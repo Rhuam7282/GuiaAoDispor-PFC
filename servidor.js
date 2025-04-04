@@ -1,27 +1,7 @@
-import {fastify} from 'fastify'
-const server = fastify()
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+const express = require('express')
+const app = express()
+const port = 7282
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-server.get('/', function(req, res){
-    return(__dirname + '/index.html');
+app.get('/', (req, res) => {
+  res.sendfile('index.ntml')
 })
-server.get('/login', () =>{
-    
-})
-server.get('/perfil', () =>{
-    
-})
-server.get('/sobre-nos', () =>{
-    
-})
-server.get('/contato', () =>{
-    
-})
-/*server.get('/chat', () =>{
-    
-})*/
-server.listen({port: 7282})
