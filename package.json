@@ -1,0 +1,23 @@
+{
+  "name": "projeto-integrador",
+  "version": "1.0.0",
+  "description": "Projeto final Lucas e Rhuam",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "node --watch --no-warnings servidor.js"
+  },
+  "author": "Lucas e Rhuam",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^5.2.1",
+    "mysql2": "^3.14.0",
+    "nodemon": "^3.1.9"
+  },
+  "keywords": [],
+  "devDependencies": {
+    "dotenv": "^16.4.7"
+  }
+}
