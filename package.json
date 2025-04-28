@@ -6,9 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "dev1": "vite",
-    "dev": "node --watch --no-warnings servidor.js",
+    "start": "node servidor.js",
+    "dev": "nodemon servidor.js --ext js,jsx,css,html --ignore 'node_modules/'",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -36,7 +35,6 @@
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
-    "globals": "^15.9.0",
-    "vite": "^5.4.1"
+    "globals": "^15.9.0"
   }
 }
