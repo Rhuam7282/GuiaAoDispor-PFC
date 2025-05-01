@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 app.get('/', (req, res) => {
-  res.sendFile('index.html', { root: __dirname });
+  res.sendFile(__dirname, 'dist', 'index.html');
 });
 
 app.listen(port, () => {
