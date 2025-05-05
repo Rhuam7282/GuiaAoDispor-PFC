@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "vite",
-    "dev": "nodemon servidor.js --ext js,jsx,css,html --ignore 'node_modules/' vite",
+    "dev": "nodemon --ext js,jsx,css,html --ignore 'node_modules/' vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
