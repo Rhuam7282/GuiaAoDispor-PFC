@@ -1,6 +1,6 @@
 // import { useState } from 'react'
 import "./App.css";
-import Menu from "./assets/components/menu.jsx";
+import Menu from "./components/menu.js";
 
 function App() {
   return (
@@ -9,5 +9,4 @@ function App() {
     </>
   );
 }
-
 export default App;
