@@ -1,11 +1,12 @@
-import { useState } from 'react'
-import './App.css'
-import Menu from './components/Menu'
+// import { useState } from 'react'
+import "./App.css";
+import Menu from "../components/menu.js";
 
-function App(){
-    return(
-        <Menu/>
-)
+function App() {
+  return (
+    <>
+      <Menu />
+    </>
+  );
 }
-
-export default App
+export default App;
