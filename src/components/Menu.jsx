@@ -1,3 +1,5 @@
+import logo from "../assets/logo.svg"
+import "./Menu.css"
 function Menu() {
   return (
     <div>
@@ -11,7 +13,9 @@ function Menu() {
         </ul>
       </aside>
       <footer>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit, a tempora. Beatae similique voluptatem assumenda illo molestiae itaque officiis unde delectus quam explicabo ex reiciendis vero, ipsum ab distinctio labore.</p>
+        <p>© 2024 Todos os direitos reservados</p>
+        <p>Desenvolvido por Webnode</p>
+        <p>Cookies</p>
       </footer>
     </div>
   );
