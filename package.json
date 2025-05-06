@@ -6,13 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-<<<<<<< HEAD
-    "start": "node /src/App.jsx",
-    "dev": "node --watch --no-warnings vite",
-=======
     "start": "node servidor.js",
     "dev": "nodemon servidor.js --ext js,jsx,css,html --ignore 'node_modules/'",
->>>>>>> 42643cefddd35ec8503811d109af1c77b87ebd47
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
