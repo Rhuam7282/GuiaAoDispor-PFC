@@ -1,88 +1,112 @@
-create database if not exists guiaaodispor;
-use guiaaodispor;
+-- Create the database (run this command separately or ensure you are connected to the correct instance)
+-- CREATE DATABASE guiaaodispor;
 
--- Tabela Cliente
-CREATE TABLE Cliente (
-    idCliente INT PRIMARY KEY auto_increment not null,
-    Descricao VARCHAR(300),
-    Usuario_IdUsuario INT not null,
-    Usuario_Localizacao_idLocalizacao INT not null,
-    FOREIGN KEY (Usuario_IdUsuario) REFERENCES Usuario(idUsuario),
-    FOREIGN KEY (Usuario_Localizacao_idLocalizacao) REFERENCES Localizacao(idLocalizacao)
+-- Connect to the database before running the rest of the script
+-- In psql: \c guiaaodispor
+
+-- Tabela Localização (deve ser criada primeiro por ser referenciada)
+CREATE TABLE Localizacao (
+    CEP VARCHAR(8) PRIMARY KEY,
+    Estado VARCHAR(2) NOT NULL,
+    Cidade VARCHAR(30) NOT NULL
 );
 
--- Tabela Profissional
-CREATE TABLE Profissional (
-    Usuario_idusuario INT PRIMARY KEY not null,
-    Descricao VARCHAR(300),
-    Usuario_Localizacao_idLocalizacao INT,
-    FOREIGN KEY (Usuario_idus) REFERENCES Usuario(idUsuario),
-    FOREIGN KEY (Usuario_Localizacao_idLocalizacao) REFERENCES Localizacao(idLocalizacao)
+
+-- Tabela TipoUsuario (deve ser criada antes de Usuario)
+CREATE TABLE TipoUsuario (
+    idTipoUsuario SERIAL PRIMARY KEY, -- Changed AUTO_INCREMENT to SERIAL
+    Descricao VARCHAR(300) NOT NULL
 );
+
 
 -- Tabela Usuário
 CREATE TABLE Usuario (
-    idUsuario INT PRIMARY KEY not null auto_increment,
-    Nome VARCHAR(100) not null,
-    Email VARCHAR(50) not null,
-    Senha VARCHAR(15) not null,
-    Foto LONGBLOB,
-    Localizacao INT(8),
-    Tipo TINYINT(1) not null
+    idUsuario SERIAL PRIMARY KEY, -- Changed AUTO_INCREMENT to SERIAL
+    Nome VARCHAR(100) NOT NULL,
+    Email VARCHAR(50) NOT NULL,
+    Senha VARCHAR(255) NOT NULL, -- Armazena o hash da senha
+    Foto BYTEA,                  -- Changed LONGBLOB to BYTEA
+    Localizacao_CEP VARCHAR(8),
+    TipoUsuario INTEGER NOT NULL, -- Changed INT to INTEGER
+    FOREIGN KEY (Localizacao_CEP) REFERENCES Localizacao(CEP),
+    FOREIGN KEY (TipoUsuario) REFERENCES TipoUsuario(idTipoUsuario),
+    UNIQUE (Email) -- Garante que emails sejam únicos
 );
 
--- Tabela Profissional_has_Cliente
-CREATE TABLE Profissional_has_Cliente (
-    Profissional_Usuario_idUsuario INT,
-    Cliente_idCliente INT,
-    Cliente_Usuario_Usuario INT,
-    Data VARCHAR(45),
-    Estado TINYINT(1),
-    PRIMARY KEY (Profissional_Usuario_idUsuario, Cliente_idCliente),
-    FOREIGN KEY (Profissional_Usuario_idUsuario) REFERENCES Profissional(Usuario_idus),
-    FOREIGN KEY (Cliente_idCliente) REFERENCES Cliente(idCliente),
-    FOREIGN KEY (Cliente_Usuario_Usuario) REFERENCES Usuario(idUsuario)
+
+-- Tabela Cliente
+CREATE TABLE Cliente (
+    idCliente SERIAL PRIMARY KEY, -- Changed AUTO_INCREMENT to SERIAL
+    Descricao VARCHAR(300),
+    Usuario_idUsuario INTEGER NOT NULL, -- Changed INT to INTEGER
+    FOREIGN KEY (Usuario_idUsuario) REFERENCES Usuario(idUsuario),
+    UNIQUE (Usuario_idUsuario) -- Garante relação 1:1
 );
 
--- Tabela Historico
-CREATE TABLE Historico (
-    idHistorico INT PRIMARY KEY,
-    Cliente_idCliente INT,
+
+-- Tabela Profissional
+CREATE TABLE Profissional (
+    idProfissional SERIAL PRIMARY KEY, -- Changed AUTO_INCREMENT to SERIAL
+    Descricao VARCHAR(300),
+    Usuario_idUsuario INTEGER NOT NULL, -- Changed INT to INTEGER
+    FOREIGN KEY (Usuario_idUsuario) REFERENCES Usuario(idUsuario),
+    UNIQUE (Usuario_idUsuario) -- Garante relação 1:1
+);
+
+
+-- Tabela Relação Cliente - Profissional (corrigida)
+CREATE TABLE Profissional_Cliente (
+    Profissional_idProfissional INTEGER, -- Changed INT to INTEGER
+    Cliente_idCliente INTEGER,           -- Changed INT to INTEGER
+    DataContrato TIMESTAMP NOT NULL,     -- Changed DATETIME to TIMESTAMP
+    Estado BOOLEAN DEFAULT TRUE,         -- Changed TINYINT(1) to BOOLEAN, DEFAULT 1 to TRUE
+    PRIMARY KEY (Profissional_idProfissional, Cliente_idCliente),
+    FOREIGN KEY (Profissional_idProfissional) REFERENCES Profissional(idProfissional),
     FOREIGN KEY (Cliente_idCliente) REFERENCES Cliente(idCliente)
 );
 
--- Tabela Contato
+
+-- Tabela Histórico
+CREATE TABLE Historico (
+    idHistorico SERIAL PRIMARY KEY,             -- Changed AUTO_INCREMENT to SERIAL
+    Cliente_idCliente INTEGER,                  -- Changed INT to INTEGER
+    Descricao TEXT,
+    DataRegistro TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Changed DATETIME to TIMESTAMP
+    FOREIGN KEY (Cliente_idCliente) REFERENCES Cliente(idCliente)
+);
+
+
+-- Tabela Contato (reestruturada)
 CREATE TABLE Contato (
-    idContato INT PRIMARY KEY not null auto_increment,
-    Usuario VARCHAR(45) not null,
-    Profissional_Usuario_idUsuario INT not null,
-    icone LONGBLOB not null,
-    Imagem LONGBLOB,
-    Contato_idContato INT,
-    FOREIGN KEY (Profissional_Usuario_idUsuario) REFERENCES Profissional(Usuario_idus)
+    idContato SERIAL PRIMARY KEY,       -- Changed AUTO_INCREMENT to SERIAL
+    Usuario_idUsuario INTEGER NOT NULL, -- Changed INT to INTEGER
+    TipoContato VARCHAR(50) NOT NULL, -- Ex: telefone, email, whatsapp
+    Valor VARCHAR(100) NOT NULL,      -- O valor do contato
+    Icone VARCHAR(100),               -- Caminho para o ícone ou nome
+    FOREIGN KEY (Usuario_idUsuario) REFERENCES Usuario(idUsuario)
 );
 
-create table icone(
-	imagem longblob,
-    Contato_idContato int not null,
-    FOREIGN KEY (Contato_idContato) REFERENCES Contato(idContato)
+
+-- Tabela Experiências Profissionais (corrigida)
+CREATE TABLE ExperienciaProfissional (
+    idExperiencia SERIAL PRIMARY KEY,            -- Changed AUTO_INCREMENT to SERIAL
+    Profissional_idProfissional INTEGER NOT NULL,-- Changed INT to INTEGER
+    Titulo VARCHAR(100) NOT NULL,
+    Empresa VARCHAR(100),
+    DataInicio DATE NOT NULL,
+    DataFim DATE,
+    Descricao TEXT,
+    FOREIGN KEY (Profissional_idProfissional) REFERENCES Profissional(idProfissional)
 );
 
--- Tabela Experiencias
-CREATE TABLE Experiencias (
-    idExperiencias INT PRIMARY KEY,
-    Titulo VARCHAR(45),
-    Data DATE,
-    Descricao VARCHAR(100),
-    Profissional_Usuario_idUsuario INT,
-    FOREIGN KEY (Profissional_Usuario_idUsuario) REFERENCES Profissional(Usuario_idus)
-);
 
--- Tabela Formacoes
-CREATE TABLE Formacoes (
-    idFormacoes INT PRIMARY KEY,
-    Formacao_e_Instituicao VARCHAR(60),
-    Ano YEAR(4),
-    Profissional_Usuario_idUsuario INT,
-    FOREIGN KEY (Profissional_Usuario_idUsuario) REFERENCES Profissional(Usuario_idus)
+-- Tabela Formações (corrigida)
+CREATE TABLE Formacao (
+    idFormacao SERIAL PRIMARY KEY,               -- Changed AUTO_INCREMENT to SERIAL
+    Profissional_idProfissional INTEGER NOT NULL,-- Changed INT to INTEGER
+    NivelFormacao VARCHAR(50) NOT NULL,          -- Ex: Graduação, Pós-graduação
+    Curso VARCHAR(100) NOT NULL,
+    Instituicao VARCHAR(100) NOT NULL,
+    AnoConclusao INTEGER,                        -- Changed YEAR(4) to INTEGER
+    FOREIGN KEY (Profissional_idProfissional) REFERENCES Profissional(idProfissional)
 );
