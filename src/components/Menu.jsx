@@ -1,19 +1,22 @@
-function Menu() {
+import { useState } from 'react'
+import logo from '../assets/logo.svg';
+
+const Menu = () => {
+  const [paginaAtiva, setPaginaAtiva] = useState('início');
+
   return (
-    <div>
+    <ul>
       <img src={logo} alt="logo da empresa" />
-      <aside>
-        <ul>
-          <li>Início</li>
-          <li>Perfil</li>
-          <li>Mensagem</li>
-          <li>Contato</li>
-        </ul>
-      </aside>
-      <footer>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit, a tempora. Beatae similique voluptatem assumenda illo molestiae itaque officiis unde delectus quam explicabo ex reiciendis vero, ipsum ab distinctio labore.</p>
-      </footer>
-    </div>
+      {['Início', 'Perfil', 'Mensagem', 'Contato'].map((pagina) => (
+        <li
+          key={pagina}
+          onClick={() => setPaginaAtiva(pagina)}
+          className={`cursor-pointer ${pagina === paginaAtiva ? 'fonte-ativa' : 'fonte-normal'}`}
+        >
+          {pagina}
+        </li>
+      ))}
+    </ul>
   );
-}
+};
 export default Menu;
