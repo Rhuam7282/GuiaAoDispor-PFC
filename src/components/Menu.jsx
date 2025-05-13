@@ -1,5 +1,6 @@
 import logo from "../assets/logo.svg";
 
+
 export default function Menu() {
   return (
     <div className="flex flex-col h-screen w-1/5 bg-[#f5f5dc] p-5 fixed left-0 top-0 shadow-xl">
