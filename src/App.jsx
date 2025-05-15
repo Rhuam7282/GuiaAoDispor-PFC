@@ -2,6 +2,7 @@ import "./App.css";
 import Menu from "./components/Menu.jsx";
 import LoginPage from "./components/cadastro.jsx";
 
+
 function App() {
   return (
     <div className="flex">
