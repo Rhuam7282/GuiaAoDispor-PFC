@@ -28,6 +28,7 @@ export default [
       'react-refresh': reactRefresh,
     },
     rules: {
+      'react/jsx-filename-extension': [1, { 'extensions': ['.js', '.jsx'] }],
       ...js.configs.recommended.rules,
       ...pluginReact.configs.recommended.rules, // <--- ADICIONADO
       ...reactHooks.configs.recommended.rules,
