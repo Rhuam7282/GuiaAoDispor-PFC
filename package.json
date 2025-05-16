@@ -6,13 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-<<<<<<< HEAD
-    "start": "node servidor.js",
-    "dev": "nodemon servidor.js --ext js,jsx,css,html --ignore 'node_modules/'",
-=======
     "start": "vite", 
-    "dev": "vite",   
->>>>>>> edc0c24bf28698abccd3a244ef395b81b0d622e1
+    "dev": "nodemon vite --ext js,jsx,css,html --ignore 'node_modules/'",   
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
