@@ -1,5 +1,4 @@
 # dependencies
-/node_modules
 .env
 # Logs
 logs
@@ -14,6 +13,9 @@ node_modules
 dist
 dist-ssr
 *.local
+.DS_Store
+*.log
+coverage/
 
 # Editor directories and files
 .vscode/*
