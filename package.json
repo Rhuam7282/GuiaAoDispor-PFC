@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "vite", 
-    "dev": "vite",   
+    "dev": "nodemon vite --ext js,jsx,css,html --ignore 'node_modules/'",   
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
