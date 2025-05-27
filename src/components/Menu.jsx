@@ -22,7 +22,7 @@ const Menu = () => {
           </li>
         ))}
       </ul>
-      <footer className="mt-auto pt-5 text-sm text-gray-600 border-t border-gray-300">
+      <footer className="mt-auto pt-5 text-sm text-gray-600 bg-blue-500 border-t border-gray-300">
         <p>© 2024 Todos os direitos reservados</p>
         <p className="mt-2">Desenvolvido por Lucas Narciso e Rhuam de Ré</p>
       </footer>
