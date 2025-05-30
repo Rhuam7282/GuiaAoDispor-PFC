@@ -8,10 +8,5 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  server: {
-    host: true,
-    allowedHosts: [
-      '5173-io6xxoptpwnfhzx6r5qy5-fab2df20.manusvm.computer'
-    ]
-  }
+  
 })

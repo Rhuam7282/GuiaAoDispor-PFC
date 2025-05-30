@@ -1,0 +1,97 @@
+/* Profissionais.css */
+
+/* Estilos para ProfileCard */
+/* Equivalente a: bg-orange-100 rounded-lg p-6 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow */
+.profile-card {
+  background-color: #FFEDD5; /* bg-orange-100 */
+  border-radius: 0.5rem; /* rounded-lg */
+  padding: 1.5rem; /* p-6 */
+  display: flex; /* flex */
+  align-items: center; /* items-center */
+  gap: 1rem; /* gap-4 */
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); /* shadow-sm */
+  transition-property: box-shadow; /* transition-shadow */
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.profile-card:hover {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* hover:shadow-md */
+}
+
+/* Equivalente a: flex-shrink-0 */
+.profile-image-container {
+  flex-shrink: 0; /* flex-shrink-0 */
+}
+
+/* Equivalente a: w-8 h-6 bg-slate-800 rounded-full object-cover border-2 border-white shadow-sm */
+.profile-image {
+  width: 2rem; /* w-8 */
+  height: 1.5rem; /* h-6 */
+  background-color: #1E293B; /* bg-slate-800 */
+  border-radius: 9999px; /* rounded-full */
+  object-fit: cover; /* object-cover */
+  border-width: 2px; /* border-2 */
+  border-style: solid;
+  border-color: #ffffff; /* border-white */
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); /* shadow-sm */
+}
+
+/* Equivalente a: flex flex-col */
+.profile-text-content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Equivalente a: text-gray-800 font-semibold text-base mb-1 */
+.profile-name {
+  color: #1F2937; /* text-gray-800 */
+  font-weight: 600; /* font-semibold */
+  font-size: 1rem; /* text-base */
+  line-height: 1.5rem;
+  margin-bottom: 0.25rem; /* mb-1 */
+}
+
+/* Equivalente a: text-gray-700 text-sm mb-1 */
+.profile-location {
+  color: #374151; /* text-gray-700 */
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.25rem;
+  margin-bottom: 0.25rem; /* mb-1 */
+}
+
+/* Equivalente a: text-gray-700 text-sm */
+.profile-experience {
+  color: #374151; /* text-gray-700 */
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.25rem;
+}
+
+/* Estilos para Profissionais (componente principal) */
+/* Equivalente a: max-w-3xl mx-auto mt-8 px-4 */
+.profissionais-container {
+  max-width: 48rem; /* max-w-3xl */
+  margin-left: auto; /* mx-auto */
+  margin-right: auto; /* mx-auto */
+  margin-top: 2rem; /* mt-8 */
+  padding-left: 1rem; /* px-4 */
+  padding-right: 1rem; /* px-4 */
+}
+
+/* Equivalente a: text-2xl font-bold mb-6 text-gray-800 border-b pb-2 */
+.profissionais-title {
+  font-size: 1.5rem; /* text-2xl */
+  line-height: 2rem;
+  font-weight: 700; /* font-bold */
+  margin-bottom: 1.5rem; /* mb-6 */
+  color: #1F2937; /* text-gray-800 */
+  border-bottom-width: 1px; /* border-b */
+  border-bottom-style: solid;
+  border-bottom-color: #E5E7EB; /* Cor de borda padrão (gray-200), já que não foi especificada */
+  padding-bottom: 0.5rem; /* pb-2 */
+}
+
+/* Equivalente a: space-y-4 (aplicado aos filhos diretos de .profile-list) */
+.profile-list > * + * {
+  margin-top: 1rem; /* space-y-4 -> mt-4 nos filhos exceto o primeiro */
+}
