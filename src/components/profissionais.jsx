@@ -2,8 +2,17 @@ import React from 'react';
 import './Profissionais.css'; // Importe o arquivo CSS
 
 const ProfileCard = ({ profile }) => {
+  const handleCardClick = () => {
+    console.log(`Card clicado: ${profile.name}`);
+    // Aqui você pode adicionar a lógica desejada, como:
+    // - Abrir um modal com mais detalhes
+    // - Navegar para uma página de perfil
+    // - Mostrar informações de contato
+    alert(`Você clicou no perfil de ${profile.name}`);
+  };
+
   return (
-    <div className="profile-card">
+    <div className="profile-card" onClick={handleCardClick}>
       {/* Profile Image */}
       <div className="profile-image-container">
         <img 
@@ -57,14 +66,9 @@ function Profissionais() {
       experience: "Terapeuta ocupacional com experiência domiciliar"
     }
   ];
-
   return (
     <div className="profissionais-container">
-      <h1 className="profissionais-title">
-        Profissionais Cadastrados
-      </h1>
-
-      {/* Lista de profissionais usando ProfileCard */} 
+      <h2 className="profissionais-title">Profissionais Disponíveis</h2>
       <div className="profile-list">
         {localProfiles.map((profile, index) => (
           <ProfileCard key={index} profile={profile} />

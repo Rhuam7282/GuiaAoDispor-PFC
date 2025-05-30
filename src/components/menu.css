@@ -56,13 +56,17 @@
   font-size: 0.875rem; /* text-sm */
   line-height: 1.25rem;
   color: #4B5563; /* text-gray-600 */
-  background-color: #3B82F6; /* bg-blue-500 */
+  background-color: #f5f5dc; /* bg-blue-500 */
   border-top-width: 1px; /* border-t */
   border-top-style: solid;
-  border-top-color: #D1D4D7; /* border-gray-300 */
+  border-top-color: #D1D4D7; /*border-gray-300 */
 }
 
 /* Equivalente a: mt-2 (para o segundo parágrafo no footer) */
 .menu-footer-developed-by {
   margin-top: 0.5rem; /* mt-2 */
+}
+
+.menu ul{
+
 }
