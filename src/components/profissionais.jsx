@@ -68,7 +68,7 @@ function Profissionais() {
   ];
   return (
     <div className="profissionais-container">
-      <h2 className="profissionais-title">Profissionais Disponíveis</h2>
+      <h2 className="profissionais-title">Profissionais</h2>
       <div className="profile-list">
         {localProfiles.map((profile, index) => (
           <ProfileCard key={index} profile={profile} />
