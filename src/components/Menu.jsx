@@ -6,14 +6,17 @@ const Menu = () => {
   const [paginaAtiva, setPaginaAtiva] = useState('Início');
 
   return (
-    <div className="menu-container">
-      <img src={logo} alt="logo da empresa" className="menu-logo"/>
-      <ul className="menu-list">
+    <menu>
+      <div class="fachada">
+        <img src={logo} alt="logo da empresa" class="logo"/>
+        <h1>Guia ao Dispor</h1>
+      </div>
+      <ul class="lista">
         {['Início', 'Perfil', 'Mensagem', 'Contato'].map((pagina) => (
           <li
             key={pagina}
             onClick={() => setPaginaAtiva(pagina)}
-            className={`menu-item ${
+            class={`menu-item ${
               pagina === paginaAtiva ? 'menu-item-active' : ''
             }`}
           >
@@ -21,11 +24,11 @@ const Menu = () => {
           </li>
         ))}
       </ul>
-      <footer className="menu-footer">
+      <footer class="menu-footer">
         <p>© 2024 Todos os direitos reservados</p>
-        <p className="menu-footer-developed-by">Desenvolvido por Lucas Narciso e Rhuam de Ré</p>
+        <p class="menu-footer-developed-by">Desenvolvido por Lucas Narciso e Rhuam de Ré</p>
       </footer>
-    </div>
+    </menu>
   );
 };
 

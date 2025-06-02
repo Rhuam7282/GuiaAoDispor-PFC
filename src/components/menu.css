@@ -1,58 +1,37 @@
-/* Menu.css */
-
-/* Equivalente a: flex flex-col h-screen w-1/5 bg-[#f5f5dc] p-5 fixed */
-.menu-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 20%; /* w-1/5 */
-  background-color: #f5f5dc; /* bg-[#f5f5dc] */
-  padding: 1.25rem; /* p-5 */
+menu {
+  display: grid;
+  grid-template-rows: 1 1 1;
+  height: 100%;
+  width: 16.67%;
+  background-color: #7FCCD4;
   position: fixed;
+  text-align: center;
+}
+.fachada{
+  margin: auto;
+}
+.logo {
+  width: 100px;
+  border-radius: 100%;
+  box-shadow: #1B3133 0px 0px 8px;
 }
 
-/* Equivalente a: w-4/5 max-w-[150px] mx-auto rounded-full my-10 (mb-8 é sobrescrito por my-10) */
-.menu-logo {
-  width: 80%; /* w-4/5 */
-  max-width: 150px; /* max-w-[150px] */
-  margin-left: auto; /* mx-auto */
-  margin-right: auto; /* mx-auto */
-  margin-top: 2.5rem; /* my-10 */
-  margin-bottom: 2.5rem; /* my-10 */
-  border-radius: 9999px; /* rounded-full */
+.lista > li + li {
+  margin: auto;
 }
-
-/* Equivalente a: space-y-2 (aplicado aos filhos li) */
-.menu-list > li + li {
-  margin-top: 0.5rem; /* space-y-2 -> mt-2 nos filhos exceto o primeiro */
-}
-
-/* Estilos base para itens da lista */
-/* Equivalente a: p-3 rounded cursor-pointer transition-colors */
 .menu-item {
-  padding: 0.75rem; /* p-3 */
-  border-radius: 0.25rem; /* rounded */
-  cursor: pointer; /* cursor-pointer */
-  transition-property: background-color, border-color, color, fill, stroke; /* transition-colors */
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+  line-height: 40px;
+  cursor: pointer;
 }
-
-/* Equivalente a: hover:bg-[#e0e0d1] (para itens não ativos) */
-.menu-item:hover {
-  background-color: #e0e0d1; /* hover:bg-[#e0e0d1] */
-}
-
-/* Equivalente a: bg-[#e0e0d1] font-medium (para item ativo) */
 .menu-item-active {
-  background-color: #e0e0d1; /* bg-[#e0e0d1] */
-  font-weight: 500; /* font-medium */
+  font-weight: bold;
+  font-size: 14pt;
 }
 
 /* Equivalente a: mt-auto pt-5 text-sm text-gray-600 bg-blue-500 border-t border-gray-300 */
 .menu-footer {
-  margin-top: auto; /* mt-auto */
-  padding-top: 1.25rem; /* pt-5 */
+  border-top: rgba(28, 49, 52, 1) solid 2px;
+  margin: auto;
   font-size: 0.875rem; /* text-sm */
   line-height: 1.25rem;
   color: #4B5563; /* text-gray-600 */
@@ -67,6 +46,6 @@
   margin-top: 0.5rem; /* mt-2 */
 }
 
-.menu-list ul{
-  margin-top: 5em;
+.menu ul{
+
 }
