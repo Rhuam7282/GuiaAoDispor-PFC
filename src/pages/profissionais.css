@@ -26,7 +26,7 @@
 .profile-image {
   width: 8rem; /* Aumentar tamanho */
   height: 8rem; /* Manter proporção quadrada */
-  border-radius: 9999px;
+  border-radius: 100%;
   object-fit: cover;
   border: none; /* Remover borda */
   box-shadow: none; /* Remover sombra */

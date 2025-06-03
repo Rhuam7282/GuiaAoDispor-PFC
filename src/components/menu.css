@@ -1,51 +1,44 @@
 menu {
   display: grid;
-  grid-template-rows: 1 1 1;
+  grid-template-rows: 1fr 1fr 1fr;
   height: 100%;
   width: 16.67%;
   background-color: #7FCCD4;
   position: fixed;
   text-align: center;
+  filter: drop-shadow(0px 0px 8px #303538);
 }
 .fachada{
   margin: auto;
+  font-weight: bold;
+  font-size: 20pt;
+  line-height: 40px;
 }
-.logo {
+menu img {
   width: 100px;
   border-radius: 100%;
-  box-shadow: #1B3133 0px 0px 8px;
+  filter: drop-shadow(0px 0px 8px #1B3133);
 }
 
-.lista > li + li {
+menu ul{
+  font-size: 16pt;
+  list-style: none;
   margin: auto;
 }
 .menu-item {
   line-height: 40px;
   cursor: pointer;
 }
-.menu-item-active {
+.pag-ativa {
+  font-size: 18pt;
   font-weight: bold;
-  font-size: 14pt;
 }
-
-/* Equivalente a: mt-auto pt-5 text-sm text-gray-600 bg-blue-500 border-t border-gray-300 */
-.menu-footer {
-  border-top: rgba(28, 49, 52, 1) solid 2px;
-  margin: auto;
-  font-size: 0.875rem; /* text-sm */
-  line-height: 1.25rem;
-  color: #4B5563; /* text-gray-600 */
-  background-color: #f5f5dc; /* bg-blue-500 */
-  border-top-width: 1px; /* border-t */
-  border-top-style: solid;
-  border-top-color: #D1D4D7; /*border-gray-300 */
-}
-
-/* Equivalente a: mt-2 (para o segundo parágrafo no footer) */
-.menu-footer-developed-by {
-  margin-top: 0.5rem; /* mt-2 */
-}
-
-.menu ul{
-
+footer {
+  border-top: 1px solid rgba(28, 49, 52, 1);
+  color:rgba(28, 49, 52, 1);
+  line-height: 16px;
+  font-weight: light;
+  font-size: 12pt;
+  padding: 15px;
+  margin-top: auto;
 }
