@@ -1,7 +1,7 @@
 /* Atualizações para corresponder ao protótipo */
 
 .profile-card {
-  background-color: #ffffff; /* Fundo branco */
+  background-color:rgba(211, 163, 127, 0.3);
   border-radius: 0.5rem;
   padding: 1rem; /* Reduzido o padding */
   display: flex;
@@ -11,6 +11,7 @@
   border: 1px solid #e5e7eb; /* Borda sutil */
   transition: none; /* Remover transição de hover */
   cursor: default; /* Remover indicação de clique */
+  font-family: Trebuchet, Arial;
 }
 
 /* Remover efeito hover */
@@ -23,8 +24,8 @@
 }
 
 .profile-image {
-  width: 3.5rem; /* Aumentar tamanho */
-  height: 3.5rem; /* Manter proporção quadrada */
+  width: 8rem; /* Aumentar tamanho */
+  height: 8rem; /* Manter proporção quadrada */
   border-radius: 9999px;
   object-fit: cover;
   border: none; /* Remover borda */
@@ -40,24 +41,25 @@
 .profile-name {
   color: #1f2937;
   font-weight: 700; /* Negrito mais forte */
-  font-size: 1rem;
+  font-size: 2rem;
   margin-bottom: 0; /* Remover margem inferior */
 }
 
 .profile-location {
   color: #4b5563; /* Tom de cinza mais escuro */
-  font-size: 0.875rem;
+  font-size: 1rem;
   margin-bottom: 0; /* Remover margem inferior */
 }
 
 .profile-experience {
   color: #4b5563; /* Tom de cinza mais escuro */
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 400; /* Peso normal */
 }
 
 .profissionais-container {
-  max-width: 48rem;
+  max-width: 80%;
+  height: 900px;
   margin: 2rem auto 0;
   padding: 0 1rem;
 }
