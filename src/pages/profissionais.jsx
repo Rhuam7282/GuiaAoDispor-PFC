@@ -1,5 +1,5 @@
 import React from 'react';
-import './Profissionais.css'; // Importe o arquivo CSS
+import './profissionais.css'; // Importe o arquivo CSS
 
 const ProfileCard = ({ profile }) => {
   const handleCardClick = () => {

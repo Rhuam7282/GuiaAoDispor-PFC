@@ -1,12 +1,13 @@
 import Menu from "./components/Menu.jsx";
-import Profissionais from "./components/profissionais.jsx";
-
+import Profissionais from "./pages/profissionais.jsx";
+import Filtro from "./components/filtro.jsx"
 
 function App() {
   return (
-    <div className="flex">
+    <div>
       <Menu />
-      <main className="flex-1 ml-[20%] min-h-screen p-8 bg-gray-900">
+      <main>
+        <Filtro/>
         <Profissionais/>
       </main>
     </div>
