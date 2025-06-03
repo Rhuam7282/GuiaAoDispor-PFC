@@ -8,25 +8,25 @@ const Menu = () => {
   return (
     <menu>
       <div class="fachada">
-        <img src={logo} alt="logo da empresa" class="logo"/>
-        <h1>Guia ao Dispor</h1>
+        <img src={logo} alt="logo da empresa" class="logo" />
+        <p>Guia ao Dispor</p>
       </div>
       <ul class="lista">
-        {['Início', 'Perfil', 'Mensagem', 'Contato'].map((pagina) => (
+        {['🏠Início', '🧑‍🦲Perfil', '💬Mensagem', '✉️Contato'].map((pagina) => (
           <li
             key={pagina}
             onClick={() => setPaginaAtiva(pagina)}
-            class={`menu-item ${
-              pagina === paginaAtiva ? 'menu-item-active' : ''
-            }`}
+            class={`menu-item ${pagina === paginaAtiva ? 'pag-ativa' : ''
+              }`}
           >
             {pagina}
           </li>
         ))}
       </ul>
-      <footer class="menu-footer">
-        <p>© 2024 Todos os direitos reservados</p>
-        <p class="menu-footer-developed-by">Desenvolvido por Lucas Narciso e Rhuam de Ré</p>
+      <footer>
+        <p>Todos os direitos reservados. <br /><br />
+          Guia ao Dispor é resultado de um projeto escolar. Saiba mais. <br /><br />
+          Veja também nosso Artigo de Desenvolvimento.</p>
       </footer>
     </menu>
   );
