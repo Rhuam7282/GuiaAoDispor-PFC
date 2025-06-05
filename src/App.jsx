@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 function App() {
   return (
     <BrowserRouter>
+        <Menu></Menu>
       <Routes>
             {/* { <Route path="/" element={<HomePage />} /> */}
             {/* <Route path="/cadastro" element={<CadastroPage />} />Vou começar a ver isso daqui tá */}
@@ -16,7 +17,6 @@ function App() {
             <Route path="/contato" element={<ContatoPage />} /> */}
         </Routes>
     </BrowserRouter>
-
   );
 }
 export default App;
