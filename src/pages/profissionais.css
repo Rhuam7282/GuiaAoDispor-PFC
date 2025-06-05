@@ -9,14 +9,8 @@
   gap: 1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
   border: 1px solid #e5e7eb; /* Borda sutil */
-  transition: none; /* Remover transição de hover */
   cursor: default; /* Remover indicação de clique */
   font-family: Trebuchet, Arial;
-}
-
-/* Remover efeito hover */
-.profile-card:hover {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .profile-image-container {
@@ -61,7 +55,7 @@
   max-width: 80%;
   height: 900px;
   margin-left: 16.67%;
-  padding: 0 1rem;
+  padding: 30px;
 }
 
 .profissionais-title {
