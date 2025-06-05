@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './profissionais.css'; // Importe o arquivo CSS
+import Filtro from '../components/filtro'; // Importe o componente Filtro
+import Menu from '../components/Menu';
 
 const ProfileCard = ({ profile }) => {
   const handleCardClick = () => {
@@ -39,6 +41,17 @@ const ProfileCard = ({ profile }) => {
 };
 
 function Profissionais() {
+
+  const [selectedFilter, setSelectedFilter] = useState('localizacao');
+
+   // Opções de filtro formatadas corretamente como objetos
+  const filterOptions = [
+    { value: 'localizacao', label: 'Localização' },
+    { value: 'disponibilidade', label: 'Disponibilidade' },
+    { value: 'favoritos', label: 'Favoritos' },
+    { value: 'avaliacao', label: 'Bem avaliados' }
+  ];
+
   const localProfiles = [
     { 
       name: "Maria Silva", 
@@ -69,6 +82,13 @@ function Profissionais() {
   return (
     <div className="profissionais-container">
       <h2 className="profissionais-title">Profissionais</h2>
+      {/* Componente de filtro com todas as props necessárias */}
+      <Filtro 
+        title="Filtros:"
+        options={filterOptions}
+        selectedOption={selectedFilter}
+        onChange={setSelectedFilter}
+      />
       <div className="profile-list">
         {localProfiles.map((profile, index) => (
           <ProfileCard key={index} profile={profile} />
