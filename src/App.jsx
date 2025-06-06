@@ -11,7 +11,7 @@ function App() {
             {/* { <Route path="/" element={<HomePage />} /> */}
             {/* <Route path="/cadastro" element={<CadastroPage />} />Vou começar a ver isso daqui tá */}
             {/* <Route path="/sobre" element={<SobreNosPage />} /> } */}
-            <Route path="/" element={<Profissionais />} />
+            <Route path="/" element={<><Menu /><Profissionais /></>} />
             {/* <Route path="/mensagens" element={<MensagensPage />} />
             <Route path="/contato" element={<ContatoPage />} /> */}
         </Routes>

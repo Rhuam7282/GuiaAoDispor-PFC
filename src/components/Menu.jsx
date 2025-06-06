@@ -7,16 +7,16 @@ const Menu = () => {
 
   return (
     <menu>
-      <div class="fachada">
-        <img src={logo} alt="logo da empresa" class="logo" />
+      <div className="fachada">
+        <img src={logo} alt="logo da empresa" className="logo" />
         <p>Guia ao Dispor</p>
       </div>
-      <ul class="lista">
+      <ul className="lista">
         {['🏠Início', '🧑‍🦲Perfil', '💬Mensagem', '✉️Contato'].map((pagina) => (
           <li
             key={pagina}
             onClick={() => setPaginaAtiva(pagina)}
-            class={`menu-item ${pagina === paginaAtiva ? 'pag-ativa' : ''
+            className={`menu-item ${pagina === paginaAtiva ? 'pag-ativa' : ''
               }`}
           >
             {pagina}
