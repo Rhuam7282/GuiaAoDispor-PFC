@@ -1,19 +1,8 @@
 import React from 'react';
-import Layout from '../components/layout/Layout';
-import Card from '../components/ui/Card';
-import RatingStars from '../components/ui/RatingStars';
-import SocialLinks from '../components/page/SocialLinks';
-import ImageGallery from '../components/page/ImageGallery';
-import '../styles/global.css';
-import './ProfilePage.css';
+import './perfil.css';
 
 const ProfilePage = () => {
   // Dados de exemplo para redes sociais
-  const socialLinks = [
-    { type: 'facebook', username: '@exemplo', url: '#' },
-    { type: 'instagram', username: '@exemplo', url: '#' },
-    { type: 'youtube', username: '@exemplo', url: '#' }
-  ];
   
   // Dados de exemplo para histórico profissional
   const professionalHistory = [
@@ -23,7 +12,6 @@ const ProfilePage = () => {
   ];
   
   return (
-    <Layout>
       <div className="profile-page">
         <h1>Nome</h1>
         
@@ -38,7 +26,6 @@ const ProfilePage = () => {
               <p>Informações detalhadas sobre o perfil do usuário...</p>
             </div>
             
-            <SocialLinks links={socialLinks} />
           </div>
         </div>
         
@@ -50,12 +37,10 @@ const ProfilePage = () => {
             </svg>
             <span>Localização</span>
           </div>
-          <RatingStars rating={5} />
         </div>
         
         <div className="history-section">
           <h2>Histórico Acadêmico:</h2>
-          <ImageGallery />
         </div>
         
         <div className="history-section">
@@ -72,7 +57,6 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
-    </Layout>
   );
 };
 
