@@ -1,0 +1,52 @@
+.sobre-nos-page {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.about-content {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.about-image {
+  flex: 0 0 150px;
+}
+
+.circle-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: #ccc;
+  overflow: hidden;
+}
+
+.circle-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-text {
+  flex: 1;
+}
+
+.about-text p {
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .about-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .about-image {
+    margin-bottom: 20px;
+  }
+  
+  .about-text {
+    text-align: center;
+  }
+}
