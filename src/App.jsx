@@ -7,14 +7,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 function App() {
   return (
     <BrowserRouter>
-        <Menu></Menu>
       <Routes>
-            {/* { <Route path="/" element={<HomePage />} /> */}
-            {/* <Route path="/cadastro" element={<CadastroPage />} />Vou começar a ver isso daqui tá */}
-            {/* <Route path="/sobre" element={<SobreNosPage />} /> } */}
-            <Route path="/" element={<><Menu /><Profissionais /></>} />
-            {/* <Route path="/mensagens" element={<MensagensPage />} />
-            <Route path="/contato" element={<ContatoPage />} /> */}
+            {<Route path="/" element={<><Menu/><Profissionais /></>} />}
+            {/* <Route path="/perfil" element={<><Menu/><Perfil/></>} /> } */}
+            {/* <Route path="/mensagem" element={<><Menu/><Mensagem/></>} /> */}
+            {/* <Route path="/contato" element={<><Menu/><Contato/></>} /> */}
+            {/* <Route path="/cadastro" element={<><Menu/><Cadastro/></>} />Vou começar a ver isso daqui tá */}
         </Routes>
     </BrowserRouter>
   );

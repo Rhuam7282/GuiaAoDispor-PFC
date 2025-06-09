@@ -4,14 +4,15 @@ import './Menu.css';
 import { Home, User, MessageSquare, Mail } from 'lucide-react';
 
 const Menu = () => {
-const [paginaAtiva, setPaginaAtiva] = useState('Início');
-const itensMenu = [
-  { icone: <Home size={18}/>, texto: 'Início' },
-  { icone: <User size={18}/>, texto: 'Perfil' },
-  { icone: <MessageSquare size={18}/>, texto: 'Mensagem' },
-  { icone: <Mail size={18}/>, texto: 'Contato' }
-];
+  const itensMenu = [
+    { Icone: Home, texto: 'Início' },
+    { Icone: User, texto: 'Perfil' },
+    { Icone: MessageSquare, texto: 'Mensagem' },
+    { Icone: Mail, texto: 'Contato' }
+  ];
 
+  
+  const [paginaAtiva, setPaginaAtiva] = useState(itensMenu[0].texto);
 
   return (
     <menu>
@@ -19,17 +20,27 @@ const itensMenu = [
         <img src={logo} alt="logo da empresa" className="logo" />
         <p>Guia ao Dispor</p>
       </div>
-      <ul className="lista">
-        {['🏠Início', '🧑‍🦲Perfil', '💬Mensagem', '✉️Contato'].map((pagina) => (
-          <li
-            key={pagina}
-            onClick={() => setPaginaAtiva(pagina)}
-            className={`menu-item ${pagina === paginaAtiva ? 'pag-ativa' : ''
-              }`}
-          >
-            {pagina}
-          </li>
-        ))}
+     <ul className="lista">
+        {itensMenu.map((item) => {
+          const ativo = item.texto === paginaAtiva;
+          
+          return (
+            <li
+              key={item.texto}
+              onClick={() => setPaginaAtiva(item.texto)}
+              className={`menu-item ${ativo ? 'pag-ativa' : ''}`}
+            >
+              <span className="icone">
+                <item.Icone 
+                  size={ativo ? 18 : 16} 
+                  color={ativo ? "#303538" : "#1B3133"} 
+                  strokeWidth={ativo ? 3.5 : 2.5}
+                />
+              </span>
+              {item.texto}
+            </li>
+         );
+        })}
       </ul>
       <footer>
         <p>Todos os direitos reservados. <br /><br />
