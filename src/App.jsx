@@ -1,7 +1,8 @@
 import Menu from "./components/Menu.jsx";
 import Profissionais from "./pages/profissionais.jsx";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import SobreNos from "./pages/sobreNos.jsx"
+import Contato from "./pages/sobreNos.jsx"
+import Perfil from "./pages/perfil.jsx"
 
 
 // <><Menu /><Profissionais /></>
@@ -13,14 +14,9 @@ function App() {
         <Route path="/perfil" element={<><Menu /><Perfil /></>} />
         <Route path="/mensagem" element={<><Menu /><Mensagem /></>} />
         <Route path="/contato" element={<><Menu /><Contato /></>} />
-        <Route path="/cadastro" element={<><Menu /><Cadastro /></>} />
+        
       </Routes>
     </BrowserRouter>
   );
 }
 export default App;
-
-{/* <Route path="/cadastro" element={<CadastroPage />} />
-<Route path="/perfil" element={<ProfilePage />} />
-<Route path="/mensagens" element={<MensagensPage />} />
-<Route path="/contato" element={<ContatoPage />} /> */}
