@@ -25,6 +25,7 @@ menu ul{
   font-size: 16pt;
   list-style: none;
   margin: auto;
+  color: #1B3133;
 }
 .menu-item {
   line-height: 40px;
@@ -33,6 +34,8 @@ menu ul{
 .pag-ativa {
   font-size: 18pt;
   font-weight: bold;
+  color: #303538;
+
 }
 footer {
   border-top: 1px solid rgba(28, 49, 52, 1);
