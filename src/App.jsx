@@ -1,9 +1,10 @@
 import Menu from "./components/Menu.jsx";
 import Profissionais from "./pages/profissionais.jsx";
-import Filtro from "./components/filtro.jsx"
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import SobreNos from "./pages/sobreNos.jsx"
 
 
+// <><Menu /><Profissionais /></>
 function App() {
   return (
     <BrowserRouter>
@@ -18,3 +19,8 @@ function App() {
   );
 }
 export default App;
+
+{/* <Route path="/cadastro" element={<CadastroPage />} />
+<Route path="/perfil" element={<ProfilePage />} />
+<Route path="/mensagens" element={<MensagensPage />} />
+<Route path="/contato" element={<ContatoPage />} /> */}
