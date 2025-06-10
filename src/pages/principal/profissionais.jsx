@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './profissionais.css'; // Importe o arquivo CSS
-import Filtro from '../components/filtro'; // Importe o componente Filtro
-import Menu from '../components/Menu';
+import Filtro from './filtro'; // Importe o componente Filtro
+import Menu from '../../components/Menu';
 
 const ProfileCard = ({ profile }) => {
   const handleCardClick = () => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import './sobreNos.css';
+import './contato.css';
 
 const SobreNosPage = () => {
   
