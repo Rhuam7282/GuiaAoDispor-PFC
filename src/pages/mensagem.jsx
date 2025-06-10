@@ -1,5 +1,6 @@
 import React from 'react';
 import './mensagem.css';
+import Corpo from '../components/layout/corpo';
 
 const Mensagens = () => {
   // Estado para a mensagem atual
@@ -36,6 +37,7 @@ const Mensagens = () => {
   
   
   return (
+    <Corpo>
       <div className="messages-page">
         <div className="messages-container">
           <div className="messages-list">
@@ -75,6 +77,7 @@ const Mensagens = () => {
           </div>
         </div>
       </div>
+    </Corpo>
   );
 };
 

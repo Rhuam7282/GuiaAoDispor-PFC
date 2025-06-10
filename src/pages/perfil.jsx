@@ -1,5 +1,6 @@
 import React from 'react';
 import './perfil.css';
+import Corpo from '../components/layout/corpo';
 
 const Perfil = () => {
   // Dados de exemplo para redes sociais
@@ -12,6 +13,7 @@ const Perfil = () => {
   ];
   
   return (
+    <Corpo>
       <div className="profile-page">
         <h1>Nome</h1>
         
@@ -57,6 +59,7 @@ const Perfil = () => {
           </div>
         </div>
       </div>
+    </Corpo>
   );
 };
 

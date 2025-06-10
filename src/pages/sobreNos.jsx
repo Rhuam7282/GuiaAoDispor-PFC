@@ -1,9 +1,11 @@
 import React from 'react';
 import './sobreNos.css';
+import Corpo from "../components/layout/corpo";
 
 const SobreNosPage = () => {
   
   return (
+    <Corpo>
       <div className="sobre-nos-page">
           <div className="about-content">
             <div className="about-image">
@@ -33,6 +35,7 @@ const SobreNosPage = () => {
             </div>
           </div>
       </div>
+    </Corpo>
   );
 };
 
