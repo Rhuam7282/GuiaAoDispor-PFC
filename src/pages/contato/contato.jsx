@@ -1,5 +1,5 @@
 import React from 'react';
-import './sobreNos.css';
+import './contato.css';
 import Corpo from "../components/layout/corpo";
 
 const SobreNosPage = () => {

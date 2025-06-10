@@ -1,9 +1,8 @@
-import Menu from "./components/layout/Menu.jsx";
-import Profissionais from "./pages/profissionais.jsx";
+import Profissionais from "./pages/principal/profissionais.jsx";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Contato from "./pages/sobreNos.jsx"
-import Perfil from "./pages/perfil.jsx"
-import Mensagem from "./pages/mensagem.jsx"
+import Contato from "./pages/contato/contato.jsx"
+import Perfil from "./pages/perfil/perfil.jsx"
+import Mensagem from "./pages/mensagem/mensagem.jsx"
 
 
 // <><Menu /><Profissionais /></>
