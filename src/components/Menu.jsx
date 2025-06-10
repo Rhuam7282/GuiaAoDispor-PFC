@@ -1,18 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import './Menu.css';
 import { Home, User, MessageSquare, Mail } from 'lucide-react';
 
 const Menu = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const itensMenu = [
-    { Icone: Home, texto: 'Início' },
-    { Icone: User, texto: 'Perfil' },
-    { Icone: MessageSquare, texto: 'Mensagem' },
-    { Icone: Mail, texto: 'Contato' }
+    { Icone: Home, texto: 'Início', rota: '/' },
+    { Icone: User, texto: 'Perfil', rota: '/perfil' },
+    { Icone: MessageSquare, texto: 'Mensagem', rota: '/mensagem' },
+    { Icone: Mail, texto: 'Contato', rota: '/contato' }
   ];
 
+
   
-  const [paginaAtiva, setPaginaAtiva] = useState(itensMenu[0].texto);
+  const [paginaAtiva, setPaginaAtiva] = useState(
+    itensMenu.find(item => item.rota === location.pathname)?.texto || itensMenu[0].texto
+  );
+
+  useEffect(() => {
+    const itemAtivo = itensMenu.find(item => item.rota === location.pathname);
+    if (itemAtivo) {
+      setPaginaAtiva(itemAtivo.texto);
+    }
+  }, [location.pathname]);
 
   return (
     <menu>
@@ -27,7 +40,10 @@ const Menu = () => {
           return (
             <li
               key={item.texto}
-              onClick={() => setPaginaAtiva(item.texto)}
+              onClick={() => {
+                setPaginaAtiva(item.texto);
+                navigate(item.rota);
+              }}
               className={`menu-item ${ativo ? 'pag-ativa' : ''}`}
             >
               <span className="icone">
