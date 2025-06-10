@@ -1,7 +1,7 @@
 import React from 'react';
 import './perfil.css';
 
-const ProfilePage = () => {
+const Perfil = () => {
   // Dados de exemplo para redes sociais
   
   // Dados de exemplo para histórico profissional
@@ -60,4 +60,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default Perfil;
