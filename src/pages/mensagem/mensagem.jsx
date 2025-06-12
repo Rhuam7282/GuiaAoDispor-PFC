@@ -1,6 +1,6 @@
 import React from 'react';
 import './mensagem.css';
-import Corpo from '../components/layout/corpo';
+import Corpo from "../../components/layout/corpo"
 
 const Mensagens = () => {
   // Estado para a mensagem atual

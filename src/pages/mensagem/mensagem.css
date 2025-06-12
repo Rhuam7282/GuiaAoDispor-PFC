@@ -1,6 +1,5 @@
 .messages-page {
   max-width: 1000px;
-  margin: 0 auto;
 }
 
 .messages-container {
@@ -13,10 +12,11 @@
 }
 
 .messages-list {
-  flex: 0 0 300px;
+  /* flex: 0 0 300px; */
   border-right: 1px solid #eee;
   overflow-y: auto;
   background-color: var(--background);
+  height: 100%;
 }
 
 .messages-list h2 {

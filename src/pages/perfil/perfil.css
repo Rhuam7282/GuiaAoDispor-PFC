@@ -1,6 +1,18 @@
 .profile-page {
   max-width: 800px;
-  margin: 0 auto;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1f2937;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+
 }
 
 .profile-header {

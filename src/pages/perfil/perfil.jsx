@@ -1,6 +1,6 @@
 import React from 'react';
 import './perfil.css';
-import Corpo from '../components/layout/corpo';
+import Corpo from "../../components/layout/corpo"
 
 const Perfil = () => {
   // Dados de exemplo para redes sociais
@@ -15,6 +15,7 @@ const Perfil = () => {
   return (
     <Corpo>
       <div className="profile-page">
+        <h2 className="title">Perfil</h2>
         <h1>Nome</h1>
         
         <div className="profile-header">

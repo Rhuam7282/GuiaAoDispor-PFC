@@ -1,6 +1,6 @@
 import React from 'react';
 import './contato.css';
-import Corpo from "../components/layout/corpo";
+import Corpo from "../../components/layout/corpo"
 
 const SobreNosPage = () => {
   

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./profissionais.css"; // Importe o arquivo CSS
-import Filtro from "../components/filtro"; // Importe o componente Filtro
-import Corpo from "../components/layout/corpo";
+import Filtro from "./filtro"; // Importe o componente Filtro
+import Corpo from "../../components/layout/corpo";
 
 const ProfileCard = ({ profile }) => {
   const handleCardClick = () => {
@@ -75,7 +75,7 @@ function Profissionais() {
   return (
     <Corpo>
       <div className="profissionais-container">
-        <h2 className="profissionais-title">Profissionais</h2>
+        <h2 className="title">Profissionais</h2>
         {/* Componente de filtro com todas as props necessárias */}
         <Filtro
           title="Filtros:"
