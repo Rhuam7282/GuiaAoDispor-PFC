@@ -1,81 +1,60 @@
-/* Atualizações para corresponder ao protótipo */
+.profissionais-container {
+  padding: 60px;
+}
 
 .profile-card {
   background-color:rgba(211, 163, 127, 0.3);
-  border-radius: 0.5rem;
-  padding: 1rem; /* Reduzido o padding */
+  border-radius: 8px;
+  padding: 15px;
   display: flex;
-  align-items: flex-start; /* Alinhar ao topo */
-  gap: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
-  border: 1px solid #e5e7eb; /* Borda sutil */
-  cursor: default; /* Remover indicação de clique */
-  font-family: Trebuchet, Arial;
-}
-
-.profile-image-container {
-  flex-shrink: 0;
+  align-items: flex-start;
+  gap: 15px;
+  box-shadow: 0 0px 8px  #303538;
+  width: auto;
 }
 
 .profile-image {
-  width: 8rem; /* Aumentar tamanho */
-  height: 8rem; /* Manter proporção quadrada */
+  width: 100px;
+  height: 100px;
   border-radius: 100%;
   object-fit: cover;
-  border: none; /* Remover borda */
-  box-shadow: none; /* Remover sombra */
+  box-shadow: 0 0px 8px  #54453B;
 }
 
 .profile-text-content {
+  text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem; /* Espaçamento entre linhas */
+  gap: 10px;
 }
 
 .profile-name {
-  color: #1f2937;
-  font-weight: 700; /* Negrito mais forte */
-  font-size: 2rem;
-  margin-bottom: 0; /* Remover margem inferior */
+  color: #303538;
+  font-size: 20px;
 }
 
 .profile-location {
-  color: #4b5563; /* Tom de cinza mais escuro */
-  font-size: 1rem;
-  margin-bottom: 0; /* Remover margem inferior */
+  /* color: #54453B;  */
+  font-size: 16px;
 }
 
 .profile-experience {
-  color: #4b5563; /* Tom de cinza mais escuro */
-  font-size: 1rem;
-  font-weight: 400; /* Peso normal */
-}
-
-.profissionais-container {
-  max-width: 80%;
-  height: 900px;
-  padding: 30px;
+  color: #54453B;
+  font-size: 16px;
 }
 
 .title {
   font-size: 48px;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  color: #1f2937;
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 0.5rem;
-  text-align: center;
-
+  font-weight: bold;
+  color: #54453B;
 }
 
-/* Layout em grid para 2 colunas */
 .profile-list {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem; /* Aumentar espaçamento entre cards */
+  gap: 30px;
 }
 
-/* Responsividade - uma coluna em telas pequenas */
 @media (max-width: 768px) {
   .profile-list {
     grid-template-columns: 1fr;

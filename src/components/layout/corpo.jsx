@@ -1,11 +1,10 @@
-import React from 'react';
 import Menu from './Menu';
 import './corpo.css';
 
 const Layout = ({ children }) => {
   return (
     <div className="layout-container">
-      <Menu />
+      <div className='menufantasma'><Menu /></div>
       <main className="main-content">
         {children}
       </main>

@@ -1,44 +1,70 @@
-.filter-bar {
-  background-color: var(--white);
-  border-radius: 10px;
-  padding: 15px;
+.seletor-filtro {
+  background-color: rgba(211, 163, 127, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  display: inline-block;
+  position: relative;
   margin-bottom: 20px;
-  box-shadow: 0 2px 4px var(--shadow);
+  cursor: pointer;
+  min-width: 200px;
 }
 
-.filter-title {
-  font-size: 1.2rem;
-  margin: 0 0 15px 0;
-  font-weight: 600;
-}
-
-.filter-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.filter-option {
+.controle-seletor {
   display: flex;
   align-items: center;
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 20px;
-  background-color: var(--background);
+  justify-content: space-between;
+}
+
+.rotulo-seletor {
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.opcao-selecionada {
+  flex-grow: 1;
+  text-align: right;
+  padding-right: 8px;
+}
+
+.icone-seta {
+  transition: transform 0.3s ease;
+}
+
+.icone-seta.aberto {
+  transform: rotate(180deg);
+}
+
+.lista-opcoes {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-top: 8px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.item-opcao {
+  padding: 10px 15px;
   transition: background-color 0.2s;
 }
 
-.filter-option:hover {
-  background-color: var(--primary);
-  color: var(--white);
+.item-opcao:hover {
+  background-color: rgba(211, 163, 127, 0.2);
 }
 
-.filter-option input {
-  margin-right: 8px;
+.item-opcao.selecionada {
+  background-color: rgba(211, 163, 127, 0.4);
+  font-weight: bold;
 }
 
 @media (max-width: 768px) {
-  .filter-options {
-    flex-direction: column;
+  .seletor-filtro {
+    width: 100%;
+    margin-bottom: 15px;
   }
 }

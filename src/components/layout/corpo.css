@@ -1,20 +1,5 @@
 .layout-container {
-  display: flex;
-  min-height: 100vh;
-}
-
-.main-content {
-  flex: 1;
-  margin-left: 16.67%;
-  padding: 20px;
-}
-
-@media (max-width: 768px) {
-  .layout-container {
-    flex-direction: column;
-  }
-  
-  .main-content {
-    margin-left: 0;
-  }
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  text-align: center;
 }
