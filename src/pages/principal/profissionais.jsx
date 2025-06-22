@@ -3,6 +3,12 @@ import "./profissionais.css"; // Importe o arquivo CSS
 import Filtro from "./filtro"; // Importe o componente Filtro
 import Corpo from "../../components/layout/corpo";
 
+import mariaSilva from '../../assets/mulher.png';
+import joaoOliveira from '../../assets/homem1.avif';
+import anaSantos from '../../assets/mulher 3.webp';
+import lucianaFerreira from '../../assets/mulher2.jpg';
+import carlosMendes from '../../assets/homem2.jpg';
+
 const ProfileCard = ({ profile }) => {
   const handleCardClick = () => {
     console.log(`Card clicado: ${profile.name}`);
@@ -18,7 +24,7 @@ const ProfileCard = ({ profile }) => {
       {/* Profile Image */}
       <div className="profile-image-container">
         <img
-          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+          src={profile.image}
           alt={`Perfil de ${profile.name}`}
           className="profile-image"
         />
@@ -47,27 +53,32 @@ function Profissionais() {
 
   const localProfiles = [
     {
+      image: mariaSilva,
       name: "Maria Silva",
       location: "São Paulo, SP",
       experience: "10 anos de experiência em enfermagem geriátrica",
     },
     {
+      image: joaoOliveira,
       name: "João Oliveira",
       location: "Rio de Janeiro, RJ",
       experience: "Especialista em LIBRAS com 8 anos de mercado",
     },
     {
+      image: anaSantos,
       name: "Ana Santos",
       location: "Belo Horizonte, MG",
       experience: "Fisioterapeuta especializada em reabilitação neurológica",
     },
     {
+      image: carlosMendes,
       name: "Carlos Mendes",
       location: "Porto Alegre, RS",
       experience: "Psicólogo com foco em terceira idade - 12 anos",
     },
     {
-      name: "Lucia Ferreira",
+      image: lucianaFerreira,
+      name: "Luciana Ferreira",
       location: "Salvador, BA",
       experience: "Terapeuta ocupacional com experiência domiciliar",
     },
