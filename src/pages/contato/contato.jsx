@@ -14,24 +14,11 @@ const SobreNosPage = () => {
             
             <div className="about-text">
               <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys
-                standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-                make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
-                remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing
-                Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including
-                versions of Lorem Ipsum.
+                A Guia ao Dispor é um protótipo, que viabiliza a divulgação de profissionais da área de cuidados especiais, especializados em serviços e tratos para a comunidade com especificidades. O projeto apresenta design simples e intuitivo para boa parte dos requerimentos provindos das características especiais do cliente, promovendo conforto para o nosso principal público.
+Aos nossos requeridos profissionais, também pensamos em diversas técnicas de facilitar e auxiliar em seu trabalho, como uma aba de conversa e de visualização dinâmica para contato com o cliente, além do acesso de um currículo e das capacidades do profissional. Tudo para fornecer o melhor trabalho de divulgação que podemos oferecer.
+Desejamos boas negociações e contratos saudáveis e duradouros, com o intuito de um mundo cada vez mais inclusivo e informativo a respeito das especificidades com que convivemos.
+Venha conosco e se torne um “Guia ao Dispor” ou um de nossos clientes mais do que especiais.
               </p>
-              <p>Guia ao Dispor</p>
-              
-              <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys
-                standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make
-                a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining
-                essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum
-                passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem
-                Ipsum.
-              </p>
-              <p>Guia ao Dispor</p>
             </div>
           </div>
       </div>
