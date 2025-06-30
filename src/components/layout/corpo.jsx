@@ -4,7 +4,7 @@ import './corpo.css';
 const Layout = ({ children }) => {
   return (
     <div className="layout-container">
-      <div className='menufantasma'><Menu /></div>
+      <Menu className="menu" />
       <main className="main-content">
         {children}
       </main>

@@ -1,13 +1,10 @@
 menu {
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
-  height: 100%;
-  width: 16.67%;
+  height: 100vh;
   background-color: #7FCCD4;
-  position: fixed;
   text-align: center;
   filter: drop-shadow(0px 0px 8px #303538);
-  z-index: 99;
 }
 .fachada{
   margin: auto;
