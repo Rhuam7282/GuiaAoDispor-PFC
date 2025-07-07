@@ -6,90 +6,121 @@ import mariaSilva from '../../assets/mulher.png';
 import micheleto from '../../assets/hospital.jpg';
 import butantan from '../../assets/butantan.webp';
 import portugues from '../../assets/portugues.jpg';
+import { MapPin, Mail, Facebook, Instagram, Linkedin } from 'lucide-react';
 
 const Perfil = () => {
-  // Dados do perfil
-  const profileData = {
-    name: "Maria Silva",
+  const dadosPerfil = {
+    nome: "Maria Silva",
     foto: mariaSilva,
-    location: "Assis Chateaibriand, PR",
-    description: "Enfermeira especializada em geriatria com 10 anos de experiência.",
-    professionalHistory: [
+    localizacao: "Assis Chateaibriand, PR",
+    descricao: "Enfermeira especializada em geriatria com 10 anos de experiência.",
+    redesSociais: [
+      { icone: Mail, url: 'mailto:maria@exemplo.com' },
+      { icone: Facebook, url: 'https://facebook.com/maria.silva' },
+      { icone: Instagram, url: 'https://instagram.com/maria.silva' },
+      { icone: Linkedin, url: 'https://linkedin.com/in/maria-silva' }
+    ],
+    historicoProfissional: [
       {
-        name: 'Hospital Micheletto - Assis Chateaubriand',
-        image: micheleto,
+        nome: 'Hospital Micheletto - Assis Chateaubriand',
+        imagem: micheleto,
         alt: "Hospital Micheletto"
       },
       {
-        name: 'Instituto Butantan - São Paulo',
-        image: butantan,
+        nome: 'Instituto Butantan - São Paulo',
+        imagem: butantan,
         alt: "Instituto Butantan"
       },
       {
-        name: 'Hospital Beneficente Português - Belém',
-        image: portugues,
+        nome: 'Hospital Beneficente Português - Belém',
+        imagem: portugues,
         alt: "Hospital Beneficente Português"
       }
     ],
-    academicHistory: [
-      { name: 'Graduação em Enfermagem - USP' },
-      { name: 'Pós-graduação em Geriatria - UNIFESP' }
+    historicoAcademico: [
+      { 
+        nome: 'Graduação em Enfermagem', 
+        instituicao: 'USP',
+        descricao: 'Formada com honras em 2010'
+      },
+      { 
+        nome: 'Pós-graduação em Geriatria', 
+        instituicao: 'UNIFESP',
+        descricao: 'Especialização concluída em 2013'
+      }
     ]
   };
 
   return (
     <Corpo>
-      <div className="profile-page">
-        <h2 className="title">Perfil</h2>
+      <div className="paginaPerfil">
+        <h2 className="tituloPerfil">{dadosPerfil.nome}</h2>
 
-        <div className="profile-header">
-          <div className="profile-image-large">
-            <div className="circle-image-large">
-                <img
-                  src={profileData.foto}
-                  alt={`Foto de ${profileData.name}`}
-                  className="profile-photo"
-                />
-            </div>
+        <div className="cabecalhoPerfil">
+          <div className="fotoPerfil">
+            <img
+              src={dadosPerfil.foto}
+              alt={`Foto de ${dadosPerfil.nome}`}
+              className="imagemPerfil"
+              style={{ width: '235px', height: '235px' }}
+            />
           </div>
 
-          <div className="profile-description">
-            <h1>{profileData.name}</h1>
-            <div className="description-box">
-              <p>{profileData.description}</p>
+          <div className="infoPerfil">
+            <div className="cardDescricao">
+              <p>{dadosPerfil.descricao}</p>
             </div>
 
-            <div className="location-rating">
-              <div className="location">
-                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" strokeWidth="2" style={{ marginRight: '5px' }}>
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                  <circle cx="12" cy="10" r="3"></circle>
-                </svg>
-                <span>{profileData.location}</span>
+            <div className="infoContato">
+              <div className="localAvaliacao">
+                <div className="localizacao">
+                  <MapPin />
+                  <span>{dadosPerfil.localizacao}</span>
+                </div>
+                <div className="avaliacao">
+                  <span>⭐⭐⭐⭐⭐</span>
+                </div>
+              </div>
+
+              <div className="redesSociais">
+                {dadosPerfil.redesSociais.map((rede, index) => {
+                  const Icone = rede.icone;
+                  return (
+                    <a key={index} href={rede.url} target="_blank" rel="noopener noreferrer">
+                      <Icone />
+                    </a>
+                  );
+                })}
               </div>
             </div>
           </div>
         </div>
 
-        <div className="history-section">
+        <div className="secaoHistorico">
           <h2>Histórico Acadêmico:</h2>
-          {/* Adicione os itens acadêmicos aqui se necessário */}
+          <div className="listaAcademica">
+            {dadosPerfil.historicoAcademico.map((item, index) => (
+              <div key={index} className="cardAcademico">
+                <h3>{item.nome}</h3>
+                <p className="instituicao">{item.instituicao}</p>
+                <p className="descricaoAcademica">{item.descricao}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="history-section">
+        <div className="secaoHistorico">
           <h2>Histórico Profissional:</h2>
-          <div className="professional-history">
-            {profileData.professionalHistory.map((item, index) => (
-              <div key={index} className="professional-item">
-                <div className="professional-image">
-                  <img
-                    src={item.image}
-                    alt={item.alt}
-                    className="professional-history-image"
-                  />
-                </div>
-                <div className="professional-info">
-                  <h3>{item.name}</h3>
+          <div className="listaProfissional">
+            {dadosPerfil.historicoProfissional.map((item, index) => (
+              <div key={index} className="cardProfissional">
+                <img
+                  src={item.imagem}
+                  alt={item.alt}
+                  className="imagemProfissional"
+                />
+                <div className="infoProfissional">
+                  <h3>{item.nome}</h3>
                 </div>
               </div>
             ))}
