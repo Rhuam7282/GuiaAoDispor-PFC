@@ -1,7 +1,3 @@
-.messages-page {
-  max-width: 1000px;
-}
-
 .messages-container {
   display: flex;
   height: 70vh;
@@ -137,6 +133,13 @@
 .message-input textarea:focus {
   outline: none;
   border-color: var(--primary);
+}
+
+.titulo {
+  font-size: 48px;
+  font-weight: bold;
+  color: #54453B;
+  text-align: center;
 }
 
 @media (max-width: 768px) {

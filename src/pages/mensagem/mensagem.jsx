@@ -39,9 +39,10 @@ const Mensagens = () => {
   return (
     <Corpo>
       <div className="messages-page">
+        <h1 className='titulo'>Mensagens</h1>
         <div className="messages-container">
           <div className="messages-list">
-            <h2>Mensagens</h2>
+            <h2>Lista de Contatos</h2>
             
             {contacts.map(contact => (
               <div key={contact.id} className={`message-item ${contact.active ? 'active' : ''}`}>

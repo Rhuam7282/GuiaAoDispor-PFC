@@ -68,3 +68,39 @@
     margin-bottom: 15px;
   }
 }
+/* Novos estilos para funcionalidade de pesquisa */
+.container-pesquisa {
+  position: relative;
+  padding: 10px 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.icone-pesquisa {
+  position: absolute;
+  left: 25px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+}
+
+.input-pesquisa {
+  width: 100%;
+  padding: 8px 8px 8px 32px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.input-pesquisa:focus {
+  outline: none;
+  border-color: #d3a37f;
+  box-shadow: 0 0 0 2px rgba(211, 163, 127, 0.2);
+}
+
+.nenhum-resultado {
+  padding: 15px;
+  text-align: center;
+  color: #777;
+  font-style: italic;
+}
