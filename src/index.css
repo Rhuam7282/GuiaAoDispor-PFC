@@ -6,3 +6,8 @@
 html{
     background-color: #FDF9EE;
 }
+.titulo {
+  font-size: 48px;
+  font-weight: bold;
+  color: #54453B;
+}

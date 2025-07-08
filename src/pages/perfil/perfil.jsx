@@ -1,12 +1,12 @@
 import React from 'react';
 import './perfil.css';
 import Corpo from "../../components/layout/corpo";
+import { Star, MapPin, Mail, Facebook, Instagram, Linkedin } from 'lucide-react';
 
 import mariaSilva from '../../assets/mulher.png';
 import micheleto from '../../assets/hospital.jpg';
 import butantan from '../../assets/butantan.webp';
 import portugues from '../../assets/portugues.jpg';
-import { MapPin, Mail, Facebook, Instagram, Linkedin } from 'lucide-react';
 
 const Perfil = () => {
   const dadosPerfil = {
@@ -14,11 +14,12 @@ const Perfil = () => {
     foto: mariaSilva,
     localizacao: "Assis Chateaibriand, PR",
     descricao: "Enfermeira especializada em geriatria com 10 anos de experiência.",
+    avaliacao: 4.8,
     redesSociais: [
-      { icone: Mail, url: 'mailto:maria@exemplo.com' },
-      { icone: Facebook, url: 'https://facebook.com/maria.silva' },
-      { icone: Instagram, url: 'https://instagram.com/maria.silva' },
-      { icone: Linkedin, url: 'https://linkedin.com/in/maria-silva' }
+      { icone: Mail, usuario: "maria.silva@exemplo.com" },
+      { icone: Facebook, usuario: "/maria.silva" },
+      { icone: Instagram, usuario: "@maria_silva" },
+      { icone: Linkedin, usuario: "linkedin.com/in/maria-silva" }
     ],
     historicoProfissional: [
       {
@@ -41,12 +42,12 @@ const Perfil = () => {
       { 
         nome: 'Graduação em Enfermagem', 
         instituicao: 'USP',
-        descricao: 'Formada com honras em 2010'
+        periodo: '2010-2014'
       },
       { 
         nome: 'Pós-graduação em Geriatria', 
         instituicao: 'UNIFESP',
-        descricao: 'Especialização concluída em 2013'
+        periodo: '2015-2017'
       }
     ]
   };
@@ -54,71 +55,90 @@ const Perfil = () => {
   return (
     <Corpo>
       <div className="paginaPerfil">
-        <h2 className="tituloPerfil">{dadosPerfil.nome}</h2>
+        <h2 className="tituloPagina">{dadosPerfil.nome}</h2>
 
-        <div className="cabecalhoPerfil">
-          <div className="fotoPerfil">
-            <img
-              src={dadosPerfil.foto}
-              alt={`Foto de ${dadosPerfil.nome}`}
-              className="imagemPerfil"
-              style={{ width: '235px', height: '235px' }}
-            />
+        <div className="containerPrincipal">
+          {/* Coluna da foto (esquerda) */}
+          <div className="colunaFoto">
+            <div className="imagemPerfilGrande">
+              <img
+                src={dadosPerfil.foto}
+                alt={`Foto de ${dadosPerfil.nome}`}
+              />
+            </div>
           </div>
 
-          <div className="infoPerfil">
-            <div className="cardDescricao">
+          {/* Coluna central com informações do perfil */}
+          <div className="colunaInformacoes">
+            <div className="descricaoPerfil">
               <p>{dadosPerfil.descricao}</p>
             </div>
 
-            <div className="infoContato">
-              <div className="localAvaliacao">
-                <div className="localizacao">
-                  <MapPin />
-                  <span>{dadosPerfil.localizacao}</span>
-                </div>
-                <div className="avaliacao">
-                  <span>⭐⭐⭐⭐⭐</span>
-                </div>
+            <div className="detalhesPerfil">
+              <div className="localizacao">
+                <MapPin size={20} />
+                <span>{dadosPerfil.localizacao}</span>
               </div>
+              
+              <div className="avaliacao">
+                <div className="estrelas">
+                  {[...Array(5)].map((_, i) => (
+                    <Star 
+                      key={i} 
+                      size={20} 
+                      fill={i < Math.floor(dadosPerfil.avaliacao) ? "#54453B" : "none"} 
+                      stroke="#54453B" 
+                    />
+                  ))}
+                </div>
+                <span className="valorAvaliacao">{dadosPerfil.avaliacao}</span>
+              </div>
+            </div>
+          </div>
 
-              <div className="redesSociais">
-                {dadosPerfil.redesSociais.map((rede, index) => {
-                  const Icone = rede.icone;
-                  return (
-                    <a key={index} href={rede.url} target="_blank" rel="noopener noreferrer">
-                      <Icone />
-                    </a>
-                  );
-                })}
-              </div>
+          {/* Coluna direita com contatos */}
+          <div className="colunaContatos">
+            <h3>Contatos</h3>
+            <div className="listaRedes">
+              {dadosPerfil.redesSociais.map((rede, index) => {
+                const Icone = rede.icone;
+                return (
+                  <div key={index} className="itemRede">
+                    <Icone size={18} />
+                    <span>{rede.usuario}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
 
+        {/* Histórico Acadêmico */}
         <div className="secaoHistorico">
-          <h2>Histórico Acadêmico:</h2>
+          <h2>Histórico Acadêmico</h2>
           <div className="listaAcademica">
             {dadosPerfil.historicoAcademico.map((item, index) => (
-              <div key={index} className="cardAcademico">
+              <div key={index} className="itemAcademico">
                 <h3>{item.nome}</h3>
-                <p className="instituicao">{item.instituicao}</p>
-                <p className="descricaoAcademica">{item.descricao}</p>
+                <p>{item.instituicao}</p>
+                <p className="periodo">{item.periodo}</p>
               </div>
             ))}
           </div>
         </div>
 
+        {/* Histórico Profissional */}
         <div className="secaoHistorico">
-          <h2>Histórico Profissional:</h2>
+          <h2>Histórico Profissional</h2>
           <div className="listaProfissional">
             {dadosPerfil.historicoProfissional.map((item, index) => (
-              <div key={index} className="cardProfissional">
-                <img
-                  src={item.imagem}
-                  alt={item.alt}
-                  className="imagemProfissional"
-                />
+              <div key={index} className="itemProfissional">
+                <div className="imagemProfissional">
+                  <img
+                    src={item.imagem}
+                    alt={item.alt}
+                  />
+                </div>
                 <div className="infoProfissional">
                   <h3>{item.nome}</h3>
                 </div>

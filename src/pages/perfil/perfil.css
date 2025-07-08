@@ -4,66 +4,47 @@
   padding: 40px;
 }
 
-.tituloPerfil {
-  font-size: 36px;
+.tituloPagina {
+  font-size: 48px;
   font-weight: 700;
-  margin-bottom: 30px;
+  margin-bottom: 1.5rem;
   color: #54453B;
+  padding-bottom: 0.5rem;
   text-align: center;
 }
 
-.cabecalhoPerfil {
+.containerPrincipal {
   display: flex;
   gap: 30px;
   margin-bottom: 40px;
-  background-color: rgba(211, 163, 127, 0.3);
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.fotoPerfil {
-  flex: 0 0 auto;
+.colunaFoto {
+  flex: 0 0 235px;
 }
 
-.imagemPerfil {
+.imagemPerfilGrande img {
   width: 235px;
   height: 235px;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0px 8px #54453B;
 }
 
-.infoPerfil {
+.colunaInformacoes {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
 }
 
-.cardDescricao {
-  background-color: white;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+.descricaoPerfil {
   font-size: 18px;
   line-height: 1.6;
+  margin-bottom: 20px;
 }
 
-.infoContato {
+.detalhesPerfil {
   display: flex;
   flex-direction: column;
   gap: 15px;
-}
-
-.localAvaliacao {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .localizacao {
@@ -74,45 +55,42 @@
 }
 
 .avaliacao {
-  font-size: 20px;
-}
-
-.redesSociais {
-  display: flex;
-  gap: 20px;
-  padding: 15px;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.redesSociais a {
-  color: #54453B;
-  transition: color 0.3s;
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: rgba(211, 163, 127, 0.2);
+  gap: 8px;
 }
 
-.redesSociais a:hover {
-  color: #7FCCD4;
-  background-color: rgba(127, 204, 212, 0.3);
+.estrelas {
+  display: flex;
+  gap: 2px;
+}
+
+.colunaContatos {
+  flex: 0 0 250px;
+}
+
+.listaRedes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.itemRede {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .secaoHistorico {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .secaoHistorico h2 {
-  font-size: 28px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  font-size: 24px;
   color: #54453B;
-  padding-bottom: 10px;
-  border-bottom: 2px solid rgba(211, 163, 127, 0.5);
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(84, 69, 59, 0.3);
 }
 
 .listaAcademica {
@@ -121,70 +99,49 @@
   gap: 20px;
 }
 
-.cardAcademico {
+.itemAcademico {
   background-color: white;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.cardAcademico h3 {
-  font-size: 20px;
-  margin-bottom: 8px;
-  color: #1B3133;
-}
-
-.instituicao {
-  font-weight: bold;
-  color: #7FCCD4;
-  margin-bottom: 10px;
-}
-
-.descricaoAcademica {
-  color: #666;
-  line-height: 1.5;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .listaProfissional {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 25px;
+  gap: 20px;
 }
 
-.cardProfissional {
+.itemProfissional {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   background-color: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  gap: 15px;
 }
 
 .imagemProfissional {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.imagemProfissional img {
   width: 100%;
-  height: 180px;
+  height: 100%;
   object-fit: cover;
 }
 
-.infoProfissional {
-  padding: 15px;
-}
-
-.infoProfissional h3 {
-  margin: 0;
-  font-size: 18px;
-  color: #1B3133;
-}
-
 @media (max-width: 768px) {
-  .cabecalhoPerfil {
+  .containerPrincipal {
     flex-direction: column;
-    align-items: center;
   }
   
-  .imagemPerfil {
-    width: 200px;
-    height: 200px;
+  .colunaFoto {
+    align-self: center;
   }
   
   .listaAcademica,

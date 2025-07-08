@@ -43,12 +43,6 @@
   font-size: 16px;
 }
 
-.title {
-  font-size: 48px;
-  font-weight: bold;
-  color: #54453B;
-}
-
 .profile-list {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
