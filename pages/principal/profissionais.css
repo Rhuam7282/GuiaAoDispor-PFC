@@ -1,0 +1,62 @@
+.profissionais-container {
+  padding: 60px;
+}
+
+.profile-card {
+  background-color:rgba(211, 163, 127, 0.3);
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  box-shadow: 0 0px 8px  #303538;
+  width: auto;
+}
+
+.profile-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  object-fit: cover;
+  box-shadow: 0 0px 8px  #54453B;
+}
+
+.profile-text-content {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-name {
+  color: #303538;
+  font-size: 20px;
+}
+
+.profile-location {
+  /* color: #54453B;  */
+  font-size: 16px;
+}
+
+.profile-experience {
+  color: #54453B;
+  font-size: 16px;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: bold;
+  color: #54453B;
+}
+
+.profile-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+@media (max-width: 768px) {
+  .profile-list {
+    grid-template-columns: 1fr;
+  }
+}

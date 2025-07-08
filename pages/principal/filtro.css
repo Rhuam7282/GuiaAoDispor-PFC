@@ -1,0 +1,106 @@
+.seletor-filtro {
+  background-color: rgba(211, 163, 127, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  display: inline-block;
+  position: relative;
+  margin-bottom: 20px;
+  cursor: pointer;
+  min-width: 200px;
+}
+
+.controle-seletor {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rotulo-seletor {
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.opcao-selecionada {
+  flex-grow: 1;
+  text-align: right;
+  padding-right: 8px;
+}
+
+.icone-seta {
+  transition: transform 0.3s ease;
+}
+
+.icone-seta.aberto {
+  transform: rotate(180deg);
+}
+
+.lista-opcoes {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-top: 8px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.item-opcao {
+  padding: 10px 15px;
+  transition: background-color 0.2s;
+}
+
+.item-opcao:hover {
+  background-color: rgba(211, 163, 127, 0.2);
+}
+
+.item-opcao.selecionada {
+  background-color: rgba(211, 163, 127, 0.4);
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .seletor-filtro {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+}
+/* Novos estilos para funcionalidade de pesquisa */
+.container-pesquisa {
+  position: relative;
+  padding: 10px 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.icone-pesquisa {
+  position: absolute;
+  left: 25px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+}
+
+.input-pesquisa {
+  width: 100%;
+  padding: 8px 8px 8px 32px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.input-pesquisa:focus {
+  outline: none;
+  border-color: #d3a37f;
+  box-shadow: 0 0 0 2px rgba(211, 163, 127, 0.2);
+}
+
+.nenhum-resultado {
+  padding: 15px;
+  text-align: center;
+  color: #777;
+  font-style: italic;
+}

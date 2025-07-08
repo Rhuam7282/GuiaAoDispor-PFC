@@ -1,0 +1,123 @@
+.profile-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 60px;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #54453B;
+  padding-bottom: 0.5rem;
+  text-align: center;
+}
+
+.profile-header {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 30px;
+  text-align: left;
+  background-color: rgba(211, 163, 127, 0.3);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0px 8px #303538;
+}
+
+.profile-image-large {
+  flex: 0 0 150px;
+}
+
+.circle-image-large {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: #ddd;
+  overflow: hidden;
+}
+
+.circle-image-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-description {
+  flex: 1;
+}
+
+.description-box {
+  background-color: var(--white);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px var(--shadow);
+}
+
+.location-rating {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 10px 15px;
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px var(--shadow);
+}
+
+.location {
+  display: flex;
+  align-items: center;
+}
+
+.history-section {
+  margin-bottom: 30px;
+}
+
+.history-section h2 {
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+.professional-history {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.professional-item {
+  display: flex;
+  align-items: center;
+  background-color: var(--white);
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px var(--shadow);
+}
+
+.professional-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-right: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.professional-info h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .profile-image-large {
+    margin-bottom: 15px;
+  }
+  
+  .profile-description {
+    width: 100%;
+  }
+}
