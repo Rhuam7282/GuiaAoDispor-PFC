@@ -6,12 +6,9 @@
 .colunaFoto {
   flex: 0 0 235px;
 }
-.imagemPerfilGrande img {
+.colunaFoto .imagemPerfil{
   width: 235px;
   height: 235px;
-  border-radius: 50%;
-  object-fit: cover;
-  box-shadow: 0 0px 8px rgba(83, 69, 58, 0.75);
 }
 
 .colunaInformacoes {

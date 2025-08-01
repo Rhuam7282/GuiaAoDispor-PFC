@@ -18,11 +18,11 @@ const ProfileCard = ({ profile }) => {
   return (
     <div className="destaque1" onClick={handleCardClick}>
       {}
-      <div className="profile-image-container">
+      <div className="imagemPerfilContainer">
         <img
           src={profile.image}
           alt={`Perfil de ${profile.name}`}
-          className="profile-image"
+          className="imagemPerfil"
         />
       </div>
 
