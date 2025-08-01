@@ -6,3 +6,17 @@
 html{
     background-color: #FDF9EE;
 }
+body {
+  overflow: hidden;
+}
+
+main {
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.titulo {
+  font-size: 48px;
+  font-weight: bold;
+  color: #54453B;
+}

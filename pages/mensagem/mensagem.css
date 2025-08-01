@@ -2,6 +2,12 @@
   max-width: 1000px;
 }
 
+.titulo{
+  padding: 15px;
+  margin: auto;
+  border-bottom: 1px solid #eee;
+}
+
 .messages-container {
   display: flex;
   height: 70vh;
@@ -17,12 +23,6 @@
   overflow-y: auto;
   background-color: var(--background);
   height: 100%;
-}
-
-.messages-list h2 {
-  padding: 15px;
-  margin: 0;
-  border-bottom: 1px solid #eee;
 }
 
 .message-item {

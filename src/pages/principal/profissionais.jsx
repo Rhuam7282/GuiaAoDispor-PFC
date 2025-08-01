@@ -86,7 +86,7 @@ function Profissionais() {
   return (
     <Corpo>
       <div className="profissionais-container">
-        <h2 className="title">Profissionais</h2>
+        <h2 className="titulo">Profissionais</h2>
         {/* Componente de filtro com todas as props necessárias */}
         <Filtro
           title="Filtros:"

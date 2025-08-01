@@ -41,7 +41,7 @@ const Mensagens = () => {
       <div className="messages-page">
         <div className="messages-container">
           <div className="messages-list">
-            <h2>Mensagens</h2>
+            <h2 className= "titulo">Mensagens</h2>
             
             {contacts.map(contact => (
               <div key={contact.id} className={`message-item ${contact.active ? 'active' : ''}`}>
