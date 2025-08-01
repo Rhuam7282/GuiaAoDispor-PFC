@@ -1,6 +1,5 @@
-/* Estilos base */
-.contato-page {
-  max-width: 1200px;
+.sobre-nos-page {
+  max-width: 800px;
   margin: 0 auto;
   padding: 30px 15px;
 }
@@ -33,95 +32,6 @@
 }
 
 .about-text p {
-  margin-bottom: 20px;
-  text-align: justify;
-}
-
-.assinatura {
-  font-weight: bold;
-  text-align: right;
-  font-style: italic;
-  color: #d3a37f;
-  margin-top: 20px;
-  font-size: 1.1rem;
-}
-
-/* Container para contato e mensagem */
-.contact-message-container {
-  display: flex;
-  gap: 30px;
-  margin-top: 40px;
-}
-
-.contact-column,
-.message-column {
-  flex: 1;
-}
-
-/* Cartões de contato e mensagem */
-.contact-card,
-.message-card {
-  background-color: white;
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  height: 100%;
-  box-sizing: border-box;
-}
-
-.contact-card h3,
-.message-card h3 {
-  margin-top: 0;
-  color: #2c3e50;
-  border-bottom: 2px solid #d3a37f;
-  padding-bottom: 15px;
-  margin-bottom: 25px;
-  font-size: 1.5rem;
-}
-
-/* Itens de contato */
-.contact-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 15px;
-  margin-bottom: 25px;
-}
-
-.contact-icon {
-  color: #d3a37f;
-  flex: 0 0 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.contact-details {
-  flex: 1;
-}
-
-.contact-label {
-  font-weight: 600;
-  color: #555;
-  font-size: 0.95rem;
-  margin-bottom: 5px;
-}
-
-.contact-value {
-  color: #333;
-  line-height: 1.5;
-  font-size: 1.05rem;
-}
-
-/* Seção de redes sociais */
-.social-section {
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
-}
-
-.social-section h4 {
-  margin-top: 0;
-  color: #2c3e50;
   margin-bottom: 15px;
 }
 
@@ -245,20 +155,5 @@
   .redes {
     align-items: stretch;
     margin-top: 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .contact-item {
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .contact-icon {
-    margin-bottom: 5px;
-  }
-  
-  .send-button {
-    width: 100%;
   }
 }
