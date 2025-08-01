@@ -54,8 +54,8 @@ const Perfil = () => {
 
   return (
     <Corpo>
-      <div className="paginaPerfil">
-        <h2 className="tituloPagina">{dadosPerfil.nome}</h2>
+      <div className="container">
+        <h2 className="titulo">{dadosPerfil.nome}</h2>
 
         <div className="containerPrincipal">
           {/* Coluna da foto (esquerda) */}
