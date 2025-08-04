@@ -1,314 +1,378 @@
-import React, { useState } from "react";
-import "./cadastro.css";
-import { Eye, EyeOff, Info } from "lucide-react";
+import React, { useState } from 'react';
+import './Cadastro.css';
 import Corpo from "../../components/layout/corpo";
 
-const Cadastro = ({
-  onLogin,
-  onCadastro,
-  mostrarLogin = false,
-  classeAdicional = "",
-}) => {
-  const [modoLogin, setModoLogin] = useState(mostrarLogin);
-  const [mostrarSenha, setMostrarSenha] = useState(false);
-  const [mostrarConfirmacaoSenha, setMostrarConfirmacaoSenha] = useState(false);
-  const [mostrarTooltips, setMostrarTooltips] = useState({});
-
+const Cadastro = () => {
   const [formData, setFormData] = useState({
-    nome: "",
-    email: "",
-    senha: "",
-    confirmacaoSenha: "",
+    nomeCompleto: '',
+    email: '',
+    senha: '',
+    confirmarSenha: '',
+    cep: '',
+    cidade: '',
+    estado: '',
+    descricao: '',
+    tipoPerfil: 'Pessoal',
+    foto: null
   });
 
-  const [erros, setErros] = useState({});
-
-  const alternarModo = () => {
-    setModoLogin(!modoLogin);
-    setFormData({
-      nome: "",
-      email: "",
-      senha: "",
-      confirmacaoSenha: "",
-    });
-    setErros({});
-  };
-
-  const alternarVisibilidadeSenha = () => {
-    setMostrarSenha(!mostrarSenha);
-  };
-
-  const alternarVisibilidadeConfirmacaoSenha = () => {
-    setMostrarConfirmacaoSenha(!mostrarConfirmacaoSenha);
-  };
-
-  const mostrarTooltip = (campo) => {
-    setMostrarTooltips((prev) => ({
-      ...prev,
-      [campo]: true,
-    }));
-  };
-
-  const esconderTooltip = (campo) => {
-    setMostrarTooltips((prev) => ({
-      ...prev,
-      [campo]: false,
-    }));
-  };
+  const [errors, setErrors] = useState({});
+  const [showTooltip, setShowTooltip] = useState({});
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: value
     }));
-
+    
     // Limpar erro quando o usuário começar a digitar
-    if (erros[name]) {
-      setErros((prev) => ({
+    if (errors[name]) {
+      setErrors(prev => ({
         ...prev,
-        [name]: "",
+        [name]: ''
       }));
     }
   };
 
-  const validarFormulario = () => {
-    const novosErros = {};
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setFormData(prev => ({
+          ...prev,
+          foto: e.target.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
-    if (!modoLogin && !formData.nome.trim()) {
-      novosErros.nome = "Nome é obrigatório";
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Validação nome completo
+    if (!formData.nomeCompleto.trim()) {
+      newErrors.nomeCompleto = 'Nome completo é obrigatório';
     }
 
+    // Validação email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
-      novosErros.email = "Email é obrigatório";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      novosErros.email = "Email inválido";
+      newErrors.email = 'Email é obrigatório';
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = 'Email deve ter um formato válido';
     }
 
+    // Validação senha
     if (!formData.senha) {
-      novosErros.senha = "Senha é obrigatória";
-    } else if (!modoLogin && formData.senha.length < 6) {
-      novosErros.senha = "Senha deve ter pelo menos 6 caracteres";
+      newErrors.senha = 'Senha é obrigatória';
+    } else if (formData.senha.length < 6) {
+      newErrors.senha = 'Senha deve ter pelo menos 6 caracteres';
     }
 
-    if (!modoLogin && !formData.confirmacaoSenha) {
-      novosErros.confirmacaoSenha = "Confirmação de senha é obrigatória";
-    } else if (!modoLogin && formData.senha !== formData.confirmacaoSenha) {
-      novosErros.confirmacaoSenha = "Senhas não coincidem";
+    // Validação confirmação de senha
+    if (!formData.confirmarSenha) {
+      newErrors.confirmarSenha = 'Confirmação de senha é obrigatória';
+    } else if (formData.senha !== formData.confirmarSenha) {
+      newErrors.confirmarSenha = 'Senhas não coincidem';
     }
 
-    setErros(novosErros);
-    return Object.keys(novosErros).length === 0;
+    // Validação CEP
+    const cepRegex = /^\d{5}-?\d{3}$/;
+    if (!formData.cep.trim()) {
+      newErrors.cep = 'CEP é obrigatório';
+    } else if (!cepRegex.test(formData.cep)) {
+      newErrors.cep = 'CEP deve ter formato válido (00000-000)';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (validarFormulario()) {
-      if (modoLogin) {
-        onLogin &&
-          onLogin({
-            email: formData.email,
-            senha: formData.senha,
-          });
-      } else {
-        onCadastro &&
-          onCadastro({
-            nome: formData.nome,
-            email: formData.email,
-            senha: formData.senha,
-          });
-      }
+    if (validateForm()) {
+      console.log('Dados do formulário:', formData);
+      alert('Cadastro realizado com sucesso!');
+      // Aqui você integraria com a API de cadastro
     }
   };
 
-  const tooltipTextos = {
-    nome: "Digite seu nome completo para identificação",
-    email: "Insira um email válido para acesso à conta",
-    senha: modoLogin
-      ? "Digite sua senha"
-      : "Crie uma senha com pelo menos 6 caracteres",
-    confirmacaoSenha: "Digite novamente a senha para confirmação",
+  const toggleTooltip = (field) => {
+    setShowTooltip(prev => ({
+      ...prev,
+      [field]: !prev[field]
+    }));
+  };
+
+  const tooltipContent = {
+    nomeCompleto: 'Digite seu nome completo como aparece em seus documentos oficiais',
+    email: 'Digite um email válido que será usado para login e comunicações',
+    senha: 'A senha deve ter pelo menos 6 caracteres, incluindo letras e números',
+    confirmarSenha: 'Digite novamente a mesma senha para confirmação',
+    cep: 'Digite seu CEP no formato 00000-000 para localização',
+    descricao: 'Descreva brevemente sua experiência profissional, especialidades ou interesses',
+    tipoPerfil: 'Escolha "Pessoal" para uso individual ou "Profissional" para representar uma empresa/instituição'
   };
 
   return (
     <Corpo>
-      <div className={`cadastro-container ${classeAdicional}`}>
-        <div className="cadastro-card">
-          <div className="cadastro-header">
-            <h2 className="cadastro-titulo">
-              {modoLogin ? "Entrar na Conta" : "Criar Conta"}
-            </h2>
-            <p className="cadastro-subtitulo">
-              {modoLogin
-                ? "Acesse sua conta para continuar"
-                : "Preencha os dados para criar sua conta"}
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="cadastro-form">
-            {!modoLogin && (
-              <div className="campo-grupo">
-                <label htmlFor="nome" className="campo-label">
-                  Nome Completo
-                  <button
-                    type="button"
-                    className="tooltip-trigger"
-                    onMouseEnter={() => mostrarTooltip("nome")}
-                    onMouseLeave={() => esconderTooltip("nome")}
-                    onClick={() => mostrarTooltip("nome")}
-                  >
-                    <Info size={16} />
-                  </button>
-                </label>
-                <input
-                  type="text"
-                  id="nome"
-                  name="nome"
-                  value={formData.nome}
-                  onChange={handleInputChange}
-                  className={`campo-input ${erros.nome ? "erro" : ""}`}
-                  placeholder="Digite seu nome completo"
-                />
-                {erros.nome && <span className="erro-texto">{erros.nome}</span>}
-                {mostrarTooltips.nome && (
-                  <div className="tooltip">{tooltipTextos.nome}</div>
-                )}
-              </div>
-            )}
-
-            <div className="campo-grupo">
-              <label htmlFor="email" className="campo-label">
-                Email
-                <button
-                  type="button"
-                  className="tooltip-trigger"
-                  onMouseEnter={() => mostrarTooltip("email")}
-                  onMouseLeave={() => esconderTooltip("email")}
-                  onClick={() => mostrarTooltip("email")}
-                >
-                  <Info size={16} />
-                </button>
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className={`campo-input ${erros.email ? "erro" : ""}`}
-                placeholder="Digite seu email"
-              />
-              {erros.email && <span className="erro-texto">{erros.email}</span>}
-              {mostrarTooltips.email && (
-                <div className="tooltip">{tooltipTextos.email}</div>
-              )}
-            </div>
-
-            <div className="campo-grupo">
-              <label htmlFor="senha" className="campo-label">
-                Senha
-                <button
-                  type="button"
-                  className="tooltip-trigger"
-                  onMouseEnter={() => mostrarTooltip("senha")}
-                  onMouseLeave={() => esconderTooltip("senha")}
-                  onClick={() => mostrarTooltip("senha")}
-                >
-                  <Info size={16} />
-                </button>
-              </label>
-              <div className="campo-senha">
-                <input
-                  type={mostrarSenha ? "text" : "password"}
-                  id="senha"
-                  name="senha"
-                  value={formData.senha}
-                  onChange={handleInputChange}
-                  className={`campo-input ${erros.senha ? "erro" : ""}`}
-                  placeholder="Digite sua senha"
-                />
-                <button
-                  type="button"
-                  className="botao-visibilidade"
-                  onClick={alternarVisibilidadeSenha}
-                >
-                  {mostrarSenha ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
-              </div>
-              {erros.senha && <span className="erro-texto">{erros.senha}</span>}
-              {mostrarTooltips.senha && (
-                <div className="tooltip">{tooltipTextos.senha}</div>
-              )}
-            </div>
-
-            {!modoLogin && (
-              <div className="campo-grupo">
-                <label htmlFor="confirmacaoSenha" className="campo-label">
-                  Confirmar Senha
-                  <button
-                    type="button"
-                    className="tooltip-trigger"
-                    onMouseEnter={() => mostrarTooltip("confirmacaoSenha")}
-                    onMouseLeave={() => esconderTooltip("confirmacaoSenha")}
-                    onClick={() => mostrarTooltip("confirmacaoSenha")}
-                  >
-                    <Info size={16} />
-                  </button>
-                </label>
-                <div className="campo-senha">
+      <div className="cadastro-page">
+        <h2 className="cadastro-title">Cadastro</h2>
+        
+        <form onSubmit={handleSubmit} className="cadastro-form">
+          <div className="form-content">
+            <div className="form-fields">
+              {/* Nome Completo */}
+              <div className="input-group">
+                <div className="input-with-tooltip">
                   <input
-                    type={mostrarConfirmacaoSenha ? "text" : "password"}
-                    id="confirmacaoSenha"
-                    name="confirmacaoSenha"
-                    value={formData.confirmacaoSenha}
+                    type="text"
+                    name="nomeCompleto"
+                    placeholder="Nome completo *"
+                    value={formData.nomeCompleto}
                     onChange={handleInputChange}
-                    className={`campo-input ${
-                      erros.confirmacaoSenha ? "erro" : ""
-                    }`}
-                    placeholder="Confirme sua senha"
+                    className={errors.nomeCompleto ? 'error' : ''}
                   />
                   <button
                     type="button"
-                    className="botao-visibilidade"
-                    onClick={alternarVisibilidadeConfirmacaoSenha}
+                    className="tooltip-btn"
+                    onClick={() => toggleTooltip('nomeCompleto')}
                   >
-                    {mostrarConfirmacaoSenha ? (
-                      <EyeOff size={20} />
-                    ) : (
-                      <Eye size={20} />
+                    ?
+                  </button>
+                  {showTooltip.nomeCompleto && (
+                    <div className="tooltip">
+                      {tooltipContent.nomeCompleto}
+                    </div>
+                  )}
+                </div>
+                {errors.nomeCompleto && <span className="error-message">{errors.nomeCompleto}</span>}
+              </div>
+
+              {/* Email */}
+              <div className="input-group">
+                <div className="input-with-tooltip">
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email *"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className={errors.email ? 'error' : ''}
+                  />
+                  <button
+                    type="button"
+                    className="tooltip-btn"
+                    onClick={() => toggleTooltip('email')}
+                  >
+                    ?
+                  </button>
+                  {showTooltip.email && (
+                    <div className="tooltip">
+                      {tooltipContent.email}
+                    </div>
+                  )}
+                </div>
+                {errors.email && <span className="error-message">{errors.email}</span>}
+              </div>
+
+              {/* Senha e Confirmação */}
+              <div className="password-row">
+                <div className="input-group">
+                  <div className="input-with-tooltip">
+                    <input
+                      type="password"
+                      name="senha"
+                      placeholder="Senha *"
+                      value={formData.senha}
+                      onChange={handleInputChange}
+                      className={errors.senha ? 'error' : ''}
+                    />
+                    <button
+                      type="button"
+                      className="tooltip-btn"
+                      onClick={() => toggleTooltip('senha')}
+                    >
+                      ?
+                    </button>
+                    {showTooltip.senha && (
+                      <div className="tooltip">
+                        {tooltipContent.senha}
+                      </div>
                     )}
+                  </div>
+                  {errors.senha && <span className="error-message">{errors.senha}</span>}
+                </div>
+
+                <div className="input-group">
+                  <div className="input-with-tooltip">
+                    <input
+                      type="password"
+                      name="confirmarSenha"
+                      placeholder="Confirme a senha *"
+                      value={formData.confirmarSenha}
+                      onChange={handleInputChange}
+                      className={errors.confirmarSenha ? 'error' : ''}
+                    />
+                    <button
+                      type="button"
+                      className="tooltip-btn"
+                      onClick={() => toggleTooltip('confirmarSenha')}
+                    >
+                      ?
+                    </button>
+                    {showTooltip.confirmarSenha && (
+                      <div className="tooltip">
+                        {tooltipContent.confirmarSenha}
+                      </div>
+                    )}
+                  </div>
+                  {errors.confirmarSenha && <span className="error-message">{errors.confirmarSenha}</span>}
+                </div>
+              </div>
+
+              {/* CEP, Cidade, Estado */}
+              <div className="address-row">
+                <div className="input-group cep-group">
+                  <div className="input-with-tooltip">
+                    <input
+                      type="text"
+                      name="cep"
+                      placeholder="CEP"
+                      value={formData.cep}
+                      onChange={handleInputChange}
+                      className={errors.cep ? 'error' : ''}
+                    />
+                    <button
+                      type="button"
+                      className="tooltip-btn"
+                      onClick={() => toggleTooltip('cep')}
+                    >
+                      ?
+                    </button>
+                    {showTooltip.cep && (
+                      <div className="tooltip">
+                        {tooltipContent.cep}
+                      </div>
+                    )}
+                  </div>
+                  {errors.cep && <span className="error-message">{errors.cep}</span>}
+                </div>
+
+                <div className="input-group">
+                  <input
+                    type="text"
+                    name="cidade"
+                    placeholder="Cidade"
+                    value={formData.cidade}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                <div className="input-group">
+                  <input
+                    type="text"
+                    name="estado"
+                    placeholder="Estado"
+                    value={formData.estado}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+
+              {/* Descrição */}
+              <div className="input-group">
+                <div className="input-with-tooltip">
+                  <textarea
+                    name="descricao"
+                    placeholder="Descrição"
+                    value={formData.descricao}
+                    onChange={handleInputChange}
+                    rows="4"
+                  />
+                  <button
+                    type="button"
+                    className="tooltip-btn"
+                    onClick={() => toggleTooltip('descricao')}
+                  >
+                    ?
+                  </button>
+                  {showTooltip.descricao && (
+                    <div className="tooltip">
+                      {tooltipContent.descricao}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Tipo de Perfil */}
+              <div className="profile-type-section">
+                <div className="profile-type-header">
+                  <span>Tipo de Perfil:</span>
+                  <button
+                    type="button"
+                    className="tooltip-btn"
+                    onClick={() => toggleTooltip('tipoPerfil')}
+                  >
+                    ?
+                  </button>
+                  {showTooltip.tipoPerfil && (
+                    <div className="tooltip">
+                      {tooltipContent.tipoPerfil}
+                    </div>
+                  )}
+                </div>
+                <div className="profile-type-options">
+                  <button
+                    type="button"
+                    className={`profile-type-btn ${formData.tipoPerfil === 'Pessoal' ? 'active' : ''}`}
+                    onClick={() => setFormData(prev => ({ ...prev, tipoPerfil: 'Pessoal' }))}
+                  >
+                    Pessoal
+                  </button>
+                  <button
+                    type="button"
+                    className={`profile-type-btn ${formData.tipoPerfil === 'Profissional' ? 'active' : ''}`}
+                    onClick={() => setFormData(prev => ({ ...prev, tipoPerfil: 'Profissional' }))}
+                  >
+                    Profissional
                   </button>
                 </div>
-                {erros.confirmacaoSenha && (
-                  <span className="erro-texto">{erros.confirmacaoSenha}</span>
-                )}
-                {mostrarTooltips.confirmacaoSenha && (
-                  <div className="tooltip">
-                    {tooltipTextos.confirmacaoSenha}
+                <span className="required-text">*Obrigatório</span>
+              </div>
+
+              <button type="submit" className="submit-btn">
+                Concluir
+              </button>
+            </div>
+
+            {/* Área de Upload de Imagem */}
+            <div className="image-upload-section">
+              <div className="image-upload-area">
+                {formData.foto ? (
+                  <img src={formData.foto} alt="Preview" className="image-preview" />
+                ) : (
+                  <div className="upload-placeholder">
+                    <span>Arraste ou carregue uma imagem</span>
                   </div>
                 )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="file-input"
+                  id="foto-upload"
+                />
+                <label htmlFor="foto-upload" className="file-label">
+                  Escolher arquivo
+                </label>
               </div>
-            )}
-
-            <button type="submit" className="botao-submit">
-              {modoLogin ? "Entrar" : "Criar Conta"}
-            </button>
-          </form>
-
-          <div className="cadastro-footer">
-            <p className="alternar-modo">
-              {modoLogin ? "Não tem uma conta?" : "Já tem uma conta?"}
-              <button
-                type="button"
-                className="link-alternar"
-                onClick={alternarModo}
-              >
-                {modoLogin ? "Criar conta" : "Fazer login"}
-              </button>
-            </p>
+            </div>
           </div>
-        </div>
+        </form>
       </div>
     </Corpo>
   );
