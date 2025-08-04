@@ -1,52 +1,420 @@
-.sobre-nos-page {
-  max-width: 800px;
+/* Importando variáveis CSS do sistema existente */
+:root {
+  --primary-brown: #54453B;
+  --light-brown: rgba(211, 163, 127, 0.3);
+  --white: #ffffff;
+  --shadow: rgba(48, 53, 56, 0.2);
+  --error-color: #e74c3c;
+  --success-color: #27ae60;
+  --tooltip-bg: #2c3e50;
+  --border-radius: 8px;
+}
+
+.cadastro-page {
+  max-width: 900px;
   margin: 0 auto;
+  padding: 40px 20px;
 }
 
-.about-content {
+.cadastro-title {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: var(--primary-brown);
+  text-align: center;
+}
+
+.cadastro-form {
+  background-color: var(--light-brown);
+  border-radius: var(--border-radius);
+  padding: 30px;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.form-content {
   display: flex;
-  gap: 20px;
-  margin-bottom: 30px;
+  gap: 40px;
+  align-items: flex-start;
 }
 
-.about-image {
-  flex: 0 0 150px;
+.form-fields {
+  flex: 2;
 }
 
-.circle-image {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background-color: #ccc;
-  overflow: hidden;
+.input-group {
+  margin-bottom: 20px;
+  position: relative;
 }
 
-.circle-image img {
+.input-with-tooltip {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-group input,
+.input-group textarea {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  padding: 12px 40px 12px 15px;
+  border: 2px solid transparent;
+  border-radius: var(--border-radius);
+  background-color: var(--white);
+  font-size: 14px;
+  color: var(--primary-brown);
+  box-shadow: 0 2px 4px var(--shadow);
+  transition: all 0.3s ease;
 }
 
-.about-text {
+.input-group input:focus,
+.input-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-brown);
+  box-shadow: 0 0 0 3px rgba(84, 69, 59, 0.1);
+}
+
+.input-group input.error,
+.input-group textarea.error {
+  border-color: var(--error-color);
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+.input-group input::placeholder,
+.input-group textarea::placeholder {
+  color: #999;
+}
+
+.tooltip-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background-color: #f8f9fa;
+  color: #666;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.tooltip-btn:hover {
+  background-color: var(--primary-brown);
+  color: white;
+  border-color: var(--primary-brown);
+}
+
+.tooltip {
+  position: absolute;
+  top: -45px;
+  right: 0;
+  background-color: var(--tooltip-bg);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  max-width: 250px;
+  white-space: normal;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 15px;
+  border: 5px solid transparent;
+  border-top-color: var(--tooltip-bg);
+}
+
+.error-message {
+  color: var(--error-color);
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+}
+
+/* Layout específico para senhas */
+.password-row {
+  display: flex;
+  gap: 15px;
+}
+
+.password-row .input-group {
   flex: 1;
 }
 
-.about-text p {
-  margin-bottom: 15px;
-  line-height: 1.6;
+/* Layout específico para endereço */
+.address-row {
+  display: flex;
+  gap: 15px;
 }
 
+.address-row .input-group {
+  flex: 1;
+}
+
+.cep-group {
+  flex: 0.8;
+}
+
+/* Área de descrição */
+.input-group textarea {
+  resize: vertical;
+  min-height: 80px;
+  padding-top: 12px;
+}
+
+/* Seção de tipo de perfil */
+.profile-type-section {
+  margin-bottom: 25px;
+  padding: 20px;
+  background-color: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px var(--shadow);
+}
+
+.profile-type-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: var(--primary-brown);
+}
+
+.profile-type-options {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.profile-type-btn {
+  padding: 10px 20px;
+  border: 2px solid #ddd;
+  border-radius: var(--border-radius);
+  background-color: var(--white);
+  color: var(--primary-brown);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.profile-type-btn:hover {
+  border-color: var(--primary-brown);
+  background-color: rgba(84, 69, 59, 0.05);
+}
+
+.profile-type-btn.active {
+  background-color: var(--primary-brown);
+  color: white;
+  border-color: var(--primary-brown);
+}
+
+.required-text {
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+}
+
+/* Botão de submit */
+.submit-btn {
+  background-color: #5DADE2;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: var(--border-radius);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px var(--shadow);
+  width: 150px;
+}
+
+.submit-btn:hover {
+  background-color: #3498DB;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px var(--shadow);
+}
+
+/* Seção de upload de imagem */
+.image-upload-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-upload-area {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 3px dashed #ccc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--white);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.image-upload-area:hover {
+  border-color: var(--primary-brown);
+  background-color: rgba(84, 69, 59, 0.05);
+}
+
+.upload-placeholder {
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+  padding: 20px;
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-label {
+  position: absolute;
+  bottom: -40px;
+  background-color: var(--primary-brown);
+  color: white;
+  padding: 8px 16px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px var(--shadow);
+}
+
+.file-label:hover {
+  background-color: #3d2f26;
+  transform: translateY(-1px);
+}
+
+/* Responsividade */
 @media (max-width: 768px) {
-  .about-content {
+  .cadastro-page {
+    padding: 20px 15px;
+  }
+  
+  .cadastro-title {
+    font-size: 36px;
+  }
+  
+  .form-content {
     flex-direction: column;
-    align-items: center;
+    gap: 30px;
   }
   
-  .about-image {
-    margin-bottom: 20px;
+  .password-row,
+  .address-row {
+    flex-direction: column;
+    gap: 10px;
   }
   
-  .about-text {
-    text-align: center;
+  .profile-type-options {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .image-upload-section {
+    order: -1;
+  }
+  
+  .image-upload-area {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .tooltip {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 280px;
+    right: auto;
+  }
+  
+  .tooltip::after {
+    display: none;
   }
 }
+
+@media (max-width: 480px) {
+  .cadastro-form {
+    padding: 20px;
+  }
+  
+  .cadastro-title {
+    font-size: 28px;
+  }
+  
+  .input-group input,
+  .input-group textarea {
+    font-size: 16px; /* Evita zoom no iOS */
+  }
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tooltip {
+  animation: fadeIn 0.3s ease;
+}
+
+.input-group {
+  animation: fadeIn 0.5s ease;
+}
+
+/* Estados de foco melhorados */
+.input-group input:focus + .tooltip-btn,
+.input-group textarea:focus + .tooltip-btn {
+  background-color: var(--primary-brown);
+  color: white;
+  border-color: var(--primary-brown);
+}
+
+/* Melhorias de acessibilidade */
+.tooltip-btn:focus {
+  outline: 2px solid var(--primary-brown);
+  outline-offset: 2px;
+}
+
+.submit-btn:focus {
+  outline: 2px solid #3498DB;
+  outline-offset: 2px;
+}
+
+.profile-type-btn:focus {
+  outline: 2px solid var(--primary-brown);
+  outline-offset: 2px;
+}
+
