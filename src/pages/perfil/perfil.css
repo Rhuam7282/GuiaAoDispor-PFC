@@ -1,34 +1,14 @@
-.paginaPerfil {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 40px;
-}
-
-.tituloPagina {
-  font-size: 48px;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  color: #54453B;
-  padding-bottom: 0.5rem;
-  text-align: center;
-}
-
 .containerPrincipal {
   display: flex;
   gap: 30px;
   margin-bottom: 40px;
 }
-
 .colunaFoto {
   flex: 0 0 235px;
 }
-
-.imagemPerfilGrande img {
+.colunaFoto .imagemPerfil{
   width: 235px;
   height: 235px;
-  border-radius: 50%;
-  object-fit: cover;
-  box-shadow: 0 0px 8px rgba(83, 69, 58, 0.75);
 }
 
 .colunaInformacoes {
@@ -43,51 +23,42 @@
   line-height: 1.6;
   margin-bottom: 20px;
 }
-
 .detalhesPerfil {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
-
 .localizacao {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 16px;
 }
-
 .avaliacao {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-
 .estrelas {
   display: flex;
   gap: 2px;
 }
-
 .colunaContatos {
   flex: 0 0 250px;
 }
-
 .listaRedes {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-
 .itemRede {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-
 .secaoHistorico {
   margin-bottom: 30px;
 }
-
 .secaoHistorico h2 {
   margin-bottom: 15px;
   font-size: 24px;
@@ -95,7 +66,6 @@
   padding-bottom: 5px;
   border-bottom: 1px solid rgba(84, 69, 59, 0.3);
 }
-
 .listaAcademica {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

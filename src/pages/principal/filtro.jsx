@@ -50,7 +50,7 @@ const Filtro = ({
 
   return (
     <div 
-      className={`seletor-filtro ${classeAdicional}`} 
+      className={`destaque3 ${classeAdicional}`} 
       ref={menuRef}
     >
       <div 

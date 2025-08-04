@@ -12,21 +12,17 @@ import carlosMendes from '../../assets/homem2.jpg';
 const ProfileCard = ({ profile }) => {
   const handleCardClick = () => {
     console.log(`Card clicado: ${profile.name}`);
-    // Aqui você pode adicionar a lógica desejada, como:
-    // - Abrir um modal com mais detalhes
-    // - Navegar para uma página de perfil
-    // - Mostrar informações de contato
     alert(`Você clicou no perfil de ${profile.name}`);
   };
 
   return (
-    <div className="profile-card" onClick={handleCardClick}>
-      {/* Profile Image */}
-      <div className="profile-image-container">
+    <div className="destaque1" onClick={handleCardClick}>
+      {}
+      <div className="imagemPerfilContainer">
         <img
           src={profile.image}
           alt={`Perfil de ${profile.name}`}
-          className="profile-image"
+          className="imagemPerfil"
         />
       </div>
 
@@ -85,7 +81,7 @@ function Profissionais() {
   ];
   return (
     <Corpo>
-      <div className="profissionais-container">
+      <div className="container">
         <h2 className="titulo">Profissionais</h2>
         {/* Componente de filtro com todas as props necessárias */}
         <Filtro

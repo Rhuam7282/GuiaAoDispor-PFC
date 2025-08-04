@@ -54,26 +54,18 @@ const Perfil = () => {
 
   return (
     <Corpo>
-      <div className="paginaPerfil">
-        <h2 className="tituloPagina">{dadosPerfil.nome}</h2>
+      <div className="container">
+        <h2 className="titulo">{dadosPerfil.nome}</h2>
 
         <div className="containerPrincipal">
-          {/* Coluna da foto (esquerda) */}
           <div className="colunaFoto">
-            <div className="imagemPerfilGrande">
-              <img
+              <img className="imagemPerfil"
                 src={dadosPerfil.foto}
                 alt={`Foto de ${dadosPerfil.nome}`}
               />
-            </div>
           </div>
-
-          {/* Coluna central com informações do perfil */}
-          <div className="colunaInformacoes">
-            <div className="descricaoPerfil">
+          <div className="destaque3">
               <p>{dadosPerfil.descricao}</p>
-            </div>
-
             <div className="detalhesPerfil">
               <div className="localizacao">
                 <MapPin size={20} />
@@ -118,7 +110,7 @@ const Perfil = () => {
           <h2>Histórico Acadêmico</h2>
           <div className="listaAcademica">
             {dadosPerfil.historicoAcademico.map((item, index) => (
-              <div key={index} className="itemAcademico">
+              <div key={index} className="destaque2">
                 <h3>{item.nome}</h3>
                 <p>{item.instituicao}</p>
                 <p className="periodo">{item.periodo}</p>
@@ -132,7 +124,7 @@ const Perfil = () => {
           <h2>Histórico Profissional</h2>
           <div className="listaProfissional">
             {dadosPerfil.historicoProfissional.map((item, index) => (
-              <div key={index} className="itemProfissional">
+              <div key={index} className="destaque2">
                 <div className="imagemProfissional">
                   <img
                     src={item.imagem}
