@@ -12,8 +12,8 @@ body {
 main {
   overflow-y: auto;
   height: 100vh;
+  text-align: center;
 }
-
 .titulo {
   font-size: 48px;
   font-weight: bold;
@@ -22,6 +22,7 @@ main {
 }
 .container {
   padding: 60px;
+  text-align: center;
 }
 .destaque1{
   border-radius: 8px;
@@ -45,12 +46,22 @@ main {
 .destaque3{
   border-radius: 8px;
   padding: 15px;
-  margin: 0px 15px 30px 15px;
+  margin: 0px 30px 30px 30px;
   width: auto;
   background-color: rgba(211, 163, 127, 0.3);
+  text-align: left;
 }
 .imagemPerfil {
   border-radius: 100%;
   object-fit: cover;
   box-shadow: 0 0px 8px  #54453B;
+}
+p {
+  line-height: 1.6;
+}
+
+main .lista{
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }

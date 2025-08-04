@@ -42,10 +42,10 @@ Venha conosco e se torne um “Guia ao Dispor” ou um de nossos clientes mais d
               <input type="text" placeholder="Seu nome" required />
               <input type="email" placeholder="Seu email" required />
               <textarea placeholder="Sua mensagem" required></textarea>
-              <button type="submit">Enviar</button>
+              <button type="submit" className='destaque2'>Enviar</button>
             </form>
             <aside className='redes'>
-              <div className="listaRedes">
+              <div className="lista">
               {redesSociais.map((rede, index) => {
                 const Icone = rede.icone;
                 return (

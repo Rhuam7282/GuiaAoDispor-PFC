@@ -1,45 +1,23 @@
 .containerPrincipal {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
   gap: 30px;
-  margin-bottom: 40px;
-}
-.colunaFoto {
-  flex: 0 0 235px;
+  margin-bottom: 30px;
 }
 .colunaFoto .imagemPerfil{
   width: 235px;
   height: 235px;
 }
-
-.colunaInformacoes {
-  flex: 1;
-  background-color: rgba(211, 163, 127, 0.3);
-  padding: 15px;
-  border-radius: 8px;
-}
-
-.descricaoPerfil {
-  font-size: 18px;
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-.detalhesPerfil {
+.destaque3{
   display: flex;
   flex-direction: column;
+}
+.detalhesPerfil {
+  margin-top: auto;
+  display: flex;
   gap: 15px;
 }
-.localizacao {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 16px;
-}
-.avaliacao {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.estrelas {
+main .icone {
   display: flex;
   gap: 2px;
 }
@@ -47,14 +25,8 @@
   flex: 0 0 250px;
 }
 .listaRedes {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.itemRede {
-  display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 .secaoHistorico {
   margin-bottom: 30px;

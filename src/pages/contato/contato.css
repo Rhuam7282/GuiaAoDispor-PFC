@@ -12,7 +12,6 @@
 
 .about-text {
   text-align: justify;
-  line-height: 1.6;
   display: flex;
 }
 .about-text img{
@@ -94,20 +93,6 @@
   max-height: 200px;
   height: 120px;
 }
-
-.contact-form button {
-  background: #d3a37f;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 15px 30px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 15px;
-  transition: background 0.2s;
-}
-
 .contact-form button:hover {
   background: #b97d4b;
 }
