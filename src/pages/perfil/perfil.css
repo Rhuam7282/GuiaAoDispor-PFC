@@ -24,10 +24,6 @@ main .icone {
 .colunaContatos {
   flex: 0 0 250px;
 }
-.listaRedes {
-  align-items: center;
-  gap: 12px;
-}
 .secaoHistorico {
   margin-bottom: 30px;
 }

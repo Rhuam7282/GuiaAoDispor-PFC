@@ -39,17 +39,17 @@ Venha conosco e se torne um “Guia ao Dispor” ou um de nossos clientes mais d
           <div className="enviarEmail">
             <h2>Entre em contato conosco</h2>
             <form className="contact-form">
-              <input type="text" placeholder="Seu nome" required />
-              <input type="email" placeholder="Seu email" required />
-              <textarea placeholder="Sua mensagem" required></textarea>
-              <button type="submit" className='destaque2'>Enviar</button>
+              <input className='destaque3' type="text" placeholder="Seu nome" required />
+              <input className='destaque3' type="email" placeholder="Seu email" required />
+              <textarea className='destaque3'placeholder="Sua mensagem" required></textarea>
+              <button type="submit">Enviar</button>
             </form>
             <aside className='redes'>
-              <div className="lista">
+              <div className="listaRedes">
               {redesSociais.map((rede, index) => {
                 const Icone = rede.icone;
                 return (
-                  <div key={index} className="itemRede">
+                  <div key={index} className="lista">
                     <Icone size={18} />
                     <span>{rede.usuario}</span>
                   </div>

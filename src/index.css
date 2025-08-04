@@ -59,9 +59,22 @@ main {
 p {
   line-height: 1.6;
 }
+.listaRedes {
+  align-items: center;
+  gap: 12px;
+  line-height: 1.6;
+}
 
 main .lista{
   display: flex;
   align-items: center;
   gap: 10px;
+}
+button {
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 30px;
+  width: auto;
+  background-color: rgba(127, 204, 212, 1);
+  border: none;
 }
