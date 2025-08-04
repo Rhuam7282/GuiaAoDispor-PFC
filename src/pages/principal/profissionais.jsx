@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./profissionais.css"; // Importe o arquivo CSS
 import Filtro from "./filtro"; // Importe o componente Filtro
 import Corpo from "../../components/layout/corpo";
+import PainelControle from "../../components/acessibilidade/controles"; // Importe o componente de acessibilidade
 
 import mariaSilva from '../../assets/mulher.png';
 import joaoOliveira from '../../assets/homem1.avif';
@@ -81,6 +82,7 @@ function Profissionais() {
   ];
   return (
     <Corpo>
+      <PainelControle />
       <div className="container">
         <h2 className="titulo">Profissionais</h2>
         {/* Componente de filtro com todas as props necessárias */}

@@ -96,8 +96,8 @@
 }
 
 .contact-form button {
-  background: #d3a37f;
-  color: #fff;
+  background: #7FCCD4;
+  color: #303538;
   border: none;
   border-radius: 8px;
   padding: 15px 30px;
@@ -109,7 +109,8 @@
 }
 
 .contact-form button:hover {
-  background: #b97d4b;
+  background: #1b3133;
+  color: #fdf9ee;
 }
 
 .redes {

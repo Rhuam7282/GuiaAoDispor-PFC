@@ -2,6 +2,7 @@ import React from 'react';
 import './perfil.css';
 import Corpo from "../../components/layout/corpo";
 import { Star, MapPin, Mail, Facebook, Instagram, Linkedin } from 'lucide-react';
+import PainelControle from "../../components/acessibilidade/controles"; // 
 
 import mariaSilva from '../../assets/mulher.png';
 import micheleto from '../../assets/hospital.jpg';
@@ -54,6 +55,7 @@ const Perfil = () => {
 
   return (
     <Corpo>
+      <PainelControle />
       <div className="container">
         <h2 className="titulo">{dadosPerfil.nome}</h2>
 

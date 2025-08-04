@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Cadastro.css';
 import Corpo from "../../components/layout/corpo";
+import PainelControle from "../../components/acessibilidade/controles"; // 
 
 const Cadastro = () => {
   const [formData, setFormData] = useState({
@@ -119,6 +120,7 @@ const Cadastro = () => {
 
   return (
     <Corpo>
+      <PainelControle />
       <div className="cadastro-page">
         <h2 className="cadastro-title">Cadastro</h2>
         
@@ -127,11 +129,11 @@ const Cadastro = () => {
             <div className="form-fields">
               {/* Nome Completo */}
               <div className="input-group">
+                <label className="input-label">Nome completo *</label>
                 <div className="input-with-tooltip">
                   <input
                     type="text"
                     name="nomeCompleto"
-                    placeholder="Nome completo *"
                     value={formData.nomeCompleto}
                     onChange={handleInputChange}
                     className={errors.nomeCompleto ? 'error' : ''}
@@ -154,11 +156,11 @@ const Cadastro = () => {
 
               {/* Email */}
               <div className="input-group">
+                <label className="input-label">Email *</label>
                 <div className="input-with-tooltip">
                   <input
                     type="email"
                     name="email"
-                    placeholder="Email *"
                     value={formData.email}
                     onChange={handleInputChange}
                     className={errors.email ? 'error' : ''}
@@ -179,14 +181,14 @@ const Cadastro = () => {
                 {errors.email && <span className="error-message">{errors.email}</span>}
               </div>
 
-              {/* Senha e Confirmação */}
+              {/* Senha e Confirmação - Lado a lado */}
               <div className="password-row">
                 <div className="input-group">
+                  <label className="input-label">Senha *</label>
                   <div className="input-with-tooltip">
                     <input
                       type="password"
                       name="senha"
-                      placeholder="Senha *"
                       value={formData.senha}
                       onChange={handleInputChange}
                       className={errors.senha ? 'error' : ''}
@@ -208,11 +210,11 @@ const Cadastro = () => {
                 </div>
 
                 <div className="input-group">
+                  <label className="input-label">Confirme a senha *</label>
                   <div className="input-with-tooltip">
                     <input
                       type="password"
                       name="confirmarSenha"
-                      placeholder="Confirme a senha *"
                       value={formData.confirmarSenha}
                       onChange={handleInputChange}
                       className={errors.confirmarSenha ? 'error' : ''}
@@ -234,61 +236,39 @@ const Cadastro = () => {
                 </div>
               </div>
 
-              {/* CEP, Cidade, Estado */}
-              <div className="address-row">
-                <div className="input-group cep-group">
-                  <div className="input-with-tooltip">
-                    <input
-                      type="text"
-                      name="cep"
-                      placeholder="CEP"
-                      value={formData.cep}
-                      onChange={handleInputChange}
-                      className={errors.cep ? 'error' : ''}
-                    />
-                    <button
-                      type="button"
-                      className="tooltip-btn"
-                      onClick={() => toggleTooltip('cep')}
-                    >
-                      ?
-                    </button>
-                    {showTooltip.cep && (
-                      <div className="tooltip">
-                        {tooltipContent.cep}
-                      </div>
-                    )}
-                  </div>
-                  {errors.cep && <span className="error-message">{errors.cep}</span>}
-                </div>
-
-                <div className="input-group">
+              {/* CEP */}
+              <div className="input-group">
+                <label className="input-label">CEP</label>
+                <div className="input-with-tooltip">
                   <input
                     type="text"
-                    name="cidade"
-                    placeholder="Cidade"
-                    value={formData.cidade}
+                    name="cep"
+                    value={formData.cep}
                     onChange={handleInputChange}
+                    className={errors.cep ? 'error' : ''}
                   />
+                  <button
+                    type="button"
+                    className="tooltip-btn"
+                    onClick={() => toggleTooltip('cep')}
+                  >
+                    ?
+                  </button>
+                  {showTooltip.cep && (
+                    <div className="tooltip">
+                      {tooltipContent.cep}
+                    </div>
+                  )}
                 </div>
-
-                <div className="input-group">
-                  <input
-                    type="text"
-                    name="estado"
-                    placeholder="Estado"
-                    value={formData.estado}
-                    onChange={handleInputChange}
-                  />
-                </div>
+                {errors.cep && <span className="error-message">{errors.cep}</span>}
               </div>
 
               {/* Descrição */}
               <div className="input-group">
+                <label className="input-label">Descrição</label>
                 <div className="input-with-tooltip">
                   <textarea
                     name="descricao"
-                    placeholder="Descrição"
                     value={formData.descricao}
                     onChange={handleInputChange}
                     rows="4"
@@ -305,6 +285,29 @@ const Cadastro = () => {
                       {tooltipContent.descricao}
                     </div>
                   )}
+                </div>
+              </div>
+
+              {/* Cidade e Estado - Lado a lado */}
+              <div className="address-row">
+                <div className="input-group">
+                  <label className="input-label">Cidade</label>
+                  <input
+                    type="text"
+                    name="cidade"
+                    value={formData.cidade}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                <div className="input-group">
+                  <label className="input-label">Estado</label>
+                  <input
+                    type="text"
+                    name="estado"
+                    value={formData.estado}
+                    onChange={handleInputChange}
+                  />
                 </div>
               </div>
 

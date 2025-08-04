@@ -1,9 +1,18 @@
+//importações de funcionalidades e bibliotecas
 import React from 'react';
 import './contato.css';
 import Corpo from "../../components/layout/corpo"
+import PainelControle from "../../components/acessibilidade/controles"; // 
+
+//===========================================================
+//importações de imagens e ícones
 import logo from '../../assets/logo.png';
 import {Mail, Facebook, Instagram,} from 'lucide-react';
 
+
+//===========================================================
+
+//componente
 const redesSociais = [
   { icone: Mail, usuario: "contato@guiaoadispor.com" },
   { icone: Facebook, usuario: "Guia ao Dispor" },
@@ -12,31 +21,35 @@ const redesSociais = [
 
 const SobreNosPage = () => {
 
+//===========================================================
+//Início do componente
   return (
     <Corpo>
-      <div className="container">
+      <PainelControle />
+      <main className="container">
+      {/* Texto explicativo */}
       <h2 className='titulo'>Sobre Nós</h2>
-          <div className="about-content">
-            <div className="about-text">
+          <section className="about-content">
+            <article className="about-text">
               <img src={logo} alt="Logo"/>
               <p>
-                A Guia ao Dispor é um protótipo, que viabiliza a divulgação de profissionais da área de cuidados especiais, especializados em serviços e tratos para a comunidade com especificidades. O projeto apresenta design simples e intuitivo para boa parte dos requerimentos provindos das características especiais do cliente, promovendo conforto para o nosso principal público.
-Aos nossos requeridos profissionais, também pensamos em diversas técnicas de facilitar e auxiliar em seu trabalho, como uma aba de conversa e de visualização dinâmica para contato com o cliente, além do acesso de um currículo e das capacidades do profissional. Tudo para fornecer o melhor trabalho de divulgação que podemos oferecer.
-Desejamos boas negociações e contratos saudáveis e duradouros, com o intuito de um mundo cada vez mais inclusivo e informativo a respeito das especificidades com que convivemos.
-Venha conosco e se torne um “Guia ao Dispor” ou um de nossos clientes mais do que especiais.
+                Iniciado em 2024 como um trabalho para o componente curricular Projeto Integrador II, no curso técnico de Informática para a Internet do IFPR - Campus Assis Chateaubriand, este projeto evoluiu para o desenvolvimento de uma plataforma web dedicada a conectar pessoas com necessidades específicas a indivíduos e profissionais capacitados para auxiliá-las. A ideia, que continua em desenvolvimento em 2025 como parte do Projeto Integrador III, visa criar um ecossistema de apoio e oportunidades no mercado de trabalho.
               </p>
-            </div>
-            <div className="about-text">
+            </article>
+            <article className="about-text">
               <p>
-                A Guia ao Dispor é um protótipo, que viabiliza a divulgação de profissionais da área de cuidados especiais, especializados em serviços e tratos para a comunidade com especificidades. O projeto apresenta design simples e intuitivo para boa parte dos requerimentos provindos das características especiais do cliente, promovendo conforto para o nosso principal público.
-Aos nossos requeridos profissionais, também pensamos em diversas técnicas de facilitar e auxiliar em seu trabalho, como uma aba de conversa e de visualização dinâmica para contato com o cliente, além do acesso de um currículo e das capacidades do profissional. Tudo para fornecer o melhor trabalho de divulgação que podemos oferecer.
-Desejamos boas negociações e contratos saudáveis e duradouros, com o intuito de um mundo cada vez mais inclusivo e informativo a respeito das especificidades com que convivemos.
-Venha conosco e se torne um “Guia ao Dispor” ou um de nossos clientes mais do que especiais.
-              </p>
+                A relevância do projeto foi validada por professoras do IFPR engajadas na área de inclusão (Dr. Celina de Oliveira Barbosa Gomes e Me. Paula Fabiane de Souza), que confirmaram a dificuldade real em encontrar profissionais qualificados para atender demandas de acessibilidade, tanto para a instituição quanto para si mesmas. A pesquisa se fundamenta na atual fase dos direitos das pessoas com deficiência, focada na adaptação do ambiente para garantir a inclusão, superando modelos históricos de exclusão e assistencialismo.              </p>
               <img src={logo} alt="Logo" />
-            </div>
-          </div>
-          <div className="enviarEmail">
+            </article>
+            <article className="about-text">
+              <img src={logo} alt="Logo"/>
+              <p>
+                O projeto adota uma abordagem inclusiva, utilizando o termo <u>pessoas com particularidades</u> ou com <u>necessidades específicas</u> para abranger um público mais amplo que a definição legal de Pessoa com Deficiência (PCD). Isso inclui a comunidade surda (que possui uma identidade linguística própria com a LIBRAS), neurodivergentes, idosos e outros grupos que enfrentam barreiras, mas não necessariamente se enquadram ou se identificam como PCD. Do outro lado, o termo <u>sujeito habilitado</u> foi criado para designar qualquer pessoa com capacidade de oferecer ajuda, seja ela um profissional certificado ou não.              </p>
+            </article>
+          </section>
+
+          {/* Formulário de contato */}
+          <section className="enviarEmail">
             <h2>Entre em contato conosco</h2>
             <form className="contact-form">
               <input type="text" placeholder="Seu nome" required />
@@ -57,8 +70,8 @@ Venha conosco e se torne um “Guia ao Dispor” ou um de nossos clientes mais d
               })}
             </div>
             </aside>
-          </div>
-        </div>
+          </section>
+        </main>
     </Corpo>
   );
 };
