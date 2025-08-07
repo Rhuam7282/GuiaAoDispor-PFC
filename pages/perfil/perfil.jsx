@@ -40,7 +40,7 @@ const Perfil = () => {
   return (
     <Corpo>
       <div className="profile-page">
-        <h2 className="title">Perfil</h2>
+        <h1 className="title">Perfil</h1>
 
         <div className="profile-header">
           <div className="profile-image-large">
