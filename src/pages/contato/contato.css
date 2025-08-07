@@ -1,25 +1,11 @@
-.about-content {
-  width: 100%;
-}
-
-.about-logo {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 100%;
-  display: block;
-}
-
 .about-text {
   text-align: justify;
-  line-height: 1.6;
   display: flex;
 }
 .about-text img{
   width: 270px;
   margin: 15px;
   object-fit: cover;
-  border-radius: 100%;
   display: block;
 }
 
@@ -39,13 +25,6 @@
     text-align: justify;
     width: 100%;
   }
-}
-
-.sobre-nos-page hr,
-.sobre-nos-page .linha-separadora {
-  border: none;
-  border-bottom: 2px solid #d3a37f;
-  margin: 30px 0;
 }
 
 .enviarEmail {
@@ -93,49 +72,6 @@
   min-height: 120px;
   max-height: 200px;
   height: 120px;
-}
-
-.contact-form button {
-  background: #d3a37f;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 15px 30px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 15px;
-  transition: background 0.2s;
-}
-
-.contact-form button:hover {
-  background: #b97d4b;
-}
-
-.redes {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  min-width: 200px;
-  align-items: flex-start;
-  margin-top: 30px;
-}
-
-.listaRedes {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.itemRede {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  font-size: 1rem;
-  line-height: 1.6;
-  background: rgba(211, 163, 127, 0.3);
-  border-radius: 8px;
-  padding: 15px 20px;
 }
 
 @media (max-width: 900px) {

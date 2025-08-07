@@ -2,6 +2,7 @@ import React from 'react';
 import './perfil.css';
 import Corpo from "../../components/layout/corpo";
 import { Star, MapPin, Mail, Facebook, Instagram, Linkedin } from 'lucide-react';
+import PainelControle from "../../components/acessibilidade/controles"; // 
 
 import mariaSilva from '../../assets/mulher.png';
 import micheleto from '../../assets/hospital.jpg';
@@ -54,6 +55,7 @@ const Perfil = () => {
 
   return (
     <Corpo>
+      <PainelControle />
       <div className="container">
         <h2 className="titulo">{dadosPerfil.nome}</h2>
 
@@ -67,13 +69,12 @@ const Perfil = () => {
           <div className="destaque3">
               <p>{dadosPerfil.descricao}</p>
             <div className="detalhesPerfil">
-              <div className="localizacao">
+              <div className="icone">
                 <MapPin size={20} />
                 <span>{dadosPerfil.localizacao}</span>
               </div>
               
-              <div className="avaliacao">
-                <div className="estrelas">
+                <div className="icone">
                   {[...Array(5)].map((_, i) => (
                     <Star 
                       key={i} 
@@ -82,11 +83,10 @@ const Perfil = () => {
                       stroke="#54453B" 
                     />
                   ))}
-                </div>
                 <span className="valorAvaliacao">{dadosPerfil.avaliacao}</span>
+                </div>
               </div>
             </div>
-          </div>
 
           {/* Coluna direita com contatos */}
           <div className="colunaContatos">
@@ -95,7 +95,7 @@ const Perfil = () => {
               {dadosPerfil.redesSociais.map((rede, index) => {
                 const Icone = rede.icone;
                 return (
-                  <div key={index} className="itemRede">
+                  <div key={index} className="lista">
                     <Icone size={18} />
                     <span>{rede.usuario}</span>
                   </div>
