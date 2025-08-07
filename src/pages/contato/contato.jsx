@@ -31,7 +31,7 @@ const SobreNosPage = () => {
       <h1 className='titulo'>Sobre</h1>
           <section className="about-content">
             <article className="about-text">
-              <img src={logo} alt="Logo"/>
+              <img src={logo} alt="Logo do Guia ao Dispor - Plataforma de conexão para cuidados especiais"/>
               <p>
                 Iniciado em 2024 como um trabalho para o componente curricular Projeto Integrador II, no curso técnico de Informática para a Internet do IFPR - Campus Assis Chateaubriand, este projeto evoluiu para o desenvolvimento de uma plataforma web dedicada a conectar pessoas com necessidades específicas a indivíduos e profissionais capacitados para auxiliá-las. A ideia, que continua em desenvolvimento em 2025 como parte do Projeto Integrador III, visa criar um ecossistema de apoio e oportunidades no mercado de trabalho.
               </p>

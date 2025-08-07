@@ -356,7 +356,7 @@ const Cadastro = () => {
             <div className="image-upload-section">
               <div className="image-upload-area">
                 {formData.foto ? (
-                  <img src={formData.foto} alt="Preview" className="image-preview" />
+                  <img src={formData.foto} alt="Pré-visualização da foto de perfil do usuário" className="image-preview" />
                 ) : (
                   <div className="upload-placeholder">
                     <span>Arraste ou carregue uma imagem</span>

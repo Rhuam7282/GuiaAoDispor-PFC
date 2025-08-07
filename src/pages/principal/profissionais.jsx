@@ -22,7 +22,7 @@ const ProfileCard = ({ profile }) => {
       <div className="imagemPerfilContainer">
         <img
           src={profile.image}
-          alt={`${profile.name} - ${profile.experience} em ${profile.location}`}
+          alt={profile.imageAlt || `Perfil de ${profile.name}`}
           className="imagemPerfil"
         />
       </div>
@@ -94,7 +94,7 @@ function Profissionais() {
         />
         <div className="profile-list">
           {localProfiles.map((profile, index) => (
-            <ProfileCard key={index} profile={profile} />
+            <ProfileCard key={index} profile={{profile, imageAlt: `${profile.name}, ${profile.experience.toLowerCase()} em ${profile.location}`}} />
           ))}
         </div>
       </div>

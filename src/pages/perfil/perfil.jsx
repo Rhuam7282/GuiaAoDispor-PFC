@@ -1,56 +1,64 @@
-import React from 'react';
-import './perfil.css';
+import React from "react";
+import "./perfil.css";
 import Corpo from "../../components/layout/corpo";
-import { Star, MapPin, Mail, Facebook, Instagram, Linkedin } from 'lucide-react';
-import PainelControle from "../../components/acessibilidade/controles"; // 
+import {
+  Star,
+  MapPin,
+  Mail,
+  Facebook,
+  Instagram,
+  Linkedin,
+} from "lucide-react";
+import PainelControle from "../../components/acessibilidade/controles"; //
 
-import mariaSilva from '../../assets/mulher.png';
-import micheleto from '../../assets/hospital.jpg';
-import butantan from '../../assets/butantan.webp';
-import portugues from '../../assets/portugues.jpg';
+import mariaSilva from "../../assets/mulher.png";
+import micheleto from "../../assets/hospital.jpg";
+import butantan from "../../assets/butantan.webp";
+import portugues from "../../assets/portugues.jpg";
 
 const Perfil = () => {
   const dadosPerfil = {
     nome: "Maria Silva",
     foto: mariaSilva,
     localizacao: "Assis Chateaibriand, PR",
-    descricao: "Enfermeira especializada em geriatria com 10 anos de experiência.",
+    descricao:
+      "Enfermeira especializada em geriatria com 10 anos de experiência.",
     avaliacao: 4.8,
     redesSociais: [
       { icone: Mail, usuario: "maria.silva@exemplo.com" },
       { icone: Facebook, usuario: "/maria.silva" },
       { icone: Instagram, usuario: "@maria_silva" },
-      { icone: Linkedin, usuario: "linkedin.com/in/maria-silva" }
+      { icone: Linkedin, usuario: "linkedin.com/in/maria-silva" },
     ],
     historicoProfissional: [
       {
-        nome: 'Hospital Micheletto - Assis Chateaubriand',
+        nome: "Hospital Micheletto - Assis Chateaubriand",
         imagem: micheleto,
-        alt: "Hospital Micheletto"
+        alt: "Hospital Micheletto",
       },
       {
-        nome: 'Instituto Butantan - São Paulo',
+        nome: "Instituto Butantan - São Paulo",
         imagem: butantan,
-        alt: "Instituto Butantan"
+        alt: "Instituto Butantan",
       },
       {
-        nome: 'Hospital Beneficente Português - Belém',
+        nome: "Hospital Beneficente Português - Belém",
         imagem: portugues,
-        alt: "Hospital Beneficente Português"
-      }
+        alt: "Hospital Beneficente Português",
+      },
     ],
     historicoAcademico: [
-      { 
-        nome: 'Graduação em Enfermagem', 
-        instituicao: 'USP',
-        periodo: '2010-2014'
+      {
+        nome: "Graduação em Enfermagem",
+        instituicao: "USP",
+        periodo: "2010-2014",
       },
-      { 
-        nome: 'Pós-graduação em Geriatria', 
-        instituicao: 'UNIFESP',
-        periodo: '2015-2017'
-      }
-    ]
+      {
+        nome: "Pós-graduação em Geriatria",
+        instituicao: "UNIFESP",
+        periodo: "2015-2017",
+      },
+    ],
   };
 
   return (
@@ -61,32 +69,35 @@ const Perfil = () => {
 
         <div className="containerPrincipal">
           <div className="colunaFoto">
-              <img className="imagemPerfil"
-                src={dadosPerfil.foto}
-                alt={`Foto de ${dadosPerfil.nome}`}
-              />
+            <img
+              className="imagemPerfil"
+              src={dadosPerfil.foto}
+              alt={`${dadosPerfil.nome} - ${dadosPerfil.descricao} em ${dadosPerfil.localizacao}`}
+            />
           </div>
           <div className="destaque3">
-              <p>{dadosPerfil.descricao}</p>
+            <p>{dadosPerfil.descricao}</p>
             <div className="detalhesPerfil">
               <div className="icone">
                 <MapPin size={20} />
                 <span>{dadosPerfil.localizacao}</span>
               </div>
-              
-                <div className="icone">
-                  {[...Array(5)].map((_, i) => (
-                    <Star 
-                      key={i} 
-                      size={20} 
-                      fill={i < Math.floor(dadosPerfil.avaliacao) ? "#54453B" : "none"} 
-                      stroke="#54453B" 
-                    />
-                  ))}
+
+              <div className="icone">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    size={20}
+                    fill={
+                      i < Math.floor(dadosPerfil.avaliacao) ? "#54453B" : "none"
+                    }
+                    stroke="#54453B"
+                  />
+                ))}
                 <span className="valorAvaliacao">{dadosPerfil.avaliacao}</span>
-                </div>
               </div>
             </div>
+          </div>
 
           {/* Coluna direita com contatos */}
           <div className="colunaContatos">
@@ -127,8 +138,9 @@ const Perfil = () => {
               <div key={index} className="destaque2">
                 <div className="imagemProfissional">
                   <img
+                    key={index}
                     src={item.imagem}
-                    alt={item.alt}
+                    alt={`${item.nome} - Local de trabalho de ${dadosPerfil.nome}`}
                   />
                 </div>
                 <div className="infoProfissional">
