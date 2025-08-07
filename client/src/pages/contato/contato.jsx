@@ -28,7 +28,7 @@ const SobreNosPage = () => {
       <PainelControle />
       <main className="container">
       {/* Texto explicativo */}
-      <h2 className='titulo'>Sobre Nós</h2>
+      <h1 className='titulo'>Sobre</h1>
           <section className="about-content">
             <article className="about-text">
               <img src={logo} alt="Logo"/>

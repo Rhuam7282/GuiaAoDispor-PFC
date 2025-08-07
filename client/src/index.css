@@ -23,6 +23,7 @@ main {
 .container {
   padding: 60px;
   text-align: center;
+  overflow: visible;
 }
 .destaque1{
   border-radius: 8px;
