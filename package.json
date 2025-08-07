@@ -2,12 +2,13 @@
   "name": "guiaaodispor",
   "version": "1.0.0",
   "description": "Projeto final Lucas e Rhuam",
-  "main": "index.js",
+  "main": "server/server.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "vite",
-    "dev": "vite --ext js,jsx,css,html --ignore 'node_modules/'",
+    "client:dev": "vite",
+    "server:dev": "nodemon server/server.js",
+    "dev": "concurrently \"npm:client:dev\" \"npm:server:dev\"",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -15,7 +16,11 @@
   "author": "Lucas e Rhuam",
   "license": "ISC",
   "dependencies": {
+    "concurrently": "^8.2.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
     "lucide-react": "^0.488.0",
+    "mongoose": "^8.4.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.5.2"
