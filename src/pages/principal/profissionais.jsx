@@ -22,7 +22,7 @@ const ProfileCard = ({ profile }) => {
       <div className="imagemPerfilContainer">
         <img
           src={profile.image}
-          alt={`Perfil de ${profile.name}`}
+          alt={`${profile.name} - ${profile.experience} em ${profile.location}`}
           className="imagemPerfil"
         />
       </div>
@@ -84,7 +84,7 @@ function Profissionais() {
     <Corpo>
       <PainelControle />
       <div className="container">
-        <h2 className="titulo">Profissionais</h2>
+        <h1 className="titulo">Profissionais</h1>
         {/* Componente de filtro com todas as props necessárias */}
         <Filtro
           title="Filtros:"

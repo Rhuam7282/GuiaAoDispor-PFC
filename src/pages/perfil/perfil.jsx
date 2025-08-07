@@ -57,7 +57,7 @@ const Perfil = () => {
     <Corpo>
       <PainelControle />
       <div className="container">
-        <h2 className="titulo">{dadosPerfil.nome}</h2>
+        <h1 className="titulo">{dadosPerfil.nome}</h1>
 
         <div className="containerPrincipal">
           <div className="colunaFoto">

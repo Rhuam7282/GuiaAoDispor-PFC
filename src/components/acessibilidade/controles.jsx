@@ -9,12 +9,61 @@ const AccessibilityControls = () => {
   const [lineHeight, setLineHeight] = useState(1.5); // Multiplicador
   const [modoAltoContraste, setModoAltoContraste] = useState(false); // Estado do alto contraste
 
+  // Funções para localStorage
+  const salvarConfiguracao = (chave, valor) => {
+    try {
+      localStorage.setItem(`acessibilidade_${chave}`, JSON.stringify(valor));
+    } catch (error) {
+      console.warn('Erro ao salvar configuração de acessibilidade:', error);
+    }
+  };
+
+  const carregarConfiguracao = (chave, valorPadrao) => {
+    try {
+      const valorSalvo = localStorage.getItem(`acessibilidade_${chave}`);
+      return valorSalvo !== null ? JSON.parse(valorSalvo) : valorPadrao;
+    } catch (error) {
+      console.warn('Erro ao carregar configuração de acessibilidade:', error);
+      return valorPadrao;
+    }
+  };
+
+  // Carregar configurações salvas na inicialização
+  useEffect(() => {
+    const fontSizeSalvo = carregarConfiguracao('fontSize', 100);
+    const letterSpacingSalvo = carregarConfiguracao('letterSpacing', 0);
+    const lineHeightSalvo = carregarConfiguracao('lineHeight', 1.5);
+    const altoContrasteSalvo = carregarConfiguracao('modoAltoContraste', false);
+
+    setFontSize(fontSizeSalvo);
+    setLetterSpacing(letterSpacingSalvo);
+    setLineHeight(lineHeightSalvo);
+    setModoAltoContraste(altoContrasteSalvo);
+  }, []);
+
   // Aplicar as mudanças nas variáveis CSS quando os valores mudarem
   useEffect(() => {
     const root = document.documentElement;
+    const body = document.body;
+    
+    // Definir variáveis CSS
     root.style.setProperty('--accessibility-font-size', `${fontSize}%`);
     root.style.setProperty('--accessibility-letter-spacing', `${letterSpacing}px`);
     root.style.setProperty('--accessibility-line-height', lineHeight);
+    
+    // Aplicar classe de acessibilidade apenas se houver mudanças dos valores padrão
+    const temMudancas = fontSize !== 100 || letterSpacing !== 0 || lineHeight !== 1.5;
+    
+    if (temMudancas) {
+      body.classList.add('acessibilidade-ativa');
+    } else {
+      body.classList.remove('acessibilidade-ativa');
+    }
+    
+    // Salvar no localStorage sempre que os valores mudarem
+    salvarConfiguracao('fontSize', fontSize);
+    salvarConfiguracao('letterSpacing', letterSpacing);
+    salvarConfiguracao('lineHeight', lineHeight);
   }, [fontSize, letterSpacing, lineHeight]);
 
   // Aplicar/remover classe de alto contraste no body
@@ -25,6 +74,9 @@ const AccessibilityControls = () => {
     } else {
       body.classList.remove('modo-alto-contraste');
     }
+    
+    // Salvar no localStorage
+    salvarConfiguracao('modoAltoContraste', modoAltoContraste);
   }, [modoAltoContraste]);
 
   const togglePanel = () => {
@@ -76,6 +128,21 @@ const AccessibilityControls = () => {
     setLetterSpacing(0);
     setLineHeight(1.5);
     setModoAltoContraste(false);
+    
+    // Limpar localStorage
+    try {
+      localStorage.removeItem('acessibilidade_fontSize');
+      localStorage.removeItem('acessibilidade_letterSpacing');
+      localStorage.removeItem('acessibilidade_lineHeight');
+      localStorage.removeItem('acessibilidade_modoAltoContraste');
+    } catch (error) {
+      console.warn('Erro ao limpar configurações de acessibilidade:', error);
+    }
+    
+    // Remover classes do body
+    const body = document.body;
+    body.classList.remove('acessibilidade-ativa');
+    body.classList.remove('modo-alto-contraste');
   };
 
   return (

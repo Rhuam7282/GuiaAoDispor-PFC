@@ -122,7 +122,7 @@ const Cadastro = () => {
     <Corpo>
       <PainelControle />
       <div className="cadastro-page">
-        <h2 className="cadastro-title">Cadastro</h2>
+        <h1 className="cadastro-title">Cadastro</h1>
         
         <form onSubmit={handleSubmit} className="cadastro-form">
           <div className="form-content">

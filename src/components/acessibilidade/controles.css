@@ -370,21 +370,14 @@
   }
 }
 
-/* Aplicação automática das variáveis de acessibilidade em elementos de texto */
-body,
-p,
-h1, h2, h3, h4, h5, h6,
-span,
-div,
-a,
-li,
-td,
-th,
-label,
-input,
-textarea,
-button {
-  font-size: calc(1em * var(--accessibility-font-size) / 100) !important;
+/* Aplicação seletiva das variáveis de acessibilidade */
+/* Aplicação do font-size apenas quando necessário */
+.acessibilidade-ativa {
+  font-size: calc(1rem * var(--accessibility-font-size) / 100) !important;
+}
+
+/* Aplicação do letter-spacing apenas quando necessário */
+.acessibilidade-ativa * {
   letter-spacing: var(--accessibility-letter-spacing) !important;
   line-height: var(--accessibility-line-height) !important;
 }
