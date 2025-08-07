@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const avaliacaoSchema = new mongoose.Schema({
     titulo: String,
@@ -54,4 +54,4 @@ avaliacaoSchema.statics.recalcularNotaMedia = async function(profissionalId) {
 
 const Avaliacao = mongoose.model('Avaliacao', avaliacaoSchema);
 
-module.exports = Avaliacao;
+export default Avaliacao;

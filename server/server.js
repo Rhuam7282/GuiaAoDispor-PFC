@@ -1,10 +1,13 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import dotenv from 'dotenv'; // 1. Importar dotenv
+
+dotenv.config();
 
 // Importar os modelos
-import Localizacao from './models/localizacaoModel.js';
-import Profissional from './models/profissionalModel.js';
+import Localizacao from './modelos/localizacao.js';
+import Profissional from './modelos/profissional.js';
 // import Usuario from './models/usuarioModel.js';
 // import Avaliacao from './models/avaliacaoModel.js';
 
@@ -14,7 +17,7 @@ app.use(cors()); // Habilita CORS para todas as origens
 app.use(express.json()); // Habilita o servidor para receber JSON
 
 // --- Conexão com o MongoDB ---
-const mongoURI = 'mongodb://localhost:27017/guiaaodispor'; // Nome do banco
+const mongoURI = process.env.MONGO_URI; 
 mongoose.connect(mongoURI)
     .then(() => console.log('✅ Conexão com o MongoDB estabelecida!'))
     .catch(err => console.error('❌ Erro ao conectar com o MongoDB:', err));

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const localizacaoSchema = new mongoose.Schema({
     nome: {
@@ -25,5 +25,4 @@ const localizacaoSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const Localizacao = mongoose.model('Localizacao', localizacaoSchema);
-
-module.exports = Localizacao;
+export default Localizacao;
