@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './Cadastro.css';
 import Corpo from "../../components/layout/corpo";
-import PainelControle from "../../components/acessibilidade/controles"; // 
 
 const Cadastro = () => {
   const [formData, setFormData] = useState({
@@ -120,7 +119,6 @@ const Cadastro = () => {
 
   return (
     <Corpo>
-      <PainelControle />
       <div className="cadastro-page">
         <h1 className="cadastro-title">Cadastro</h1>
         

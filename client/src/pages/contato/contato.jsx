@@ -2,7 +2,6 @@
 import React from 'react';
 import './contato.css';
 import Corpo from "../../components/layout/corpo"
-import PainelControle from "../../components/acessibilidade/controles"; // 
 
 //===========================================================
 //importações de imagens e ícones
@@ -25,7 +24,6 @@ const SobreNosPage = () => {
 //Início do componente
   return (
     <Corpo>
-      <PainelControle />
       <main className="container">
       {/* Texto explicativo */}
       <h1 className='titulo'>Sobre</h1>
