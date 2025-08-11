@@ -1,40 +1,36 @@
-.destaque1{
+.cartaoDestaque.variacao1 {
   margin-bottom: 0;
 }
 
-img{
+.listaDePerfis img {
   width: 100px;
   height: 100px;
 }
 
-.profile-text-content {
+.textoConteudoPerfil {
   text-align: left;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.profile-name {
+.nomePerfil {
   color: #303538;
   font-size: 20px;
 }
 
-.profile-location {
-  /* color: #54453B;  */
+.localizacaoPerfil {
   font-size: 16px;
 }
 
-.profile-experience {
-}
-
-.profile-list {
+.listaDePerfis {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 30px;
 }
 
 @media (max-width: 768px) {
-  .profile-list {
+  .listaDePerfis {
     grid-template-columns: 1fr;
   }
 }
