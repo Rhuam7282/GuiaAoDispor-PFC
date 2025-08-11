@@ -1,102 +1,87 @@
-import React, { useState, useEffect } from "react";
-import "./profissionais.css";
-import Filtro from "./Filtro";
-import Corpo from "../../componentes/esqueleto/Corpo";
-import ControlesAcessibilidade from "../../componentes/acessibilidade/ControlesAcessibilidade";
+import React, { useState } from "react";
+import "./profissionais.css"; // O CSS existente será mantido e ajustado
+import Filtro from "./filtro";
+import Corpo from "../../components/layout/corpo";
+import PainelControle from "../../components/acessibilidade/controles"; // Adicionado para consistência
 
-// Imagens locais como fallback enquanto a API não está populada
-import mariaSilva from '../../recursos/mulher.png';
-import joaoOliveira from '../../recursos/homem1.avif';
-// ... outras imagens
+// Imagens dos perfis
+import mariaSilva from '../../assets/mulher.png';
+import joaoOliveira from '../../assets/homem1.avif';
+import anaSantos from '../../assets/mulher 3.webp';
+import lucianaFerreira from '../../assets/mulher2.jpg';
+import carlosMendes from '../../assets/homem2.jpg';
 
-const CartaoPerfil = ({ perfil }) => {
-  const aoClicarNoCartao = () => {
-    // Futuramente, navegar para a página de perfil dinâmico: navigate(`/perfil/${perfil.id}`)
-    alert(`Você clicou no perfil de ${perfil.nome}`);
+// Componente do Card de Perfil (sem alterações)
+const ProfileCard = ({ profile }) => {
+  const handleCardClick = () => {
+    // A navegação para a página de perfil pode ser implementada aqui
+    alert(`Você clicou no perfil de ${profile.name}`);
   };
 
   return (
-    <div className="cartaoDestaque variacao1" onClick={aoClicarNoCartao}>
-      <div className="containerImagemPerfil">
+    <div className="destaque1" onClick={handleCardClick}>
+      <div className="imagemPerfilContainer">
         <img
-          src={perfil.imagem || 'caminho/para/imagem/padrao.png'}
-          alt={perfil.imagemAlt}
+          src={profile.image}
+          alt={profile.imageAlt || `Perfil de ${profile.name}`}
           className="imagemPerfil"
         />
       </div>
-      <div className="conteudoTextoPerfil">
-        <h3 className="nomePerfil">{perfil.nome}</h3>
-        <p className="localizacaoPerfil">{perfil.localizacao}</p>
-        <p className="experienciaPerfil">{perfil.experiencia}</p>
+      <div className="profile-text-content">
+        <h3 className="profile-name">{profile.name}</h3>
+        <p className="profile-location">{profile.location}</p>
+        <p className="profile-experience">{profile.experience}</p>
       </div>
     </div>
   );
 };
 
+// Componente principal da página
 function Profissionais() {
-  const [filtroSelecionado, setFiltroSelecionado] = useState("localizacao");
-  const [perfis, setPerfis] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState("localizacao");
 
-  useEffect(() => {
-    const buscarProfissionais = async () => {
-      try {
-        const resposta = await fetch('/api/profissionais');
-        const dados = await resposta.json();
-
-        if (dados.status === 'sucesso' && dados.data.length > 0) {
-          // Mapear dados da API para o formato esperado pelo componente
-          const perfisFormatados = dados.data.map(p => ({
-            id: p._id,
-            nome: p.nome,
-            imagem: p.fotoUrl || joaoOliveira, // Usar uma imagem padrão
-            localizacao: p.localizacao?.nome || "Localização não informada",
-            experiencia: p.descricaoBreve || "Descrição não disponível.",
-            imagemAlt: `${p.nome}, profissional em ${p.localizacao?.nome}`
-          }));
-          setPerfis(perfisFormatados);
-        } else {
-          // Se a API não retornar dados, usar os dados locais como fallback
-          throw new Error("API não retornou dados.");
-        }
-      } catch (erro) {
-        console.warn("API indisponível ou sem dados. Usando dados locais.", erro);
-        const perfisLocais = [
-          { id: 1, imagem: mariaSilva, nome: "Maria Silva", localizacao: "São Paulo, SP", experiencia: "10 anos de experiência em enfermagem geriátrica" },
-          { id: 2, imagem: joaoOliveira, nome: "João Oliveira", localizacao: "Rio de Janeiro, RJ", experiencia: "Especialista em LIBRAS com 8 anos de mercado" },
-          // ... outros perfis locais
-        ];
-        const perfisLocaisFormatados = perfisLocais.map(p => ({
-          ...p,
-          imagemAlt: `${p.nome}, ${p.experiencia.toLowerCase()} em ${p.localizacao}`
-        }));
-        setPerfis(perfisLocaisFormatados);
-      }
-    };
-
-    buscarProfissionais();
-  }, []);
-
-  const opcoesFiltro = [
+  const filterOptions = [
     { value: "localizacao", label: "Localização" },
     { value: "disponibilidade", label: "Disponibilidade" },
     { value: "favoritos", label: "Favoritos" },
     { value: "avaliacao", label: "Bem avaliados" },
   ];
 
+  const localProfiles = [
+    { image: mariaSilva, name: "Maria Silva", location: "São Paulo, SP", experience: "10 anos de experiência em enfermagem geriátrica" },
+    { image: joaoOliveira, name: "João Oliveira", location: "Rio de Janeiro, RJ", experience: "Especialista em LIBRAS com 8 anos de mercado" },
+    { image: anaSantos, name: "Ana Santos", location: "Belo Horizonte, MG", experience: "Fisioterapeuta especializada em reabilitação neurológica" },
+    { image: carlosMendes, name: "Carlos Mendes", location: "Porto Alegre, RS", experience: "Psicólogo com foco em terceira idade - 12 anos" },
+    { image: lucianaFerreira, name: "Luciana Ferreira", location: "Salvador, BA", experience: "Terapeuta ocupacional com experiência domiciliar" },
+  ];
+
   return (
     <Corpo>
-      <ControlesAcessibilidade />
+      <PainelControle />
       <div className="container">
-        <h1 className="titulo">Profissionais</h1>
+        
+        {/* SEÇÃO DE EXPLICAÇÃO INSERIDA AQUI */}
+        <div className="secao-explicativa">
+          <h1 className="titulo-principal">Guia ao Dispor</h1>
+          <p>
+            O projeto Guia ao Dispor nasceu da necessidade de criar uma ponte entre pessoas com necessidades específicas e o mercado de trabalho. Nosso objetivo é desenvolver um site que sirva como uma ferramenta de auxílio, inclusão e conexão.
+          </p>
+          <p>
+            Abaixo, você encontra uma lista de profissionais qualificados e dedicados. Utilize os filtros para encontrar o auxílio que você precisa, de forma fácil e segura.
+          </p>
+        </div>
+
+        {/* Conteúdo original da página */}
+        <h2 className="titulo-secao">Profissionais</h2>
         <Filtro
           titulo="Filtros:"
-          opcoes={opcoesFiltro}
-          opcaoSelecionada={filtroSelecionado}
-          aoMudar={setFiltroSelecionado}
+          opcoes={filterOptions}
+          opcaoSelecionada={selectedFilter}
+          aoMudar={setSelectedFilter}
         />
-        <div className="listaDePerfis">
-          {perfis.map(perfil => (
-            <CartaoPerfil key={perfil.id} perfil={perfil} />
+        <div className="profile-list">
+          {localProfiles.map((profile, index) => (
+            <ProfileCard key={index} profile={{...profile, imageAlt: `${profile.name}, ${profile.experience.toLowerCase()} em ${profile.location}`}} />
           ))}
         </div>
       </div>

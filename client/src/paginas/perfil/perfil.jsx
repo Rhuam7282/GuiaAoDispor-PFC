@@ -1,6 +1,7 @@
 import React from "react";
 import "./perfil.css";
 import Corpo from "../../components/layout/corpo";
+
 import {
   Star,
   MapPin,
@@ -63,7 +64,6 @@ const Perfil = () => {
 
   return (
     <Corpo>
-      <PainelControle />
       <div className="container">
         <h1 className="titulo">{dadosPerfil.nome}</h1>
 

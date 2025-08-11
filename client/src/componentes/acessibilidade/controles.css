@@ -15,12 +15,16 @@
   --cor-destaque-alto-contraste: #ffff00;
 }
 
-/* Aplicação das variáveis de acessibilidade */
-.accessibility-enabled {
+/* 
+  CORREÇÃO: Unificamos as regras de acessibilidade em uma única classe.
+  Isso garante que todas as propriedades sejam aplicadas juntas e de forma consistente.
+*/
+.acessibilidade-ativa {
   font-size: var(--accessibility-font-size) !important;
   letter-spacing: var(--accessibility-letter-spacing) !important;
   line-height: var(--accessibility-line-height) !important;
 }
+
 
 /* Modo de Alto Contraste - Aplicação global */
 .modo-alto-contraste {
@@ -31,8 +35,8 @@
 .modo-alto-contraste *,
 .modo-alto-contraste *::before,
 .modo-alto-contraste *::after {
-  background-color: var(--cor-fundo-alto-contraste) !important;
-  color: var(--cor-texto-alto-contraste) !important;
+  background-color: inherit !important; /* Herda o fundo para evitar sobreposições */
+  color: inherit !important; /* Herda a cor do texto */
   border-color: var(--cor-borda-alto-contraste) !important;
   box-shadow: none !important;
   text-shadow: none !important;
@@ -369,16 +373,3 @@
     max-width: calc(100vw - 40px);
   }
 }
-
-/* Aplicação seletiva das variáveis de acessibilidade */
-/* Aplicação do font-size apenas quando necessário */
-.acessibilidade-ativa {
-  font-size: calc(1rem * var(--accessibility-font-size) / 100) !important;
-}
-
-/* Aplicação do letter-spacing apenas quando necessário */
-.acessibilidade-ativa * {
-  letter-spacing: var(--accessibility-letter-spacing) !important;
-  line-height: var(--accessibility-line-height) !important;
-}
-

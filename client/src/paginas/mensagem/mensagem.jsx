@@ -1,7 +1,6 @@
 import React from 'react';
 import './mensagem.css';
 import Corpo from "../../components/layout/corpo"
-import PainelControle from "../../components/acessibilidade/controles"; // 
 
 const Mensagens = () => {
   // Estado para a mensagem atual
@@ -39,7 +38,6 @@ const Mensagens = () => {
   
   return (
     <Corpo>
-      <PainelControle />
       <div className="messages-page">
         <h1 className='titulo'>Mensagens</h1>
         <div className="messages-container">
