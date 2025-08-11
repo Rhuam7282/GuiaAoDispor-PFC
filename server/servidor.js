@@ -2,10 +2,17 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-dotenv.config();
+// Configuração do dotenv
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const caminhoRaiz = path.resolve(__dirname, '..');
+const caminhoEnv = path.join(caminhoRaiz, '.env');
+dotenv.config({ path: caminhoEnv });
 
-// Importar os modelos
+// Importar modelos
 import Localizacao from './modelos/localizacao.js';
 import Profissional from './modelos/profissional.js';
 import Usuario from './modelos/usuario.js';
@@ -15,14 +22,20 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Conexão com MongoDB
 const mongoURI = process.env.MONGO_URI;
 mongoose.connect(mongoURI)
     .then(() => console.log('✅ Conexão com o MongoDB estabelecida!'))
     .catch(err => console.error('❌ Erro ao conectar com o MongoDB:', err));
 
+// Rota raiz
+app.get('/', (req, res) => {
+  res.send('Bem-vindo à API do Guia ao Dispor!');
+});
+
 const apiRouter = express.Router();
 
-// Rota para listar todos os profissionais
+// Rotas da API
 apiRouter.get('/profissionais', async (req, res) => {
     try {
         const profissionais = await Profissional.find().populate('localizacao');
@@ -32,7 +45,6 @@ apiRouter.get('/profissionais', async (req, res) => {
     }
 });
 
-// Rota para criar um Profissional
 apiRouter.post('/profissionais', async (req, res) => {
     try {
         const novoProfissional = await Profissional.create(req.body);
@@ -44,7 +56,23 @@ apiRouter.post('/profissionais', async (req, res) => {
 
 app.use('/api', apiRouter);
 
+// Rota para 404
+app.use((req, res) => {
+  res.status(404).send('Página não encontrada');
+});
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta http://localhost:${PORT}`);
+});
+
+// Configuração para encerramento com Ctrl+C
+process.on('SIGINT', () => {
+    console.log('\n🔴 Servidor encerrado pelo usuário (Ctrl+C)');
+    mongoose.connection.close(() => {
+        console.log('✅ Conexão com MongoDB fechada');
+        server.close(() => {
+            process.exit(0);
+        });
+    });
 });
