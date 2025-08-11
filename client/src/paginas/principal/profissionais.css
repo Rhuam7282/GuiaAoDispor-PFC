@@ -34,3 +34,35 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Adicione estas novas regras ao final de profissionais.css */
+
+.secao-explicativa {
+  background-color: rgba(245, 245, 245, 0.5); /* Um fundo suave para destacar a seção */
+  border-radius: 8px;
+  padding: 25px;
+  margin-bottom: 40px; /* Espaço antes da lista de profissionais */
+  text-align: left;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.titulo-principal {
+  font-size: 28px;
+  color: #54453B;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(84, 69, 59, 0.2);
+}
+
+.secao-explicativa p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.titulo-secao {
+  font-size: 24px;
+  color: #54453B;
+  margin-bottom: 20px;
+}
