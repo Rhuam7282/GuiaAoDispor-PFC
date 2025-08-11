@@ -1,0 +1,375 @@
+/* Variáveis CSS para acessibilidade */
+:root {
+  --accessibility-font-size: 100%;
+  --accessibility-letter-spacing: 0px;
+  --accessibility-line-height: 1.5;
+  
+  /* Variáveis para modo de alto contraste */
+  --cor-fundo-alto-contraste: #000000;
+  --cor-texto-alto-contraste: #ffffff;
+  --cor-link-alto-contraste: #ffff00;
+  --cor-link-visitado-alto-contraste: #ff00ff;
+  --cor-borda-alto-contraste: #ffffff;
+  --cor-botao-fundo-alto-contraste: #ffffff;
+  --cor-botao-texto-alto-contraste: #000000;
+  --cor-destaque-alto-contraste: #ffff00;
+}
+
+/* 
+  CORREÇÃO: Unificamos as regras de acessibilidade em uma única classe.
+  Isso garante que todas as propriedades sejam aplicadas juntas e de forma consistente.
+*/
+.acessibilidade-ativa {
+  font-size: var(--accessibility-font-size) !important;
+  letter-spacing: var(--accessibility-letter-spacing) !important;
+  line-height: var(--accessibility-line-height) !important;
+}
+
+
+/* Modo de Alto Contraste - Aplicação global */
+.modo-alto-contraste {
+  background-color: var(--cor-fundo-alto-contraste) !important;
+  color: var(--cor-texto-alto-contraste) !important;
+}
+
+.modo-alto-contraste *,
+.modo-alto-contraste *::before,
+.modo-alto-contraste *::after {
+  background-color: inherit !important; /* Herda o fundo para evitar sobreposições */
+  color: inherit !important; /* Herda a cor do texto */
+  border-color: var(--cor-borda-alto-contraste) !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+/* Links em modo de alto contraste */
+.modo-alto-contraste a,
+.modo-alto-contraste a:link {
+  color: var(--cor-link-alto-contraste) !important;
+  text-decoration: underline !important;
+}
+
+.modo-alto-contraste a:visited {
+  color: var(--cor-link-visitado-alto-contraste) !important;
+}
+
+.modo-alto-contraste a:hover,
+.modo-alto-contraste a:focus {
+  background-color: var(--cor-destaque-alto-contraste) !important;
+  color: var(--cor-fundo-alto-contraste) !important;
+  outline: 2px solid var(--cor-texto-alto-contraste) !important;
+}
+
+/* Botões em modo de alto contraste */
+.modo-alto-contraste button,
+.modo-alto-contraste input[type="button"],
+.modo-alto-contraste input[type="submit"],
+.modo-alto-contraste input[type="reset"] {
+  background-color: var(--cor-botao-fundo-alto-contraste) !important;
+  color: var(--cor-botao-texto-alto-contraste) !important;
+  border: 2px solid var(--cor-borda-alto-contraste) !important;
+}
+
+.modo-alto-contraste button:hover,
+.modo-alto-contraste button:focus,
+.modo-alto-contraste input[type="button"]:hover,
+.modo-alto-contraste input[type="button"]:focus,
+.modo-alto-contraste input[type="submit"]:hover,
+.modo-alto-contraste input[type="submit"]:focus,
+.modo-alto-contraste input[type="reset"]:hover,
+.modo-alto-contraste input[type="reset"]:focus {
+  background-color: var(--cor-destaque-alto-contraste) !important;
+  color: var(--cor-fundo-alto-contraste) !important;
+  outline: 3px solid var(--cor-texto-alto-contraste) !important;
+}
+
+/* Campos de entrada em modo de alto contraste */
+.modo-alto-contraste input,
+.modo-alto-contraste textarea,
+.modo-alto-contraste select {
+  background-color: var(--cor-botao-fundo-alto-contraste) !important;
+  color: var(--cor-botao-texto-alto-contraste) !important;
+  border: 2px solid var(--cor-borda-alto-contraste) !important;
+}
+
+.modo-alto-contraste input:focus,
+.modo-alto-contraste textarea:focus,
+.modo-alto-contraste select:focus {
+  outline: 3px solid var(--cor-destaque-alto-contraste) !important;
+  background-color: var(--cor-fundo-alto-contraste) !important;
+  color: var(--cor-texto-alto-contraste) !important;
+}
+
+/* Imagens em modo de alto contraste */
+.modo-alto-contraste img {
+  opacity: 0.8 !important;
+  filter: contrast(150%) brightness(120%) !important;
+}
+
+/* Elementos de destaque em modo de alto contraste */
+.modo-alto-contraste h1,
+.modo-alto-contraste h2,
+.modo-alto-contraste h3,
+.modo-alto-contraste h4,
+.modo-alto-contraste h5,
+.modo-alto-contraste h6 {
+  color: var(--cor-texto-alto-contraste) !important;
+  border-bottom: 1px solid var(--cor-borda-alto-contraste) !important;
+}
+
+/* Tabelas em modo de alto contraste */
+.modo-alto-contraste table,
+.modo-alto-contraste th,
+.modo-alto-contraste td {
+  border: 1px solid var(--cor-borda-alto-contraste) !important;
+}
+
+.modo-alto-contraste th {
+  background-color: var(--cor-botao-fundo-alto-contraste) !important;
+  color: var(--cor-botao-texto-alto-contraste) !important;
+}
+
+/* Controles de acessibilidade */
+.accessibility-controls {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.accessibility-toggle {
+  background-color: #54453B;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.accessibility-toggle:hover {
+  background-color: #3d332b;
+  transform: scale(1.05);
+}
+
+.accessibility-panel {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  min-width: 280px;
+  max-width: 320px;
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+}
+
+.accessibility-header {
+  background-color: #54453B;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accessibility-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.close-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.accessibility-content {
+  padding: 20px;
+}
+
+.control-group {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.control-group:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.control-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 8px;
+  color: #54453B;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.control-value {
+  margin-left: auto;
+  background-color: rgba(211, 163, 127, 0.2);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.control-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.control-btn {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-btn:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.control-btn.decrease {
+  color: #dc3545;
+}
+
+.control-btn.decrease:hover {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.control-btn.increase {
+  color: #28a745;
+}
+
+.control-btn.increase:hover {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.control-btn.reset {
+  color: #6c757d;
+  font-weight: 600;
+}
+
+.control-btn.reset:hover {
+  background-color: #e2e6ea;
+  border-color: #dae0e5;
+}
+
+.reset-all-container {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.reset-all-btn {
+  width: 100%;
+  background-color: #54453B;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.reset-all-btn:hover {
+  background-color: #3d332b;
+}
+
+/* Estilos específicos para o controle de alto contraste */
+.control-value.ativo {
+  background-color: #28a745;
+  color: white;
+}
+
+.control-value.inativo {
+  background-color: #6c757d;
+  color: white;
+}
+
+.control-btn.toggle-contrast {
+  min-width: 80px;
+  font-weight: 600;
+}
+
+.control-btn.toggle-contrast.ativo {
+  background-color: #28a745;
+  color: white;
+  border-color: #1e7e34;
+}
+
+.control-btn.toggle-contrast.ativo:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+.control-btn.toggle-contrast.inativo {
+  background-color: #6c757d;
+  color: white;
+  border-color: #5a6268;
+}
+
+.control-btn.toggle-contrast.inativo:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .accessibility-controls {
+    top: 10px;
+    right: 10px;
+  }
+  
+  .accessibility-toggle {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .accessibility-panel {
+    right: -10px;
+    min-width: 260px;
+    max-width: calc(100vw - 40px);
+  }
+}
