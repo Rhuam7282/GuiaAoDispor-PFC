@@ -6,7 +6,6 @@
   --shadow: rgba(48, 53, 56, 0.2);
   --error-color: #e74c3c;
   --success-color: #27ae60;
-  --tooltip-bg: #2c3e50;
   --border-radius: 8px;
 }
 
@@ -41,100 +40,6 @@
   flex: 2;
 }
 
-.input-group {
-  margin-bottom: 20px;
-  position: relative;
-}
-
-.input-with-tooltip {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.input-group input,
-.input-group textarea {
-  width: 100%;
-  padding: 12px 40px 12px 15px;
-  border: 2px solid transparent;
-  border-radius: var(--border-radius);
-  background-color: var(--white);
-  font-size: 14px;
-  color: var(--primary-brown);
-  box-shadow: 0 2px 4px var(--shadow);
-  transition: all 0.3s ease;
-}
-
-.input-group input:focus,
-.input-group textarea:focus {
-  outline: none;
-  border-color: var(--primary-brown);
-  box-shadow: 0 0 0 3px rgba(84, 69, 59, 0.1);
-}
-
-.input-group input.error,
-.input-group textarea.error {
-  border-color: var(--error-color);
-  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
-}
-
-.input-group input::placeholder,
-.input-group textarea::placeholder {
-  color: #999;
-}
-
-.tooltip-btn {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 1px solid #ccc;
-  background-color: #f8f9fa;
-  color: #666;
-  font-size: 12px;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  z-index: 2;
-}
-
-.tooltip-btn:hover {
-  background-color: var(--primary-brown);
-  color: white;
-  border-color: var(--primary-brown);
-}
-
-.tooltip {
-  position: absolute;
-  top: -45px;
-  right: 0;
-  background-color: var(--tooltip-bg);
-  color: white;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  white-space: nowrap;
-  max-width: 250px;
-  white-space: normal;
-  z-index: 10;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-
-.tooltip::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  right: 15px;
-  border: 5px solid transparent;
-  border-top-color: var(--tooltip-bg);
-}
-
 .error-message {
   color: var(--error-color);
   font-size: 12px;
@@ -148,18 +53,10 @@
   gap: 15px;
 }
 
-.password-row .input-group {
-  flex: 1;
-}
-
 /* Layout específico para endereço */
 .address-row {
   display: flex;
   gap: 15px;
-}
-
-.address-row .input-group {
-  flex: 1;
 }
 
 .cep-group {
@@ -167,11 +64,6 @@
 }
 
 /* Área de descrição */
-.input-group textarea {
-  resize: vertical;
-  min-height: 80px;
-  padding-top: 12px;
-}
 
 /* Seção de tipo de perfil */
 .profile-type-section {
@@ -345,18 +237,6 @@
     height: 150px;
   }
   
-  .tooltip {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 280px;
-    right: auto;
-  }
-  
-  .tooltip::after {
-    display: none;
-  }
 }
 
 @media (max-width: 480px) {
@@ -368,10 +248,6 @@
     font-size: 28px;
   }
   
-  .input-group input,
-  .input-group textarea {
-    font-size: 16px; /* Evita zoom no iOS */
-  }
 }
 
 /* Animações */
@@ -386,27 +262,8 @@
   }
 }
 
-.tooltip {
-  animation: fadeIn 0.3s ease;
-}
-
-.input-group {
-  animation: fadeIn 0.5s ease;
-}
-
-/* Estados de foco melhorados */
-.input-group input:focus + .tooltip-btn,
-.input-group textarea:focus + .tooltip-btn {
-  background-color: var(--primary-brown);
-  color: white;
-  border-color: var(--primary-brown);
-}
 
 /* Melhorias de acessibilidade */
-.tooltip-btn:focus {
-  outline: 2px solid var(--primary-brown);
-  outline-offset: 2px;
-}
 
 .submit-btn:focus {
   outline: 2px solid #3498DB;

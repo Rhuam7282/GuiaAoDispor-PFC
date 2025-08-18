@@ -18,7 +18,7 @@ const ProfileCard = ({ profile }) => {
   };
 
   return (
-    <div className="destaque1" onClick={handleCardClick}>
+    <div className="cartaoDestaque variacao1" onClick={handleCardClick}>
       <div className="imagemPerfilContainer">
         <img
           src={profile.image}

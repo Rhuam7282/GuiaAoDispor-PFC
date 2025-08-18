@@ -8,10 +8,6 @@
   width: 235px;
   height: 235px;
 }
-.destaque3{
-  display: flex;
-  flex-direction: column;
-}
 .detalhesPerfil {
   margin-top: auto;
   display: flex;

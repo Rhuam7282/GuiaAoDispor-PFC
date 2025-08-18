@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import logo from '@recursos/logo.png';
 import './menu.css';
 import { Home, User, MessageSquare, Mail } from 'lucide-react';
+import Interrogacao from '@componentes/acessibilidade/interrogacao/interrogacao.jsx';
 
 const Menu = () => {
   const navigate = useNavigate();
@@ -33,7 +34,11 @@ const Menu = () => {
         <img src={logo} alt="logo da empresa" className="logo" />
         <p>Guia ao Dispor</p>
       </div>
-     <ul className="lista">
+     <ul className="listaIcones vertical">
+      <Interrogacao>
+        Este texto é editável diretamente na interface! Clique e digite para alterar o conteúdo.
+        Você pode usar <strong>HTML</strong> para formatação também.
+      </Interrogacao>
         {itensMenu.map((item) => {
           const ativo = item.texto === paginaAtiva;
           
