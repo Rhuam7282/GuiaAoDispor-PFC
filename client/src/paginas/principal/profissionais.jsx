@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./profissionais.css"; // O CSS existente será mantido e ajustado
 import Filtro from "./filtro";
-import Corpo from "../../components/layout/corpo";
+import Corpo from "../../componentes/layout/corpo.jsx";
 import PainelControle from "../../components/acessibilidade/controles"; // Adicionado para consistência
 
 // Imagens dos perfis

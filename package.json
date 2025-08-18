@@ -4,13 +4,13 @@
   "description": "Projeto final de Lucas e Rhuam, uma plataforma de conexão para cuidados especiais e acessibilidade.",
   "main": "server/servidor.js",
   "type": "module",
-  "scripts": {
-    "dev:cliente": "vite",
-    "dev:servidor": "nodemon server/servidor.js",
-    "dev": "concurrently \"npm:dev:cliente\" \"npm:dev:servidor\"",
-    "build": "vite build",
+"scripts": {
+    "dev:cliente": "cd client && vite --force",
+    "dev:servidor": "cd server && nodemon servidor.js",
+    "dev": "concurrently -k \"npm run dev:cliente\" \"npm run dev:servidor\"",
+    "build": "cd client && vite build",
     "lint": "eslint . --fix",
-    "preview": "vite preview"
+    "preview": "cd client && vite preview"
   },
   "author": "Lucas e Rhuam",
   "license": "ISC",
@@ -25,20 +25,19 @@
     "react-router-dom": "^6.23.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.4.0",
+    "@eslint/js": "^9",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.0",
     "autoprefixer": "^10.4.19",
     "dotenv": "^16.4.5",
-    "eslint": "^9.4.0",
+    "eslint": "^9",
     "eslint-plugin-react": "^7.34.2",
-    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.7",
     "globals": "^15.4.0",
     "nodemon": "^3.1.2",
     "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.4",
     "vite": "^5.2.12"
   }
 }
