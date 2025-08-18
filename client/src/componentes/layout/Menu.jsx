@@ -33,7 +33,7 @@ const Menu = () => {
         <img src={logo} alt="logo da empresa" className="logo" />
         <p>Guia ao Dispor</p>
       </div>
-     <ul className="lista">
+     <ul className="listaIcones vertical">
         {itensMenu.map((item) => {
           const ativo = item.texto === paginaAtiva;
           

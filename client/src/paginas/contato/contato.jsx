@@ -56,11 +56,11 @@ const SobreNosPage = () => {
               <button type="submit">Enviar</button>
             </form>
             <aside className='redes'>
-              <div className="listaRedes">
+              <div className="listaIcones vertical">
               {redesSociais.map((rede, index) => {
                 const Icone = rede.icone;
                 return (
-                  <div key={index} className="lista">
+                  <div key={index} className="listaIcones">
                     <Icone size={18} />
                     <span>{rede.usuario}</span>
                   </div>

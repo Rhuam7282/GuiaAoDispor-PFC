@@ -23,10 +23,15 @@ menu ul{
   list-style: none;
   margin: auto;
   color: #1B3133;
+  align-items: center !important;
 }
 .menu-item {
   line-height: 40px;
   cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0 0px 8px #303538;
+  padding: 3px 12px;
+  width: 100%;
 }
 .pag-ativa {
   font-size: 18pt;

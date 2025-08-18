@@ -102,11 +102,11 @@ const Perfil = () => {
           {/* Coluna direita com contatos */}
           <div className="colunaContatos">
             <h3>Contatos</h3>
-            <div className="listaRedes">
+            <div className="listaIcones vertical">
               {dadosPerfil.redesSociais.map((rede, index) => {
                 const Icone = rede.icone;
                 return (
-                  <div key={index} className="lista">
+                  <div key={index} className="listaIcones">
                     <Icone size={18} />
                     <span>{rede.usuario}</span>
                   </div>
