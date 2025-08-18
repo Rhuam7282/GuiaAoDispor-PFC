@@ -1,6 +1,6 @@
 import Menu from './Menu';
 import './corpo.css';
-import PainelControle from "../../components/acessibilidade/controles"; // 
+import PainelControle from "@componentes/acessibilidade/controles"; // 
 
 const Layout = ({ children }) => {
   return (

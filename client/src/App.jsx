@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Contato from "./paginas/contato/Contato.jsx";
 import Perfil from "./paginas/perfil/Perfil.jsx";
-import Mensagem from "./paginas/mensagem/Mensagem.jsx";
-import Profissionais from "./paginas/principal/Profissionais.jsx";
-import Cadastro from "./paginas/cadastro/Cadastro.jsx";
+import Mensagem from "./paginas/mensagem/mensagem.jsx";
+import Profissionais from "./paginas/principal/profissionais.jsx";
+import Cadastro from "./paginas/cadastro/cadastro.jsx";
 
 function App() {
   return (

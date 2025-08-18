@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import "./profissionais.css"; // O CSS existente será mantido e ajustado
 import Filtro from "./filtro";
-import Corpo from "../../componentes/layout/corpo.jsx";
-import PainelControle from "../../components/acessibilidade/controles"; // Adicionado para consistência
+import Corpo from "@componentes/layout/corpo.jsx";
+import PainelControle from "@componentes/acessibilidade/controles.jsx"; // Adicionado para consistência
 
 // Imagens dos perfis
-import mariaSilva from '../../assets/mulher.png';
-import joaoOliveira from '../../assets/homem1.avif';
-import anaSantos from '../../assets/mulher 3.webp';
-import lucianaFerreira from '../../assets/mulher2.jpg';
-import carlosMendes from '../../assets/homem2.jpg';
+import mariaSilva from '@recursos/mulher.png';
+import joaoOliveira from '@recursos/homem1.avif';
+import anaSantos from '@recursos/mulher 3.webp';
+import lucianaFerreira from '@recursos/mulher2.jpg';
+import carlosMendes from '@recursos/homem2.jpg';
 
 // Componente do Card de Perfil (sem alterações)
 const ProfileCard = ({ profile }) => {

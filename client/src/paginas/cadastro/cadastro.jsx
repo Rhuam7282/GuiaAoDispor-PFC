@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './cadastro.css';
-import Corpo from "../../componentes/layout/corpo.jsx";
-import ControlesAcessibilidade from "../../componentes/acessibilidade/controles.jsx";
+import Corpo from "@componentes/layout/corpo.jsx";
+import ControlesAcessibilidade from "@componentes/acessibilidade/controles.jsx";
 
 const Cadastro = () => {
   const [dadosFormulario, setDadosFormulario] = useState({

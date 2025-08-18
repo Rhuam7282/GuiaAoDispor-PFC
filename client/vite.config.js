@@ -29,7 +29,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src')
+      '@': path.resolve(__dirname, 'src'),
+      '@componentes': path.resolve(__dirname, 'src/componentes'),
+      '@paginas': path.resolve(__dirname, 'src/paginas'),
+      '@recursos': path.resolve(__dirname, 'src/recursos')
     }
   }
 });

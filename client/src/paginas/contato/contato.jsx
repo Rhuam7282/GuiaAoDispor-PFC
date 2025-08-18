@@ -1,11 +1,11 @@
 //importações de funcionalidades e bibliotecas
 import React from 'react';
 import './contato.css';
-import Corpo from "../../components/layout/corpo"
+import Corpo from "@componentes/layout/corpo"
 
 //===========================================================
 //importações de imagens e ícones
-import logo from '../../assets/logo.png';
+import logo from '@recursos/logo.png';
 import {Mail, Facebook, Instagram,} from 'lucide-react';
 
 

@@ -38,9 +38,17 @@ export default [
       'react/prop-types': 'off',
     },
     settings: {
-      react: {
-        version: 'detect',
-      },
-    },
+  'import/resolver': {
+    alias: {
+      map: [
+        ['@', './src'],
+        ['@componentes', './src/componentes'],
+        ['@paginas', './src/paginas'],
+        ['@recursos', './src/recursos']
+      ],
+      extensions: ['.js', '.jsx']
+    }
+  }
+},
   },
 ]

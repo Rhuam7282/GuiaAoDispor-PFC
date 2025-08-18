@@ -1,6 +1,6 @@
 import React from "react";
 import "./perfil.css";
-import Corpo from "../../components/layout/corpo";
+import Corpo from "@componentes/layout/corpo";
 
 import {
   Star,
@@ -10,12 +10,12 @@ import {
   Instagram,
   Linkedin,
 } from "lucide-react";
-import PainelControle from "../../components/acessibilidade/controles"; //
+import PainelControle from "@componentes/acessibilidade/controles"; //
 
-import mariaSilva from "../../assets/mulher.png";
-import micheleto from "../../assets/hospital.jpg";
-import butantan from "../../assets/butantan.webp";
-import portugues from "../../assets/portugues.jpg";
+import mariaSilva from "@recursos/mulher.png";
+import micheleto from "@recursos/hospital.jpg";
+import butantan from "@recursos/butantan.webp";
+import portugues from "@recursos/portugues.jpg";
 
 const Perfil = () => {
   const dadosPerfil = {

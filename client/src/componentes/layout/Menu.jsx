@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import logo from '../../assets/logo.png';
+import logo from '@recursos/logo.png';
 import './menu.css';
 import { Home, User, MessageSquare, Mail } from 'lucide-react';
 
