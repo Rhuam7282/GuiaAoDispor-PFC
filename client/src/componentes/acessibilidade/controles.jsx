@@ -4,10 +4,10 @@ import { Type, AlignJustify, MoreHorizontal, Settings, Contrast } from 'lucide-r
 
 const AccessibilityControls = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [fontSize, setFontSize] = useState(100); // Porcentagem base
-  const [letterSpacing, setLetterSpacing] = useState(0); // Em pixels
-  const [lineHeight, setLineHeight] = useState(1.5); // Multiplicador
-  const [modoAltoContraste, setModoAltoContraste] = useState(false); // Estado do alto contraste
+  const [fontSize, setFontSize] = useState(100);
+  const [letterSpacing, setLetterSpacing] = useState(0);
+  const [lineHeight, setLineHeight] = useState(1.5);
+  const [modoAltoContraste, setModoAltoContraste] = useState(false);
 
   // Funções para localStorage
   const salvarConfiguracao = (chave, valor) => {
@@ -41,44 +41,44 @@ const AccessibilityControls = () => {
     setModoAltoContraste(altoContrasteSalvo);
   }, []);
 
-  // Aplicar as mudanças nas variáveis CSS quando os valores mudarem
+  // Aplicar mudanças de fonte e espaçamento
   useEffect(() => {
     const root = document.documentElement;
-    const body = document.body;
     
-    // Definir variáveis CSS
     root.style.setProperty('--accessibility-font-size', `${fontSize}%`);
     root.style.setProperty('--accessibility-letter-spacing', `${letterSpacing}px`);
     root.style.setProperty('--accessibility-line-height', lineHeight);
-    
-    // Aplicar classe de acessibilidade apenas se houver mudanças dos valores padrão
+
     const temMudancas = fontSize !== 100 || letterSpacing !== 0 || lineHeight !== 1.5;
     
     if (temMudancas) {
-      body.classList.add('acessibilidade-ativa');
+      root.classList.add('acessibilidade-ativa');
     } else {
-      body.classList.remove('acessibilidade-ativa');
+      root.classList.remove('acessibilidade-ativa');
     }
     
-    // Salvar no localStorage sempre que os valores mudarem
     salvarConfiguracao('fontSize', fontSize);
     salvarConfiguracao('letterSpacing', letterSpacing);
     salvarConfiguracao('lineHeight', lineHeight);
   }, [fontSize, letterSpacing, lineHeight]);
 
-  // Aplicar/remover classe de alto contraste no body
+  // Aplicar modo de alto contraste
   useEffect(() => {
-    const body = document.body;
+    const root = document.documentElement;
+    
     if (modoAltoContraste) {
-      body.classList.add('modo-alto-contraste');
+      root.classList.add('modo-alto-contraste');
     } else {
-      body.classList.remove('modo-alto-contraste');
+      root.classList.remove('modo-alto-contraste');
     }
     
-    // Salvar no localStorage
     salvarConfiguracao('modoAltoContraste', modoAltoContraste);
   }, [modoAltoContraste]);
 
+  // =================================================================
+  // ADICIONEI AS FUNÇÕES FALTANTES AQUI (elas foram removidas antes)
+  // =================================================================
+  
   const togglePanel = () => {
     setIsOpen(!isOpen);
   };
@@ -123,6 +123,7 @@ const AccessibilityControls = () => {
     setModoAltoContraste(prev => !prev);
   };
 
+  // Função para resetar tudo
   const resetAll = () => {
     setFontSize(100);
     setLetterSpacing(0);
@@ -139,10 +140,10 @@ const AccessibilityControls = () => {
       console.warn('Erro ao limpar configurações de acessibilidade:', error);
     }
     
-    // Remover classes do body
-    const body = document.body;
-    body.classList.remove('acessibilidade-ativa');
-    body.classList.remove('modo-alto-contraste');
+    // Remover classes do elemento raiz (<html>)
+    const root = document.documentElement;
+    root.classList.remove('acessibilidade-ativa');
+    root.classList.remove('modo-alto-contraste');
   };
 
   return (
@@ -303,4 +304,3 @@ const AccessibilityControls = () => {
 };
 
 export default AccessibilityControls;
-

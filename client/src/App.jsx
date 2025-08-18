@@ -11,7 +11,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Profissionais />} />
         <Route path="/perfil" element={<Perfil />} />
-        <Route path="/mensagem" element={<Mensagem />} />
+        {/* Temporariamente inativo */}
+        {/* <Route path="/mensagem" element={<Mensagem />} /> */}
         <Route path="/contato" element={<Contato />} />
         <Route path="/cadastro" element={<Cadastro />} />
       </Routes>

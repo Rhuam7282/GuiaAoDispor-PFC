@@ -66,3 +66,75 @@
   color: #54453B;
   margin-bottom: 20px;
 }
+
+.secao-projeto-explicacao {
+  background-color: rgba(245, 245, 245, 0.5); /* Fundo suave para a seção explicativa */
+  border-radius: 8px;
+  padding: 25px;
+  margin-bottom: 40px; /* Espaço entre a explicação e a lista de profissionais */
+  text-align: left;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.titulo-principal-projeto {
+  font-size: 28px;
+  color: #54453B; /* Cor do título principal, como em outras páginas */
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(84, 69, 59, 0.3);
+}
+
+.secao-projeto-explicacao p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.titulo-secao-profissionais {
+  font-size: 24px;
+  color: #54453B; /* Cor do título "Profissionais Disponíveis" */
+  margin-top: 30px; /* Espaço acima do título da seção de profissionais */
+  margin-bottom: 20px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(84, 69, 59, 0.2);
+  text-align: left;
+}
+
+/* Container para a seção de introdução */
+.projeto-intro-container {
+  background-color: rgba(245, 245, 245, 0.5); /* Fundo suave, como solicitado */
+  border-radius: 8px;
+  padding: 25px;
+  margin-bottom: 40px; /* Espaço antes da lista de profissionais */
+  text-align: left;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Título principal da introdução */
+.projeto-intro-container__titulo {
+  font-size: 28px;
+  color: #54453B; /* Cor que você já usa */
+  margin: 0 0 15px 0; /* Zera margens padrão e adiciona uma inferior */
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(84, 69, 59, 0.3);
+}
+
+/* Parágrafos da introdução */
+.projeto-intro-container__paragrafo {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+/* Título da seção de profissionais */
+.profissionais-lista-container__titulo {
+  font-size: 24px;
+  color: #54453B;
+  margin-top: 0; /* Remove margem superior para alinhar com o fluxo */
+  margin-bottom: 20px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(84, 69, 59, 0.2);
+  text-align: left;
+}

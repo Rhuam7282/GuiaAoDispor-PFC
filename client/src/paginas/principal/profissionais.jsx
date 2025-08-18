@@ -1,20 +1,19 @@
 import React, { useState } from "react";
-import "./profissionais.css"; // O CSS existente será mantido e ajustado
+import "./profissionais.css";
 import Filtro from "./filtro";
-import Corpo from "@componentes/layout/corpo.jsx";
-import PainelControle from "@componentes/acessibilidade/controles.jsx"; // Adicionado para consistência
+import Corpo from "../../componentes/layout/corpo";
+import PainelControle from "../../componentes/acessibilidade/controles";
 
-// Imagens dos perfis
-import mariaSilva from '@recursos/mulher.png';
-import joaoOliveira from '@recursos/homem1.avif';
-import anaSantos from '@recursos/mulher 3.webp';
-import lucianaFerreira from '@recursos/mulher2.jpg';
-import carlosMendes from '@recursos/homem2.jpg';
+// Corrigindo os caminhos dos assets, assumindo que estão em 'src/assets'
+import mariaSilva from '../../recursos/mulher.png';
+import joaoOliveira from '../../recursos/homem1.avif';
+import anaSantos from '../../recursos/mulher 3.webp';
+import lucianaFerreira from '../../recursos/mulher2.jpg';
+import carlosMendes from '../../recursos/homem2.jpg';
 
-// Componente do Card de Perfil (sem alterações)
+// Componente do Card de Perfil (sem alterações, preservando seu código original)
 const ProfileCard = ({ profile }) => {
   const handleCardClick = () => {
-    // A navegação para a página de perfil pode ser implementada aqui
     alert(`Você clicou no perfil de ${profile.name}`);
   };
 
@@ -60,29 +59,31 @@ function Profissionais() {
       <PainelControle />
       <div className="container">
         
-        {/* SEÇÃO DE EXPLICAÇÃO INSERIDA AQUI */}
-        <div className="secao-explicativa">
-          <h1 className="titulo-principal">Guia ao Dispor</h1>
-          <p>
-            O projeto Guia ao Dispor nasceu da necessidade de criar uma ponte entre pessoas com necessidades específicas e o mercado de trabalho. Nosso objetivo é desenvolver um site que sirva como uma ferramenta de auxílio, inclusão e conexão.
+        {/* Seção explicativa com classes BEM específicas para evitar conflitos */}
+        <div className="projeto-intro-container">
+          <h1 className="projeto-intro-container__titulo">Bem-vindo ao Guia ao Dispor</h1>
+          <p className="projeto-intro-container__paragrafo">
+            O projeto Guia ao Dispor nasceu da necessidade de criar uma ponte entre pessoas com necessidades específicas e o mercado de trabalho. Iniciado em 2024 como parte do Projeto Integrador do curso técnico de informática do IFPR - Campus Assis Chateaubriand, nosso objetivo é desenvolver um site que sirva como uma ferramenta de auxílio e inclusão.
           </p>
-          <p>
-            Abaixo, você encontra uma lista de profissionais qualificados e dedicados. Utilize os filtros para encontrar o auxílio que você precisa, de forma fácil e segura.
+          <p className="projeto-intro-container__paragrafo">
+            A plataforma visa facilitar a busca por profissionais qualificados e, ao mesmo tempo, oferecer um espaço para que pessoas com diversas particularidades possam encontrar oportunidades e se sentirem mais incluídas na sociedade.
           </p>
         </div>
 
-        {/* Conteúdo original da página */}
-        <h2 className="titulo-secao">Profissionais</h2>
-        <Filtro
-          titulo="Filtros:"
-          opcoes={filterOptions}
-          opcaoSelecionada={selectedFilter}
-          aoMudar={setSelectedFilter}
-        />
-        <div className="profile-list">
-          {localProfiles.map((profile, index) => (
-            <ProfileCard key={index} profile={{...profile, imageAlt: `${profile.name}, ${profile.experience.toLowerCase()} em ${profile.location}`}} />
-          ))}
+        {/* Conteúdo original da página (lista de profissionais) */}
+        <div className="profissionais-lista-container">
+          <h2 className="profissionais-lista-container__titulo">Profissionais Disponíveis</h2>
+          <Filtro
+            titulo="Filtros:"
+            opcoes={filterOptions}
+            opcaoSelecionada={selectedFilter}
+            aoMudar={setSelectedFilter}
+          />
+          <div className="profile-list">
+            {localProfiles.map((profile, index) => (
+              <ProfileCard key={index} profile={{...profile, imageAlt: `${profile.name}, ${profile.experience.toLowerCase()} em ${profile.location}`}} />
+            ))}
+          </div>
         </div>
       </div>
     </Corpo>
