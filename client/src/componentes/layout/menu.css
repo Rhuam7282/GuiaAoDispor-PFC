@@ -30,14 +30,14 @@ menu ul{
   cursor: pointer;
   border-radius: 8px;
   box-shadow: 0 0px 8px #303538;
-  padding: 3px 12px;
-  width: 100%;
+  padding: 3px;
+  width: 200px;
 }
 .pag-ativa {
   font-size: 18pt;
   font-weight: bold;
   color: #303538;
-
+  background-color: rgba(211, 163, 127, 0.6);
 }
 footer {
   border-top: 1px solid rgba(28, 49, 52, 1);
