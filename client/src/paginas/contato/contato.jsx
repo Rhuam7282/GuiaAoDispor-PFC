@@ -50,9 +50,9 @@ const SobreNosPage = () => {
           <section className="enviarEmail">
             <h2>Entre em contato conosco</h2>
             <form className="contact-form">
-              <input className='destaque3' type="text" placeholder="Seu nome" required />
-              <input className='destaque3' type="email" placeholder="Seu email" required />
-              <textarea className='destaque3'placeholder="Sua mensagem" required></textarea>
+              <input className='cartaoDestaque variacao3' type="text" placeholder="Seu nome" required />
+              <input className='cartaoDestaque variacao3' type="email" placeholder="Seu email" required />
+              <textarea className='cartaoDestaque variacao3'placeholder="Sua mensagem" required></textarea>
               <button type="submit">Enviar</button>
             </form>
             <aside className='redes'>

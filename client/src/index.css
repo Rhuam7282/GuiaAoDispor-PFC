@@ -67,11 +67,13 @@ p {
 
 .cartaoDestaque.variacao2 {
     background-color: var(--cor-destaque-secundaria-transparente);
+    box-shadow: none;
 }
 
 .cartaoDestaque.variacao3 {
     background-color: var(--cor-destaque-primaria);
     text-align: left;
+    box-shadow: none;
 }
 
 .imagemPerfil {

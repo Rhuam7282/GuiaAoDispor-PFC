@@ -75,7 +75,7 @@ const Perfil = () => {
               alt={`${dadosPerfil.nome} - ${dadosPerfil.descricao} em ${dadosPerfil.localizacao}`}
             />
           </div>
-          <div className="destaque3">
+          <div className="cartaoDestaque variacao3">
             <p>{dadosPerfil.descricao}</p>
             <div className="detalhesPerfil">
               <div className="icone">
@@ -121,7 +121,7 @@ const Perfil = () => {
           <h2>Histórico Acadêmico</h2>
           <div className="listaAcademica">
             {dadosPerfil.historicoAcademico.map((item, index) => (
-              <div key={index} className="destaque2">
+              <div key={index} className="cartaoDestaque variacao2">
                 <h3>{item.nome}</h3>
                 <p>{item.instituicao}</p>
                 <p className="periodo">{item.periodo}</p>
@@ -135,7 +135,7 @@ const Perfil = () => {
           <h2>Histórico Profissional</h2>
           <div className="listaProfissional">
             {dadosPerfil.historicoProfissional.map((item, index) => (
-              <div key={index} className="destaque2">
+              <div key={index} className="cartaoDestaque variacao2">
                 <div className="imagemProfissional">
                   <img
                     key={index}
