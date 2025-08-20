@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import logo from '@recursos/logo.png';
 import './menu.css';
-import { Home, User, MessageSquare, Mail } from 'lucide-react';
+import { Home, User, MessageSquare, Mail, GalleryHorizontal } from 'lucide-react';
 import Interrogacao from '@componentes/acessibilidade/interrogacao/interrogacao.jsx';
 
 const Menu = () => {
@@ -10,9 +10,10 @@ const Menu = () => {
   const location = useLocation();
   const itensMenu = [
     { Icone: Home, texto: 'Início', rota: '/' },
+    { Icone: GalleryHorizontal, texto: 'Qualificados', rota: '/qualificados' },
     { Icone: User, texto: 'Perfil', rota: '/perfil' },
     // { Icone: MessageSquare, texto: 'Mensagem', rota: '/mensagem' }, // Inativo
-    { Icone: Mail, texto: 'Contato', rota: '/contato' }
+    { Icone: Mail, texto: 'Sobre Nós', rota: '/sobreNos' }
   ];
 
 

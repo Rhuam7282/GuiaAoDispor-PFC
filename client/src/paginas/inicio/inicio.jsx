@@ -1,6 +1,6 @@
 //importações de funcionalidades e bibliotecas
 import React from 'react';
-import './contato.css';
+import './inicio.css';
 import Corpo from "@componentes/layout/corpo"
 
 //===========================================================
@@ -25,8 +25,7 @@ const SobreNosPage = () => {
   return (
     <Corpo>
       <main className="container">
-      {/* Texto explicativo */}
-      <h1 className='titulo'>Sobre</h1>
+      <h1 className='titulo'>Guia ao Dispor</h1>
           <section className="about-content">
             <article className="about-text">
               <img src={logo} alt="Logo do Guia ao Dispor - Plataforma de conexão para cuidados especiais"/>
@@ -73,4 +72,4 @@ const SobreNosPage = () => {
     </Corpo>
   );
 };
-export default SobreNosPage;
+export default SobreNosPage;    

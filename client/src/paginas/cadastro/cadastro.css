@@ -40,11 +40,52 @@
   flex: 2;
 }
 
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--primary-brown);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-brown);
+}
+
+.form-group input.error,
+.form-group textarea.error {
+  border-color: var(--error-color);
+}
+
 .error-message {
   color: var(--error-color);
   font-size: 12px;
   margin-top: 5px;
   display: block;
+}
+
+.mensagem-sucesso {
+  color: var(--success-color);
+  font-size: 14px;
+  margin: 15px 0;
+  padding: 10px;
+  background-color: rgba(39, 174, 96, 0.1);
+  border-radius: var(--border-radius);
 }
 
 /* Layout específico para senhas */
@@ -53,17 +94,23 @@
   gap: 15px;
 }
 
+.password-row .form-group {
+  flex: 1;
+}
+
 /* Layout específico para endereço */
 .address-row {
   display: flex;
   gap: 15px;
 }
 
+.address-row .form-group {
+  flex: 1;
+}
+
 .cep-group {
   flex: 0.8;
 }
-
-/* Área de descrição */
 
 /* Seção de tipo de perfil */
 .profile-type-section {
@@ -119,7 +166,7 @@
 
 /* Botão de submit */
 .submit-btn {
-  background-color: #5DADE2;
+  background-color: var(--primary-brown);
   color: white;
   border: none;
   padding: 12px 30px;
@@ -129,13 +176,19 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 4px var(--shadow);
-  width: 150px;
+  width: 100%;
+  margin-top: 20px;
 }
 
-.submit-btn:hover {
-  background-color: #3498DB;
+.submit-btn:hover:not(:disabled) {
+  background-color: #3d2f26;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px var(--shadow);
+}
+
+.submit-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
 
 /* Seção de upload de imagem */
@@ -237,6 +290,11 @@
     height: 150px;
   }
   
+  .file-label {
+    position: relative;
+    bottom: auto;
+    margin-top: 15px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -247,7 +305,6 @@
   .cadastro-title {
     font-size: 28px;
   }
-  
 }
 
 /* Animações */
@@ -262,11 +319,9 @@
   }
 }
 
-
 /* Melhorias de acessibilidade */
-
 .submit-btn:focus {
-  outline: 2px solid #3498DB;
+  outline: 2px solid var(--primary-brown);
   outline-offset: 2px;
 }
 
@@ -275,3 +330,7 @@
   outline-offset: 2px;
 }
 
+.file-label:focus {
+  outline: 2px solid var(--primary-brown);
+  outline-offset: 2px;
+}
