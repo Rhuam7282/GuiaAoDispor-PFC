@@ -1,25 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
+import './Interrogacao.css';
 
 const Interrogacao = ({ children }) => {
   const [mostrarConteudo, setMostrarConteudo] = useState(false);
-  const [posicao, setPosicao] = useState({ x: 0, y: 0 });
-  const botaoRef = useRef(null);
   const conteudoRef = useRef(null);
+  const botaoRef = useRef(null);
   
-  const alternarVisibilidade = (e) => {
-    if (botaoRef.current) {
-      const rect = botaoRef.current.getBoundingClientRect();
-      setPosicao({
-        x: rect.left + window.scrollX,
-        y: rect.top + window.scrollY
-      });
-    }
+  const alternarVisibilidade = () => {
     setMostrarConteudo(!mostrarConteudo);
   };
 
   useEffect(() => {
     const lidarCliqueFora = (evento) => {
-      if (conteudoRef.current && !conteudoRef.current.contains(evento.target)) {
+      if (conteudoRef.current && 
+          !conteudoRef.current.contains(evento.target) && 
+          !botaoRef.current.contains(evento.target)) {
         setMostrarConteudo(false);
       }
     };
@@ -37,31 +32,19 @@ const Interrogacao = ({ children }) => {
     <>
       <button 
         ref={botaoRef}
-        className="interogacao" 
+        className={`interogacao ${mostrarConteudo ? 'fechar' : ''} cartaoDestaque variacao1`}
         onClick={alternarVisibilidade}
-        aria-label="Mostrar informações adicionais"
+        aria-label={mostrarConteudo ? "Fechar informações" : "Mostrar informações adicionais"}
       >
-        ?
+        {mostrarConteudo ? '✕' : '?'}
       </button>
       
       {mostrarConteudo && (
         <div 
           ref={conteudoRef}
-          className="cartaoDestaque variacao3 conteudo-interrogacao"
-          style={{
-            position: 'fixed',
-            top: `${posicao.y}px`,
-            left: `${posicao.x}px`,
-            transform: 'translate(-100%, -100%)'
-          }}
+          className="conteudo-interrogacao cartaoDestaque variacao3"
         >
-          <div 
-            className="conteudo-editavel" 
-            contentEditable
-            suppressContentEditableWarning={true}
-          >
-            {children}
-          </div>
+          {children}
         </div>
       )}
     </>

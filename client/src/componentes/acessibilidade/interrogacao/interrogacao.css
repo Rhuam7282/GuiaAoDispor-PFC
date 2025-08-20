@@ -1,74 +1,34 @@
-/* Estilos para o componente */
+/* Interrogacao.css */
 .interogacao {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  background-color: #3a86ff;
-  color: white;
-  border-radius: 50%;
-  border: none;
+  top: 15px;
+  right: 15px;
+  width: 18px !important;
+  height: 18px !important;
   font-weight: bold;
-  font-size: 24px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 1000;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  transition: all 0.3s ease;
-}
-
-.interogacao:hover {
-  background-color: #2667cc;
-  transform: scale(1.1);
+  transition: all 0.3s;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .conteudo-interrogacao {
-  min-width: 300px;
-  max-width: 500px;
-  padding: 20px;
+  position: fixed;
+  top: 60px;
+  right: 15px;
+  max-width: 210px;
   z-index: 1001;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  animation: aparecer 0.3s ease forwards;
+  border-radius: 8px;
+  animation: aparecer 0.3s;
+  background-color: rgba(211, 163, 127, 1) !important;
+  box-shadow: 0 0px 8px var(--cor-sombra) !important;
 }
 
 @keyframes aparecer {
   from {
     opacity: 0;
-    transform: translate(-100%, -100%) scale(0.8);
   }
   to {
     opacity: 1;
-    transform: translate(-100%, -100%) scale(1);
   }
-}
-
-.conteudo-editavel {
-  min-height: 100px;
-  padding: 12px;
-  border: 2px dashed rgba(58, 134, 255, 0.3);
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-
-.conteudo-editavel:focus {
-  outline: none;
-  border-color: #3a86ff;
-  background-color: #f8f9ff;
-  box-shadow: 0 0 0 2px rgba(58, 134, 255, 0.2);
-}
-
-/* Estilos para o cartão de destaque */
-.cartaoDestaque {
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-}
-
-.variacao3 {
-  background-color: #f0f9ff;
-  border-color: #b6e0fe;
-  color: #004085;
 }

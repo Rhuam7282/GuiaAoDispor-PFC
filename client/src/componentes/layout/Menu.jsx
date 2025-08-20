@@ -36,8 +36,7 @@ const Menu = () => {
       </div>
      <ul className="listaIcones vertical">
       <Interrogacao>
-        Este texto é editável diretamente na interface! Clique e digite para alterar o conteúdo.
-        Você pode usar <strong>HTML</strong> para formatação também.
+        Texto auxiliar muito legal 👍
       </Interrogacao>
         {itensMenu.map((item) => {
           const ativo = item.texto === paginaAtiva;
