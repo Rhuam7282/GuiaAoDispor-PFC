@@ -11,7 +11,7 @@ const Menu = () => {
   const itensMenu = [
     { Icone: Home, texto: 'Início', rota: '/' },
     { Icone: User, texto: 'Perfil', rota: '/perfil' },
-    { Icone: MessageSquare, texto: 'Mensagem', rota: '/mensagem' },
+    // { Icone: MessageSquare, texto: 'Mensagem', rota: '/mensagem' }, // Inativo
     { Icone: Mail, texto: 'Contato', rota: '/contato' }
   ];
 

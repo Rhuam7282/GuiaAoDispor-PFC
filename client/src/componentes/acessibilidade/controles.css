@@ -19,7 +19,7 @@
   CORREÇÃO: Unificamos as regras de acessibilidade em uma única classe.
   Isso garante que todas as propriedades sejam aplicadas juntas e de forma consistente.
 */
-.acessibilidade-ativa {
+html.acessibilidade-ativa body {
   font-size: var(--accessibility-font-size) !important;
   letter-spacing: var(--accessibility-letter-spacing) !important;
   line-height: var(--accessibility-line-height) !important;

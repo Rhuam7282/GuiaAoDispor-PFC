@@ -7,7 +7,40 @@
     <meta name="keywords" content="cuidados especiais, acessibilidade, inclusão, profissionais de saúde, LIBRAS, terapeutas, enfermeiros, cuidadores, necessidades específicas">
     <title>Guia ao Dispor - Plataforma de Conexão para Cuidados Especiais e Acessibilidade</title>
     <link rel="canonical" href="https://www.guiaaodispor.com.br" />
-    <link rel="icon" href="recursos/logo.png">
+    <link rel="icon" href="/client/src/recursos/logo.png">
+    <script>
+    // Aplica configurações antes da renderização
+      (function() {
+        function getSetting(key, defaultValue) {
+          try {
+            const value = localStorage.getItem('acessibilidade_' + key);
+            return value !== null ? JSON.parse(value) : defaultValue;
+          } catch (e) {
+            return defaultValue;
+          }
+        }
+
+        const root = document.documentElement;
+        const fontSize = getSetting('fontSize', 100);
+        const letterSpacing = getSetting('letterSpacing', 0);
+        const lineHeight = getSetting('lineHeight', 1.5);
+        const highContrast = getSetting('modoAltoContraste', false);
+
+        // Aplica variáveis CSS
+        root.style.setProperty('--accessibility-font-size', `${fontSize}%`);
+        root.style.setProperty('--accessibility-letter-spacing', `${letterSpacing}px`);
+        root.style.setProperty('--accessibility-line-height', lineHeight);
+
+        // Aplica classes
+        if (fontSize !== 100 || letterSpacing !== 0 || lineHeight !== 1.5) {
+          root.classList.add('acessibilidade-ativa');
+        }
+        
+        if (highContrast) {
+          root.classList.add('modo-alto-contraste');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
