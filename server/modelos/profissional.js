@@ -1,17 +1,29 @@
-// server/models/profissionalModel.js
 import mongoose from 'mongoose';
 
-// ... (schemas de hCurricular e hProfissional aqui, sem alterações) ...
-const hCurricularSchema = new mongoose.Schema({ /* ... */ });
-const hProfissionalSchema = new mongoose.Schema({ /* ... */ });
-
-const profissionalSchema = new mongoose.Schema({
-    // ... (todo o conteúdo do schema aqui, sem alterações) ...
-    nome: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    // etc.
+const ProfissionalSchema = new mongoose.Schema({
+  nome: {
+    type: String,
+    required: true
+  },
+  desc: {
+    type: String,
+    required: true
+  },
+  inst: String,
+  face: String,
+  email: String,
+  num: String,
+  senha: {
+    type: String,
+    required: true
+  },
+  nota: Number,
+  localizacao: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Localizacao'
+  },
+  foto: String,
+  linkedin: String
 });
 
-const Profissional = mongoose.model('Profissional', profissionalSchema);
-
-export default Profissional; // <-- Mude module.exports para export default
+export default mongoose.model('Profissional', ProfissionalSchema);
