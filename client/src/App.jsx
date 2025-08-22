@@ -7,6 +7,7 @@ import Cadastro from "./paginas/cadastro/cadastro.jsx";
 import Inicio from "./paginas/inicio/inicio.jsx";
 import PainelControle from "@componentes/acessibilidade/controles"; 
 
+
 function App() {
   return (
     <BrowserRouter>

@@ -64,9 +64,7 @@ const Menu = () => {
         })}
       </ul>
       <footer>
-        <p>Todos os direitos reservados. <br /><br />
-          Guia ao Dispor é resultado de um projeto escolar. Saiba mais. <br /><br />
-          Veja também nosso Artigo de Desenvolvimento.</p>
+        <p>Todos os direitos reservados.</p>
       </footer>
     </menu>
   );
