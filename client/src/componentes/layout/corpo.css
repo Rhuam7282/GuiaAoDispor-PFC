@@ -1,5 +1,18 @@
-.layout-container {
+.container-layout {
   display: grid;
   grid-template-columns: 1fr 5fr;
   text-align: center;
+}
+
+.container-layout.pagina-inicial {
+  grid-template-columns: 1fr;
+}
+
+.conteudo-principal {
+  transition: all 0.3s ease;
+}
+
+.conteudo-principal.conteudo-inteiro {
+  width: 100vw;
+  margin-left: 0;
 }
