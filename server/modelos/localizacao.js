@@ -5,11 +5,13 @@ const LocalizacaoSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  coord: {
-    type: Number,
-    required: true
+  coordenadas: {
+    lat: Number,
+    lng: Number
   },
-  cep: Number
+  cep: String,
+  cidade: String,
+  estado: String
 });
 
 export default mongoose.model('Localizacao', LocalizacaoSchema);
