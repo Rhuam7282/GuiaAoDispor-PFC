@@ -483,27 +483,26 @@ const Cadastro = () => {
                 {carregando ? 'Cadastrando...' : 'Criar Conta'}
               </button>
             </div>
-            
             <div className="secao-upload-imagem">
-  <div className="area-upload-imagem">
-    <input
-      type="file"
-      id="foto"
-      className="input-arquivo"
-      accept="image/*"
-      onChange={aoSelecionarArquivo}
-    />
-    <label htmlFor="foto" className="rotulo-upload-imagem">
-      {dadosFormulario.foto ? (
-        <img src={dadosFormulario.foto} alt="Preview" className="preview-imagem-perfil" />
-      ) : (
-        <div className="placeholder-upload">
-          <span>Clique para adicionar uma foto</span>
-        </div>
-      )}
-    </label>
-  </div>
-</div>
+              <div className="area-upload-imagem">
+                <input
+                  type="file"
+                  id="foto"
+                  className="input-arquivo"
+                  accept="image/*"
+                  onChange={aoSelecionarArquivo}
+                />
+                <label htmlFor="foto" className="rotulo-upload-imagem">
+                  {dadosFormulario.foto ? (
+                    <img src={dadosFormulario.foto} alt="Preview" className="preview-imagem-perfil" />
+                  ) : (
+                    <div className="placeholder-upload">
+                      <span>Clique para adicionar uma foto</span>
+                    </div>
+                  )}
+                </label>
+              </div>
+            </div>
           </div>
         </form>
       </div>

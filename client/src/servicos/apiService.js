@@ -20,12 +20,14 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
     const dadosResposta = await resposta.json();
 
     if (!resposta.ok) {
-      throw new Error(dadosResposta.mensagem || "Erro na requisição");
+      const mensagemErro =
+        dadosResposta.message || dadosResposta.mensagem || "Erro na requisição";
+      throw new Error(mensagemErro);
     }
 
     return dadosResposta;
   } catch (erro) {
-    throw new Error(erro.mensagem || "Erro de conexão");
+    throw new Error(erro.message || "Erro de conexão");
   }
 };
 
@@ -162,7 +164,6 @@ export const servicoCadastro = {
       });
       const idProfissional =
         respostaProfissional.data._id || respostaProfissional.dados._id;
-
       // Cadastra cada histórico curricular
       for (const hc of historicosCurriculares) {
         await servicoHCurricular.criar({
