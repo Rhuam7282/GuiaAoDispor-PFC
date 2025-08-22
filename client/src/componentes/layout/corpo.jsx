@@ -1,6 +1,5 @@
 import Menu from './Menu';
 import './corpo.css';
-import PainelControle from "@componentes/acessibilidade/controles"; 
 import { useLocation } from 'react-router-dom';
 
 const Corpo = ({ children }) => {
@@ -9,7 +8,6 @@ const Corpo = ({ children }) => {
   
   return (
     <div className={`container-layout ${paginaInicial ? 'pagina-inicial' : ''}`}>
-      <PainelControle />
       {!paginaInicial && <Menu className="menu" />}
       <main className={`conteudo-principal ${paginaInicial ? 'conteudo-inteiro' : ''}`}>
         {children}

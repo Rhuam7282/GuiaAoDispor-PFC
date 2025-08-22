@@ -10,7 +10,6 @@ import {
   Instagram,
   Linkedin,
 } from "lucide-react";
-import PainelControle from "@componentes/acessibilidade/controles"; //
 
 import mariaSilva from "@recursos/mulher.png";
 import micheleto from "@recursos/hospital.jpg";

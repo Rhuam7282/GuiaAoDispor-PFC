@@ -5,10 +5,12 @@ import Mensagem from "./paginas/mensagem/mensagem.jsx";
 import Qualificados from "./paginas/qualificados/qualificados.jsx";
 import Cadastro from "./paginas/cadastro/cadastro.jsx";
 import Inicio from "./paginas/inicio/inicio.jsx";
+import PainelControle from "@componentes/acessibilidade/controles"; 
 
 function App() {
   return (
     <BrowserRouter>
+      <PainelControle />
       <Routes>
         <Route path="/" element={<Inicio />} />
         <Route path="/qualificados" element={<Qualificados />} />

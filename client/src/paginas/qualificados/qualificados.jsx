@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./qualificados.css";
 import Filtro from "./filtro";
 import Corpo from "../../componentes/layout/corpo";
-import PainelControle from "../../componentes/acessibilidade/controles";
 
 // Corrigindo os caminhos dos assets, assumindo que estão em 'src/assets'
 import mariaSilva from '../../recursos/mulher.png';
@@ -56,7 +55,6 @@ function Profissionais() {
 
   return (
     <Corpo>
-      <PainelControle />
       <div className="container">
         
         {/* Seção explicativa com classes BEM específicas para evitar conflitos */}
