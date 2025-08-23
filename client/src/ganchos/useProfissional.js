@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { profissionalService } from '@servicos/apiService';
+import { servicoProfissional } from '@servicos/apiService';
 
 export const useProfissional = (id) => {
   const [profissional, setProfissional] = useState(null);
@@ -15,7 +15,7 @@ export const useProfissional = (id) => {
           throw new Error('ID não fornecido');
         }
 
-        const response = await profissionalService.buscarPorId(id);
+        const response = await servicoProfissional.buscarPorId(id);
         console.log('Resposta da API:', response);
         
         // Ajuste conforme a estrutura da sua API
