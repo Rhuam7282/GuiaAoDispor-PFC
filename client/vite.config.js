@@ -34,7 +34,8 @@ export default defineConfig({
       '@servicos': path.resolve(__dirname, 'src/servicos'),
       '@config': path.resolve(__dirname, 'config'),
       '@paginas': path.resolve(__dirname, 'src/paginas'),
-      '@recursos': path.resolve(__dirname, 'src/recursos')
+      '@recursos': path.resolve(__dirname, 'src/recursos'),
+      '@ganchos': path.resolve(__dirname, 'src/ganchos')
     }
   }
 });

@@ -1,8 +1,8 @@
-import { CONFIG_API } from "@config/apiConfig.js";
+import { API_CONFIG } from '@config/apiConfig.js';
 
 const URL_BASE = CONFIG_API.URL_BASE;
 
-// Função utilitária para fazer requisições
+// Função utilitária para fazer requisições usando fetch
 const fazerRequisicao = async (url, metodo, dados = null) => {
   const opcoes = {
     method: metodo,
@@ -11,7 +11,7 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
     },
   };
 
-  if (dados) {
+  if (dados && (metodo === 'POST' || metodo === 'PUT')) {
     opcoes.body = JSON.stringify(dados);
   }
 
@@ -118,8 +118,7 @@ export const servicoCadastro = {
       );
       const respostaUsuario = await servicoUsuario.criar({
         ...dadosUsuario,
-        localizacao:
-          respostaLocalizacao.data._id || respostaLocalizacao.dados._id,
+        localizacao: localizacaoResposta.data._id
       });
       return respostaUsuario;
     } catch (erro) {
@@ -137,7 +136,7 @@ export const servicoCadastro = {
       // Depois cria o profissional com a referência da localização
       const respostaProfissional = await servicoProfissional.criar({
         ...dadosProfissional,
-        localizacao: respostaLocalizacao.dados._id,
+        localizacao: localizacaoResposta.data._id
       });
 
       return respostaProfissional;
