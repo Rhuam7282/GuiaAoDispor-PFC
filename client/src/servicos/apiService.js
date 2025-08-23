@@ -1,6 +1,6 @@
 import { API_CONFIG } from '@config/apiConfig.js';
 
-const URL_BASE = CONFIG_API.URL_BASE;
+const URL_BASE = API_CONFIG.URL_BASE;
 
 // Função utilitária para fazer requisições usando fetch
 const fazerRequisicao = async (url, metodo, dados = null) => {
@@ -118,7 +118,7 @@ export const servicoCadastro = {
       );
       const respostaUsuario = await servicoUsuario.criar({
         ...dadosUsuario,
-        localizacao: localizacaoResposta.data._id
+        localizacao: respostaLocalizacao.data._id
       });
       return respostaUsuario;
     } catch (erro) {
@@ -136,7 +136,7 @@ export const servicoCadastro = {
       // Depois cria o profissional com a referência da localização
       const respostaProfissional = await servicoProfissional.criar({
         ...dadosProfissional,
-        localizacao: localizacaoResposta.data._id
+        localizacao: respostaLocalizacao.data._id
       });
 
       return respostaProfissional;
