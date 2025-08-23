@@ -1,7 +1,7 @@
 import React from "react";
 import "./perfil.css";
 import Corpo from "@componentes/layout/corpo";
-
+import { useProfissional } from "@ganchos/useProfissional"; // Hook personalizado para buscar dados
 import {
   Star,
   MapPin,
@@ -9,77 +9,84 @@ import {
   Facebook,
   Instagram,
   Linkedin,
+  Phone
 } from "lucide-react";
 
-import mariaSilva from "@recursos/mulher.png";
-import micheleto from "@recursos/hospital.jpg";
-import butantan from "@recursos/butantan.webp";
-import portugues from "@recursos/portugues.jpg";
-
 const Perfil = () => {
-  const dadosPerfil = {
-    nome: "Maria Silva",
-    foto: mariaSilva,
-    localizacao: "Assis Chateaibriand, PR",
-    descricao:
-      "Enfermeira especializada em geriatria com 10 anos de experiência.",
-    avaliacao: 4.8,
-    redesSociais: [
-      { icone: Mail, usuario: "maria.silva@exemplo.com" },
-      { icone: Facebook, usuario: "/maria.silva" },
-      { icone: Instagram, usuario: "@maria_silva" },
-      { icone: Linkedin, usuario: "linkedin.com/in/maria-silva" },
-    ],
-    historicoProfissional: [
-      {
-        nome: "Hospital Micheletto - Assis Chateaubriand",
-        imagem: micheleto,
-        alt: "Hospital Micheletto",
-      },
-      {
-        nome: "Instituto Butantan - São Paulo",
-        imagem: butantan,
-        alt: "Instituto Butantan",
-      },
-      {
-        nome: "Hospital Beneficente Português - Belém",
-        imagem: portugues,
-        alt: "Hospital Beneficente Português",
-      },
-    ],
-    historicoAcademico: [
-      {
-        nome: "Graduação em Enfermagem",
-        instituicao: "USP",
-        periodo: "2010-2014",
-      },
-      {
-        nome: "Pós-graduação em Geriatria",
-        instituicao: "UNIFESP",
-        periodo: "2015-2017",
-      },
-    ],
-  };
+  const { id } = useParams(); // Obtenha o ID da URL
+  const { profissional, loading, error } = useProfissional(id);
+
+  if (loading) {
+  return (
+    <Corpo>
+      <div className="container">
+        <div style={{textAlign: 'center', padding: '2rem'}}>
+          <h2>Carregando perfil...</h2>
+          <p>Isso pode levar alguns instantes</p>
+        </div>
+      </div>
+    </Corpo>
+  );
+}
+if (!id) {
+  return (
+    <Corpo>
+      <div className="container">
+        <div style={{textAlign: 'center', padding: '2rem'}}>
+          <h2>ID do profissional não especificado</h2>
+          <p>Por favor, verifique o URL e tente novamente.</p>
+        </div>
+      </div>
+    </Corpo>
+  );
+}
+
+if (error) {
+  return (
+    <Corpo>
+      <div className="container">
+        <div style={{textAlign: 'center', padding: '2rem', color: 'red'}}>
+          <h2>Erro ao carregar perfil</h2>
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>
+            Tentar novamente
+          </button>
+        </div>
+      </div>
+    </Corpo>
+  );
+}
+  if (error) return <div>Erro ao carregar perfil: {error.message}</div>;
+  if (!profissional) return <div>Profissional não encontrado</div>;
+
+  // Mapear redes sociais
+  const redesSociais = [
+    { icone: Mail, usuario: profissional.email },
+    { icone: Facebook, usuario: profissional.face },
+    { icone: Instagram, usuario: profissional.inst },
+    { icone: Linkedin, usuario: profissional.linkedin },
+    { icone: Phone, usuario: profissional.num }
+  ].filter(rede => rede.usuario); // Remove redes vazias
 
   return (
     <Corpo>
       <div className="container">
-        <h1 className="titulo">{dadosPerfil.nome}</h1>
+        <h1 className="titulo">{profissional.nome}</h1>
 
         <div className="containerPrincipal">
           <div className="colunaFoto">
             <img
               className="imagemPerfil"
-              src={dadosPerfil.foto}
-              alt={`${dadosPerfil.nome} - ${dadosPerfil.descricao} em ${dadosPerfil.localizacao}`}
+              src={profissional.foto}
+              alt={`${profissional.nome} - ${profissional.desc} em ${profissional.localizacao?.nome}`}
             />
           </div>
           <div className="cartaoDestaque variacao3">
-            <p>{dadosPerfil.descricao}</p>
+            <p>{profissional.desc}</p>
             <div className="detalhesPerfil">
               <div className="icone">
                 <MapPin size={20} />
-                <span>{dadosPerfil.localizacao}</span>
+                <span>{profissional.localizacao?.nome}</span>
               </div>
 
               <div className="icone">
@@ -87,13 +94,11 @@ const Perfil = () => {
                   <Star
                     key={i}
                     size={20}
-                    fill={
-                      i < Math.floor(dadosPerfil.avaliacao) ? "#54453B" : "none"
-                    }
+                    fill={i < Math.floor(profissional.nota) ? "#54453B" : "none"}
                     stroke="#54453B"
                   />
                 ))}
-                <span className="valorAvaliacao">{dadosPerfil.avaliacao}</span>
+                <span className="valorAvaliacao">{profissional.nota}</span>
               </div>
             </div>
           </div>
@@ -102,7 +107,7 @@ const Perfil = () => {
           <div className="colunaContatos">
             <h3>Contatos</h3>
             <div className="listaIcones vertical">
-              {dadosPerfil.redesSociais.map((rede, index) => {
+              {redesSociais.map((rede, index) => {
                 const Icone = rede.icone;
                 return (
                   <div key={index} className="listaIcones">
@@ -119,11 +124,10 @@ const Perfil = () => {
         <div className="secaoHistorico">
           <h2>Histórico Acadêmico</h2>
           <div className="listaAcademica">
-            {dadosPerfil.historicoAcademico.map((item, index) => (
+            {profissional.historicoAcademico?.map((item, index) => (
               <div key={index} className="cartaoDestaque variacao2">
                 <h3>{item.nome}</h3>
-                <p>{item.instituicao}</p>
-                <p className="periodo">{item.periodo}</p>
+                <p>{item.desc}</p>
               </div>
             ))}
           </div>
@@ -133,17 +137,17 @@ const Perfil = () => {
         <div className="secaoHistorico">
           <h2>Histórico Profissional</h2>
           <div className="listaProfissional">
-            {dadosPerfil.historicoProfissional.map((item, index) => (
+            {profissional.historicoProfissional?.map((item, index) => (
               <div key={index} className="cartaoDestaque variacao2">
                 <div className="imagemProfissional">
                   <img
-                    key={index}
-                    src={item.imagem}
-                    alt={`${item.nome} - Local de trabalho de ${dadosPerfil.nome}`}
+                    src={item.foto}
+                    alt={`${item.nome} - Local de trabalho de ${profissional.nome}`}
                   />
                 </div>
                 <div className="infoProfissional">
                   <h3>{item.nome}</h3>
+                  <p>{item.desc}</p>
                 </div>
               </div>
             ))}

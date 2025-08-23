@@ -1,8 +1,8 @@
-import { API_CONFIG } from '@config/apiConfig.js';
+import { API_CONFIG } from '../../config/apiConfig';
 
 const BASE_URL = API_CONFIG.BASE_URL;
 
-// Função utilitária para fazer requisições
+// Função utilitária para fazer requisições usando fetch
 const fazerRequisicao = async (url, metodo, dados = null) => {
   const opcoes = {
     method: metodo,
@@ -11,7 +11,7 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
     },
   };
 
-  if (dados) {
+  if (dados && (metodo === 'POST' || metodo === 'PUT')) {
     opcoes.body = JSON.stringify(dados);
   }
 
@@ -75,7 +75,7 @@ export const cadastroService = {
       // Depois cria o usuário com a referência da localização
       const usuarioResposta = await usuarioService.criar({
         ...dadosUsuario,
-        localizacao: localizacaoResposta.data._id
+        localizacao: localizacaoResposta._id // Ajuste conforme a estrutura da sua API
       });
       
       return usuarioResposta;
@@ -92,7 +92,7 @@ export const cadastroService = {
       // Depois cria o profissional com a referência da localização
       const profissionalResposta = await profissionalService.criar({
         ...dadosProfissional,
-        localizacao: localizacaoResposta.data._id
+        localizacao: localizacaoResposta._id // Ajuste conforme a estrutura da sua API
       });
       
       return profissionalResposta;

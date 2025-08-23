@@ -6,10 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 // Configuração do dotenv
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const caminhoEnv = path.resolve(__dirname, '.env');
-dotenv.config({ path: caminhoEnv });
+dotenv.config();
 
 // Importar todos os modelos
 import Localizacao from './modelos/localizacao.js';
@@ -23,15 +20,23 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  next();
+});
+
 // Conexão com MongoDB
-const mongoURI = process.env.MONGO_URI;
+const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/guiaaodispor';
 mongoose.connect(mongoURI)
-    .then(() => console.log('✅ Conexão com o MongoDB estabelecida!'))
-    .catch(err => console.error('❌ Erro ao conectar com o MongoDB:', err));
+  .then(() => console.log('✅ Conexão com o MongoDB estabelecida!'))
+  .catch(err => {
+    console.error('❌ Erro ao conectar com o MongoDB:', err);
+    process.exit(1); // Encerra o processo em caso de erro
+  });
 
 // Rota raiz
 app.get('/', (req, res) => {
-  res.send('Bem-vindo à API do Guia ao Dispor!');
+    res.send('Bem-vindo à API do Guia ao Dispor!');
 });
 
 // Rotas da API
@@ -68,7 +73,11 @@ apiRouter.get('/profissionais', async (req, res) => {
 
 apiRouter.get('/profissionais/:id', async (req, res) => {
     try {
-        const profissional = await Profissional.findById(req.params.id).populate('localizacao');
+        const profissional = await Profissional.findById(req.params.id)
+            .populate('localizacao')
+            .populate('historicoAcademico')
+            .populate('historicoProfissional');
+
         if (!profissional) {
             return res.status(404).json({ status: 'erro', message: 'Profissional não encontrado' });
         }
@@ -94,11 +103,11 @@ apiRouter.put('/profissionais/:id', async (req, res) => {
             req.body,
             { new: true, runValidators: true }
         ).populate('localizacao');
-        
+
         if (!profissional) {
             return res.status(404).json({ status: 'erro', message: 'Profissional não encontrado' });
         }
-        
+
         res.status(200).json({ status: 'sucesso', data: profissional });
     } catch (error) {
         res.status(400).json({ status: 'erro', message: error.message });
@@ -108,11 +117,11 @@ apiRouter.put('/profissionais/:id', async (req, res) => {
 apiRouter.delete('/profissionais/:id', async (req, res) => {
     try {
         const profissional = await Profissional.findByIdAndDelete(req.params.id);
-        
+
         if (!profissional) {
             return res.status(404).json({ status: 'erro', message: 'Profissional não encontrado' });
         }
-        
+
         res.status(200).json({ status: 'sucesso', message: 'Profissional deletado com sucesso' });
     } catch (error) {
         res.status(500).json({ status: 'erro', message: error.message });
@@ -157,11 +166,11 @@ apiRouter.put('/usuarios/:id', async (req, res) => {
             req.body,
             { new: true, runValidators: true }
         ).populate('localizacao');
-        
+
         if (!usuario) {
             return res.status(404).json({ status: 'erro', message: 'Usuário não encontrado' });
         }
-        
+
         res.status(200).json({ status: 'sucesso', data: usuario });
     } catch (error) {
         res.status(400).json({ status: 'erro', message: error.message });
@@ -171,11 +180,11 @@ apiRouter.put('/usuarios/:id', async (req, res) => {
 apiRouter.delete('/usuarios/:id', async (req, res) => {
     try {
         const usuario = await Usuario.findByIdAndDelete(req.params.id);
-        
+
         if (!usuario) {
             return res.status(404).json({ status: 'erro', message: 'Usuário não encontrado' });
         }
-        
+
         res.status(200).json({ status: 'sucesso', message: 'Usuário deletado com sucesso' });
     } catch (error) {
         res.status(500).json({ status: 'erro', message: error.message });
@@ -199,7 +208,7 @@ apiRouter.get('/avaliacoes/:id', async (req, res) => {
         const avaliacao = await Avaliacao.findById(req.params.id)
             .populate('usuario')
             .populate('profissional');
-            
+
         if (!avaliacao) {
             return res.status(404).json({ status: 'erro', message: 'Avaliação não encontrada' });
         }
@@ -225,13 +234,13 @@ apiRouter.put('/avaliacoes/:id', async (req, res) => {
             req.body,
             { new: true, runValidators: true }
         )
-        .populate('usuario')
-        .populate('profissional');
-        
+            .populate('usuario')
+            .populate('profissional');
+
         if (!avaliacao) {
             return res.status(404).json({ status: 'erro', message: 'Avaliação não encontrada' });
         }
-        
+
         res.status(200).json({ status: 'sucesso', data: avaliacao });
     } catch (error) {
         res.status(400).json({ status: 'erro', message: error.message });
@@ -241,11 +250,11 @@ apiRouter.put('/avaliacoes/:id', async (req, res) => {
 apiRouter.delete('/avaliacoes/:id', async (req, res) => {
     try {
         const avaliacao = await Avaliacao.findByIdAndDelete(req.params.id);
-        
+
         if (!avaliacao) {
             return res.status(404).json({ status: 'erro', message: 'Avaliação não encontrada' });
         }
-        
+
         res.status(200).json({ status: 'sucesso', message: 'Avaliação deletada com sucesso' });
     } catch (error) {
         res.status(500).json({ status: 'erro', message: error.message });
@@ -290,11 +299,11 @@ apiRouter.put('/hcurriculares/:id', async (req, res) => {
             req.body,
             { new: true, runValidators: true }
         ).populate('profissional');
-        
+
         if (!hcurricular) {
             return res.status(404).json({ status: 'erro', message: 'H. Curricular não encontrado' });
         }
-        
+
         res.status(200).json({ status: 'sucesso', data: hcurricular });
     } catch (error) {
         res.status(400).json({ status: 'erro', message: error.message });
@@ -304,11 +313,11 @@ apiRouter.put('/hcurriculares/:id', async (req, res) => {
 apiRouter.delete('/hcurriculares/:id', async (req, res) => {
     try {
         const hcurricular = await HCurricular.findByIdAndDelete(req.params.id);
-        
+
         if (!hcurricular) {
             return res.status(404).json({ status: 'erro', message: 'H. Curricular não encontrado' });
         }
-        
+
         res.status(200).json({ status: 'sucesso', message: 'H. Curricular deletado com sucesso' });
     } catch (error) {
         res.status(500).json({ status: 'erro', message: error.message });
@@ -353,11 +362,11 @@ apiRouter.put('/hprofissionais/:id', async (req, res) => {
             req.body,
             { new: true, runValidators: true }
         ).populate('profissional');
-        
+
         if (!hprofissional) {
             return res.status(404).json({ status: 'erro', message: 'H. Profissional não encontrado' });
         }
-        
+
         res.status(200).json({ status: 'sucesso', data: hprofissional });
     } catch (error) {
         res.status(400).json({ status: 'erro', message: error.message });
@@ -367,11 +376,11 @@ apiRouter.put('/hprofissionais/:id', async (req, res) => {
 apiRouter.delete('/hprofissionais/:id', async (req, res) => {
     try {
         const hprofissional = await HProfissional.findByIdAndDelete(req.params.id);
-        
+
         if (!hprofissional) {
             return res.status(404).json({ status: 'erro', message: 'H. Profissional não encontrado' });
         }
-        
+
         res.status(200).json({ status: 'sucesso', message: 'H. Profissional deletado com sucesso' });
     } catch (error) {
         res.status(500).json({ status: 'erro', message: error.message });
@@ -383,7 +392,7 @@ app.use('/api', apiRouter);
 
 // Rota para 404
 app.use((req, res) => {
-  res.status(404).send('Página não encontrada');
+    res.status(404).send('Página não encontrada');
 });
 
 const PORT = process.env.PORT || 3000;
