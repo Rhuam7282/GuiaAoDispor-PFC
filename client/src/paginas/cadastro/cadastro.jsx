@@ -212,14 +212,14 @@ const Cadastro = () => {
 
   return (
     <Corpo>
-      <div className="container-pagina-cadastro">
+      <div className="container">
         <h1 className="titulo">Criar Conta</h1>
         
-        <form className="formulario-cadastro" onSubmit={aoEnviarFormulario}>
+        <form onSubmit={aoEnviarFormulario}>
           <div className="conteudo-formulario">
-            <div className="campos-formulario">
+            <div>
               {/* Campos básicos */}
-              <div className="grupo-formulario">
+              <div className="cartaoDestaque">
                 <label htmlFor="nome">Nome Completo *</label>
                 <input
                   type="text"
@@ -232,7 +232,7 @@ const Cadastro = () => {
                 {erros.nome && <span className="mensagem-erro">{erros.nome}</span>}
               </div>
 
-              <div className="grupo-formulario">
+              <div className="cartaoDestaque">
                 <label htmlFor="email">Email *</label>
                 <input
                   type="email"
@@ -245,8 +245,8 @@ const Cadastro = () => {
                 {erros.email && <span className="mensagem-erro">{erros.email}</span>}
               </div>
 
-              <div className="linha-senhas">
-                <div className="grupo-formulario">
+              <div className="lista">
+                <div className="cartaoDestaque">
                   <label htmlFor="senha">Senha *</label>
                   <input
                     type="password"
@@ -259,7 +259,7 @@ const Cadastro = () => {
                   {erros.senha && <span className="mensagem-erro">{erros.senha}</span>}
                 </div>
 
-                <div className="grupo-formulario">
+                <div className="cartaoDestaque">
                   <label htmlFor="confirmarSenha">Confirmar Senha *</label>
                   <input
                     type="password"
@@ -273,8 +273,8 @@ const Cadastro = () => {
                 </div>
               </div>
 
-              <div className="linha-endereco">
-                <div className="grupo-formulario grupo-cep">
+              <div className="lista">
+                <div className="cartaoDestaque">
                   <label htmlFor="cep">CEP *</label>
                   <input
                     type="text"
@@ -287,7 +287,7 @@ const Cadastro = () => {
                   {erros.cep && <span className="mensagem-erro">{erros.cep}</span>}
                 </div>
 
-                <div className="grupo-formulario">
+                <div className="cartaoDestaque">
                   <label htmlFor="cidade">Cidade *</label>
                   <input
                     type="text"
@@ -300,7 +300,7 @@ const Cadastro = () => {
                   {erros.cidade && <span className="mensagem-erro">{erros.cidade}</span>}
                 </div>
 
-                <div className="grupo-formulario">
+                <div className="cartaoDestaque">
                   <label htmlFor="estado">Estado</label>
                   <input
                     type="text"
@@ -313,33 +313,33 @@ const Cadastro = () => {
               </div>
 
               {/* Seção de tipo de perfil */}
-              <div className="secao-tipo-perfil">
-                <div className="cabecalho-tipo-perfil">
-                  <span>Tipo de Perfil</span>
+              <div className="cartaoDestaque">
+                <div>
+                  <p>Tipo de Perfil</p>
                 </div>
-                <div className="opcoes-tipo-perfil">
+                <div className="lista">
                   <button
                     type="button"
-                    className={`botao-tipo-perfil ${dadosFormulario.tipoPerfil === 'Pessoal' ? 'ativo' : ''}`}
+                    className={` ${dadosFormulario.tipoPerfil === 'Pessoal' ? 'ativo' : ''}`}
                     onClick={() => setDadosFormulario(prev => ({ ...prev, tipoPerfil: 'Pessoal' }))}
                   >
                     Pessoal
                   </button>
                   <button
                     type="button"
-                    className={`botao-tipo-perfil ${dadosFormulario.tipoPerfil === 'Profissional' ? 'ativo' : ''}`}
+                    className={` ${dadosFormulario.tipoPerfil === 'Profissional' ? 'ativo' : ''}`}
                     onClick={() => setDadosFormulario(prev => ({ ...prev, tipoPerfil: 'Profissional' }))}
                   >
                     Profissional
                   </button>
                 </div>
-                <p className="texto-obrigatorio">* Campos obrigatórios</p>
+                <p>* Campos obrigatórios</p>
               </div>
 
               {/* Campos específicos para profissionais */}
               {dadosFormulario.tipoPerfil === 'Profissional' && (
                 <>
-                  <div className="grupo-formulario">
+                  <div className="cartaoDestaque">
                     <label htmlFor="descricao">Descrição Profissional *</label>
                     <textarea
                       id="descricao"
@@ -352,7 +352,7 @@ const Cadastro = () => {
                     {erros.descricao && <span className="mensagem-erro">{erros.descricao}</span>}
                   </div>
 
-                  <div className="grupo-formulario">
+                  <div className="cartaoDestaque">
                     <label htmlFor="instituicao">Instituição/Formação</label>
                     <input
                       type="text"
@@ -363,7 +363,7 @@ const Cadastro = () => {
                     />
                   </div>
 
-                  <div className="grupo-formulario">
+                  <div className="cartaoDestaque">
                     <label htmlFor="linkedin">LinkedIn</label>
                     <input
                       type="url"
@@ -375,11 +375,11 @@ const Cadastro = () => {
                   </div>
 
                   {/* Seção de Históricos Curriculares */}
-                  <div className="secao-historico">
+                  <div className="cartaoDestaque">
                     <h3>Histórico Curricular</h3>
                     {dadosFormulario.historicosCurriculares.map((hc, indice) => (
-                      <div key={indice} className="item-historico">
-                        <div className="grupo-formulario">
+                      <div key={indice} className="cartaoDestaque variacao3">
+                        <div>
                           <label htmlFor={`hc-nome-${indice}`}>Título</label>
                           <input
                             type="text"
@@ -388,7 +388,7 @@ const Cadastro = () => {
                             onChange={(e) => alterarHistoricoCurricular(indice, 'nome', e.target.value)}
                           />
                         </div>
-                        <div className="grupo-formulario">
+                        <div>
                           <label htmlFor={`hc-descricao-${indice}`}>Descrição</label>
                           <textarea
                             id={`hc-descricao-${indice}`}

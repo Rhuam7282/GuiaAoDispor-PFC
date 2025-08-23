@@ -7,9 +7,7 @@
 
 .formulario-cadastro {
   background-color: var(--cor-destaque-primaria);
-  border-radius: 8px;
   padding: 30px;
-  box-shadow: 0 0px 8px var(--cor-sombra);
 }
 
 .conteudo-formulario {
@@ -34,15 +32,6 @@
 }
 
 .grupo-formulario input,
-.grupo-formulario textarea {
-  background: var(--cor-destaque-primaria);
-  border: none;
-  border-radius: 8px;
-  padding: 15px;
-  font-size: 1rem;
-  width: 100%;
-  resize: none;
-}
 
 .grupo-formulario input.erro,
 .grupo-formulario textarea.erro {
@@ -65,22 +54,14 @@
   border-radius: 8px;
 }
 
-/* Layout específico para senhas */
-.linha-senhas {
-  display: flex;
-  gap: 15px;
-}
-
-.linha-senhas .grupo-formulario {
-  flex: 1;
-}
-
-/* Layout específico para endereço */
+/* Layout específico para formulário */
+.linha-senhas,
 .linha-endereco {
   display: flex;
   gap: 15px;
 }
 
+.linha-senha .grupo-formulario,
 .linha-endereco .grupo-formulario {
   flex: 1;
 }
@@ -91,11 +72,10 @@
 
 /* Seção de tipo de perfil */
 .secao-tipo-perfil {
+  composes: cartaoDestaque from global;
+  background-color: var(--cor-fundo-principal);
   margin-bottom: 25px;
   padding: 20px;
-  background-color: var(--cor-fundo-principal);
-  border-radius: 8px;
-  box-shadow: 0 0px 8px var(--cor-sombra);
 }
 
 .cabecalho-tipo-perfil {
@@ -113,28 +93,6 @@
   margin-bottom: 10px;
 }
 
-.botao-tipo-perfil {
-  padding: 10px 20px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  background-color: var(--cor-fundo-principal);
-  color: var(--cor-texto-principal);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 500;
-}
-
-.botao-tipo-perfil:hover {
-  border-color: var(--cor-texto-principal);
-  background-color: rgba(84, 69, 59, 0.05);
-}
-
-.botao-tipo-perfil.ativo {
-  background-color: var(--cor-texto-principal);
-  color: var(--cor-fundo-principal);
-  border-color: var(--cor-texto-principal);
-}
-
 .texto-obrigatorio {
   font-size: 12px;
   color: var(--cor-texto-principal);
@@ -144,27 +102,9 @@
 
 /* Botão de submit */
 .botao-enviar {
-  background-color: var(--cor-botao-principal);
-  color: var(--cor-texto-principal);
-  border: none;
-  padding: 15px;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  box-shadow: 0 0px 8px var(--cor-sombra);
+  composes: button from global;
   width: 100%;
   margin-top: 20px;
-}
-
-.botao-enviar:hover:not(:disabled) {
-  filter: brightness(0.95);
-}
-
-.botao-enviar:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
 }
 
 /* Seção de upload de imagem */
@@ -215,30 +155,20 @@
 }
 
 .rotulo-arquivo {
+  composes: button from global;
   position: absolute;
   bottom: -40px;
-  background-color: var(--cor-botao-principal);
-  color: var(--cor-texto-principal);
   padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
   font-size: 12px;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  box-shadow: 0 0px 8px var(--cor-sombra);
-}
-
-.rotulo-arquivo:hover {
-  filter: brightness(0.95);
+  margin-bottom: 0;
 }
 
 /* Estilos para a seção de históricos */
 .secao-historico {
+  composes: cartaoDestaque from global;
+  background-color: var(--cor-fundo-principal);
   margin-bottom: 25px;
   padding: 20px;
-  background-color: var(--cor-fundo-principal);
-  border-radius: 8px;
-  box-shadow: 0 0px 8px var(--cor-sombra);
 }
 
 .secao-historico h3 {
@@ -254,18 +184,10 @@
 }
 
 .item-historico button {
-  background-color: var(--cor-botao-principal);
-  color: var(--cor-texto-principal);
-  border: none;
+  composes: button from global;
   padding: 8px 15px;
-  border-radius: 8px;
-  cursor: pointer;
   margin-top: 10px;
-  font-weight: bold;
-}
-
-.item-historico button:hover {
-  filter: brightness(0.95);
+  margin-bottom: 0;
 }
 
 .preview-imagem {
@@ -274,6 +196,19 @@
   object-fit: cover;
   border-radius: 8px;
   margin-top: 10px;
+}
+
+.rotulo-upload-imagem {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+.area-upload-imagem:hover .rotulo-upload-imagem {
+  background-color: rgba(127, 204, 212, 0.1);
 }
 
 /* Responsividade */
@@ -318,29 +253,4 @@
   .formulario-cadastro {
     padding: 20px;
   }
-
-  .rotulo-upload-imagem {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .area-upload-imagem:hover .rotulo-upload-imagem {
-    background-color: rgba(127, 204, 212, 0.1);
-  }
-}
-.rotulo-upload-imagem {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-}
-
-.area-upload-imagem:hover .rotulo-upload-imagem {
-  background-color: rgba(127, 204, 212, 0.1);
 }
