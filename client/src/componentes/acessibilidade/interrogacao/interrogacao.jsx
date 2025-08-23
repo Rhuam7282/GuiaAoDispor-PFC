@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import './Interrogacao.css';
+import './interrogacao.css';
 
 const Interrogacao = ({ children }) => {
   const [mostrarConteudo, setMostrarConteudo] = useState(false);
