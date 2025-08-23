@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SobreNos from "./paginas/sobrenos/sobreNos.jsx";
-import Perfil from "./paginas/perfil/Perfil.jsx";
+import Perfil from "./paginas/perfil/perfil.jsx";
 import Mensagem from "./paginas/mensagem/mensagem.jsx";
 import Qualificados from "./paginas/qualificados/qualificados.jsx";
 import Cadastro from "./paginas/cadastro/cadastro.jsx";

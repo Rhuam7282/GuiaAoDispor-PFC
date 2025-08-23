@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './cadastro.css';
 import Corpo from "@componentes/layout/corpo.jsx";
 import { servicoCadastro } from '@/servicos/apiService';
+import './cadastro.css';
 
 const Cadastro = () => {
   const [dadosFormulario, setDadosFormulario] = useState({
@@ -31,7 +31,6 @@ const Cadastro = () => {
     const { name, value } = evento.target;
     setDadosFormulario(prev => ({ ...prev, [name]: value }));
     
-    // Limpar erro do campo quando o usuário começar a digitar
     if (erros[name]) {
       setErros(prev => ({ ...prev, [name]: '' }));
     }
@@ -110,7 +109,6 @@ const Cadastro = () => {
   const validarFormulario = () => {
     const novosErros = {};
 
-    // Validações básicas
     if (!dadosFormulario.nome) novosErros.nome = 'Nome é obrigatório';
     if (!dadosFormulario.email) novosErros.email = 'Email é obrigatório';
     if (!dadosFormulario.senha) novosErros.senha = 'Senha é obrigatória';
@@ -120,7 +118,6 @@ const Cadastro = () => {
     if (!dadosFormulario.cep) novosErros.cep = 'CEP é obrigatório';
     if (!dadosFormulario.cidade) novosErros.cidade = 'Cidade é obrigatória';
 
-    // Validações específicas para profissionais
     if (dadosFormulario.tipoPerfil === 'Profissional') {
       if (!dadosFormulario.descricao) {
         novosErros.descricao = 'Descrição é obrigatória para profissionais';
@@ -142,7 +139,6 @@ const Cadastro = () => {
     setMensagemSucesso('');
 
     try {
-      // Preparar dados de localização
       const dadosLocalizacao = {
         nome: `${dadosFormulario.cidade}, ${dadosFormulario.estado}`,
         cep: dadosFormulario.cep,
@@ -150,7 +146,6 @@ const Cadastro = () => {
         estado: dadosFormulario.estado
       };
 
-      // Preparar dados do perfil
       const dadosPerfil = {
         nome: dadosFormulario.nome,
         email: dadosFormulario.email,
@@ -162,12 +157,10 @@ const Cadastro = () => {
         foto: dadosFormulario.foto
       };
 
-      // Adicionar LinkedIn apenas para profissionais
       if (dadosFormulario.tipoPerfil === 'Profissional') {
         dadosPerfil.linkedin = dadosFormulario.linkedin;
       }
 
-      // Realizar cadastro baseado no tipo de perfil
       let resposta;
       if (dadosFormulario.tipoPerfil === 'Pessoal') {
         resposta = await servicoCadastro.cadastrarUsuario(dadosPerfil, dadosLocalizacao);
@@ -182,7 +175,6 @@ const Cadastro = () => {
 
       setMensagemSucesso('Cadastro realizado com sucesso!');
       
-      // Limpar formulário após sucesso
       setDadosFormulario({
         nome: '',
         email: '',
@@ -215,11 +207,10 @@ const Cadastro = () => {
       <div className="container">
         <h1 className="titulo">Criar Conta</h1>
         
-        <form onSubmit={aoEnviarFormulario}>
+        <form onSubmit={aoEnviarFormulario} className="formulario-cadastro">
           <div className="conteudo-formulario">
-            <div>
-              {/* Campos básicos */}
-              <div className="cartaoDestaque">
+            <div className="campos-formulario">
+              <div className="grupo-formulario">
                 <label htmlFor="nome">Nome Completo *</label>
                 <input
                   type="text"
@@ -232,7 +223,7 @@ const Cadastro = () => {
                 {erros.nome && <span className="mensagem-erro">{erros.nome}</span>}
               </div>
 
-              <div className="cartaoDestaque">
+              <div className="grupo-formulario">
                 <label htmlFor="email">Email *</label>
                 <input
                   type="email"
@@ -245,8 +236,8 @@ const Cadastro = () => {
                 {erros.email && <span className="mensagem-erro">{erros.email}</span>}
               </div>
 
-              <div className="lista">
-                <div className="cartaoDestaque">
+              <div className="linha-senhas">
+                <div className="grupo-formulario">
                   <label htmlFor="senha">Senha *</label>
                   <input
                     type="password"
@@ -259,7 +250,7 @@ const Cadastro = () => {
                   {erros.senha && <span className="mensagem-erro">{erros.senha}</span>}
                 </div>
 
-                <div className="cartaoDestaque">
+                <div className="grupo-formulario">
                   <label htmlFor="confirmarSenha">Confirmar Senha *</label>
                   <input
                     type="password"
@@ -273,8 +264,8 @@ const Cadastro = () => {
                 </div>
               </div>
 
-              <div className="lista">
-                <div className="cartaoDestaque">
+              <div className="linha-endereco">
+                <div className="grupo-formulario grupo-cep">
                   <label htmlFor="cep">CEP *</label>
                   <input
                     type="text"
@@ -287,7 +278,7 @@ const Cadastro = () => {
                   {erros.cep && <span className="mensagem-erro">{erros.cep}</span>}
                 </div>
 
-                <div className="cartaoDestaque">
+                <div className="grupo-formulario">
                   <label htmlFor="cidade">Cidade *</label>
                   <input
                     type="text"
@@ -300,7 +291,7 @@ const Cadastro = () => {
                   {erros.cidade && <span className="mensagem-erro">{erros.cidade}</span>}
                 </div>
 
-                <div className="cartaoDestaque">
+                <div className="grupo-formulario">
                   <label htmlFor="estado">Estado</label>
                   <input
                     type="text"
@@ -312,34 +303,32 @@ const Cadastro = () => {
                 </div>
               </div>
 
-              {/* Seção de tipo de perfil */}
-              <div className="cartaoDestaque">
-                <div>
-                  <p>Tipo de Perfil</p>
+              <div className="secao-tipo-perfil cartaoDestaque variacao2">
+                <div className="cabecalho-tipo-perfil">
+                  <span>Tipo de Perfil</span>
                 </div>
-                <div className="lista">
+                <div className="opcoes-tipo-perfil listaIcones">
                   <button
                     type="button"
-                    className={` ${dadosFormulario.tipoPerfil === 'Pessoal' ? 'ativo' : ''}`}
+                    className={`botao-tipo-perfil ${dadosFormulario.tipoPerfil === 'Pessoal' ? 'ativo' : ''}`}
                     onClick={() => setDadosFormulario(prev => ({ ...prev, tipoPerfil: 'Pessoal' }))}
                   >
                     Pessoal
                   </button>
                   <button
                     type="button"
-                    className={` ${dadosFormulario.tipoPerfil === 'Profissional' ? 'ativo' : ''}`}
+                    className={`botao-tipo-perfil ${dadosFormulario.tipoPerfil === 'Profissional' ? 'ativo' : ''}`}
                     onClick={() => setDadosFormulario(prev => ({ ...prev, tipoPerfil: 'Profissional' }))}
                   >
                     Profissional
                   </button>
                 </div>
-                <p>* Campos obrigatórios</p>
+                <p className="texto-obrigatorio">* Campos obrigatórios</p>
               </div>
 
-              {/* Campos específicos para profissionais */}
               {dadosFormulario.tipoPerfil === 'Profissional' && (
                 <>
-                  <div className="cartaoDestaque">
+                  <div className="grupo-formulario">
                     <label htmlFor="descricao">Descrição Profissional *</label>
                     <textarea
                       id="descricao"
@@ -352,7 +341,7 @@ const Cadastro = () => {
                     {erros.descricao && <span className="mensagem-erro">{erros.descricao}</span>}
                   </div>
 
-                  <div className="cartaoDestaque">
+                  <div className="grupo-formulario">
                     <label htmlFor="instituicao">Instituição/Formação</label>
                     <input
                       type="text"
@@ -363,7 +352,7 @@ const Cadastro = () => {
                     />
                   </div>
 
-                  <div className="cartaoDestaque">
+                  <div className="grupo-formulario">
                     <label htmlFor="linkedin">LinkedIn</label>
                     <input
                       type="url"
@@ -374,12 +363,11 @@ const Cadastro = () => {
                     />
                   </div>
 
-                  {/* Seção de Históricos Curriculares */}
-                  <div className="cartaoDestaque">
+                  <div className="secao-historico cartaoDestaque variacao3">
                     <h3>Histórico Curricular</h3>
                     {dadosFormulario.historicosCurriculares.map((hc, indice) => (
-                      <div key={indice} className="cartaoDestaque variacao3">
-                        <div>
+                      <div key={indice} className="item-historico">
+                        <div className="grupo-formulario">
                           <label htmlFor={`hc-nome-${indice}`}>Título</label>
                           <input
                             type="text"
@@ -388,7 +376,7 @@ const Cadastro = () => {
                             onChange={(e) => alterarHistoricoCurricular(indice, 'nome', e.target.value)}
                           />
                         </div>
-                        <div>
+                        <div className="grupo-formulario">
                           <label htmlFor={`hc-descricao-${indice}`}>Descrição</label>
                           <textarea
                             id={`hc-descricao-${indice}`}
@@ -403,8 +391,7 @@ const Cadastro = () => {
                     <button type="button" onClick={adicionarHistoricoCurricular}>Adicionar Histórico Curricular</button>
                   </div>
 
-                  {/* Seção de Históricos Profissionais */}
-                  <div className="secao-historico">
+                  <div className="secao-historico cartaoDestaque variacao3">
                     <h3>Histórico Profissional</h3>
                     {dadosFormulario.historicosProfissionais.map((hp, indice) => (
                       <div key={indice} className="item-historico">
@@ -444,7 +431,6 @@ const Cadastro = () => {
                 </>
               )}
 
-              {/* Campos opcionais para ambos os tipos */}
               <div className="grupo-formulario">
                 <label htmlFor="facebook">Facebook</label>
                 <input
@@ -483,6 +469,7 @@ const Cadastro = () => {
                 {carregando ? 'Cadastrando...' : 'Criar Conta'}
               </button>
             </div>
+            
             <div className="secao-upload-imagem">
               <div className="area-upload-imagem">
                 <input

@@ -1,13 +1,8 @@
-/* Estilos específicos para a página de cadastro */
-.container-pagina-cadastro {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 40px 20px;
-}
-
 .formulario-cadastro {
   background-color: var(--cor-destaque-primaria);
+  border-radius: 8px;
   padding: 30px;
+  box-shadow: 0 0px 8px var(--cor-sombra);
 }
 
 .conteudo-formulario {
@@ -31,13 +26,6 @@
   color: var(--cor-texto-principal);
 }
 
-.grupo-formulario input,
-
-.grupo-formulario input.erro,
-.grupo-formulario textarea.erro {
-  border: 2px solid #e74c3c;
-}
-
 .mensagem-erro {
   color: #e74c3c;
   font-size: 12px;
@@ -54,14 +42,20 @@
   border-radius: 8px;
 }
 
-/* Layout específico para formulário */
-.linha-senhas,
+.linha-senhas {
+  display: flex;
+  gap: 15px;
+}
+
+.linha-senhas .grupo-formulario {
+  flex: 1;
+}
+
 .linha-endereco {
   display: flex;
   gap: 15px;
 }
 
-.linha-senha .grupo-formulario,
 .linha-endereco .grupo-formulario {
   flex: 1;
 }
@@ -70,10 +64,7 @@
   flex: 0.8;
 }
 
-/* Seção de tipo de perfil */
 .secao-tipo-perfil {
-  composes: cartaoDestaque from global;
-  background-color: var(--cor-fundo-principal);
   margin-bottom: 25px;
   padding: 20px;
 }
@@ -93,6 +84,28 @@
   margin-bottom: 10px;
 }
 
+.botao-tipo-perfil {
+  padding: 10px 20px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background-color: var(--cor-fundo-principal);
+  color: var(--cor-texto-principal);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.botao-tipo-perfil:hover {
+  border-color: var(--cor-texto-principal);
+  background-color: rgba(84, 69, 59, 0.05);
+}
+
+.botao-tipo-perfil.ativo {
+  background-color: var(--cor-texto-principal);
+  color: var(--cor-fundo-principal);
+  border-color: var(--cor-texto-principal);
+}
+
 .texto-obrigatorio {
   font-size: 12px;
   color: var(--cor-texto-principal);
@@ -100,14 +113,6 @@
   opacity: 0.7;
 }
 
-/* Botão de submit */
-.botao-enviar {
-  composes: button from global;
-  width: 100%;
-  margin-top: 20px;
-}
-
-/* Seção de upload de imagem */
 .secao-upload-imagem {
   flex: 1;
   display: flex;
@@ -154,19 +159,20 @@
   display: none;
 }
 
-.rotulo-arquivo {
-  composes: button from global;
-  position: absolute;
-  bottom: -40px;
-  padding: 8px 16px;
-  font-size: 12px;
-  margin-bottom: 0;
+.rotulo-upload-imagem {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Estilos para a seção de históricos */
+.area-upload-imagem:hover .rotulo-upload-imagem {
+  background-color: rgba(127, 204, 212, 0.1);
+}
+
 .secao-historico {
-  composes: cartaoDestaque from global;
-  background-color: var(--cor-fundo-principal);
   margin-bottom: 25px;
   padding: 20px;
 }
@@ -184,10 +190,18 @@
 }
 
 .item-historico button {
-  composes: button from global;
+  background-color: var(--cor-botao-principal);
+  color: var(--cor-texto-principal);
+  border: none;
   padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
   margin-top: 10px;
-  margin-bottom: 0;
+  font-weight: bold;
+}
+
+.item-historico button:hover {
+  filter: brightness(0.95);
 }
 
 .preview-imagem {
@@ -198,54 +212,35 @@
   margin-top: 10px;
 }
 
-.rotulo-upload-imagem {
-  display: flex;
+.botao-enviar {
   width: 100%;
-  height: 100%;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
+  margin-top: 20px;
 }
 
-.area-upload-imagem:hover .rotulo-upload-imagem {
-  background-color: rgba(127, 204, 212, 0.1);
-}
-
-/* Responsividade */
 @media (max-width: 768px) {
-  .container-pagina-cadastro {
-    padding: 20px 15px;
-  }
-
   .conteudo-formulario {
     flex-direction: column;
     gap: 30px;
   }
-
+  
   .linha-senhas,
   .linha-endereco {
     flex-direction: column;
     gap: 10px;
   }
-
+  
   .opcoes-tipo-perfil {
     flex-direction: column;
     gap: 10px;
   }
-
+  
   .secao-upload-imagem {
     order: -1;
   }
-
+  
   .area-upload-imagem {
     width: 150px;
     height: 150px;
-  }
-
-  .rotulo-arquivo {
-    position: relative;
-    bottom: auto;
-    margin-top: 15px;
   }
 }
 
