@@ -6,6 +6,6 @@ export const API_CONFIG = {
 
 // Tipos de perfil disponíveis
 export const TIPOS_PERFIL = {
-  PESSOAL: 'Pessoal',
-  PROFISSIONAL: 'Profissional'
+  PESSOAL: "Pessoal",
+  PROFISSIONAL: "Profissional",
 };

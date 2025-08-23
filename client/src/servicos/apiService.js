@@ -1,13 +1,13 @@
-import { API_CONFIG } from '../../config/apiConfig';
+import { API_CONFIG } from '@config/apiConfig.js';
 
-const BASE_URL = API_CONFIG.BASE_URL;
+const URL_BASE = CONFIG_API.URL_BASE;
 
 // Função utilitária para fazer requisições usando fetch
 const fazerRequisicao = async (url, metodo, dados = null) => {
   const opcoes = {
     method: metodo,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   };
 
@@ -20,84 +20,168 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
     const dadosResposta = await resposta.json();
 
     if (!resposta.ok) {
-      throw new Error(dadosResposta.message || 'Erro na requisição');
+      const mensagemErro =
+        dadosResposta.message || dadosResposta.mensagem || "Erro na requisição";
+      throw new Error(mensagemErro);
     }
 
     return dadosResposta;
   } catch (erro) {
-    throw new Error(erro.message || 'Erro de conexão');
+    throw new Error(erro.message || "Erro de conexão");
   }
 };
 
 // Serviços para Localização
-export const localizacaoService = {
-  criar: (dadosLocalizacao) => fazerRequisicao(`${BASE_URL}/localizacoes`, 'POST', dadosLocalizacao),
-  buscarPorId: (id) => fazerRequisicao(`${BASE_URL}/localizacoes/${id}`, 'GET'),
-  listarTodas: () => fazerRequisicao(`${BASE_URL}/localizacoes`, 'GET'),
-  atualizar: (id, dadosLocalizacao) => fazerRequisicao(`${BASE_URL}/localizacoes/${id}`, 'PUT', dadosLocalizacao),
-  deletar: (id) => fazerRequisicao(`${BASE_URL}/localizacoes/${id}`, 'DELETE'),
+export const servicoLocalizacao = {
+  criar: (dadosLocalizacao) =>
+    fazerRequisicao(`${URL_BASE}/localizacoes`, "POST", dadosLocalizacao),
+  buscarPorId: (id) => fazerRequisicao(`${URL_BASE}/localizacoes/${id}`, "GET"),
+  listarTodas: () => fazerRequisicao(`${URL_BASE}/localizacoes`, "GET"),
+  atualizar: (id, dadosLocalizacao) =>
+    fazerRequisicao(`${URL_BASE}/localizacoes/${id}`, "PUT", dadosLocalizacao),
+  deletar: (id) => fazerRequisicao(`${URL_BASE}/localizacoes/${id}`, "DELETE"),
 };
 
 // Serviços para Usuário
-export const usuarioService = {
-  criar: (dadosUsuario) => fazerRequisicao(`${BASE_URL}/usuarios`, 'POST', dadosUsuario),
-  buscarPorId: (id) => fazerRequisicao(`${BASE_URL}/usuarios/${id}`, 'GET'),
-  listarTodos: () => fazerRequisicao(`${BASE_URL}/usuarios`, 'GET'),
-  atualizar: (id, dadosUsuario) => fazerRequisicao(`${BASE_URL}/usuarios/${id}`, 'PUT', dadosUsuario),
-  deletar: (id) => fazerRequisicao(`${BASE_URL}/usuarios/${id}`, 'DELETE'),
+export const servicoUsuario = {
+  criar: (dadosUsuario) =>
+    fazerRequisicao(`${URL_BASE}/usuarios`, "POST", dadosUsuario),
+  buscarPorId: (id) => fazerRequisicao(`${URL_BASE}/usuarios/${id}`, "GET"),
+  listarTodos: () => fazerRequisicao(`${URL_BASE}/usuarios`, "GET"),
+  atualizar: (id, dadosUsuario) =>
+    fazerRequisicao(`${URL_BASE}/usuarios/${id}`, "PUT", dadosUsuario),
+  deletar: (id) => fazerRequisicao(`${URL_BASE}/usuarios/${id}`, "DELETE"),
 };
 
 // Serviços para Profissional
-export const profissionalService = {
-  criar: (dadosProfissional) => fazerRequisicao(`${BASE_URL}/profissionais`, 'POST', dadosProfissional),
-  buscarPorId: (id) => fazerRequisicao(`${BASE_URL}/profissionais/${id}`, 'GET'),
-  listarTodos: () => fazerRequisicao(`${BASE_URL}/profissionais`, 'GET'),
-  atualizar: (id, dadosProfissional) => fazerRequisicao(`${BASE_URL}/profissionais/${id}`, 'PUT', dadosProfissional),
-  deletar: (id) => fazerRequisicao(`${BASE_URL}/profissionais/${id}`, 'DELETE'),
+export const servicoProfissional = {
+  criar: (dadosProfissional) =>
+    fazerRequisicao(`${URL_BASE}/profissionais`, "POST", dadosProfissional),
+  buscarPorId: (id) =>
+    fazerRequisicao(`${URL_BASE}/profissionais/${id}`, "GET"),
+  listarTodos: () => fazerRequisicao(`${URL_BASE}/profissionais`, "GET"),
+  atualizar: (id, dadosProfissional) =>
+    fazerRequisicao(
+      `${URL_BASE}/profissionais/${id}`,
+      "PUT",
+      dadosProfissional
+    ),
+  deletar: (id) => fazerRequisicao(`${URL_BASE}/profissionais/${id}`, "DELETE"),
 };
 
 // Serviços para Avaliação
-export const avaliacaoService = {
-  criar: (dadosAvaliacao) => fazerRequisicao(`${BASE_URL}/avaliacoes`, 'POST', dadosAvaliacao),
-  buscarPorId: (id) => fazerRequisicao(`${BASE_URL}/avaliacoes/${id}`, 'GET'),
-  listarTodas: () => fazerRequisicao(`${BASE_URL}/avaliacoes`, 'GET'),
-  atualizar: (id, dadosAvaliacao) => fazerRequisicao(`${BASE_URL}/avaliacoes/${id}`, 'PUT', dadosAvaliacao),
-  deletar: (id) => fazerRequisicao(`${BASE_URL}/avaliacoes/${id}`, 'DELETE'),
+export const servicoAvaliacao = {
+  criar: (dadosAvaliacao) =>
+    fazerRequisicao(`${URL_BASE}/avaliacoes`, "POST", dadosAvaliacao),
+  buscarPorId: (id) => fazerRequisicao(`${URL_BASE}/avaliacoes/${id}`, "GET"),
+  listarTodas: () => fazerRequisicao(`${URL_BASE}/avaliacoes`, "GET"),
+  atualizar: (id, dadosAvaliacao) =>
+    fazerRequisicao(`${URL_BASE}/avaliacoes/${id}`, "PUT", dadosAvaliacao),
+  deletar: (id) => fazerRequisicao(`${URL_BASE}/avaliacoes/${id}`, "DELETE"),
+};
+
+// Serviços para HCurricular
+export const servicoHCurricular = {
+  criar: (dadosHCurricular) =>
+    fazerRequisicao(`${URL_BASE}/hcurriculares`, "POST", dadosHCurricular),
+  buscarPorId: (id) =>
+    fazerRequisicao(`${URL_BASE}/hcurriculares/${id}`, "GET"),
+  listarTodos: () => fazerRequisicao(`${URL_BASE}/hcurriculares`, "GET"),
+  atualizar: (id, dadosHCurricular) =>
+    fazerRequisicao(`${URL_BASE}/hcurriculares/${id}`, "PUT", dadosHCurricular),
+  deletar: (id) => fazerRequisicao(`${URL_BASE}/hcurriculares/${id}`, "DELETE"),
+};
+
+// Serviços para HProfissional
+export const servicoHProfissional = {
+  criar: (dadosHProfissional) =>
+    fazerRequisicao(`${URL_BASE}/hprofissionais`, "POST", dadosHProfissional),
+  buscarPorId: (id) =>
+    fazerRequisicao(`${URL_BASE}/hprofissionais/${id}`, "GET"),
+  listarTodos: () => fazerRequisicao(`${URL_BASE}/hprofissionais`, "GET"),
+  atualizar: (id, dadosHProfissional) =>
+    fazerRequisicao(
+      `${URL_BASE}/hprofissionais/${id}`,
+      "PUT",
+      dadosHProfissional
+    ),
+  deletar: (id) =>
+    fazerRequisicao(`${URL_BASE}/hprofissionais/${id}`, "DELETE"),
 };
 
 // Serviço especializado para cadastro
-export const cadastroService = {
+export const servicoCadastro = {
   cadastrarUsuario: async (dadosUsuario, dadosLocalizacao) => {
     try {
-      // Primeiro cria a localização
-      const localizacaoResposta = await localizacaoService.criar(dadosLocalizacao);
-      
-      // Depois cria o usuário com a referência da localização
-      const usuarioResposta = await usuarioService.criar({
+      const respostaLocalizacao = await servicoLocalizacao.criar(
+        dadosLocalizacao
+      );
+      const respostaUsuario = await servicoUsuario.criar({
         ...dadosUsuario,
-        localizacao: localizacaoResposta._id // Ajuste conforme a estrutura da sua API
+        localizacao: localizacaoResposta.data._id
       });
-      
-      return usuarioResposta;
+      return respostaUsuario;
     } catch (erro) {
-      throw new Error(`Erro no cadastro: ${erro.message}`);
+      throw new Error(`Erro no cadastro: ${erro.mensagem}`);
     }
   },
 
   cadastrarProfissional: async (dadosProfissional, dadosLocalizacao) => {
     try {
       // Primeiro cria a localização
-      const localizacaoResposta = await localizacaoService.criar(dadosLocalizacao);
-      
+      const respostaLocalizacao = await servicoLocalizacao.criar(
+        dadosLocalizacao
+      );
+
       // Depois cria o profissional com a referência da localização
-      const profissionalResposta = await profissionalService.criar({
+      const respostaProfissional = await servicoProfissional.criar({
         ...dadosProfissional,
-        localizacao: localizacaoResposta._id // Ajuste conforme a estrutura da sua API
+        localizacao: localizacaoResposta.data._id
       });
-      
-      return profissionalResposta;
+
+      return respostaProfissional;
     } catch (erro) {
-      throw new Error(`Erro no cadastro: ${erro.message}`);
+      throw new Error(`Erro no cadastro: ${erro.mensagem}`);
     }
-  }
+  },
+
+  cadastrarProfissionalComHistoricos: async (
+    dadosProfissional,
+    dadosLocalizacao,
+    historicosCurriculares,
+    historicosProfissionais
+  ) => {
+    try {
+      // Primeiro cria a localização
+      const respostaLocalizacao = await servicoLocalizacao.criar(
+        dadosLocalizacao
+      );
+      const respostaProfissional = await servicoProfissional.criar({
+        ...dadosProfissional,
+        localizacao:
+          respostaLocalizacao.data._id || respostaLocalizacao.dados._id,
+      });
+      const idProfissional =
+        respostaProfissional.data._id || respostaProfissional.dados._id;
+      // Cadastra cada histórico curricular
+      for (const hc of historicosCurriculares) {
+        await servicoHCurricular.criar({
+          ...hc,
+          profissional: idProfissional,
+        });
+      }
+
+      // Cadastra cada histórico profissional
+      for (const hp of historicosProfissionais) {
+        await servicoHProfissional.criar({
+          ...hp,
+          profissional: idProfissional,
+        });
+      }
+
+      return respostaProfissional;
+    } catch (erro) {
+      throw new Error(`Erro no cadastro: ${erro.mensagem}`);
+    }
+  },
 };

@@ -54,7 +54,6 @@ p {
     padding: 15px;
     margin-bottom: 30px;
     width: auto;
-    box-shadow: 0 0px 8px var(--cor-sombra);
 }
 
 .cartaoDestaque.variacao1 {
@@ -63,17 +62,16 @@ p {
     display: flex;
     align-items: flex-start;
     gap: 15px;
+    box-shadow: 0 0px 8px var(--cor-sombra);
 }
 
 .cartaoDestaque.variacao2 {
     background-color: var(--cor-destaque-secundaria-transparente);
-    box-shadow: none;
 }
 
 .cartaoDestaque.variacao3 {
     background-color: var(--cor-destaque-primaria);
     text-align: left;
-    box-shadow: none;
 }
 
 .imagemPerfil {
@@ -95,6 +93,12 @@ p {
 }
 
 /* Estilos de Formulário Globais */
+.lista {
+    justify-content: center;
+    display: flex;
+    gap: 12px;
+}
+
 button {
     border-radius: 8px;
     padding: 15px;
@@ -114,8 +118,12 @@ button:hover {
     filter: brightness(0.95);
 }
 
-input[type="text"],
-input[type="email"],
+.ativo {
+  background-color: var(--cor-texto-principal);
+  color: var(--cor-fundo-principal);
+}
+
+input,
 textarea {
     background: var(--cor-destaque-primaria);
     border: none;
@@ -124,4 +132,5 @@ textarea {
     font-size: 1rem;
     width: 100%;
     resize: none;
+    gap: 12px;
 }
