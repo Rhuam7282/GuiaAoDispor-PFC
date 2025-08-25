@@ -28,7 +28,7 @@ const AccessibilityControlsComplete = () => {
       console.warn('Erro ao carregar configuração de acessibilidade:', error);
       return valorPadrao;
     }
-  };
+  })
 
   // Carregar configurações salvas na inicialização
   useEffect(() => {
