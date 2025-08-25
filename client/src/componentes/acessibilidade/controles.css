@@ -15,16 +15,12 @@
   --cor-destaque-alto-contraste: #ffff00;
 }
 
-/* 
-  CORREÇÃO: Unificamos as regras de acessibilidade em uma única classe.
-  Isso garante que todas as propriedades sejam aplicadas juntas e de forma consistente.
-*/
-html.acessibilidade-ativa body {
+/* Aplicação das variáveis de acessibilidade */
+.accessibility-enabled {
   font-size: var(--accessibility-font-size) !important;
   letter-spacing: var(--accessibility-letter-spacing) !important;
   line-height: var(--accessibility-line-height) !important;
 }
-
 
 /* Modo de Alto Contraste - Aplicação global */
 .modo-alto-contraste {
@@ -35,8 +31,8 @@ html.acessibilidade-ativa body {
 .modo-alto-contraste *,
 .modo-alto-contraste *::before,
 .modo-alto-contraste *::after {
-  background-color: inherit !important; /* Herda o fundo para evitar sobreposições */
-  color: inherit !important; /* Herda a cor do texto */
+  background-color: var(--cor-fundo-alto-contraste) !important;
+  color: var(--cor-texto-alto-contraste) !important;
   border-color: var(--cor-borda-alto-contraste) !important;
   box-shadow: none !important;
   text-shadow: none !important;
@@ -373,3 +369,124 @@ html.acessibilidade-ativa body {
     max-width: calc(100vw - 40px);
   }
 }
+
+/* Aplicação seletiva das variáveis de acessibilidade */
+/* Aplicação do font-size apenas quando necessário */
+.acessibilidade-ativa {
+  font-size: calc(1rem * var(--accessibility-font-size) / 100) !important;
+}
+
+/* Aplicação do letter-spacing apenas quando necessário */
+.acessibilidade-ativa * {
+  letter-spacing: var(--accessibility-letter-spacing) !important;
+  line-height: var(--accessibility-line-height) !important;
+}
+
+/* Estilos para Máscara de Leitura */
+.mascara-leitura-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+  z-index: 9998;
+  transition: opacity 0.3s ease;
+}
+
+.mascara-leitura-overlay::before {
+  content: '';
+  position: absolute;
+  top: var(--mouse-y, 50%);
+  left: var(--mouse-x, 50%);
+  width: 300px;
+  height: 150px;
+  background: transparent;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+  box-shadow: 
+    0 0 0 300px rgba(0, 0, 0, 0.7),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+  transition: all 0.1s ease-out;
+}
+
+/* Estilos para Guia de Leitura */
+.guia-leitura-linha {
+  position: fixed;
+  left: 0;
+  width: 100vw;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    #ff6b35 20%, 
+    #ff6b35 80%, 
+    transparent 100%);
+  pointer-events: none;
+  z-index: 9997;
+  transition: top 0.1s ease-out;
+  box-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+}
+
+.guia-leitura-linha::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  width: 60%;
+  height: 4px;
+  background: rgba(255, 107, 53, 0.3);
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+/* Estilos para os botões dos novos controles */
+.control-btn.toggle-mascara,
+.control-btn.toggle-guia {
+  min-width: 80px;
+  font-weight: 600;
+}
+
+.control-btn.toggle-mascara.ativo,
+.control-btn.toggle-guia.ativo {
+  background-color: #ff6b35;
+  color: white;
+  border-color: #e55a2b;
+}
+
+.control-btn.toggle-mascara.ativo:hover,
+.control-btn.toggle-guia.ativo:hover {
+  background-color: #e55a2b;
+  border-color: #cc4f24;
+}
+
+.control-btn.toggle-mascara.inativo,
+.control-btn.toggle-guia.inativo {
+  background-color: #6c757d;
+  color: white;
+  border-color: #5a6268;
+}
+
+.control-btn.toggle-mascara.inativo:hover,
+.control-btn.toggle-guia.inativo:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+/* Responsividade para dispositivos móveis */
+@media (max-width: 768px) {
+  .mascara-leitura-overlay::before {
+    width: 250px;
+    height: 120px;
+  }
+  
+  .guia-leitura-linha {
+    height: 3px;
+  }
+  
+  .guia-leitura-linha::before {
+    height: 5px;
+    width: 80%;
+  }
+}
+

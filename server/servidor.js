@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Configuração do dotenv
+// Configuração do dotenvapiRouter.get
 dotenv.config();
 
 // Importar todos os modelos
@@ -17,7 +17,10 @@ import HCurricular from './modelos/hcurricular.js';
 import HProfissional from './modelos/hprofissional.js';
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // URL do seu frontend
+  credentials: true
+}));
 app.use(express.json());
 
 app.use((req, res, next) => {

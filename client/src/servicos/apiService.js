@@ -1,6 +1,6 @@
 import { API_CONFIG } from '@config/apiConfig.js';
 
-const URL_BASE = API_CONFIG.URL_BASE;
+const URL_BASE = API_CONFIG.BASE_URL;
 
 // Função utilitária para fazer requisições usando fetch
 const fazerRequisicao = async (url, metodo, dados = null) => {
@@ -17,6 +17,13 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
 
   try {
     const resposta = await fetch(url, opcoes);
+
+    // Verificar se a resposta é JSON
+    const contentType = resposta.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      throw new Error('Resposta não é JSON');
+    }
+
     const dadosResposta = await resposta.json();
 
     if (!resposta.ok) {
@@ -27,6 +34,7 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
 
     return dadosResposta;
   } catch (erro) {
+    console.error('Erro na requisição:', erro);
     throw new Error(erro.message || "Erro de conexão");
   }
 };

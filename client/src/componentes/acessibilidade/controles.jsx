@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './controles.css';
-import { Type, AlignJustify, MoreHorizontal, Settings, Contrast } from 'lucide-react';
+import { Type, AlignJustify, MoreHorizontal, Settings, Contrast, Eye, Minus } from 'lucide-react';
 
 const AccessibilityControls = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [fontSize, setFontSize] = useState(100);
-  const [letterSpacing, setLetterSpacing] = useState(0);
-  const [lineHeight, setLineHeight] = useState(1.5);
-  const [modoAltoContraste, setModoAltoContraste] = useState(false);
+  const [fontSize, setFontSize] = useState(100); // Porcentagem base
+  const [letterSpacing, setLetterSpacing] = useState(0); // Em pixels
+  const [lineHeight, setLineHeight] = useState(1.5); // Multiplicador
+  const [modoAltoContraste, setModoAltoContraste] = useState(false); // Estado do alto contraste
+  const [mascaraLeitura, setMascaraLeitura] = useState(false); // Estado da máscara de leitura
+  const [guiaLeitura, setGuiaLeitura] = useState(false); // Estado da guia de leitura
 
   // Funções para localStorage
   const salvarConfiguracao = (chave, valor) => {
@@ -34,51 +36,143 @@ const AccessibilityControls = () => {
     const letterSpacingSalvo = carregarConfiguracao('letterSpacing', 0);
     const lineHeightSalvo = carregarConfiguracao('lineHeight', 1.5);
     const altoContrasteSalvo = carregarConfiguracao('modoAltoContraste', false);
+    const mascaraLeituraSalva = carregarConfiguracao('mascaraLeitura', false);
+    const guiaLeituraSalva = carregarConfiguracao('guiaLeitura', false);
 
     setFontSize(fontSizeSalvo);
     setLetterSpacing(letterSpacingSalvo);
     setLineHeight(lineHeightSalvo);
     setModoAltoContraste(altoContrasteSalvo);
+    setMascaraLeitura(mascaraLeituraSalva);
+    setGuiaLeitura(guiaLeituraSalva);
   }, []);
 
-  // Aplicar mudanças de fonte e espaçamento
+  // Aplicar as mudanças nas variáveis CSS quando os valores mudarem
   useEffect(() => {
     const root = document.documentElement;
+    const body = document.body;
     
+    // Definir variáveis CSS
     root.style.setProperty('--accessibility-font-size', `${fontSize}%`);
     root.style.setProperty('--accessibility-letter-spacing', `${letterSpacing}px`);
     root.style.setProperty('--accessibility-line-height', lineHeight);
-
+    
+    // Aplicar classe de acessibilidade apenas se houver mudanças dos valores padrão
     const temMudancas = fontSize !== 100 || letterSpacing !== 0 || lineHeight !== 1.5;
     
     if (temMudancas) {
-      root.classList.add('acessibilidade-ativa');
+      body.classList.add('acessibilidade-ativa');
     } else {
-      root.classList.remove('acessibilidade-ativa');
+      body.classList.remove('acessibilidade-ativa');
     }
     
+    // Salvar no localStorage sempre que os valores mudarem
     salvarConfiguracao('fontSize', fontSize);
     salvarConfiguracao('letterSpacing', letterSpacing);
     salvarConfiguracao('lineHeight', lineHeight);
   }, [fontSize, letterSpacing, lineHeight]);
 
-  // Aplicar modo de alto contraste
+  // Aplicar/remover classe de alto contraste no body
   useEffect(() => {
-    const root = document.documentElement;
-    
+    const body = document.body;
     if (modoAltoContraste) {
-      root.classList.add('modo-alto-contraste');
+      body.classList.add('modo-alto-contraste');
     } else {
-      root.classList.remove('modo-alto-contraste');
+      body.classList.remove('modo-alto-contraste');
     }
     
+    // Salvar no localStorage
     salvarConfiguracao('modoAltoContraste', modoAltoContraste);
   }, [modoAltoContraste]);
 
-  // =================================================================
-  // ADICIONEI AS FUNÇÕES FALTANTES AQUI (elas foram removidas antes)
-  // =================================================================
-  
+  // Controle da Máscara de Leitura
+  useEffect(() => {
+    const body = document.body;
+    
+    if (mascaraLeitura) {
+      body.classList.add('mascara-leitura-ativa');
+      
+      // Criar elemento da máscara se não existir
+      let mascaraElement = document.getElementById('mascara-leitura');
+      if (!mascaraElement) {
+        mascaraElement = document.createElement('div');
+        mascaraElement.id = 'mascara-leitura';
+        mascaraElement.className = 'mascara-leitura-overlay';
+        body.appendChild(mascaraElement);
+      }
+      
+      // Função para seguir o cursor
+      const seguirCursor = (e) => {
+        const x = e.clientX;
+        const y = e.clientY;
+        mascaraElement.style.setProperty('--mouse-x', `${x}px`);
+        mascaraElement.style.setProperty('--mouse-y', `${y}px`);
+      };
+      
+      // Adicionar evento de movimento do mouse
+      document.addEventListener('mousemove', seguirCursor);
+      
+      // Cleanup function para remover o evento
+      return () => {
+        document.removeEventListener('mousemove', seguirCursor);
+      };
+    } else {
+      body.classList.remove('mascara-leitura-ativa');
+      
+      // Remover elemento da máscara
+      const mascaraElement = document.getElementById('mascara-leitura');
+      if (mascaraElement) {
+        mascaraElement.remove();
+      }
+    }
+    
+    // Salvar no localStorage
+    salvarConfiguracao('mascaraLeitura', mascaraLeitura);
+  }, [mascaraLeitura]);
+
+  // Controle da Guia de Leitura
+  useEffect(() => {
+    const body = document.body;
+    
+    if (guiaLeitura) {
+      body.classList.add('guia-leitura-ativa');
+      
+      // Criar elemento da guia se não existir
+      let guiaElement = document.getElementById('guia-leitura');
+      if (!guiaElement) {
+        guiaElement = document.createElement('div');
+        guiaElement.id = 'guia-leitura';
+        guiaElement.className = 'guia-leitura-linha';
+        body.appendChild(guiaElement);
+      }
+      
+      // Função para seguir o cursor
+      const seguirCursor = (e) => {
+        const y = e.clientY;
+        guiaElement.style.top = `${y}px`;
+      };
+      
+      // Adicionar evento de movimento do mouse
+      document.addEventListener('mousemove', seguirCursor);
+      
+      // Cleanup function para remover o evento
+      return () => {
+        document.removeEventListener('mousemove', seguirCursor);
+      };
+    } else {
+      body.classList.remove('guia-leitura-ativa');
+      
+      // Remover elemento da guia
+      const guiaElement = document.getElementById('guia-leitura');
+      if (guiaElement) {
+        guiaElement.remove();
+      }
+    }
+    
+    // Salvar no localStorage
+    salvarConfiguracao('guiaLeitura', guiaLeitura);
+  }, [guiaLeitura]);
+
   const togglePanel = () => {
     setIsOpen(!isOpen);
   };
@@ -123,12 +217,21 @@ const AccessibilityControls = () => {
     setModoAltoContraste(prev => !prev);
   };
 
-  // Função para resetar tudo
+  const alternarMascaraLeitura = () => {
+    setMascaraLeitura(prev => !prev);
+  };
+
+  const alternarGuiaLeitura = () => {
+    setGuiaLeitura(prev => !prev);
+  };
+
   const resetAll = () => {
     setFontSize(100);
     setLetterSpacing(0);
     setLineHeight(1.5);
     setModoAltoContraste(false);
+    setMascaraLeitura(false);
+    setGuiaLeitura(false);
     
     // Limpar localStorage
     try {
@@ -136,14 +239,29 @@ const AccessibilityControls = () => {
       localStorage.removeItem('acessibilidade_letterSpacing');
       localStorage.removeItem('acessibilidade_lineHeight');
       localStorage.removeItem('acessibilidade_modoAltoContraste');
+      localStorage.removeItem('acessibilidade_mascaraLeitura');
+      localStorage.removeItem('acessibilidade_guiaLeitura');
     } catch (error) {
       console.warn('Erro ao limpar configurações de acessibilidade:', error);
     }
     
-    // Remover classes do elemento raiz (<html>)
-    const root = document.documentElement;
-    root.classList.remove('acessibilidade-ativa');
-    root.classList.remove('modo-alto-contraste');
+    // Remover classes do body
+    const body = document.body;
+    body.classList.remove('acessibilidade-ativa');
+    body.classList.remove('modo-alto-contraste');
+    body.classList.remove('mascara-leitura-ativa');
+    body.classList.remove('guia-leitura-ativa');
+    
+    // Remover elementos criados dinamicamente
+    const mascaraElement = document.getElementById('mascara-leitura');
+    if (mascaraElement) {
+      mascaraElement.remove();
+    }
+    
+    const guiaElement = document.getElementById('guia-leitura');
+    if (guiaElement) {
+      guiaElement.remove();
+    }
   };
 
   return (
@@ -286,6 +404,46 @@ const AccessibilityControls = () => {
               </div>
             </div>
 
+            {/* Controle de Máscara de Leitura */}
+            <div className="control-group">
+              <div className="control-header">
+                <Eye size={16} />
+                <span>Máscara de Leitura</span>
+                <span className={`control-value ${mascaraLeitura ? 'ativo' : 'inativo'}`}>
+                  {mascaraLeitura ? 'Ativo' : 'Inativo'}
+                </span>
+              </div>
+              <div className="control-buttons">
+                <button 
+                  onClick={alternarMascaraLeitura}
+                  className={`control-btn toggle-mascara ${mascaraLeitura ? 'ativo' : 'inativo'}`}
+                  aria-label={mascaraLeitura ? "Desativar máscara de leitura" : "Ativar máscara de leitura"}
+                >
+                  {mascaraLeitura ? 'Desativar' : 'Ativar'}
+                </button>
+              </div>
+            </div>
+
+            {/* Controle de Guia de Leitura */}
+            <div className="control-group">
+              <div className="control-header">
+                <Minus size={16} />
+                <span>Guia de Leitura</span>
+                <span className={`control-value ${guiaLeitura ? 'ativo' : 'inativo'}`}>
+                  {guiaLeitura ? 'Ativo' : 'Inativo'}
+                </span>
+              </div>
+              <div className="control-buttons">
+                <button 
+                  onClick={alternarGuiaLeitura}
+                  className={`control-btn toggle-guia ${guiaLeitura ? 'ativo' : 'inativo'}`}
+                  aria-label={guiaLeitura ? "Desativar guia de leitura" : "Ativar guia de leitura"}
+                >
+                  {guiaLeitura ? 'Desativar' : 'Ativar'}
+                </button>
+              </div>
+            </div>
+
             {/* Botão de Reset Geral */}
             <div className="reset-all-container">
               <button 
@@ -304,3 +462,4 @@ const AccessibilityControls = () => {
 };
 
 export default AccessibilityControls;
+
