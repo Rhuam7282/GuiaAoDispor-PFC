@@ -303,21 +303,21 @@ const Cadastro = () => {
                 </div>
               </div>
 
-              <div className="secao-tipo-perfil cartaoDestaque variacao2">
-                <div className="cabecalho-tipo-perfil">
+              <div className="cartaoDestaque variacao2">
+                <div>
                   <span>Tipo de Perfil</span>
                 </div>
-                <div className="opcoes-tipo-perfil listaIcones">
+                <div className="listaIcones">
                   <button
                     type="button"
-                    className={`botao-tipo-perfil ${dadosFormulario.tipoPerfil === 'Pessoal' ? 'ativo' : ''}`}
+                    className={dadosFormulario.tipoPerfil === 'Pessoal' ? 'ativo' : ''}
                     onClick={() => setDadosFormulario(prev => ({ ...prev, tipoPerfil: 'Pessoal' }))}
                   >
                     Pessoal
                   </button>
                   <button
                     type="button"
-                    className={`botao-tipo-perfil ${dadosFormulario.tipoPerfil === 'Profissional' ? 'ativo' : ''}`}
+                    className={dadosFormulario.tipoPerfil === 'Profissional' ? 'ativo' : ''}
                     onClick={() => setDadosFormulario(prev => ({ ...prev, tipoPerfil: 'Profissional' }))}
                   >
                     Profissional
@@ -363,7 +363,7 @@ const Cadastro = () => {
                     />
                   </div>
 
-                  <div className="secao-historico cartaoDestaque variacao3">
+                  <div className="cartaoDestaque variacao3">
                     <h3>Histórico Curricular</h3>
                     {dadosFormulario.historicosCurriculares.map((hc, indice) => (
                       <div key={indice} className="item-historico">
@@ -391,7 +391,7 @@ const Cadastro = () => {
                     <button type="button" onClick={adicionarHistoricoCurricular}>Adicionar Histórico Curricular</button>
                   </div>
 
-                  <div className="secao-historico cartaoDestaque variacao3">
+                  <div className="cartaoDestaque variacao3">
                     <h3>Histórico Profissional</h3>
                     {dadosFormulario.historicosProfissionais.map((hp, indice) => (
                       <div key={indice} className="item-historico">
@@ -463,7 +463,6 @@ const Cadastro = () => {
               
               <button 
                 type="submit" 
-                className="botao-enviar"
                 disabled={carregando}
               >
                 {carregando ? 'Cadastrando...' : 'Criar Conta'}
@@ -481,7 +480,7 @@ const Cadastro = () => {
                 />
                 <label htmlFor="foto" className="rotulo-upload-imagem">
                   {dadosFormulario.foto ? (
-                    <img src={dadosFormulario.foto} alt="Preview" className="preview-imagem-perfil" />
+                    <img src={dadosFormulario.foto} alt="Preview" className="imagemPerfil" />
                   ) : (
                     <div className="placeholder-upload">
                       <span>Clique para adicionar uma foto</span>
