@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import './controles.css';
 import { 
   Type, 
   AlignJustify, 
@@ -37,6 +38,70 @@ const ControlesAcessibilidade = () => {
   
   const guiaMouseRef = useRef(null);
   const mascaraRef = useRef(null);
+
+  // Efeito para aplicar estilos de acessibilidade textual globalmente
+    
+  useEffect(() => {
+    const aplicarEstilosTexto = () => {
+      const estiloDinamico = document.getElementById('estilo-acessibilidade-texto');
+      const conteudoEstilo = `
+        :root {
+          --fator-escala: ${tamanhoFonte / 100};
+          --espacamento-letras: ${espacamentoLetras}px;
+          --altura-linha: ${alturaLinha};
+        }
+        
+      //   body {
+      //     font-size: calc(1rem * var(--fator-escala)) !important;
+      //     letter-spacing: var(--espacamento-letras) !important;
+      //     line-height: var(--altura-linha) !important;
+      //   }
+        
+      //   h1 {
+      //     font-size: calc(2.5rem * var(--fator-escala)) !important;
+      //   }
+        
+      //   h2 {
+      //     font-size: calc(2rem * var(--fator-escala)) !important;
+      //   }
+        
+      //   h3 {
+      //     font-size: calc(1.75rem * var(--fator-escala)) !important;
+      //   }
+        
+      //   h4 {
+      //     font-size: calc(1.5rem * var(--fator-escala)) !important;
+      //   }
+        
+      //   h5 {
+      //     font-size: calc(1.25rem * var(--fator-escala)) !important;
+      //   }
+        
+      //   h6 {
+      //     font-size: calc(1rem * var(--fator-escala)) !important;
+      //   }
+        
+      //   .texto-pequeno {
+      //     font-size: calc(0.875rem * var(--fator-escala)) !important;
+      //   }
+        
+      //   .texto-grande {
+      //     font-size: calc(1.25rem * var(--fator-escala)) !important;
+      //   }
+      // `;
+      
+      if (!estiloDinamico) {
+        const style = document.createElement('style');
+        style.id = 'estilo-acessibilidade-texto';
+        style.textContent = conteudoEstilo;
+        document.head.appendChild(style);
+      } else {
+        estiloDinamico.textContent = conteudoEstilo;
+      }
+    };
+
+    aplicarEstilosTexto();
+  }, [tamanhoFonte, espacamentoLetras, alturaLinha]);
 
   const salvarConfiguracao = useCallback((chave, valor) => {
     try {
@@ -89,7 +154,7 @@ const ControlesAcessibilidade = () => {
   useEffect(() => {
     const raiz = document.documentElement;
     
-    // Aplicar configurações de texto de forma mais suave
+    // Aplicar configurações de texto
     raiz.style.setProperty('--acessibilidade-tamanho-fonte', `${tamanhoFonte}%`);
     raiz.style.setProperty('--acessibilidade-espacamento-letras', `${espacamentoLetras}px`);
     raiz.style.setProperty('--acessibilidade-altura-linha', alturaLinha);
@@ -245,11 +310,11 @@ const ControlesAcessibilidade = () => {
   };
 
   const aumentarTamanhoFonte = () => {
-    setTamanhoFonte(prev => Math.min(prev + 10, 150));
+    setTamanhoFonte(prev => Math.min(prev + 5, 130)); // Reduzido de 10 para 5 e limite de 150 para 120
   };
 
   const diminuirTamanhoFonte = () => {
-    setTamanhoFonte(prev => Math.max(prev - 10, 80));
+    setTamanhoFonte(prev => Math.max(prev - 5, 80)); // Reduzido de 10 para 5 e limite de 80 para 90
   };
 
   const redefinirTamanhoFonte = () => {
