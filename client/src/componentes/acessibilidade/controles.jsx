@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import './controles.css';
 import { 
   Type, 
   AlignJustify, 
   MoreHorizontal, 
-  Settings, 
   Contrast,
   Moon,
   Sun,
@@ -15,42 +13,31 @@ import {
   X,
   Accessibility,
   Link,
-  Search,
   Palette,
   EyeOff,
-  Volume2,
-  BookOpen,
-  Zap
+  BookOpen
 } from 'lucide-react';
 
-const AccessibilityControlsFinal = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [fontSize, setFontSize] = useState(100);
-  const [letterSpacing, setLetterSpacing] = useState(0);
-  const [lineHeight, setLineHeight] = useState(1.5);
+const ControlesAcessibilidade = () => {
+  const [estaAberto, setEstaAberto] = useState(false);
+  const [tamanhoFonte, setTamanhoFonte] = useState(100);
+  const [espacamentoLetras, setEspacamentoLetras] = useState(0);
+  const [alturaLinha, setAlturaLinha] = useState(1.5);
   
-  // Estados para múltiplas variações
-  const [contrastMode, setContrastMode] = useState(0); // 0: desativado, 1: leve, 2: intenso
-  const [darkMode, setDarkMode] = useState(0); // 0: claro, 1: escuro, 2: automático
-  const [readingGuide, setReadingGuide] = useState(0); // 0: off, 1: barra horizontal, 2: máscara
-  const [focusMode, setFocusMode] = useState(0); // 0: normal, 1: destacado, 2: máximo
+  const [modoContraste, setModoContraste] = useState(0);
+  const [modoEscuro, setModoEscuro] = useState(0);
+  const [guiaLeitura, setGuiaLeitura] = useState(0);
   
-  // Novas funcionalidades
-  const [removeImages, setRemoveImages] = useState(false);
-  const [removeHeaders, setRemoveHeaders] = useState(false);
-  const [highlightLinks, setHighlightLinks] = useState(false);
-  const [magnifier, setMagnifier] = useState(false);
-  const [colorIntensity, setColorIntensity] = useState(1); // 0: 50%, 1: 100%, 2: 150%
-  const [colorBlindMode, setColorBlindMode] = useState(0); // 0: normal, 1: protanopia, 2: deuteranopia, 3: tritanopia
-  const [pauseAnimations, setPauseAnimations] = useState(false);
-  const [bigCursor, setBigCursor] = useState(false);
-  const [speechReader, setSpeechReader] = useState(false);
+  const [removerImagens, setRemoverImagens] = useState(false);
+  const [removerCabecalhos, setRemoverCabecalhos] = useState(false);
+  const [destacarLinks, setDestacarLinks] = useState(false);
+  const [modoDaltonico, setModoDaltonico] = useState(0);
+  const [pausarAnimacoes, setPausarAnimacoes] = useState(false);
+  const [cursorGrande, setCursorGrande] = useState(false);
   
-  // Refs para guia de leitura
-  const mouseGuideRef = useRef(null);
-  const maskRef = useRef(null);
+  const guiaMouseRef = useRef(null);
+  const mascaraRef = useRef(null);
 
-  // Funções para localStorage
   const salvarConfiguracao = useCallback((chave, valor) => {
     try {
       localStorage.setItem(`acessibilidade_${chave}`, JSON.stringify(valor));
@@ -69,317 +56,248 @@ const AccessibilityControlsFinal = () => {
     }
   }, []);
 
-  // Carregar configurações salvas
   useEffect(() => {
     const configuracoes = {
-      fontSize: carregarConfiguracao('fontSize', 100),
-      letterSpacing: carregarConfiguracao('letterSpacing', 0),
-      lineHeight: carregarConfiguracao('lineHeight', 1.5),
-      contrastMode: carregarConfiguracao('contrastMode', 0),
-      darkMode: carregarConfiguracao('darkMode', 0),
-      readingGuide: carregarConfiguracao('readingGuide', 0),
-      focusMode: carregarConfiguracao('focusMode', 0),
-      removeImages: carregarConfiguracao('removeImages', false),
-      removeHeaders: carregarConfiguracao('removeHeaders', false),
-      highlightLinks: carregarConfiguracao('highlightLinks', false),
-      magnifier: carregarConfiguracao('magnifier', false),
-      colorIntensity: carregarConfiguracao('colorIntensity', 1),
-      colorBlindMode: carregarConfiguracao('colorBlindMode', 0),
-      pauseAnimations: carregarConfiguracao('pauseAnimations', false),
-      bigCursor: carregarConfiguracao('bigCursor', false),
-      speechReader: carregarConfiguracao('speechReader', false)
+      tamanhoFonte: carregarConfiguracao('tamanhoFonte', 100),
+      espacamentoLetras: carregarConfiguracao('espacamentoLetras', 0),
+      alturaLinha: carregarConfiguracao('alturaLinha', 1.5),
+      modoContraste: carregarConfiguracao('modoContraste', 0),
+      modoEscuro: carregarConfiguracao('modoEscuro', 0),
+      guiaLeitura: carregarConfiguracao('guiaLeitura', 0),
+      removerImagens: carregarConfiguracao('removerImagens', false),
+      removerCabecalhos: carregarConfiguracao('removerCabecalhos', false),
+      destacarLinks: carregarConfiguracao('destacarLinks', false),
+      modoDaltonico: carregarConfiguracao('modoDaltonico', 0),
+      pausarAnimacoes: carregarConfiguracao('pausarAnimacoes', false),
+      cursorGrande: carregarConfiguracao('cursorGrande', false)
     };
 
-    setFontSize(configuracoes.fontSize);
-    setLetterSpacing(configuracoes.letterSpacing);
-    setLineHeight(configuracoes.lineHeight);
-    setContrastMode(configuracoes.contrastMode);
-    setDarkMode(configuracoes.darkMode);
-    setReadingGuide(configuracoes.readingGuide);
-    setFocusMode(configuracoes.focusMode);
-    setRemoveImages(configuracoes.removeImages);
-    setRemoveHeaders(configuracoes.removeHeaders);
-    setHighlightLinks(configuracoes.highlightLinks);
-    setMagnifier(configuracoes.magnifier);
-    setColorIntensity(configuracoes.colorIntensity);
-    setColorBlindMode(configuracoes.colorBlindMode);
-    setPauseAnimations(configuracoes.pauseAnimations);
-    setBigCursor(configuracoes.bigCursor);
-    setSpeechReader(configuracoes.speechReader);
+    setTamanhoFonte(configuracoes.tamanhoFonte);
+    setEspacamentoLetras(configuracoes.espacamentoLetras);
+    setAlturaLinha(configuracoes.alturaLinha);
+    setModoContraste(configuracoes.modoContraste);
+    setModoEscuro(configuracoes.modoEscuro);
+    setGuiaLeitura(configuracoes.guiaLeitura);
+    setRemoverImagens(configuracoes.removerImagens);
+    setRemoverCabecalhos(configuracoes.removerCabecalhos);
+    setDestacarLinks(configuracoes.destacarLinks);
+    setModoDaltonico(configuracoes.modoDaltonico);
+    setPausarAnimacoes(configuracoes.pausarAnimacoes);
+    setCursorGrande(configuracoes.cursorGrande);
   }, [carregarConfiguracao]);
 
-  // Aplicar configurações de texto
   useEffect(() => {
-    const root = document.documentElement;
+    const raiz = document.documentElement;
     
-    root.style.setProperty('--accessibility-font-size', `${fontSize}%`);
-    root.style.setProperty('--accessibility-letter-spacing', `${letterSpacing}px`);
-    root.style.setProperty('--accessibility-line-height', lineHeight);
+    // Aplicar configurações de texto de forma mais suave
+    raiz.style.setProperty('--acessibilidade-tamanho-fonte', `${tamanhoFonte}%`);
+    raiz.style.setProperty('--acessibilidade-espacamento-letras', `${espacamentoLetras}px`);
+    raiz.style.setProperty('--acessibilidade-altura-linha', alturaLinha);
 
-    const temMudancas = fontSize !== 100 || letterSpacing !== 0 || lineHeight !== 1.5;
-    
-    if (temMudancas) {
-      root.classList.add('acessibilidade-ativa');
-    } else {
-      root.classList.remove('acessibilidade-ativa');
-    }
-    
-    salvarConfiguracao('fontSize', fontSize);
-    salvarConfiguracao('letterSpacing', letterSpacing);
-    salvarConfiguracao('lineHeight', lineHeight);
-  }, [fontSize, letterSpacing, lineHeight, salvarConfiguracao]);
+    salvarConfiguracao('tamanhoFonte', tamanhoFonte);
+    salvarConfiguracao('espacamentoLetras', espacamentoLetras);
+    salvarConfiguracao('alturaLinha', alturaLinha);
+  }, [tamanhoFonte, espacamentoLetras, alturaLinha, salvarConfiguracao]);
 
-  // Aplicar modos de contraste
   useEffect(() => {
-    const root = document.documentElement;
+    const raiz = document.documentElement;
     
-    // Remover classes anteriores
-    root.classList.remove('contraste-desativado', 'contraste-leve', 'contraste-intenso');
+    raiz.classList.remove('contraste-leve', 'contraste-intenso');
     
-    switch(contrastMode) {
+    switch(modoContraste) {
       case 1:
-        root.classList.add('contraste-leve');
+        raiz.classList.add('contraste-leve');
         break;
       case 2:
-        root.classList.add('contraste-intenso');
+        raiz.classList.add('contraste-intenso');
         break;
       default:
-        root.classList.add('contraste-desativado');
+        // Nada a fazer para desativado
     }
     
-    salvarConfiguracao('contrastMode', contrastMode);
-  }, [contrastMode, salvarConfiguracao]);
+    salvarConfiguracao('modoContraste', modoContraste);
+  }, [modoContraste, salvarConfiguracao]);
 
-  // Aplicar modos escuros
   useEffect(() => {
-    const root = document.documentElement;
+    const raiz = document.documentElement;
     
-    root.classList.remove('tema-claro', 'tema-escuro', 'tema-automatico');
+    raiz.classList.remove('tema-escuro');
     
-    switch(darkMode) {
-      case 1:
-        root.classList.add('tema-escuro');
-        break;
-      case 2:
-        root.classList.add('tema-automatico');
-        break;
-      default:
-        root.classList.add('tema-claro');
+    if (modoEscuro === 1) {
+      raiz.classList.add('tema-escuro');
     }
     
-    salvarConfiguracao('darkMode', darkMode);
-  }, [darkMode, salvarConfiguracao]);
+    salvarConfiguracao('modoEscuro', modoEscuro);
+  }, [modoEscuro, salvarConfiguracao]);
 
-  // Guia de leitura que segue o mouse
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (readingGuide === 1 && mouseGuideRef.current) {
-        // Barra horizontal que segue o mouse
-        mouseGuideRef.current.style.top = `${e.clientY}px`;
-        mouseGuideRef.current.style.left = '0px';
-        mouseGuideRef.current.style.width = '100vw';
-        mouseGuideRef.current.style.height = '2px';
-        
-        // Indicador de posição do cursor
-        const indicator = mouseGuideRef.current.querySelector('.cursor-indicator');
-        if (indicator) {
-          indicator.style.left = `${e.clientX}px`;
-        }
-      } else if (readingGuide === 2 && maskRef.current) {
-        // Máscara que segue o mouse
-        maskRef.current.style.top = `${e.clientY - 100}px`;
-        maskRef.current.style.left = `${e.clientX - 150}px`;
-      }
-    };
-
-    if (readingGuide === 1) {
-      document.addEventListener('mousemove', handleMouseMove);
-      if (!mouseGuideRef.current) {
-        const guide = document.createElement('div');
-        guide.className = 'horizontal-reading-guide';
-        guide.innerHTML = '<div class="cursor-indicator"></div>';
-        document.body.appendChild(guide);
-        mouseGuideRef.current = guide;
-      }
-    } else if (readingGuide === 2) {
-      document.addEventListener('mousemove', handleMouseMove);
-      if (!maskRef.current) {
-        const mask = document.createElement('div');
-        mask.className = 'reading-mask';
-        document.body.appendChild(mask);
-        maskRef.current = mask;
-      }
-    } else {
-      document.removeEventListener('mousemove', handleMouseMove);
-      if (mouseGuideRef.current) {
-        mouseGuideRef.current.remove();
-        mouseGuideRef.current = null;
-      }
-      if (maskRef.current) {
-        maskRef.current.remove();
-        maskRef.current = null;
-      }
+  const limparGuiasLeitura = useCallback(() => {
+    if (guiaMouseRef.current) {
+      guiaMouseRef.current.remove();
+      guiaMouseRef.current = null;
     }
-
-    salvarConfiguracao('readingGuide', readingGuide);
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [readingGuide, salvarConfiguracao]);
-
-  // Aplicar outras configurações
-  useEffect(() => {
-    const root = document.documentElement;
-    
-    // Focus modes
-    root.classList.remove('focus-normal', 'focus-destacado', 'focus-maximo');
-    switch(focusMode) {
-      case 1:
-        root.classList.add('focus-destacado');
-        break;
-      case 2:
-        root.classList.add('focus-maximo');
-        break;
-      default:
-        root.classList.add('focus-normal');
+    if (mascaraRef.current) {
+      mascaraRef.current.remove();
+      mascaraRef.current = null;
     }
-
-    // Outras funcionalidades
-    root.classList.toggle('remover-imagens', removeImages);
-    root.classList.toggle('remover-cabecalhos', removeHeaders);
-    root.classList.toggle('destacar-links', highlightLinks);
-    root.classList.toggle('lupa-ativa', magnifier);
-    root.classList.toggle('pausar-animacoes', pauseAnimations);
-    root.classList.toggle('cursor-grande', bigCursor);
-    root.classList.toggle('leitor-ativo', speechReader);
-
-    // Intensidade de cores
-    const intensityValues = ['0.5', '1', '1.5'];
-    root.style.setProperty('--color-intensity', intensityValues[colorIntensity]);
-
-    // Modo daltônico
-    root.classList.remove('daltonico-normal', 'daltonico-protanopia', 'daltonico-deuteranopia', 'daltonico-tritanopia');
-    switch(colorBlindMode) {
-      case 1:
-        root.classList.add('daltonico-protanopia');
-        break;
-      case 2:
-        root.classList.add('daltonico-deuteranopia');
-        break;
-      case 3:
-        root.classList.add('daltonico-tritanopia');
-        break;
-      default:
-        root.classList.add('daltonico-normal');
-    }
-
-    // Salvar configurações
-    salvarConfiguracao('focusMode', focusMode);
-    salvarConfiguracao('removeImages', removeImages);
-    salvarConfiguracao('removeHeaders', removeHeaders);
-    salvarConfiguracao('highlightLinks', highlightLinks);
-    salvarConfiguracao('magnifier', magnifier);
-    salvarConfiguracao('colorIntensity', colorIntensity);
-    salvarConfiguracao('colorBlindMode', colorBlindMode);
-    salvarConfiguracao('pauseAnimations', pauseAnimations);
-    salvarConfiguracao('bigCursor', bigCursor);
-    salvarConfiguracao('speechReader', speechReader);
-  }, [focusMode, removeImages, removeHeaders, highlightLinks, magnifier, colorIntensity, colorBlindMode, pauseAnimations, bigCursor, speechReader, salvarConfiguracao]);
-
-  // Atalhos de teclado
-  useEffect(() => {
-    const handleKeyPress = (event) => {
-      if (event.altKey && event.key === 'a') {
-        event.preventDefault();
-        setIsOpen(prev => !prev);
-      }
-      if (event.altKey && event.key === 'c') {
-        event.preventDefault();
-        setContrastMode(prev => (prev + 1) % 3);
-      }
-      if (event.altKey && event.key === 'd') {
-        event.preventDefault();
-        setDarkMode(prev => (prev + 1) % 3);
-      }
-      if (event.altKey && event.key === '+') {
-        event.preventDefault();
-        setFontSize(prev => Math.min(prev + 5, 150));
-      }
-      if (event.altKey && event.key === '-') {
-        event.preventDefault();
-        setFontSize(prev => Math.max(prev - 5, 80));
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyPress);
-    return () => document.removeEventListener('keydown', handleKeyPress);
   }, []);
 
-  const togglePanel = () => {
-    setIsOpen(!isOpen);
-  };
+  useEffect(() => {
+    const manipularMovimentoMouse = (e) => {
+      if (guiaLeitura === 1 && guiaMouseRef.current) {
+        guiaMouseRef.current.style.top = `${e.clientY}px`;
+        
+        const indicador = guiaMouseRef.current.querySelector('.cursor-indicator');
+        if (indicador) {
+          indicador.style.left = `${e.clientX}px`;
+        }
+      } else if (guiaLeitura === 2 && mascaraRef.current) {
+        mascaraRef.current.style.top = `${e.clientY - 100}px`;
+        mascaraRef.current.style.left = `${e.clientX - 150}px`;
+      }
+    };
 
-  // Funções de controle de texto
-  const increaseFontSize = () => {
-    setFontSize(prev => Math.min(prev + 5, 150));
-  };
+    limparGuiasLeitura();
 
-  const decreaseFontSize = () => {
-    setFontSize(prev => Math.max(prev - 5, 80));
-  };
+    if (guiaLeitura === 1) {
+      document.addEventListener('mousemove', manipularMovimentoMouse);
+      const guia = document.createElement('div');
+      guia.className = 'horizontal-reading-guide';
+      guia.innerHTML = '<div class="cursor-indicator"></div>';
+      document.body.appendChild(guia);
+      guiaMouseRef.current = guia;
+    } else if (guiaLeitura === 2) {
+      document.addEventListener('mousemove', manipularMovimentoMouse);
+      const mascara = document.createElement('div');
+      mascara.className = 'reading-mask';
+      document.body.appendChild(mascara);
+      mascaraRef.current = mascara;
+    }
 
-  const resetFontSize = () => {
-    setFontSize(100);
-  };
+    salvarConfiguracao('guiaLeitura', guiaLeitura);
 
-  const increaseLetterSpacing = () => {
-    setLetterSpacing(prev => Math.min(prev + 0.25, 5));
-  };
+    return () => {
+      document.removeEventListener('mousemove', manipularMovimentoMouse);
+    };
+  }, [guiaLeitura, salvarConfiguracao, limparGuiasLeitura]);
 
-  const decreaseLetterSpacing = () => {
-    setLetterSpacing(prev => Math.max(prev - 0.25, -1));
-  };
-
-  const resetLetterSpacing = () => {
-    setLetterSpacing(0);
-  };
-
-  const increaseLineHeight = () => {
-    setLineHeight(prev => Math.min(prev + 0.05, 2.5));
-  };
-
-  const decreaseLineHeight = () => {
-    setLineHeight(prev => Math.max(prev - 0.05, 1.0));
-  };
-
-  const resetLineHeight = () => {
-    setLineHeight(1.5);
-  };
-
-  const resetAll = () => {
-    setFontSize(100);
-    setLetterSpacing(0);
-    setLineHeight(1.5);
-    setContrastMode(0);
-    setDarkMode(0);
-    setReadingGuide(0);
-    setFocusMode(0);
-    setRemoveImages(false);
-    setRemoveHeaders(false);
-    setHighlightLinks(false);
-    setMagnifier(false);
-    setColorIntensity(1);
-    setColorBlindMode(0);
-    setPauseAnimations(false);
-    setBigCursor(false);
-    setSpeechReader(false);
+  useEffect(() => {
+    const raiz = document.documentElement;
     
-    // Limpar localStorage
+    raiz.classList.toggle('remover-imagens', removerImagens);
+    raiz.classList.toggle('remover-cabecalhos', removerCabecalhos);
+    raiz.classList.toggle('destacar-links', destacarLinks);
+    raiz.classList.toggle('pausar-animacoes', pausarAnimacoes);
+    raiz.classList.toggle('cursor-grande', cursorGrande);
+
+    raiz.classList.remove('daltonico-protanopia', 'daltonico-deuteranopia', 'daltonico-tritanopia');
+    switch(modoDaltonico) {
+      case 1:
+        raiz.classList.add('daltonico-protanopia');
+        break;
+      case 2:
+        raiz.classList.add('daltonico-deuteranopia');
+        break;
+      case 3:
+        raiz.classList.add('daltonico-tritanopia');
+        break;
+      default:
+        // Nada a fazer para normal
+    }
+
+    salvarConfiguracao('removerImagens', removerImagens);
+    salvarConfiguracao('removerCabecalhos', removerCabecalhos);
+    salvarConfiguracao('destacarLinks', destacarLinks);
+    salvarConfiguracao('modoDaltonico', modoDaltonico);
+    salvarConfiguracao('pausarAnimacoes', pausarAnimacoes);
+    salvarConfiguracao('cursorGrande', cursorGrande);
+  }, [removerImagens, removerCabecalhos, destacarLinks, modoDaltonico, pausarAnimacoes, cursorGrande, salvarConfiguracao]);
+
+  useEffect(() => {
+    const manipularTeclaPressionada = (evento) => {
+      if (evento.altKey && evento.key === 'a') {
+        evento.preventDefault();
+        setEstaAberto(prev => !prev);
+      }
+      if (evento.altKey && evento.key === 'c') {
+        evento.preventDefault();
+        setModoContraste(prev => (prev + 1) % 3);
+      }
+      if (evento.altKey && evento.key === 'd') {
+        evento.preventDefault();
+        setModoEscuro(prev => (prev + 1) % 2);
+      }
+      if (evento.altKey && evento.key === '+') {
+        evento.preventDefault();
+        setTamanhoFonte(prev => Math.min(prev + 10, 150));
+      }
+      if (evento.altKey && evento.key === '-') {
+        evento.preventDefault();
+        setTamanhoFonte(prev => Math.max(prev - 10, 80));
+      }
+    };
+
+    document.addEventListener('keydown', manipularTeclaPressionada);
+    return () => document.removeEventListener('keydown', manipularTeclaPressionada);
+  }, []);
+
+  const alternarPainel = () => {
+    setEstaAberto(!estaAberto);
+  };
+
+  const aumentarTamanhoFonte = () => {
+    setTamanhoFonte(prev => Math.min(prev + 10, 150));
+  };
+
+  const diminuirTamanhoFonte = () => {
+    setTamanhoFonte(prev => Math.max(prev - 10, 80));
+  };
+
+  const redefinirTamanhoFonte = () => {
+    setTamanhoFonte(100);
+  };
+
+  const aumentarEspacamentoLetras = () => {
+    setEspacamentoLetras(prev => Math.min(prev + 0.1, 0.5));
+  };
+
+  const diminuirEspacamentoLetras = () => {
+    setEspacamentoLetras(prev => Math.max(prev - 0.1, -0.5));
+  };
+
+  const redefinirEspacamentoLetras = () => {
+    setEspacamentoLetras(0);
+  };
+
+  const aumentarAlturaLinha = () => {
+    setAlturaLinha(prev => Math.min(prev + 0.1, 2.0));
+  };
+
+  const diminuirAlturaLinha = () => {
+    setAlturaLinha(prev => Math.max(prev - 0.1, 1.0));
+  };
+
+  const redefinirAlturaLinha = () => {
+    setAlturaLinha(1.5);
+  };
+
+  const redefinirTudo = () => {
+    setTamanhoFonte(100);
+    setEspacamentoLetras(0);
+    setAlturaLinha(1.5);
+    setModoContraste(0);
+    setModoEscuro(0);
+    setGuiaLeitura(0);
+    setRemoverImagens(false);
+    setRemoverCabecalhos(false);
+    setDestacarLinks(false);
+    setModoDaltonico(0);
+    setPausarAnimacoes(false);
+    setCursorGrande(false);
+    
     const chaves = [
-      'fontSize', 'letterSpacing', 'lineHeight', 'contrastMode', 'darkMode',
-      'readingGuide', 'focusMode', 'removeImages', 'removeHeaders', 'highlightLinks',
-      'magnifier', 'colorIntensity', 'colorBlindMode', 'pauseAnimations', 'bigCursor', 'speechReader'
+      'tamanhoFonte', 'espacamentoLetras', 'alturaLinha', 'modoContraste', 'modoEscuro',
+      'guiaLeitura', 'removerImagens', 'removerCabecalhos', 'destacarLinks',
+      'modoDaltonico', 'pausarAnimacoes', 'cursorGrande'
     ];
     
     chaves.forEach(chave => {
@@ -390,71 +308,45 @@ const AccessibilityControlsFinal = () => {
       }
     });
     
-    // Remover classes do elemento raiz
-    const root = document.documentElement;
+    const raiz = document.documentElement;
     const classes = [
-      'acessibilidade-ativa', 'contraste-leve', 'contraste-intenso', 'tema-escuro', 'tema-automatico',
-      'focus-destacado', 'focus-maximo', 'remover-imagens', 'remover-cabecalhos', 'destacar-links', 
-      'lupa-ativa', 'pausar-animacoes', 'cursor-grande', 'leitor-ativo',
+      'contraste-leve', 'contraste-intenso', 'tema-escuro',
+      'remover-imagens', 'remover-cabecalhos', 'destacar-links', 
+      'pausar-animacoes', 'cursor-grande',
       'daltonico-protanopia', 'daltonico-deuteranopia', 'daltonico-tritanopia'
     ];
     
-    classes.forEach(classe => root.classList.remove(classe));
+    classes.forEach(classe => raiz.classList.remove(classe));
     
-    // Limpar guias de leitura
-    if (mouseGuideRef.current) {
-      mouseGuideRef.current.remove();
-      mouseGuideRef.current = null;
-    }
-    if (maskRef.current) {
-      maskRef.current.remove();
-      maskRef.current = null;
-    }
+    raiz.style.setProperty('--acessibilidade-tamanho-fonte', '100%');
+    raiz.style.setProperty('--acessibilidade-espacamento-letras', '0px');
+    raiz.style.setProperty('--acessibilidade-altura-linha', '1.5');
+    
+    limparGuiasLeitura();
   };
 
-  // Função para obter texto do modo atual
-  const getContrastModeText = () => {
-    switch(contrastMode) {
+  const obterTextoModoContraste = () => {
+    switch(modoContraste) {
       case 1: return 'Leve';
       case 2: return 'Intenso';
       default: return 'Desativado';
     }
   };
 
-  const getDarkModeText = () => {
-    switch(darkMode) {
-      case 1: return 'Escuro';
-      case 2: return 'Auto';
-      default: return 'Claro';
-    }
+  const obterTextoModoEscuro = () => {
+    return modoEscuro === 1 ? 'Ativado' : 'Desativado';
   };
 
-  const getReadingGuideText = () => {
-    switch(readingGuide) {
+  const obterTextoGuiaLeitura = () => {
+    switch(guiaLeitura) {
       case 1: return 'Barra';
       case 2: return 'Máscara';
       default: return 'Desativado';
     }
   };
 
-  const getFocusModeText = () => {
-    switch(focusMode) {
-      case 1: return 'Destacado';
-      case 2: return 'Máximo';
-      default: return 'Normal';
-    }
-  };
-
-  const getColorIntensityText = () => {
-    switch(colorIntensity) {
-      case 0: return '50%';
-      case 2: return '150%';
-      default: return '100%';
-    }
-  };
-
-  const getColorBlindModeText = () => {
-    switch(colorBlindMode) {
+  const obterTextoModoDaltonico = () => {
+    switch(modoDaltonico) {
       case 1: return 'Protanopia';
       case 2: return 'Deuteranopia';
       case 3: return 'Tritanopia';
@@ -463,331 +355,242 @@ const AccessibilityControlsFinal = () => {
   };
 
   return (
-    <div className="accessibility-controls-final">
+    <div className="accessibility-controls">
       <button 
-        className="accessibility-toggle-final"
-        onClick={togglePanel}
+        className="accessibility-toggle"
+        onClick={alternarPainel}
         aria-label="Abrir controles de acessibilidade (Alt + A)"
         title="Controles de Acessibilidade (Alt + A)"
       >
         <Accessibility size={24} />
       </button>
 
-      {isOpen && (
-        <div className="accessibility-panel-final" role="dialog" aria-label="Painel de controles de acessibilidade">
-          <div className="accessibility-header-final">
+      {estaAberto && (
+        <div className="accessibility-panel" role="dialog" aria-label="Painel de controles de acessibilidade">
+          <div className="accessibility-header">
             <div className="header-title">
               <Accessibility size={20} />
               <h3>Acessibilidade</h3>
             </div>
             <button 
-              className="close-button-final"
-              onClick={togglePanel}
+              className="close-button"
+              onClick={alternarPainel}
               aria-label="Fechar controles"
             >
               <X size={18} />
             </button>
           </div>
 
-          <div className="accessibility-content-final">
-            {/* Seção de Texto */}
-            <div className="section-final">
+          <div className="accessibility-content">
+            <div className="section">
               <h4 className="section-title">1. Controles de Texto</h4>
               
-              {/* Tamanho da Fonte */}
-              <div className="control-group-final">
-                <div className="control-header-final">
+              <div className="control-group">
+                <div className="control-header">
                   <Type size={16} />
                   <span>Tamanho da Fonte</span>
-                  <span className="control-value-final">{fontSize}%</span>
+                  <span className="control-value">{tamanhoFonte}%</span>
                 </div>
-                <div className="control-buttons-final">
-                  <button onClick={decreaseFontSize} className="control-btn-final decrease">A-</button>
-                  <button onClick={resetFontSize} className="control-btn-final reset">A</button>
-                  <button onClick={increaseFontSize} className="control-btn-final increase">A+</button>
+                <div className="control-buttons">
+                  <button onClick={diminuirTamanhoFonte} className="control-btn decrease">A-</button>
+                  <button onClick={redefinirTamanhoFonte} className="control-btn reset">A</button>
+                  <button onClick={aumentarTamanhoFonte} className="control-btn increase">A+</button>
                 </div>
               </div>
 
-              {/* Espaçamento entre Letras */}
-              <div className="control-group-final">
-                <div className="control-header-final">
+              <div className="control-group">
+                <div className="control-header">
                   <MoreHorizontal size={16} />
                   <span>Espaço entre Letras</span>
-                  <span className="control-value-final">{letterSpacing}px</span>
+                  <span className="control-value">{espacamentoLetras.toFixed(1)}px</span>
                 </div>
-                <div className="control-buttons-final">
-                  <button onClick={decreaseLetterSpacing} className="control-btn-final decrease">-</button>
-                  <button onClick={resetLetterSpacing} className="control-btn-final reset">0</button>
-                  <button onClick={increaseLetterSpacing} className="control-btn-final increase">+</button>
+                <div className="control-buttons">
+                  <button onClick={diminuirEspacamentoLetras} className="control-btn decrease">-</button>
+                  <button onClick={redefinirEspacamentoLetras} className="control-btn reset">0</button>
+                  <button onClick={aumentarEspacamentoLetras} className="control-btn increase">+</button>
                 </div>
               </div>
 
-              {/* Altura da Linha */}
-              <div className="control-group-final">
-                <div className="control-header-final">
+              <div className="control-group">
+                <div className="control-header">
                   <AlignJustify size={16} />
                   <span>Espaço entre Linhas</span>
-                  <span className="control-value-final">{lineHeight.toFixed(2)}</span>
+                  <span className="control-value">{alturaLinha.toFixed(1)}</span>
                 </div>
-                <div className="control-buttons-final">
-                  <button onClick={decreaseLineHeight} className="control-btn-final decrease">-</button>
-                  <button onClick={resetLineHeight} className="control-btn-final reset">1.5</button>
-                  <button onClick={increaseLineHeight} className="control-btn-final increase">+</button>
+                <div className="control-buttons">
+                  <button onClick={diminuirAlturaLinha} className="control-btn decrease">-</button>
+                  <button onClick={redefinirAlturaLinha} className="control-btn reset">1.5</button>
+                  <button onClick={aumentarAlturaLinha} className="control-btn increase">+</button>
                 </div>
               </div>
             </div>
 
-            {/* Seção de Aparência */}
-            <div className="section-final">
-              <h4 className="section-title">2. Aparência e Cores</h4>
+            <div className="section">
+              <h4 className="section-title">2. Aparência</h4>
               
-              {/* Contraste */}
               <div className="multi-option-control">
-                <div className="control-header-final">
+                <div className="control-header">
                   <Contrast size={16} />
                   <span>Contraste</span>
-                  <span className="control-value-final">{getContrastModeText()}</span>
+                  <span className="control-value">{obterTextoModoContraste()}</span>
                 </div>
                 <div className="multi-buttons">
                   <button 
-                    onClick={() => setContrastMode(0)}
-                    className={`multi-btn ${contrastMode === 0 ? 'active' : ''}`}
+                    onClick={() => setModoContraste(0)}
+                    className={`multi-btn ${modoContraste === 0 ? 'active' : ''}`}
                   >Desativado</button>
                   <button 
-                    onClick={() => setContrastMode(1)}
-                    className={`multi-btn ${contrastMode === 1 ? 'active' : ''}`}
+                    onClick={() => setModoContraste(1)}
+                    className={`multi-btn ${modoContraste === 1 ? 'active' : ''}`}
                   >Leve</button>
                   <button 
-                    onClick={() => setContrastMode(2)}
-                    className={`multi-btn ${contrastMode === 2 ? 'active' : ''}`}
+                    onClick={() => setModoContraste(2)}
+                    className={`multi-btn ${modoContraste === 2 ? 'active' : ''}`}
                   >Intenso</button>
                 </div>
               </div>
 
-              {/* Modo Escuro */}
               <div className="multi-option-control">
-                <div className="control-header-final">
-                  {darkMode === 1 ? <Moon size={16} /> : <Sun size={16} />}
-                  <span>Tema</span>
-                  <span className="control-value-final">{getDarkModeText()}</span>
+                <div className="control-header">
+                  {modoEscuro === 1 ? <Moon size={16} /> : <Sun size={16} />}
+                  <span>Modo Escuro</span>
+                  <span className="control-value">{obterTextoModoEscuro()}</span>
                 </div>
                 <div className="multi-buttons">
                   <button 
-                    onClick={() => setDarkMode(0)}
-                    className={`multi-btn ${darkMode === 0 ? 'active' : ''}`}
-                  >Claro</button>
+                    onClick={() => setModoEscuro(0)}
+                    className={`multi-btn ${modoEscuro === 0 ? 'active' : ''}`}
+                  >Desativado</button>
                   <button 
-                    onClick={() => setDarkMode(1)}
-                    className={`multi-btn ${darkMode === 1 ? 'active' : ''}`}
-                  >Escuro</button>
-                  <button 
-                    onClick={() => setDarkMode(2)}
-                    className={`multi-btn ${darkMode === 2 ? 'active' : ''}`}
-                  >Auto</button>
+                    onClick={() => setModoEscuro(1)}
+                    className={`multi-btn ${modoEscuro === 1 ? 'active' : ''}`}
+                  >Ativado</button>
                 </div>
               </div>
 
-              {/* Intensidade de Cores */}
               <div className="multi-option-control">
-                <div className="control-header-final">
-                  <Palette size={16} />
-                  <span>Intensidade de Cores</span>
-                  <span className="control-value-final">{getColorIntensityText()}</span>
-                </div>
-                <div className="multi-buttons">
-                  <button 
-                    onClick={() => setColorIntensity(0)}
-                    className={`multi-btn ${colorIntensity === 0 ? 'active' : ''}`}
-                  >50%</button>
-                  <button 
-                    onClick={() => setColorIntensity(1)}
-                    className={`multi-btn ${colorIntensity === 1 ? 'active' : ''}`}
-                  >100%</button>
-                  <button 
-                    onClick={() => setColorIntensity(2)}
-                    className={`multi-btn ${colorIntensity === 2 ? 'active' : ''}`}
-                  >150%</button>
-                </div>
-              </div>
-
-              {/* Modo Daltônico */}
-              <div className="multi-option-control">
-                <div className="control-header-final">
+                <div className="control-header">
                   <Eye size={16} />
                   <span>Modo Daltônico</span>
-                  <span className="control-value-final">{getColorBlindModeText()}</span>
+                  <span className="control-value">{obterTextoModoDaltonico()}</span>
                 </div>
                 <div className="multi-buttons">
                   <button 
-                    onClick={() => setColorBlindMode(0)}
-                    className={`multi-btn ${colorBlindMode === 0 ? 'active' : ''}`}
+                    onClick={() => setModoDaltonico(0)}
+                    className={`multi-btn ${modoDaltonico === 0 ? 'active' : ''}`}
                   >Normal</button>
                   <button 
-                    onClick={() => setColorBlindMode(1)}
-                    className={`multi-btn ${colorBlindMode === 1 ? 'active' : ''}`}
+                    onClick={() => setModoDaltonico(1)}
+                    className={`multi-btn ${modoDaltonico === 1 ? 'active' : ''}`}
                   >Protanopia</button>
                   <button 
-                    onClick={() => setColorBlindMode(2)}
-                    className={`multi-btn ${colorBlindMode === 2 ? 'active' : ''}`}
+                    onClick={() => setModoDaltonico(2)}
+                    className={`multi-btn ${modoDaltonico === 2 ? 'active' : ''}`}
                   >Deuteranopia</button>
                   <button 
-                    onClick={() => setColorBlindMode(3)}
-                    className={`multi-btn ${colorBlindMode === 3 ? 'active' : ''}`}
+                    onClick={() => setModoDaltonico(3)}
+                    className={`multi-btn ${modoDaltonico === 3 ? 'active' : ''}`}
                   >Tritanopia</button>
                 </div>
               </div>
             </div>
 
-            {/* Seção de Navegação e Leitura */}
-            <div className="section-final">
-              <h4 className="section-title">3. Navegação e Leitura</h4>
+            <div className="section">
+              <h4 className="section-title">3. Navegação</h4>
               
-              {/* Guia de Leitura */}
               <div className="multi-option-control">
-                <div className="control-header-final">
+                <div className="control-header">
                   <BookOpen size={16} />
                   <span>Guia de Leitura</span>
-                  <span className="control-value-final">{getReadingGuideText()}</span>
+                  <span className="control-value">{obterTextoGuiaLeitura()}</span>
                 </div>
                 <div className="multi-buttons">
                   <button 
-                    onClick={() => setReadingGuide(0)}
-                    className={`multi-btn ${readingGuide === 0 ? 'active' : ''}`}
+                    onClick={() => setGuiaLeitura(0)}
+                    className={`multi-btn ${guiaLeitura === 0 ? 'active' : ''}`}
                   >Desativado</button>
                   <button 
-                    onClick={() => setReadingGuide(1)}
-                    className={`multi-btn ${readingGuide === 1 ? 'active' : ''}`}
+                    onClick={() => setGuiaLeitura(1)}
+                    className={`multi-btn ${guiaLeitura === 1 ? 'active' : ''}`}
                   >Barra</button>
                   <button 
-                    onClick={() => setReadingGuide(2)}
-                    className={`multi-btn ${readingGuide === 2 ? 'active' : ''}`}
+                    onClick={() => setGuiaLeitura(2)}
+                    className={`multi-btn ${guiaLeitura === 2 ? 'active' : ''}`}
                   >Máscara</button>
                 </div>
               </div>
 
-              {/* Focus Visível */}
-              <div className="multi-option-control">
-                <div className="control-header-final">
-                  <Zap size={16} />
-                  <span>Focus Visível</span>
-                  <span className="control-value-final">{getFocusModeText()}</span>
-                </div>
-                <div className="multi-buttons">
-                  <button 
-                    onClick={() => setFocusMode(0)}
-                    className={`multi-btn ${focusMode === 0 ? 'active' : ''}`}
-                  >Normal</button>
-                  <button 
-                    onClick={() => setFocusMode(1)}
-                    className={`multi-btn ${focusMode === 1 ? 'active' : ''}`}
-                  >Destacado</button>
-                  <button 
-                    onClick={() => setFocusMode(2)}
-                    className={`multi-btn ${focusMode === 2 ? 'active' : ''}`}
-                  >Máximo</button>
-                </div>
-              </div>
-
-              {/* Toggles */}
-              <div className="toggle-control-final">
-                <div className="toggle-header-final">
+              <div className="toggle-control">
+                <div className="toggle-header">
                   <Link size={16} />
                   <span>Destacar Links</span>
                 </div>
                 <button 
-                  onClick={() => setHighlightLinks(prev => !prev)}
-                  className={`toggle-btn-final ${highlightLinks ? 'ativo' : ''}`}
+                  onClick={() => setDestacarLinks(prev => !prev)}
+                  className={`toggle-btn ${destacarLinks ? 'ativo' : ''}`}
                 >
-                  <div className="toggle-slider-final"></div>
+                  <div className="toggle-slider"></div>
                 </button>
               </div>
 
-              <div className="toggle-control-final">
-                <div className="toggle-header-final">
-                  <Search size={16} />
-                  <span>Lupa de Conteúdo</span>
-                </div>
-                <button 
-                  onClick={() => setMagnifier(prev => !prev)}
-                  className={`toggle-btn-final ${magnifier ? 'ativo' : ''}`}
-                >
-                  <div className="toggle-slider-final"></div>
-                </button>
-              </div>
-
-              <div className="toggle-control-final">
-                <div className="toggle-header-final">
+              <div className="toggle-control">
+                <div className="toggle-header">
                   <MousePointer size={16} />
                   <span>Cursor Grande</span>
                 </div>
                 <button 
-                  onClick={() => setBigCursor(prev => !prev)}
-                  className={`toggle-btn-final ${bigCursor ? 'ativo' : ''}`}
+                  onClick={() => setCursorGrande(prev => !prev)}
+                  className={`toggle-btn ${cursorGrande ? 'ativo' : ''}`}
                 >
-                  <div className="toggle-slider-final"></div>
+                  <div className="toggle-slider"></div>
                 </button>
               </div>
 
-              <div className="toggle-control-final">
-                <div className="toggle-header-final">
+              <div className="toggle-control">
+                <div className="toggle-header">
                   <Pause size={16} />
                   <span>Pausar Animações</span>
                 </div>
                 <button 
-                  onClick={() => setPauseAnimations(prev => !prev)}
-                  className={`toggle-btn-final ${pauseAnimations ? 'ativo' : ''}`}
+                  onClick={() => setPausarAnimacoes(prev => !prev)}
+                  className={`toggle-btn ${pausarAnimacoes ? 'ativo' : ''}`}
                 >
-                  <div className="toggle-slider-final"></div>
+                  <div className="toggle-slider"></div>
                 </button>
               </div>
             </div>
 
-            {/* Seção para Leitores de Tela */}
-            <div className="section-final">
+            <div className="section">
               <h4 className="section-title">4. Leitores de Tela</h4>
               
-              <div className="toggle-control-final">
-                <div className="toggle-header-final">
+              <div className="toggle-control">
+                <div className="toggle-header">
                   <EyeOff size={16} />
                   <span>Remover Imagens</span>
                 </div>
                 <button 
-                  onClick={() => setRemoveImages(prev => !prev)}
-                  className={`toggle-btn-final ${removeImages ? 'ativo' : ''}`}
+                  onClick={() => setRemoverImagens(prev => !prev)}
+                  className={`toggle-btn ${removerImagens ? 'ativo' : ''}`}
                 >
-                  <div className="toggle-slider-final"></div>
+                  <div className="toggle-slider"></div>
                 </button>
               </div>
 
-              <div className="toggle-control-final">
-                <div className="toggle-header-final">
+              <div className="toggle-control">
+                <div className="toggle-header">
                   <Type size={16} />
                   <span>Remover Cabeçalhos</span>
                 </div>
                 <button 
-                  onClick={() => setRemoveHeaders(prev => !prev)}
-                  className={`toggle-btn-final ${removeHeaders ? 'ativo' : ''}`}
+                  onClick={() => setRemoverCabecalhos(prev => !prev)}
+                  className={`toggle-btn ${removerCabecalhos ? 'ativo' : ''}`}
                 >
-                  <div className="toggle-slider-final"></div>
-                </button>
-              </div>
-
-              <div className="toggle-control-final">
-                <div className="toggle-header-final">
-                  <Volume2 size={16} />
-                  <span>Leitor de Voz</span>
-                </div>
-                <button 
-                  onClick={() => setSpeechReader(prev => !prev)}
-                  className={`toggle-btn-final ${speechReader ? 'ativo' : ''}`}
-                >
-                  <div className="toggle-slider-final"></div>
+                  <div className="toggle-slider"></div>
                 </button>
               </div>
             </div>
 
-            {/* Atalhos */}
-            <div className="shortcuts-section-final">
+            <div className="shortcuts-section">
               <details>
                 <summary>Atalhos de Teclado</summary>
                 <div className="shortcuts-list">
@@ -801,11 +604,10 @@ const AccessibilityControlsFinal = () => {
             </div>
           </div>
 
-          {/* Botão de Reset sempre visível */}
-          <div className="reset-section-final">
+          <div className="reset-section">
             <button 
-              onClick={resetAll}
-              className="reset-all-btn-final"
+              onClick={redefinirTudo}
+              className="reset-all-btn"
               aria-label="Resetar todas as configurações"
             >
               <RotateCcw size={16} />
@@ -818,5 +620,4 @@ const AccessibilityControlsFinal = () => {
   );
 };
 
-export default AccessibilityControlsFinal;
-
+export default ControlesAcessibilidade;
