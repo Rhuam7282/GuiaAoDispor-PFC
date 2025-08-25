@@ -1,15 +1,54 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './controles.css';
-import { Type, AlignJustify, MoreHorizontal, Settings, Contrast, Eye, Minus } from 'lucide-react';
+import { 
+  Type, 
+  AlignJustify, 
+  MoreHorizontal, 
+  Settings, 
+  Contrast,
+  Moon,
+  Sun,
+  MousePointer,
+  Eye,
+  Pause,
+  RotateCcw,
+  X,
+  Accessibility,
+  Link,
+  Search,
+  Palette,
+  EyeOff,
+  Volume2,
+  BookOpen,
+  Zap
+} from 'lucide-react';
 
-const AccessibilityControlsComplete = () => {
+const AccessibilityControlsFinal = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [fontSize, setFontSize] = useState(100); // Porcentagem base
-  const [letterSpacing, setLetterSpacing] = useState(0); // Em pixels
-  const [lineHeight, setLineHeight] = useState(1.5); // Multiplicador
-  const [modoAltoContraste, setModoAltoContraste] = useState(false); // Estado do alto contraste
-  const [mascaraLeitura, setMascaraLeitura] = useState(false); // Estado da máscara de leitura
-  const [guiaLeitura, setGuiaLeitura] = useState(false); // Estado da guia de leitura
+  const [fontSize, setFontSize] = useState(100);
+  const [letterSpacing, setLetterSpacing] = useState(0);
+  const [lineHeight, setLineHeight] = useState(1.5);
+  
+  // Estados para múltiplas variações
+  const [contrastMode, setContrastMode] = useState(0); // 0: desativado, 1: leve, 2: intenso
+  const [darkMode, setDarkMode] = useState(0); // 0: claro, 1: escuro, 2: automático
+  const [readingGuide, setReadingGuide] = useState(0); // 0: off, 1: barra horizontal, 2: máscara
+  const [focusMode, setFocusMode] = useState(0); // 0: normal, 1: destacado, 2: máximo
+  
+  // Novas funcionalidades
+  const [removeImages, setRemoveImages] = useState(false);
+  const [removeHeaders, setRemoveHeaders] = useState(false);
+  const [highlightLinks, setHighlightLinks] = useState(false);
+  const [magnifier, setMagnifier] = useState(false);
+  const [colorIntensity, setColorIntensity] = useState(1); // 0: 50%, 1: 100%, 2: 150%
+  const [colorBlindMode, setColorBlindMode] = useState(0); // 0: normal, 1: protanopia, 2: deuteranopia, 3: tritanopia
+  const [pauseAnimations, setPauseAnimations] = useState(false);
+  const [bigCursor, setBigCursor] = useState(false);
+  const [speechReader, setSpeechReader] = useState(false);
+  
+  // Refs para guia de leitura
+  const mouseGuideRef = useRef(null);
+  const maskRef = useRef(null);
 
   // Funções para localStorage
   const salvarConfiguracao = useCallback((chave, valor) => {
@@ -28,156 +67,260 @@ const AccessibilityControlsComplete = () => {
       console.warn('Erro ao carregar configuração de acessibilidade:', error);
       return valorPadrao;
     }
-  })
-
-  // Carregar configurações salvas na inicialização
-  useEffect(() => {
-    const fontSizeSalvo = carregarConfiguracao('fontSize', 100);
-    const letterSpacingSalvo = carregarConfiguracao('letterSpacing', 0);
-    const lineHeightSalvo = carregarConfiguracao('lineHeight', 1.5);
-    const altoContrasteSalvo = carregarConfiguracao('modoAltoContraste', false);
-    const mascaraLeituraSalva = carregarConfiguracao('mascaraLeitura', false);
-    const guiaLeituraSalva = carregarConfiguracao('guiaLeitura', false);
-
-    setFontSize(fontSizeSalvo);
-    setLetterSpacing(letterSpacingSalvo);
-    setLineHeight(lineHeightSalvo);
-    setModoAltoContraste(altoContrasteSalvo);
-    setMascaraLeitura(mascaraLeituraSalva);
-    setGuiaLeitura(guiaLeituraSalva);
   }, []);
 
-  // Aplicar as mudanças nas variáveis CSS quando os valores mudarem
+  // Carregar configurações salvas
+  useEffect(() => {
+    const configuracoes = {
+      fontSize: carregarConfiguracao('fontSize', 100),
+      letterSpacing: carregarConfiguracao('letterSpacing', 0),
+      lineHeight: carregarConfiguracao('lineHeight', 1.5),
+      contrastMode: carregarConfiguracao('contrastMode', 0),
+      darkMode: carregarConfiguracao('darkMode', 0),
+      readingGuide: carregarConfiguracao('readingGuide', 0),
+      focusMode: carregarConfiguracao('focusMode', 0),
+      removeImages: carregarConfiguracao('removeImages', false),
+      removeHeaders: carregarConfiguracao('removeHeaders', false),
+      highlightLinks: carregarConfiguracao('highlightLinks', false),
+      magnifier: carregarConfiguracao('magnifier', false),
+      colorIntensity: carregarConfiguracao('colorIntensity', 1),
+      colorBlindMode: carregarConfiguracao('colorBlindMode', 0),
+      pauseAnimations: carregarConfiguracao('pauseAnimations', false),
+      bigCursor: carregarConfiguracao('bigCursor', false),
+      speechReader: carregarConfiguracao('speechReader', false)
+    };
+
+    setFontSize(configuracoes.fontSize);
+    setLetterSpacing(configuracoes.letterSpacing);
+    setLineHeight(configuracoes.lineHeight);
+    setContrastMode(configuracoes.contrastMode);
+    setDarkMode(configuracoes.darkMode);
+    setReadingGuide(configuracoes.readingGuide);
+    setFocusMode(configuracoes.focusMode);
+    setRemoveImages(configuracoes.removeImages);
+    setRemoveHeaders(configuracoes.removeHeaders);
+    setHighlightLinks(configuracoes.highlightLinks);
+    setMagnifier(configuracoes.magnifier);
+    setColorIntensity(configuracoes.colorIntensity);
+    setColorBlindMode(configuracoes.colorBlindMode);
+    setPauseAnimations(configuracoes.pauseAnimations);
+    setBigCursor(configuracoes.bigCursor);
+    setSpeechReader(configuracoes.speechReader);
+  }, [carregarConfiguracao]);
+
+  // Aplicar configurações de texto
   useEffect(() => {
     const root = document.documentElement;
-    const body = document.body;
     
-    // Definir variáveis CSS
     root.style.setProperty('--accessibility-font-size', `${fontSize}%`);
     root.style.setProperty('--accessibility-letter-spacing', `${letterSpacing}px`);
     root.style.setProperty('--accessibility-line-height', lineHeight);
-    
-    // Aplicar classe de acessibilidade apenas se houver mudanças dos valores padrão
+
     const temMudancas = fontSize !== 100 || letterSpacing !== 0 || lineHeight !== 1.5;
     
     if (temMudancas) {
-      body.classList.add('acessibilidade-ativa');
+      root.classList.add('acessibilidade-ativa');
     } else {
-      body.classList.remove('acessibilidade-ativa');
+      root.classList.remove('acessibilidade-ativa');
     }
     
-    // Salvar no localStorage sempre que os valores mudarem
     salvarConfiguracao('fontSize', fontSize);
     salvarConfiguracao('letterSpacing', letterSpacing);
     salvarConfiguracao('lineHeight', lineHeight);
   }, [fontSize, letterSpacing, lineHeight, salvarConfiguracao]);
 
-  // Aplicar/remover classe de alto contraste no body
+  // Aplicar modos de contraste
   useEffect(() => {
-    const body = document.body;
-    if (modoAltoContraste) {
-      body.classList.add('modo-alto-contraste');
-    } else {
-      body.classList.remove('modo-alto-contraste');
+    const root = document.documentElement;
+    
+    // Remover classes anteriores
+    root.classList.remove('contraste-desativado', 'contraste-leve', 'contraste-intenso');
+    
+    switch(contrastMode) {
+      case 1:
+        root.classList.add('contraste-leve');
+        break;
+      case 2:
+        root.classList.add('contraste-intenso');
+        break;
+      default:
+        root.classList.add('contraste-desativado');
     }
     
-    // Salvar no localStorage
-    salvarConfiguracao('modoAltoContraste', modoAltoContraste);
-  }, [modoAltoContraste]);
+    salvarConfiguracao('contrastMode', contrastMode);
+  }, [contrastMode, salvarConfiguracao]);
 
-  // Controle da Máscara de Leitura
+  // Aplicar modos escuros
   useEffect(() => {
-    const body = document.body;
+    const root = document.documentElement;
     
-    if (mascaraLeitura) {
-      body.classList.add('mascara-leitura-ativa');
-      
-      // Criar elemento da máscara se não existir
-      let mascaraElement = document.getElementById('mascara-leitura');
-      if (!mascaraElement) {
-        mascaraElement = document.createElement('div');
-        mascaraElement.id = 'mascara-leitura';
-        mascaraElement.className = 'mascara-leitura-overlay';
-        body.appendChild(mascaraElement);
-      }
-      
-      // Função para seguir o cursor
-      const seguirCursor = (e) => {
-        const x = e.clientX;
-        const y = e.clientY;
-        mascaraElement.style.setProperty('--mouse-x', `${x}px`);
-        mascaraElement.style.setProperty('--mouse-y', `${y}px`);
-      };
-      
-      // Adicionar evento de movimento do mouse
-      document.addEventListener('mousemove', seguirCursor);
-      
-      // Cleanup function para remover o evento
-      return () => {
-        document.removeEventListener('mousemove', seguirCursor);
-      };
-    } else {
-      body.classList.remove('mascara-leitura-ativa');
-      
-      // Remover elemento da máscara
-      const mascaraElement = document.getElementById('mascara-leitura');
-      if (mascaraElement) {
-        mascaraElement.remove();
-      }
+    root.classList.remove('tema-claro', 'tema-escuro', 'tema-automatico');
+    
+    switch(darkMode) {
+      case 1:
+        root.classList.add('tema-escuro');
+        break;
+      case 2:
+        root.classList.add('tema-automatico');
+        break;
+      default:
+        root.classList.add('tema-claro');
     }
     
-    // Salvar no localStorage
-    salvarConfiguracao('mascaraLeitura', mascaraLeitura);
-  }, [mascaraLeitura]);
+    salvarConfiguracao('darkMode', darkMode);
+  }, [darkMode, salvarConfiguracao]);
 
-  // Controle da Guia de Leitura
+  // Guia de leitura que segue o mouse
   useEffect(() => {
-    const body = document.body;
-    
-    if (guiaLeitura) {
-      body.classList.add('guia-leitura-ativa');
-      
-      // Criar elemento da guia se não existir
-      let guiaElement = document.getElementById('guia-leitura');
-      if (!guiaElement) {
-        guiaElement = document.createElement('div');
-        guiaElement.id = 'guia-leitura';
-        guiaElement.className = 'guia-leitura-linha';
-        body.appendChild(guiaElement);
+    const handleMouseMove = (e) => {
+      if (readingGuide === 1 && mouseGuideRef.current) {
+        // Barra horizontal que segue o mouse
+        mouseGuideRef.current.style.top = `${e.clientY}px`;
+        mouseGuideRef.current.style.left = '0px';
+        mouseGuideRef.current.style.width = '100vw';
+        mouseGuideRef.current.style.height = '2px';
+        
+        // Indicador de posição do cursor
+        const indicator = mouseGuideRef.current.querySelector('.cursor-indicator');
+        if (indicator) {
+          indicator.style.left = `${e.clientX}px`;
+        }
+      } else if (readingGuide === 2 && maskRef.current) {
+        // Máscara que segue o mouse
+        maskRef.current.style.top = `${e.clientY - 100}px`;
+        maskRef.current.style.left = `${e.clientX - 150}px`;
       }
-      
-      // Função para seguir o cursor
-      const seguirCursor = (e) => {
-        const y = e.clientY;
-        guiaElement.style.top = `${y}px`;
-      };
-      
-      // Adicionar evento de movimento do mouse
-      document.addEventListener('mousemove', seguirCursor);
-      
-      // Cleanup function para remover o evento
-      return () => {
-        document.removeEventListener('mousemove', seguirCursor);
-      };
+    };
+
+    if (readingGuide === 1) {
+      document.addEventListener('mousemove', handleMouseMove);
+      if (!mouseGuideRef.current) {
+        const guide = document.createElement('div');
+        guide.className = 'horizontal-reading-guide';
+        guide.innerHTML = '<div class="cursor-indicator"></div>';
+        document.body.appendChild(guide);
+        mouseGuideRef.current = guide;
+      }
+    } else if (readingGuide === 2) {
+      document.addEventListener('mousemove', handleMouseMove);
+      if (!maskRef.current) {
+        const mask = document.createElement('div');
+        mask.className = 'reading-mask';
+        document.body.appendChild(mask);
+        maskRef.current = mask;
+      }
     } else {
-      body.classList.remove('guia-leitura-ativa');
-      
-      // Remover elemento da guia
-      const guiaElement = document.getElementById('guia-leitura');
-      if (guiaElement) {
-        guiaElement.remove();
+      document.removeEventListener('mousemove', handleMouseMove);
+      if (mouseGuideRef.current) {
+        mouseGuideRef.current.remove();
+        mouseGuideRef.current = null;
+      }
+      if (maskRef.current) {
+        maskRef.current.remove();
+        maskRef.current = null;
       }
     }
+
+    salvarConfiguracao('readingGuide', readingGuide);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [readingGuide, salvarConfiguracao]);
+
+  // Aplicar outras configurações
+  useEffect(() => {
+    const root = document.documentElement;
     
-    // Salvar no localStorage
-    salvarConfiguracao('guiaLeitura', guiaLeitura);
-  }, [guiaLeitura]);
+    // Focus modes
+    root.classList.remove('focus-normal', 'focus-destacado', 'focus-maximo');
+    switch(focusMode) {
+      case 1:
+        root.classList.add('focus-destacado');
+        break;
+      case 2:
+        root.classList.add('focus-maximo');
+        break;
+      default:
+        root.classList.add('focus-normal');
+    }
+
+    // Outras funcionalidades
+    root.classList.toggle('remover-imagens', removeImages);
+    root.classList.toggle('remover-cabecalhos', removeHeaders);
+    root.classList.toggle('destacar-links', highlightLinks);
+    root.classList.toggle('lupa-ativa', magnifier);
+    root.classList.toggle('pausar-animacoes', pauseAnimations);
+    root.classList.toggle('cursor-grande', bigCursor);
+    root.classList.toggle('leitor-ativo', speechReader);
+
+    // Intensidade de cores
+    const intensityValues = ['0.5', '1', '1.5'];
+    root.style.setProperty('--color-intensity', intensityValues[colorIntensity]);
+
+    // Modo daltônico
+    root.classList.remove('daltonico-normal', 'daltonico-protanopia', 'daltonico-deuteranopia', 'daltonico-tritanopia');
+    switch(colorBlindMode) {
+      case 1:
+        root.classList.add('daltonico-protanopia');
+        break;
+      case 2:
+        root.classList.add('daltonico-deuteranopia');
+        break;
+      case 3:
+        root.classList.add('daltonico-tritanopia');
+        break;
+      default:
+        root.classList.add('daltonico-normal');
+    }
+
+    // Salvar configurações
+    salvarConfiguracao('focusMode', focusMode);
+    salvarConfiguracao('removeImages', removeImages);
+    salvarConfiguracao('removeHeaders', removeHeaders);
+    salvarConfiguracao('highlightLinks', highlightLinks);
+    salvarConfiguracao('magnifier', magnifier);
+    salvarConfiguracao('colorIntensity', colorIntensity);
+    salvarConfiguracao('colorBlindMode', colorBlindMode);
+    salvarConfiguracao('pauseAnimations', pauseAnimations);
+    salvarConfiguracao('bigCursor', bigCursor);
+    salvarConfiguracao('speechReader', speechReader);
+  }, [focusMode, removeImages, removeHeaders, highlightLinks, magnifier, colorIntensity, colorBlindMode, pauseAnimations, bigCursor, speechReader, salvarConfiguracao]);
+
+  // Atalhos de teclado
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.altKey && event.key === 'a') {
+        event.preventDefault();
+        setIsOpen(prev => !prev);
+      }
+      if (event.altKey && event.key === 'c') {
+        event.preventDefault();
+        setContrastMode(prev => (prev + 1) % 3);
+      }
+      if (event.altKey && event.key === 'd') {
+        event.preventDefault();
+        setDarkMode(prev => (prev + 1) % 3);
+      }
+      if (event.altKey && event.key === '+') {
+        event.preventDefault();
+        setFontSize(prev => Math.min(prev + 5, 150));
+      }
+      if (event.altKey && event.key === '-') {
+        event.preventDefault();
+        setFontSize(prev => Math.max(prev - 5, 80));
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, []);
 
   const togglePanel = () => {
     setIsOpen(!isOpen);
   };
 
-  // Funções de controle de texto com incrementos menores
+  // Funções de controle de texto
   const increaseFontSize = () => {
     setFontSize(prev => Math.min(prev + 5, 150));
   };
@@ -214,61 +357,115 @@ const AccessibilityControlsComplete = () => {
     setLineHeight(1.5);
   };
 
-  const alternarAltoContraste = () => {
-    setModoAltoContraste(prev => !prev);
-  };
-
-  const alternarMascaraLeitura = () => {
-    setMascaraLeitura(prev => !prev);
-  };
-
-  const alternarGuiaLeitura = () => {
-    setGuiaLeitura(prev => !prev);
-  };
-
   const resetAll = () => {
     setFontSize(100);
     setLetterSpacing(0);
     setLineHeight(1.5);
-    setModoAltoContraste(false);
-    setMascaraLeitura(false);
-    setGuiaLeitura(false);
+    setContrastMode(0);
+    setDarkMode(0);
+    setReadingGuide(0);
+    setFocusMode(0);
+    setRemoveImages(false);
+    setRemoveHeaders(false);
+    setHighlightLinks(false);
+    setMagnifier(false);
+    setColorIntensity(1);
+    setColorBlindMode(0);
+    setPauseAnimations(false);
+    setBigCursor(false);
+    setSpeechReader(false);
     
     // Limpar localStorage
-    try {
-      localStorage.removeItem('acessibilidade_fontSize');
-      localStorage.removeItem('acessibilidade_letterSpacing');
-      localStorage.removeItem('acessibilidade_lineHeight');
-      localStorage.removeItem('acessibilidade_modoAltoContraste');
-      localStorage.removeItem('acessibilidade_mascaraLeitura');
-      localStorage.removeItem('acessibilidade_guiaLeitura');
-    } catch (error) {
-      console.warn('Erro ao limpar configurações de acessibilidade:', error);
+    const chaves = [
+      'fontSize', 'letterSpacing', 'lineHeight', 'contrastMode', 'darkMode',
+      'readingGuide', 'focusMode', 'removeImages', 'removeHeaders', 'highlightLinks',
+      'magnifier', 'colorIntensity', 'colorBlindMode', 'pauseAnimations', 'bigCursor', 'speechReader'
+    ];
+    
+    chaves.forEach(chave => {
+      try {
+        localStorage.removeItem(`acessibilidade_${chave}`);
+      } catch (error) {
+        console.warn('Erro ao limpar configuração:', error);
+      }
+    });
+    
+    // Remover classes do elemento raiz
+    const root = document.documentElement;
+    const classes = [
+      'acessibilidade-ativa', 'contraste-leve', 'contraste-intenso', 'tema-escuro', 'tema-automatico',
+      'focus-destacado', 'focus-maximo', 'remover-imagens', 'remover-cabecalhos', 'destacar-links', 
+      'lupa-ativa', 'pausar-animacoes', 'cursor-grande', 'leitor-ativo',
+      'daltonico-protanopia', 'daltonico-deuteranopia', 'daltonico-tritanopia'
+    ];
+    
+    classes.forEach(classe => root.classList.remove(classe));
+    
+    // Limpar guias de leitura
+    if (mouseGuideRef.current) {
+      mouseGuideRef.current.remove();
+      mouseGuideRef.current = null;
     }
-    
-    // Remover classes do body
-    const body = document.body;
-    body.classList.remove('acessibilidade-ativa');
-    body.classList.remove('modo-alto-contraste');
-    body.classList.remove('mascara-leitura-ativa');
-    body.classList.remove('guia-leitura-ativa');
-    
-    // Remover elementos criados dinamicamente
-    const mascaraElement = document.getElementById('mascara-leitura');
-    if (mascaraElement) {
-      mascaraElement.remove();
+    if (maskRef.current) {
+      maskRef.current.remove();
+      maskRef.current = null;
     }
-    
-    const guiaElement = document.getElementById('guia-leitura');
-    if (guiaElement) {
-      guiaElement.remove();
+  };
+
+  // Função para obter texto do modo atual
+  const getContrastModeText = () => {
+    switch(contrastMode) {
+      case 1: return 'Leve';
+      case 2: return 'Intenso';
+      default: return 'Desativado';
+    }
+  };
+
+  const getDarkModeText = () => {
+    switch(darkMode) {
+      case 1: return 'Escuro';
+      case 2: return 'Auto';
+      default: return 'Claro';
+    }
+  };
+
+  const getReadingGuideText = () => {
+    switch(readingGuide) {
+      case 1: return 'Barra';
+      case 2: return 'Máscara';
+      default: return 'Desativado';
+    }
+  };
+
+  const getFocusModeText = () => {
+    switch(focusMode) {
+      case 1: return 'Destacado';
+      case 2: return 'Máximo';
+      default: return 'Normal';
+    }
+  };
+
+  const getColorIntensityText = () => {
+    switch(colorIntensity) {
+      case 0: return '50%';
+      case 2: return '150%';
+      default: return '100%';
+    }
+  };
+
+  const getColorBlindModeText = () => {
+    switch(colorBlindMode) {
+      case 1: return 'Protanopia';
+      case 2: return 'Deuteranopia';
+      case 3: return 'Tritanopia';
+      default: return 'Normal';
     }
   };
 
   return (
-    <div className="accessibility-controls-complete">
+    <div className="accessibility-controls-final">
       <button 
-        className="accessibility-toggle-complete"
+        className="accessibility-toggle-final"
         onClick={togglePanel}
         aria-label="Abrir controles de acessibilidade (Alt + A)"
         title="Controles de Acessibilidade (Alt + A)"
@@ -277,14 +474,14 @@ const AccessibilityControlsComplete = () => {
       </button>
 
       {isOpen && (
-        <div className="accessibility-panel-complete" role="dialog" aria-label="Painel de controles de acessibilidade">
-          <div className="accessibility-header-complete">
+        <div className="accessibility-panel-final" role="dialog" aria-label="Painel de controles de acessibilidade">
+          <div className="accessibility-header-final">
             <div className="header-title">
               <Accessibility size={20} />
               <h3>Acessibilidade</h3>
             </div>
             <button 
-              className="close-button-complete"
+              className="close-button-final"
               onClick={togglePanel}
               aria-label="Fechar controles"
             >
@@ -292,87 +489,87 @@ const AccessibilityControlsComplete = () => {
             </button>
           </div>
 
-          <div className="accessibility-content-complete">
+          <div className="accessibility-content-final">
             {/* Seção de Texto */}
-            <div className="section-complete">
+            <div className="section-final">
               <h4 className="section-title">1. Controles de Texto</h4>
               
               {/* Tamanho da Fonte */}
-              <div className="control-group-complete">
-                <div className="control-header-complete">
+              <div className="control-group-final">
+                <div className="control-header-final">
                   <Type size={16} />
                   <span>Tamanho da Fonte</span>
-                  <span className="control-value-complete">{fontSize}%</span>
+                  <span className="control-value-final">{fontSize}%</span>
                 </div>
-                <div className="control-buttons-complete">
-                  <button onClick={decreaseFontSize} className="control-btn-complete decrease">A-</button>
-                  <button onClick={resetFontSize} className="control-btn-complete reset">A</button>
-                  <button onClick={increaseFontSize} className="control-btn-complete increase">A+</button>
+                <div className="control-buttons-final">
+                  <button onClick={decreaseFontSize} className="control-btn-final decrease">A-</button>
+                  <button onClick={resetFontSize} className="control-btn-final reset">A</button>
+                  <button onClick={increaseFontSize} className="control-btn-final increase">A+</button>
                 </div>
               </div>
 
               {/* Espaçamento entre Letras */}
-              <div className="control-group-complete">
-                <div className="control-header-complete">
+              <div className="control-group-final">
+                <div className="control-header-final">
                   <MoreHorizontal size={16} />
                   <span>Espaço entre Letras</span>
-                  <span className="control-value-complete">{letterSpacing}px</span>
+                  <span className="control-value-final">{letterSpacing}px</span>
                 </div>
-                <div className="control-buttons-complete">
-                  <button onClick={decreaseLetterSpacing} className="control-btn-complete decrease">-</button>
-                  <button onClick={resetLetterSpacing} className="control-btn-complete reset">0</button>
-                  <button onClick={increaseLetterSpacing} className="control-btn-complete increase">+</button>
+                <div className="control-buttons-final">
+                  <button onClick={decreaseLetterSpacing} className="control-btn-final decrease">-</button>
+                  <button onClick={resetLetterSpacing} className="control-btn-final reset">0</button>
+                  <button onClick={increaseLetterSpacing} className="control-btn-final increase">+</button>
                 </div>
               </div>
 
               {/* Altura da Linha */}
-              <div className="control-group-complete">
-                <div className="control-header-complete">
+              <div className="control-group-final">
+                <div className="control-header-final">
                   <AlignJustify size={16} />
                   <span>Espaço entre Linhas</span>
-                  <span className="control-value-complete">{lineHeight.toFixed(2)}</span>
+                  <span className="control-value-final">{lineHeight.toFixed(2)}</span>
                 </div>
-                <div className="control-buttons-complete">
-                  <button onClick={decreaseLineHeight} className="control-btn-complete decrease">-</button>
-                  <button onClick={resetLineHeight} className="control-btn-complete reset">1.5</button>
-                  <button onClick={increaseLineHeight} className="control-btn-complete increase">+</button>
+                <div className="control-buttons-final">
+                  <button onClick={decreaseLineHeight} className="control-btn-final decrease">-</button>
+                  <button onClick={resetLineHeight} className="control-btn-final reset">1.5</button>
+                  <button onClick={increaseLineHeight} className="control-btn-final increase">+</button>
                 </div>
               </div>
             </div>
 
             {/* Seção de Aparência */}
-            <div className="section-complete">
+            <div className="section-final">
               <h4 className="section-title">2. Aparência e Cores</h4>
               
               {/* Contraste */}
               <div className="multi-option-control">
-                <div className="control-header-complete">
+                <div className="control-header-final">
                   <Contrast size={16} />
                   <span>Contraste</span>
-                  <span className="control-value-complete">{getContrastModeText()}</span>
+                  <span className="control-value-final">{getContrastModeText()}</span>
                 </div>
                 <div className="multi-buttons">
                   <button 
                     onClick={() => setContrastMode(0)}
                     className={`multi-btn ${contrastMode === 0 ? 'active' : ''}`}
-                  >Normal</button>
+                  >Desativado</button>
                   <button 
                     onClick={() => setContrastMode(1)}
                     className={`multi-btn ${contrastMode === 1 ? 'active' : ''}`}
-                  >Alto</button>
+                  >Leve</button>
                   <button 
                     onClick={() => setContrastMode(2)}
                     className={`multi-btn ${contrastMode === 2 ? 'active' : ''}`}
-                  >Invertido</button>
+                  >Intenso</button>
                 </div>
               </div>
 
               {/* Modo Escuro */}
               <div className="multi-option-control">
-                <div className="control-header-complete">
+                <div className="control-header-final">
                   {darkMode === 1 ? <Moon size={16} /> : <Sun size={16} />}
                   <span>Tema</span>
-                  <span className="control-value-complete">{getDarkModeText()}</span>
+                  <span className="control-value-final">{getDarkModeText()}</span>
                 </div>
                 <div className="multi-buttons">
                   <button 
@@ -391,34 +588,34 @@ const AccessibilityControlsComplete = () => {
               </div>
 
               {/* Intensidade de Cores */}
-              <div className="control-group-complete">
-                <div className="control-header-complete">
+              <div className="multi-option-control">
+                <div className="control-header-final">
                   <Palette size={16} />
                   <span>Intensidade de Cores</span>
-                  <span className="control-value-complete">{colorIntensity}%</span>
+                  <span className="control-value-final">{getColorIntensityText()}</span>
                 </div>
-                <div className="control-buttons-complete">
+                <div className="multi-buttons">
                   <button 
-                    onClick={() => setColorIntensity(prev => Math.max(prev - 10, 50))}
-                    className="control-btn-complete decrease"
-                  >-</button>
+                    onClick={() => setColorIntensity(0)}
+                    className={`multi-btn ${colorIntensity === 0 ? 'active' : ''}`}
+                  >50%</button>
                   <button 
-                    onClick={() => setColorIntensity(100)}
-                    className="control-btn-complete reset"
+                    onClick={() => setColorIntensity(1)}
+                    className={`multi-btn ${colorIntensity === 1 ? 'active' : ''}`}
                   >100%</button>
                   <button 
-                    onClick={() => setColorIntensity(prev => Math.min(prev + 10, 150))}
-                    className="control-btn-complete increase"
-                  >+</button>
+                    onClick={() => setColorIntensity(2)}
+                    className={`multi-btn ${colorIntensity === 2 ? 'active' : ''}`}
+                  >150%</button>
                 </div>
               </div>
 
               {/* Modo Daltônico */}
               <div className="multi-option-control">
-                <div className="control-header-complete">
+                <div className="control-header-final">
                   <Eye size={16} />
                   <span>Modo Daltônico</span>
-                  <span className="control-value-complete">{getColorBlindModeText()}</span>
+                  <span className="control-value-final">{getColorBlindModeText()}</span>
                 </div>
                 <div className="multi-buttons">
                   <button 
@@ -442,25 +639,25 @@ const AccessibilityControlsComplete = () => {
             </div>
 
             {/* Seção de Navegação e Leitura */}
-            <div className="section-complete">
+            <div className="section-final">
               <h4 className="section-title">3. Navegação e Leitura</h4>
               
               {/* Guia de Leitura */}
               <div className="multi-option-control">
-                <div className="control-header-complete">
+                <div className="control-header-final">
                   <BookOpen size={16} />
                   <span>Guia de Leitura</span>
-                  <span className="control-value-complete">{getReadingGuideText()}</span>
+                  <span className="control-value-final">{getReadingGuideText()}</span>
                 </div>
                 <div className="multi-buttons">
                   <button 
                     onClick={() => setReadingGuide(0)}
                     className={`multi-btn ${readingGuide === 0 ? 'active' : ''}`}
-                  >Desligado</button>
+                  >Desativado</button>
                   <button 
                     onClick={() => setReadingGuide(1)}
                     className={`multi-btn ${readingGuide === 1 ? 'active' : ''}`}
-                  >Linha</button>
+                  >Barra</button>
                   <button 
                     onClick={() => setReadingGuide(2)}
                     className={`multi-btn ${readingGuide === 2 ? 'active' : ''}`}
@@ -470,10 +667,10 @@ const AccessibilityControlsComplete = () => {
 
               {/* Focus Visível */}
               <div className="multi-option-control">
-                <div className="control-header-complete">
+                <div className="control-header-final">
                   <Zap size={16} />
                   <span>Focus Visível</span>
-                  <span className="control-value-complete">{getFocusModeText()}</span>
+                  <span className="control-value-final">{getFocusModeText()}</span>
                 </div>
                 <div className="multi-buttons">
                   <button 
@@ -492,209 +689,105 @@ const AccessibilityControlsComplete = () => {
               </div>
 
               {/* Toggles */}
-              <div className="toggle-control-complete">
-                <div className="toggle-header-complete">
+              <div className="toggle-control-final">
+                <div className="toggle-header-final">
                   <Link size={16} />
                   <span>Destacar Links</span>
                 </div>
                 <button 
                   onClick={() => setHighlightLinks(prev => !prev)}
-                  className={`toggle-btn-complete ${highlightLinks ? 'ativo' : ''}`}
+                  className={`toggle-btn-final ${highlightLinks ? 'ativo' : ''}`}
                 >
-                  <div className="toggle-slider-complete"></div>
+                  <div className="toggle-slider-final"></div>
                 </button>
               </div>
 
-              <div className="toggle-control-complete">
-                <div className="toggle-header-complete">
+              <div className="toggle-control-final">
+                <div className="toggle-header-final">
                   <Search size={16} />
                   <span>Lupa de Conteúdo</span>
                 </div>
                 <button 
                   onClick={() => setMagnifier(prev => !prev)}
-                  className={`toggle-btn-complete ${magnifier ? 'ativo' : ''}`}
+                  className={`toggle-btn-final ${magnifier ? 'ativo' : ''}`}
                 >
-                  <div className="toggle-slider-complete"></div>
+                  <div className="toggle-slider-final"></div>
                 </button>
               </div>
 
-              <div className="toggle-control-complete">
-                <div className="toggle-header-complete">
+              <div className="toggle-control-final">
+                <div className="toggle-header-final">
                   <MousePointer size={16} />
                   <span>Cursor Grande</span>
                 </div>
                 <button 
                   onClick={() => setBigCursor(prev => !prev)}
-                  className={`toggle-btn-complete ${bigCursor ? 'ativo' : ''}`}
+                  className={`toggle-btn-final ${bigCursor ? 'ativo' : ''}`}
                 >
-                  <div className="toggle-slider-complete"></div>
+                  <div className="toggle-slider-final"></div>
                 </button>
               </div>
 
-              <div className="toggle-control-complete">
-                <div className="toggle-header-complete">
+              <div className="toggle-control-final">
+                <div className="toggle-header-final">
                   <Pause size={16} />
                   <span>Pausar Animações</span>
                 </div>
                 <button 
                   onClick={() => setPauseAnimations(prev => !prev)}
-                  className={`toggle-btn-complete ${pauseAnimations ? 'ativo' : ''}`}
+                  className={`toggle-btn-final ${pauseAnimations ? 'ativo' : ''}`}
                 >
-                  <div className="toggle-slider-complete"></div>
+                  <div className="toggle-slider-final"></div>
                 </button>
               </div>
             </div>
 
             {/* Seção para Leitores de Tela */}
-            <div className="section-complete">
+            <div className="section-final">
               <h4 className="section-title">4. Leitores de Tela</h4>
               
-              <div className="toggle-control-complete">
-                <div className="toggle-header-complete">
+              <div className="toggle-control-final">
+                <div className="toggle-header-final">
                   <EyeOff size={16} />
                   <span>Remover Imagens</span>
                 </div>
                 <button 
                   onClick={() => setRemoveImages(prev => !prev)}
-                  className={`toggle-btn-complete ${removeImages ? 'ativo' : ''}`}
+                  className={`toggle-btn-final ${removeImages ? 'ativo' : ''}`}
                 >
-                  <div className="toggle-slider-complete"></div>
+                  <div className="toggle-slider-final"></div>
                 </button>
               </div>
 
-              <div className="toggle-control-complete">
-                <div className="toggle-header-complete">
+              <div className="toggle-control-final">
+                <div className="toggle-header-final">
                   <Type size={16} />
                   <span>Remover Cabeçalhos</span>
                 </div>
                 <button 
                   onClick={() => setRemoveHeaders(prev => !prev)}
-                  className={`toggle-btn-complete ${removeHeaders ? 'ativo' : ''}`}
+                  className={`toggle-btn-final ${removeHeaders ? 'ativo' : ''}`}
                 >
-                  <div className="toggle-slider-complete"></div>
+                  <div className="toggle-slider-final"></div>
                 </button>
               </div>
 
-              <div className="toggle-control-complete">
-                <div className="toggle-header-complete">
+              <div className="toggle-control-final">
+                <div className="toggle-header-final">
                   <Volume2 size={16} />
                   <span>Leitor de Voz</span>
                 </div>
                 <button 
                   onClick={() => setSpeechReader(prev => !prev)}
-                  className={`toggle-btn-complete ${speechReader ? 'ativo' : ''}`}
+                  className={`toggle-btn-final ${speechReader ? 'ativo' : ''}`}
                 >
-                  <div className="toggle-slider-complete"></div>
+                  <div className="toggle-slider-final"></div>
                 </button>
               </div>
-            </div>
-
-            {/* Controle de Altura da Linha */}
-            <div className="control-group">
-              <div className="control-header">
-                <AlignJustify size={16} />
-                <span>Espaço entre Linhas</span>
-                <span className="control-value">{lineHeight.toFixed(1)}</span>
-              </div>
-              <div className="control-buttons">
-                <button 
-                  onClick={decreaseLineHeight}
-                  className="control-btn decrease"
-                  aria-label="Diminuir altura da linha"
-                >
-                  -
-                </button>
-                <button 
-                  onClick={resetLineHeight}
-                  className="control-btn reset"
-                  aria-label="Resetar altura da linha"
-                >
-                  1.5
-                </button>
-                <button 
-                  onClick={increaseLineHeight}
-                  className="control-btn increase"
-                  aria-label="Aumentar altura da linha"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-
-            {/* Controle de Alto Contraste */}
-            <div className="control-group">
-              <div className="control-header">
-                <Contrast size={16} />
-                <span>Alto Contraste</span>
-                <span className={`control-value ${modoAltoContraste ? 'ativo' : 'inativo'}`}>
-                  {modoAltoContraste ? 'Ativo' : 'Inativo'}
-                </span>
-              </div>
-              <div className="control-buttons">
-                <button 
-                  onClick={alternarAltoContraste}
-                  className={`control-btn toggle-contrast ${modoAltoContraste ? 'ativo' : 'inativo'}`}
-                  aria-label={modoAltoContraste ? "Desativar alto contraste" : "Ativar alto contraste"}
-                >
-                  {modoAltoContraste ? 'Desativar' : 'Ativar'}
-                </button>
-              </div>
-            </div>
-
-            {/* Controle de Máscara de Leitura */}
-            <div className="control-group">
-              <div className="control-header">
-                <Eye size={16} />
-                <span>Máscara de Leitura</span>
-                <span className={`control-value ${mascaraLeitura ? 'ativo' : 'inativo'}`}>
-                  {mascaraLeitura ? 'Ativo' : 'Inativo'}
-                </span>
-              </div>
-              <div className="control-buttons">
-                <button 
-                  onClick={alternarMascaraLeitura}
-                  className={`control-btn toggle-mascara ${mascaraLeitura ? 'ativo' : 'inativo'}`}
-                  aria-label={mascaraLeitura ? "Desativar máscara de leitura" : "Ativar máscara de leitura"}
-                >
-                  {mascaraLeitura ? 'Desativar' : 'Ativar'}
-                </button>
-              </div>
-            </div>
-
-            {/* Controle de Guia de Leitura */}
-            <div className="control-group">
-              <div className="control-header">
-                <Minus size={16} />
-                <span>Guia de Leitura</span>
-                <span className={`control-value ${guiaLeitura ? 'ativo' : 'inativo'}`}>
-                  {guiaLeitura ? 'Ativo' : 'Inativo'}
-                </span>
-              </div>
-              <div className="control-buttons">
-                <button 
-                  onClick={alternarGuiaLeitura}
-                  className={`control-btn toggle-guia ${guiaLeitura ? 'ativo' : 'inativo'}`}
-                  aria-label={guiaLeitura ? "Desativar guia de leitura" : "Ativar guia de leitura"}
-                >
-                  {guiaLeitura ? 'Desativar' : 'Ativar'}
-                </button>
-              </div>
-            </div>
-
-            {/* Botão de Reset Geral */}
-            <div className="reset-all-container">
-              <button 
-                onClick={resetAll}
-                className="reset-all-btn-complete"
-                aria-label="Resetar todas as configurações"
-              >
-                <RotateCcw size={16} />
-                Resetar Tudo
-              </button>
             </div>
 
             {/* Atalhos */}
-            <div className="shortcuts-section-complete">
+            <div className="shortcuts-section-final">
               <details>
                 <summary>Atalhos de Teclado</summary>
                 <div className="shortcuts-list">
@@ -707,11 +800,23 @@ const AccessibilityControlsComplete = () => {
               </details>
             </div>
           </div>
+
+          {/* Botão de Reset sempre visível */}
+          <div className="reset-section-final">
+            <button 
+              onClick={resetAll}
+              className="reset-all-btn-final"
+              aria-label="Resetar todas as configurações"
+            >
+              <RotateCcw size={16} />
+              Resetar Tudo
+            </button>
+          </div>
         </div>
       )}
     </div>
   );
 };
 
-export default AccessibilityControls;
+export default AccessibilityControlsFinal;
 

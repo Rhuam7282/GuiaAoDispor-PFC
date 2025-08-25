@@ -1,11 +1,11 @@
-/* ===== CONTROLES DE ACESSIBILIDADE COMPLETOS ===== */
+/* ===== CONTROLES DE ACESSIBILIDADE FINAIS ===== */
 
 /* Variáveis CSS para acessibilidade */
 :root {
   --accessibility-font-size: 100%;
   --accessibility-letter-spacing: 0px;
   --accessibility-line-height: 1.5;
-  --color-intensity: 100%;
+  --color-intensity: 1;
   
   /* Cores do tema */
   --accessibility-primary: #2563eb;
@@ -24,163 +24,154 @@
   --accessibility-shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
-/* Aplicação das variáveis de acessibilidade */
-.accessibility-enabled {
+/* Aplicar configurações de acessibilidade globalmente */
+.acessibilidade-ativa * {
   font-size: var(--accessibility-font-size) !important;
   letter-spacing: var(--accessibility-letter-spacing) !important;
   line-height: var(--accessibility-line-height) !important;
 }
 
-/* Modo de Alto Contraste - Aplicação global */
-.modo-alto-contraste {
-  background-color: var(--cor-fundo-alto-contraste) !important;
-  color: var(--cor-texto-alto-contraste) !important;
+/* ===== MODOS DE CONTRASTE ===== */
+.contraste-desativado {
+  /* Contraste padrão - sem alterações */
 }
 
-.modo-alto-contraste *,
-.modo-alto-contraste *::before,
-.modo-alto-contraste *::after {
-  background-color: var(--cor-fundo-alto-contraste) !important;
-  color: var(--cor-texto-alto-contraste) !important;
-  border-color: var(--cor-borda-alto-contraste) !important;
-  box-shadow: none !important;
-  text-shadow: none !important;
+.contraste-leve {
+  filter: contrast(1.2) brightness(1.1);
 }
 
-.contraste-alto * {
+.contraste-leve * {
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+}
+
+.contraste-intenso {
+  --accessibility-background: #000000 !important;
+  --accessibility-surface: #1a1a1a !important;
+  --accessibility-text: #ffffff !important;
+  --accessibility-text-secondary: #cccccc !important;
+  --accessibility-border: #444444 !important;
+  --accessibility-primary: #ffff00 !important;
+  --accessibility-primary-hover: #cccc00 !important;
+  --accessibility-primary-light: #333300 !important;
+}
+
+.contraste-intenso * {
   background-color: var(--accessibility-background) !important;
   color: var(--accessibility-text) !important;
   border-color: var(--accessibility-border) !important;
 }
 
-.contraste-alto a,
-.contraste-alto button {
+.contraste-intenso a,
+.contraste-intenso button {
   color: var(--accessibility-primary) !important;
   text-decoration: underline !important;
 }
 
-.contraste-alto img {
+.contraste-intenso img {
   filter: contrast(150%) brightness(120%) !important;
 }
 
-.contraste-invertido {
-  filter: invert(1) hue-rotate(180deg) !important;
-}
-
-.contraste-invertido img,
-.contraste-invertido video {
-  filter: invert(1) hue-rotate(180deg) !important;
-}
-
 /* ===== MODOS DE TEMA ===== */
-.modo-claro {
+.tema-claro {
   /* Tema claro padrão */
 }
 
-.modo-escuro {
-  --accessibility-background: #0f172a;
-  --accessibility-surface: #1e293b;
-  --accessibility-text: #f1f5f9;
-  --accessibility-text-secondary: #cbd5e1;
-  --accessibility-border: #334155;
-  --accessibility-primary: #3b82f6;
-  --accessibility-primary-hover: #2563eb;
-  --accessibility-primary-light: #1e3a8a;
+.tema-escuro {
+  --accessibility-background: #0f172a !important;
+  --accessibility-surface: #1e293b !important;
+  --accessibility-text: #f1f5f9 !important;
+  --accessibility-text-secondary: #cbd5e1 !important;
+  --accessibility-border: #334155 !important;
+  --accessibility-primary: #3b82f6 !important;
+  --accessibility-primary-hover: #2563eb !important;
+  --accessibility-primary-light: #1e3a8a !important;
 }
 
-.modo-automatico {
+.tema-escuro * {
+  background-color: var(--accessibility-background) !important;
+  color: var(--accessibility-text) !important;
+  border-color: var(--accessibility-border) !important;
+}
+
+.tema-automatico {
   /* Detectar preferência do sistema */
 }
 
 @media (prefers-color-scheme: dark) {
-  .modo-automatico {
-    --accessibility-background: #0f172a;
-    --accessibility-surface: #1e293b;
-    --accessibility-text: #f1f5f9;
-    --accessibility-text-secondary: #cbd5e1;
-    --accessibility-border: #334155;
-    --accessibility-primary: #3b82f6;
-    --accessibility-primary-hover: #2563eb;
-    --accessibility-primary-light: #1e3a8a;
+  .tema-automatico {
+    --accessibility-background: #0f172a !important;
+    --accessibility-surface: #1e293b !important;
+    --accessibility-text: #f1f5f9 !important;
+    --accessibility-text-secondary: #cbd5e1 !important;
+    --accessibility-border: #334155 !important;
+    --accessibility-primary: #3b82f6 !important;
+    --accessibility-primary-hover: #2563eb !important;
+    --accessibility-primary-light: #1e3a8a !important;
+  }
+  
+  .tema-automatico * {
+    background-color: var(--accessibility-background) !important;
+    color: var(--accessibility-text) !important;
+    border-color: var(--accessibility-border) !important;
   }
 }
 
 /* ===== GUIA DE LEITURA ===== */
-.mouse-reading-guide {
+.horizontal-reading-guide {
   position: fixed;
   pointer-events: none;
   z-index: 10001;
-  width: 100px;
-  height: 100px;
-  transform: translate(-50%, -50%);
+  background: linear-gradient(90deg, transparent, var(--accessibility-primary), transparent);
+  height: 2px;
+  width: 100vw;
+  left: 0;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.6);
 }
 
-.guide-pointer {
-  width: 20px;
-  height: 20px;
+.cursor-indicator {
+  position: absolute;
+  top: -8px;
+  width: 16px;
+  height: 16px;
   background: var(--accessibility-primary);
   border-radius: 50%;
-  position: relative;
-  box-shadow: 0 0 20px rgba(37, 99, 235, 0.6);
+  transform: translateX(-50%);
+  box-shadow: 0 0 15px rgba(37, 99, 235, 0.8);
 }
 
-.guide-pointer::before {
+.cursor-indicator::before {
   content: '';
   position: absolute;
-  top: -50px;
+  top: -5px;
   left: 50%;
   transform: translateX(-50%);
-  width: 2px;
-  height: 100px;
-  background: linear-gradient(to bottom, transparent, var(--accessibility-primary), transparent);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 8px solid var(--accessibility-primary);
 }
 
-.guide-pointer::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: -50px;
-  transform: translateY(-50%);
-  width: 100px;
-  height: 2px;
-  background: linear-gradient(to right, transparent, var(--accessibility-primary), transparent);
-}
-
-.guia-linha {
-  position: relative;
-}
-
-.guia-mascara::before {
-  content: '';
+.reading-mask {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  z-index: 9998;
   pointer-events: none;
-}
-
-.guia-mascara::after {
-  content: '';
-  position: fixed;
-  top: 40%;
-  left: 10%;
-  right: 10%;
-  height: 20%;
-  background: transparent;
-  border: 2px solid var(--accessibility-primary);
-  border-radius: 8px;
-  z-index: 9999;
-  pointer-events: none;
-  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.8);
+  z-index: 10001;
+  width: 300px;
+  height: 200px;
+  border: 3px solid var(--accessibility-primary);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(1px);
+  box-shadow: 
+    0 0 0 9999px rgba(0, 0, 0, 0.7),
+    0 0 20px rgba(37, 99, 235, 0.6),
+    inset 0 0 20px rgba(37, 99, 235, 0.1);
 }
 
 /* ===== MODOS DE FOCUS ===== */
 .focus-normal *:focus {
-  outline: 2px solid var(--accessibility-primary);
-  outline-offset: 2px;
+  outline: 2px solid var(--accessibility-primary) !important;
+  outline-offset: 2px !important;
 }
 
 .focus-destacado *:focus {
@@ -217,29 +208,48 @@
 
 /* ===== DESTAQUE DE LINKS ===== */
 .destacar-links a {
-  background-color: yellow !important;
-  color: black !important;
+  background-color: #ffff00 !important;
+  color: #000000 !important;
   text-decoration: underline !important;
   font-weight: bold !important;
   padding: 2px 4px !important;
   border-radius: 3px !important;
   border: 2px solid #ff6600 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* ===== LUPA DE CONTEÚDO ===== */
-.lupa-ativa {
-  cursor: zoom-in !important;
+/* ===== LUPA DE CONTEÚDO CORRIGIDA ===== */
+.lupa-ativa * {
+  transition: all 0.2s ease !important;
 }
 
 .lupa-ativa *:hover {
-  transform: scale(1.2) !important;
+  transform: scale(1.15) !important;
   z-index: 1000 !important;
   position: relative !important;
-  background: white !important;
-  border: 2px solid var(--accessibility-primary) !important;
-  border-radius: 4px !important;
-  padding: 4px !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 3px solid var(--accessibility-primary) !important;
+  border-radius: 8px !important;
+  padding: 8px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(10px) !important;
+  margin: 4px !important;
+}
+
+.lupa-ativa p:hover,
+.lupa-ativa h1:hover,
+.lupa-ativa h2:hover,
+.lupa-ativa h3:hover,
+.lupa-ativa h4:hover,
+.lupa-ativa h5:hover,
+.lupa-ativa h6:hover,
+.lupa-ativa span:hover,
+.lupa-ativa div:hover,
+.lupa-ativa a:hover,
+.lupa-ativa button:hover {
+  font-size: 1.2em !important;
+  line-height: 1.4 !important;
+  color: #000000 !important;
 }
 
 /* ===== INTENSIDADE DE CORES ===== */
@@ -247,34 +257,42 @@ body {
   filter: saturate(var(--color-intensity));
 }
 
-/* ===== MODOS DALTÔNICOS ===== */
+/* ===== MODOS DALTÔNICOS CORRIGIDOS ===== */
 .daltonico-normal {
   /* Cores normais */
 }
 
+/* Protanopia - Dificuldade com vermelho */
 .daltonico-protanopia {
-  filter: url('#protanopia-filter');
+  filter: 
+    sepia(100%) 
+    saturate(0%) 
+    hue-rotate(0deg) 
+    brightness(100%) 
+    contrast(100%)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='protanopia'%3E%3CfeColorMatrix values='0.567,0.433,0,0,0 0.558,0.442,0,0,0 0,0.242,0.758,0,0 0,0,0,1,0'/%3E%3C/filter%3E%3C/svg%3E#protanopia");
 }
 
+/* Deuteranopia - Dificuldade com verde */
 .daltonico-deuteranopia {
-  filter: url('#deuteranopia-filter');
+  filter: 
+    sepia(100%) 
+    saturate(0%) 
+    hue-rotate(0deg) 
+    brightness(100%) 
+    contrast(100%)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='deuteranopia'%3E%3CfeColorMatrix values='0.625,0.375,0,0,0 0.7,0.3,0,0,0 0,0.3,0.7,0,0 0,0,0,1,0'/%3E%3C/filter%3E%3C/svg%3E#deuteranopia");
 }
 
+/* Tritanopia - Dificuldade com azul */
 .daltonico-tritanopia {
-  filter: url('#tritanopia-filter');
-}
-
-/* Filtros SVG para daltonismo */
-.daltonico-protanopia {
-  filter: sepia(1) saturate(0.8) hue-rotate(320deg);
-}
-
-.daltonico-deuteranopia {
-  filter: sepia(1) saturate(0.6) hue-rotate(60deg);
-}
-
-.daltonico-tritanopia {
-  filter: sepia(1) saturate(1.2) hue-rotate(180deg);
+  filter: 
+    sepia(100%) 
+    saturate(0%) 
+    hue-rotate(0deg) 
+    brightness(100%) 
+    contrast(100%)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='tritanopia'%3E%3CfeColorMatrix values='0.95,0.05,0,0,0 0,0.433,0.567,0,0 0,0.475,0.525,0,0 0,0,0,1,0'/%3E%3C/filter%3E%3C/svg%3E#tritanopia");
 }
 
 /* ===== CURSOR GRANDE ===== */
@@ -311,7 +329,7 @@ body {
 }
 
 /* ===== CONTAINER PRINCIPAL ===== */
-.accessibility-controls-complete {
+.accessibility-controls-final {
   position: fixed;
   top: 20px;
   right: 20px;
@@ -320,7 +338,7 @@ body {
 }
 
 /* ===== BOTÃO DE TOGGLE ===== */
-.accessibility-toggle-complete {
+.accessibility-toggle-final {
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -337,7 +355,7 @@ body {
   overflow: hidden;
 }
 
-.accessibility-toggle-complete::before {
+.accessibility-toggle-final::before {
   content: '';
   position: absolute;
   top: 0;
@@ -349,27 +367,27 @@ body {
   transition: transform 0.6s;
 }
 
-.accessibility-toggle-complete:hover {
+.accessibility-toggle-final:hover {
   background: var(--accessibility-primary-hover);
   transform: scale(1.05);
   box-shadow: var(--accessibility-shadow-lg), 0 0 20px rgba(37, 99, 235, 0.4);
 }
 
-.accessibility-toggle-complete:hover::before {
+.accessibility-toggle-final:hover::before {
   transform: translateX(100%);
 }
 
-.accessibility-toggle-complete:focus {
+.accessibility-toggle-final:focus {
   outline: 3px solid rgba(37, 99, 235, 0.5);
   outline-offset: 3px;
 }
 
-.accessibility-toggle-complete:active {
+.accessibility-toggle-final:active {
   transform: scale(0.95);
 }
 
 /* ===== PAINEL PRINCIPAL ===== */
-.accessibility-panel-complete {
+.accessibility-panel-final {
   position: absolute;
   top: 70px;
   right: 0;
@@ -383,6 +401,8 @@ body {
   overflow: hidden;
   animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes slideIn {
@@ -397,13 +417,14 @@ body {
 }
 
 /* ===== CABEÇALHO DO PAINEL ===== */
-.accessibility-header-complete {
+.accessibility-header-final {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 20px;
   background: linear-gradient(135deg, var(--accessibility-primary), var(--accessibility-primary-hover));
   color: white;
+  flex-shrink: 0;
 }
 
 .header-title {
@@ -418,7 +439,7 @@ body {
   font-weight: 600;
 }
 
-.close-button-complete {
+.close-button-final {
   background: rgba(255, 255, 255, 0.2);
   border: none;
   color: white;
@@ -432,40 +453,40 @@ body {
   transition: all 0.2s;
 }
 
-.close-button-complete:hover {
+.close-button-final:hover {
   background: rgba(255, 255, 255, 0.3);
   transform: scale(1.05);
 }
 
 /* ===== CONTEÚDO DO PAINEL ===== */
-.accessibility-content-complete {
+.accessibility-content-final {
   padding: 0;
-  max-height: 60vh;
+  flex: 1;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--accessibility-border) transparent;
 }
 
-.accessibility-content-complete::-webkit-scrollbar {
+.accessibility-content-final::-webkit-scrollbar {
   width: 6px;
 }
 
-.accessibility-content-complete::-webkit-scrollbar-track {
+.accessibility-content-final::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.accessibility-content-complete::-webkit-scrollbar-thumb {
+.accessibility-content-final::-webkit-scrollbar-thumb {
   background: var(--accessibility-border);
   border-radius: 3px;
 }
 
 /* ===== SEÇÕES ===== */
-.section-complete {
+.section-final {
   padding: 20px;
   border-bottom: 1px solid var(--accessibility-border);
 }
 
-.section-complete:last-child {
+.section-final:last-child {
   border-bottom: none;
 }
 
@@ -479,15 +500,15 @@ body {
 }
 
 /* ===== GRUPOS DE CONTROLE ===== */
-.control-group-complete {
+.control-group-final {
   margin-bottom: 20px;
 }
 
-.control-group-complete:last-child {
+.control-group-final:last-child {
   margin-bottom: 0;
 }
 
-.control-header-complete {
+.control-header-final {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -495,10 +516,10 @@ body {
   color: var(--accessibility-text);
   font-size: 14px;
   font-weight: 500;
-  white-space: nowrap; /* Evita quebra de linha no cabeçalho */
+  white-space: nowrap;
 }
 
-.control-value-complete {
+.control-value-final {
   margin-left: auto;
   background: var(--accessibility-primary-light);
   color: var(--accessibility-primary);
@@ -506,16 +527,16 @@ body {
   border-radius: 12px;
   font-size: 12px;
   font-weight: 600;
-  min-width: 40px; /* Largura mínima fixa para evitar movimento */
+  min-width: 40px;
   text-align: center;
 }
 
-.control-buttons-complete {
+.control-buttons-final {
   display: flex;
   gap: 8px;
 }
 
-.control-btn-complete {
+.control-btn-final {
   flex: 1;
   height: 40px;
   border: 1px solid var(--accessibility-border);
@@ -529,30 +550,30 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 0; /* Permite flexibilidade */
-  white-space: nowrap; /* Evita quebra de linha nos botões */
+  min-width: 0;
+  white-space: nowrap;
 }
 
-.control-btn-complete:hover {
+.control-btn-final:hover {
   background: var(--accessibility-primary-light);
   border-color: var(--accessibility-primary);
   color: var(--accessibility-primary);
   transform: translateY(-1px);
 }
 
-.control-btn-complete.decrease:hover {
+.control-btn-final.decrease:hover {
   background: #fef2f2;
   border-color: var(--accessibility-danger);
   color: var(--accessibility-danger);
 }
 
-.control-btn-complete.increase:hover {
+.control-btn-final.increase:hover {
   background: #f0fdf4;
   border-color: var(--accessibility-success);
   color: var(--accessibility-success);
 }
 
-.control-btn-complete:active {
+.control-btn-final:active {
   transform: translateY(0);
 }
 
@@ -568,12 +589,12 @@ body {
 .multi-buttons {
   display: flex;
   gap: 4px;
-  flex-wrap: wrap; /* Permite quebra de linha se necessário */
+  flex-wrap: wrap;
 }
 
 .multi-btn {
   flex: 1;
-  min-width: 70px; /* Largura mínima para cada botão */
+  min-width: 70px;
   height: 36px;
   border: 1px solid var(--accessibility-border);
   background: var(--accessibility-surface);
@@ -602,7 +623,7 @@ body {
 }
 
 /* ===== CONTROLES DE TOGGLE ===== */
-.toggle-control-complete {
+.toggle-control-final {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -610,21 +631,21 @@ body {
   padding: 12px 0;
 }
 
-.toggle-control-complete:last-child {
+.toggle-control-final:last-child {
   margin-bottom: 0;
 }
 
-.toggle-header-complete {
+.toggle-header-final {
   display: flex;
   align-items: center;
   gap: 8px;
   color: var(--accessibility-text);
   font-size: 14px;
   font-weight: 500;
-  flex: 1; /* Ocupa espaço disponível */
+  flex: 1;
 }
 
-.toggle-btn-complete {
+.toggle-btn-final {
   position: relative;
   width: 48px;
   height: 24px;
@@ -633,14 +654,14 @@ body {
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  flex-shrink: 0; /* Não encolhe */
+  flex-shrink: 0;
 }
 
-.toggle-btn-complete.ativo {
+.toggle-btn-final.ativo {
   background: var(--accessibility-primary);
 }
 
-.toggle-slider-complete {
+.toggle-slider-final {
   position: absolute;
   top: 2px;
   left: 2px;
@@ -652,27 +673,30 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.toggle-btn-complete.ativo .toggle-slider-complete {
+.toggle-btn-final.ativo .toggle-slider-final {
   transform: translateX(24px);
 }
 
-.toggle-btn-complete:hover {
+.toggle-btn-final:hover {
   transform: scale(1.05);
 }
 
-.toggle-btn-complete:focus {
+.toggle-btn-final:focus {
   outline: 2px solid var(--accessibility-primary);
   outline-offset: 2px;
 }
 
-/* ===== SEÇÃO DE RESET ===== */
-.reset-section-complete {
+/* ===== SEÇÃO DE RESET SEMPRE VISÍVEL ===== */
+.reset-section-final {
   padding: 20px;
   border-top: 1px solid var(--accessibility-border);
   background: var(--accessibility-surface);
+  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
 }
 
-.reset-all-btn-complete {
+.reset-all-btn-final {
   width: 100%;
   height: 48px;
   background: linear-gradient(135deg, var(--accessibility-danger), #b91c1c);
@@ -691,7 +715,7 @@ body {
   overflow: hidden;
 }
 
-.reset-all-btn-complete::before {
+.reset-all-btn-final::before {
   content: '';
   position: absolute;
   top: 0;
@@ -702,31 +726,31 @@ body {
   transition: left 0.5s;
 }
 
-.reset-all-btn-complete:hover {
+.reset-all-btn-final:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
 }
 
-.reset-all-btn-complete:hover::before {
+.reset-all-btn-final:hover::before {
   left: 100%;
 }
 
-.reset-all-btn-complete:active {
+.reset-all-btn-final:active {
   transform: translateY(0);
 }
 
 /* ===== SEÇÃO DE ATALHOS ===== */
-.shortcuts-section-complete {
+.shortcuts-section-final {
   padding: 16px 20px;
   background: var(--accessibility-surface);
   border-top: 1px solid var(--accessibility-border);
 }
 
-.shortcuts-section-complete details {
+.shortcuts-section-final details {
   cursor: pointer;
 }
 
-.shortcuts-section-complete summary {
+.shortcuts-section-final summary {
   font-size: 12px;
   color: var(--accessibility-text-secondary);
   font-weight: 500;
@@ -737,17 +761,17 @@ body {
   gap: 8px;
 }
 
-.shortcuts-section-complete summary::-webkit-details-marker {
+.shortcuts-section-final summary::-webkit-details-marker {
   display: none;
 }
 
-.shortcuts-section-complete summary::before {
+.shortcuts-section-final summary::before {
   content: '▶';
   transition: transform 0.2s;
   font-size: 10px;
 }
 
-.shortcuts-section-complete details[open] summary::before {
+.shortcuts-section-final details[open] summary::before {
   transform: rotate(90deg);
 }
 
@@ -778,139 +802,66 @@ body {
 
 /* ===== RESPONSIVIDADE ===== */
 @media (max-width: 480px) {
-  .accessibility-controls-complete {
+  .accessibility-controls-final {
     top: 10px;
     right: 10px;
   }
   
-  .accessibility-panel-complete {
+  .accessibility-panel-final {
     width: calc(100vw - 20px);
     right: -10px;
   }
   
-  .accessibility-toggle-complete {
+  .accessibility-toggle-final {
     width: 48px;
     height: 48px;
   }
-}
-
-/* Aplicação seletiva das variáveis de acessibilidade */
-/* Aplicação do font-size apenas quando necessário */
-.acessibilidade-ativa {
-  font-size: calc(1rem * var(--accessibility-font-size) / 100) !important;
-}
-
-/* Aplicação do letter-spacing apenas quando necessário */
-.acessibilidade-ativa * {
-  letter-spacing: var(--accessibility-letter-spacing) !important;
-  line-height: var(--accessibility-line-height) !important;
-}
-
-/* Estilos para Máscara de Leitura */
-.mascara-leitura-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.7);
-  pointer-events: none;
-  z-index: 9998;
-  transition: opacity 0.3s ease;
-}
-
-.mascara-leitura-overlay::before {
-  content: '';
-  position: absolute;
-  top: var(--mouse-y, 50%);
-  left: var(--mouse-x, 50%);
-  width: 300px;
-  height: 150px;
-  background: transparent;
-  border-radius: 10px;
-  transform: translate(-50%, -50%);
-  box-shadow: 
-    0 0 0 300px rgba(0, 0, 0, 0.7),
-    inset 0 0 20px rgba(255, 255, 255, 0.1);
-  transition: all 0.1s ease-out;
-}
-
-/* Estilos para Guia de Leitura */
-.guia-leitura-linha {
-  position: fixed;
-  left: 0;
-  width: 100vw;
-  height: 2px;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    #ff6b35 20%, 
-    #ff6b35 80%, 
-    transparent 100%);
-  pointer-events: none;
-  z-index: 9997;
-  transition: top 0.1s ease-out;
-  box-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
-}
-
-.guia-leitura-linha::before {
-  content: '';
-  position: absolute;
-  top: -1px;
-  left: 50%;
-  width: 60%;
-  height: 4px;
-  background: rgba(255, 107, 53, 0.3);
-  transform: translateX(-50%);
-  border-radius: 2px;
-}
-
-/* Estilos para os botões dos novos controles */
-.control-btn.toggle-mascara,
-.control-btn.toggle-guia {
-  min-width: 80px;
-  font-weight: 600;
-}
-
-.control-btn.toggle-mascara.ativo,
-.control-btn.toggle-guia.ativo {
-  background-color: #ff6b35;
-  color: white;
-  border-color: #e55a2b;
-}
-
-.control-btn.toggle-mascara.ativo:hover,
-.control-btn.toggle-guia.ativo:hover {
-  background-color: #e55a2b;
-  border-color: #cc4f24;
-}
-
-.control-btn.toggle-mascara.inativo,
-.control-btn.toggle-guia.inativo {
-  background-color: #6c757d;
-  color: white;
-  border-color: #5a6268;
-}
-
-.control-btn.toggle-mascara.inativo:hover,
-.control-btn.toggle-guia.inativo:hover {
-  background-color: #5a6268;
-  border-color: #545b62;
-}
-
-/* Responsividade para dispositivos móveis */
-@media (max-width: 768px) {
-  .mascara-leitura-overlay::before {
-    width: 250px;
-    height: 120px;
+  
+  .multi-buttons {
+    flex-direction: column;
   }
   
-  .guia-leitura-linha {
-    height: 3px;
+  .multi-btn {
+    min-width: auto;
+    flex: none;
   }
-  
-  .guia-leitura-linha::before {
-    height: 5px;
-    width: 80%;
+}
+
+/* ===== ANIMAÇÕES DE ENTRADA ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.control-group-final,
+.toggle-control-final,
+.multi-option-control {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.control-group-final:nth-child(1) { animation-delay: 0.1s; }
+.control-group-final:nth-child(2) { animation-delay: 0.2s; }
+.control-group-final:nth-child(3) { animation-delay: 0.3s; }
+
+/* ===== ESTADOS DE HOVER MELHORADOS ===== */
+.accessibility-panel-final {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.accessibility-panel-final:hover {
+  box-shadow: var(--accessibility-shadow-lg), 0 0 40px rgba(37, 99, 235, 0.1);
+}
+
+/* ===== MODO DE IMPRESSÃO ===== */
+@media print {
+  .accessibility-controls-final {
+    display: none !important;
   }
 }
 
