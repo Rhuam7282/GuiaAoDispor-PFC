@@ -1,54 +1,15 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './controles.css';
-import { 
-  Type, 
-  AlignJustify, 
-  MoreHorizontal, 
-  Settings, 
-  Contrast,
-  Moon,
-  Sun,
-  MousePointer,
-  Eye,
-  Pause,
-  RotateCcw,
-  X,
-  Accessibility,
-  Link,
-  Search,
-  Palette,
-  EyeOff,
-  Volume2,
-  BookOpen,
-  Zap
-} from 'lucide-react';
+import { Type, AlignJustify, MoreHorizontal, Settings, Contrast, Eye, Minus } from 'lucide-react';
 
 const AccessibilityControlsComplete = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [fontSize, setFontSize] = useState(100);
-  const [letterSpacing, setLetterSpacing] = useState(0);
-  const [lineHeight, setLineHeight] = useState(1.5);
-  
-  // Estados para múltiplas variações
-  const [contrastMode, setContrastMode] = useState(0); // 0: normal, 1: alto, 2: invertido
-  const [darkMode, setDarkMode] = useState(0); // 0: claro, 1: escuro, 2: automático
-  const [readingGuide, setReadingGuide] = useState(0); // 0: off, 1: linha, 2: máscara
-  const [focusMode, setFocusMode] = useState(0); // 0: normal, 1: destacado, 2: máximo
-  
-  // Novas funcionalidades
-  const [removeImages, setRemoveImages] = useState(false);
-  const [removeHeaders, setRemoveHeaders] = useState(false);
-  const [highlightLinks, setHighlightLinks] = useState(false);
-  const [magnifier, setMagnifier] = useState(false);
-  const [colorIntensity, setColorIntensity] = useState(100);
-  const [colorBlindMode, setColorBlindMode] = useState(0); // 0: normal, 1: protanopia, 2: deuteranopia, 3: tritanopia
-  const [pauseAnimations, setPauseAnimations] = useState(false);
-  const [bigCursor, setBigCursor] = useState(false);
-  const [speechReader, setSpeechReader] = useState(false);
-  
-  // Refs para guia de leitura
-  const mouseGuideRef = useRef(null);
-  const maskRef = useRef(null);
+  const [fontSize, setFontSize] = useState(100); // Porcentagem base
+  const [letterSpacing, setLetterSpacing] = useState(0); // Em pixels
+  const [lineHeight, setLineHeight] = useState(1.5); // Multiplicador
+  const [modoAltoContraste, setModoAltoContraste] = useState(false); // Estado do alto contraste
+  const [mascaraLeitura, setMascaraLeitura] = useState(false); // Estado da máscara de leitura
+  const [guiaLeitura, setGuiaLeitura] = useState(false); // Estado da guia de leitura
 
   // Funções para localStorage
   const salvarConfiguracao = useCallback((chave, valor) => {
@@ -67,237 +28,150 @@ const AccessibilityControlsComplete = () => {
       console.warn('Erro ao carregar configuração de acessibilidade:', error);
       return valorPadrao;
     }
+  };
+
+  // Carregar configurações salvas na inicialização
+  useEffect(() => {
+    const fontSizeSalvo = carregarConfiguracao('fontSize', 100);
+    const letterSpacingSalvo = carregarConfiguracao('letterSpacing', 0);
+    const lineHeightSalvo = carregarConfiguracao('lineHeight', 1.5);
+    const altoContrasteSalvo = carregarConfiguracao('modoAltoContraste', false);
+    const mascaraLeituraSalva = carregarConfiguracao('mascaraLeitura', false);
+    const guiaLeituraSalva = carregarConfiguracao('guiaLeitura', false);
+
+    setFontSize(fontSizeSalvo);
+    setLetterSpacing(letterSpacingSalvo);
+    setLineHeight(lineHeightSalvo);
+    setModoAltoContraste(altoContrasteSalvo);
+    setMascaraLeitura(mascaraLeituraSalva);
+    setGuiaLeitura(guiaLeituraSalva);
   }, []);
 
-  // Carregar configurações salvas
-  useEffect(() => {
-    const configuracoes = {
-      fontSize: carregarConfiguracao('fontSize', 100),
-      letterSpacing: carregarConfiguracao('letterSpacing', 0),
-      lineHeight: carregarConfiguracao('lineHeight', 1.5),
-      contrastMode: carregarConfiguracao('contrastMode', 0),
-      darkMode: carregarConfiguracao('darkMode', 0),
-      readingGuide: carregarConfiguracao('readingGuide', 0),
-      focusMode: carregarConfiguracao('focusMode', 0),
-      removeImages: carregarConfiguracao('removeImages', false),
-      removeHeaders: carregarConfiguracao('removeHeaders', false),
-      highlightLinks: carregarConfiguracao('highlightLinks', false),
-      magnifier: carregarConfiguracao('magnifier', false),
-      colorIntensity: carregarConfiguracao('colorIntensity', 100),
-      colorBlindMode: carregarConfiguracao('colorBlindMode', 0),
-      pauseAnimations: carregarConfiguracao('pauseAnimations', false),
-      bigCursor: carregarConfiguracao('bigCursor', false),
-      speechReader: carregarConfiguracao('speechReader', false)
-    };
-
-    setFontSize(configuracoes.fontSize);
-    setLetterSpacing(configuracoes.letterSpacing);
-    setLineHeight(configuracoes.lineHeight);
-    setContrastMode(configuracoes.contrastMode);
-    setDarkMode(configuracoes.darkMode);
-    setReadingGuide(configuracoes.readingGuide);
-    setFocusMode(configuracoes.focusMode);
-    setRemoveImages(configuracoes.removeImages);
-    setRemoveHeaders(configuracoes.removeHeaders);
-    setHighlightLinks(configuracoes.highlightLinks);
-    setMagnifier(configuracoes.magnifier);
-    setColorIntensity(configuracoes.colorIntensity);
-    setColorBlindMode(configuracoes.colorBlindMode);
-    setPauseAnimations(configuracoes.pauseAnimations);
-    setBigCursor(configuracoes.bigCursor);
-    setSpeechReader(configuracoes.speechReader);
-  }, [carregarConfiguracao]);
-
-  // Aplicar configurações de texto
+  // Aplicar as mudanças nas variáveis CSS quando os valores mudarem
   useEffect(() => {
     const root = document.documentElement;
+    const body = document.body;
     
-    // Aplicar com incrementos menores para suavidade
+    // Definir variáveis CSS
     root.style.setProperty('--accessibility-font-size', `${fontSize}%`);
     root.style.setProperty('--accessibility-letter-spacing', `${letterSpacing}px`);
     root.style.setProperty('--accessibility-line-height', lineHeight);
-
+    
+    // Aplicar classe de acessibilidade apenas se houver mudanças dos valores padrão
     const temMudancas = fontSize !== 100 || letterSpacing !== 0 || lineHeight !== 1.5;
     
     if (temMudancas) {
-      root.classList.add('acessibilidade-ativa');
+      body.classList.add('acessibilidade-ativa');
     } else {
-      root.classList.remove('acessibilidade-ativa');
+      body.classList.remove('acessibilidade-ativa');
     }
     
+    // Salvar no localStorage sempre que os valores mudarem
     salvarConfiguracao('fontSize', fontSize);
     salvarConfiguracao('letterSpacing', letterSpacing);
     salvarConfiguracao('lineHeight', lineHeight);
   }, [fontSize, letterSpacing, lineHeight, salvarConfiguracao]);
 
-  // Aplicar modos de contraste
+  // Aplicar/remover classe de alto contraste no body
   useEffect(() => {
-    const root = document.documentElement;
-    
-    // Remover classes anteriores
-    root.classList.remove('contraste-normal', 'contraste-alto', 'contraste-invertido');
-    
-    switch(contrastMode) {
-      case 1:
-        root.classList.add('contraste-alto');
-        break;
-      case 2:
-        root.classList.add('contraste-invertido');
-        break;
-      default:
-        root.classList.add('contraste-normal');
+    const body = document.body;
+    if (modoAltoContraste) {
+      body.classList.add('modo-alto-contraste');
+    } else {
+      body.classList.remove('modo-alto-contraste');
     }
     
-    salvarConfiguracao('contrastMode', contrastMode);
-  }, [contrastMode, salvarConfiguracao]);
+    // Salvar no localStorage
+    salvarConfiguracao('modoAltoContraste', modoAltoContraste);
+  }, [modoAltoContraste]);
 
-  // Aplicar modos escuros
+  // Controle da Máscara de Leitura
   useEffect(() => {
-    const root = document.documentElement;
+    const body = document.body;
     
-    root.classList.remove('modo-claro', 'modo-escuro', 'modo-automatico');
-    
-    switch(darkMode) {
-      case 1:
-        root.classList.add('modo-escuro');
-        break;
-      case 2:
-        root.classList.add('modo-automatico');
-        break;
-      default:
-        root.classList.add('modo-claro');
+    if (mascaraLeitura) {
+      body.classList.add('mascara-leitura-ativa');
+      
+      // Criar elemento da máscara se não existir
+      let mascaraElement = document.getElementById('mascara-leitura');
+      if (!mascaraElement) {
+        mascaraElement = document.createElement('div');
+        mascaraElement.id = 'mascara-leitura';
+        mascaraElement.className = 'mascara-leitura-overlay';
+        body.appendChild(mascaraElement);
+      }
+      
+      // Função para seguir o cursor
+      const seguirCursor = (e) => {
+        const x = e.clientX;
+        const y = e.clientY;
+        mascaraElement.style.setProperty('--mouse-x', `${x}px`);
+        mascaraElement.style.setProperty('--mouse-y', `${y}px`);
+      };
+      
+      // Adicionar evento de movimento do mouse
+      document.addEventListener('mousemove', seguirCursor);
+      
+      // Cleanup function para remover o evento
+      return () => {
+        document.removeEventListener('mousemove', seguirCursor);
+      };
+    } else {
+      body.classList.remove('mascara-leitura-ativa');
+      
+      // Remover elemento da máscara
+      const mascaraElement = document.getElementById('mascara-leitura');
+      if (mascaraElement) {
+        mascaraElement.remove();
+      }
     }
     
-    salvarConfiguracao('darkMode', darkMode);
-  }, [darkMode, salvarConfiguracao]);
+    // Salvar no localStorage
+    salvarConfiguracao('mascaraLeitura', mascaraLeitura);
+  }, [mascaraLeitura]);
 
-  // Guia de leitura que segue o mouse
+  // Controle da Guia de Leitura
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (readingGuide === 1 && mouseGuideRef.current) {
-        mouseGuideRef.current.style.top = `${e.clientY}px`;
-        mouseGuideRef.current.style.left = `${e.clientX}px`;
-      }
-    };
-
-    if (readingGuide === 1) {
-      document.addEventListener('mousemove', handleMouseMove);
-      if (!mouseGuideRef.current) {
-        const guide = document.createElement('div');
-        guide.className = 'mouse-reading-guide';
-        guide.innerHTML = '<div class="guide-pointer"></div>';
-        document.body.appendChild(guide);
-        mouseGuideRef.current = guide;
-      }
-    } else if (mouseGuideRef.current) {
-      document.removeEventListener('mousemove', handleMouseMove);
-      mouseGuideRef.current.remove();
-      mouseGuideRef.current = null;
-    }
-
-    // Máscara de leitura
-    const root = document.documentElement;
-    root.classList.remove('guia-linha', 'guia-mascara');
+    const body = document.body;
     
-    if (readingGuide === 1) {
-      root.classList.add('guia-linha');
-    } else if (readingGuide === 2) {
-      root.classList.add('guia-mascara');
+    if (guiaLeitura) {
+      body.classList.add('guia-leitura-ativa');
+      
+      // Criar elemento da guia se não existir
+      let guiaElement = document.getElementById('guia-leitura');
+      if (!guiaElement) {
+        guiaElement = document.createElement('div');
+        guiaElement.id = 'guia-leitura';
+        guiaElement.className = 'guia-leitura-linha';
+        body.appendChild(guiaElement);
+      }
+      
+      // Função para seguir o cursor
+      const seguirCursor = (e) => {
+        const y = e.clientY;
+        guiaElement.style.top = `${y}px`;
+      };
+      
+      // Adicionar evento de movimento do mouse
+      document.addEventListener('mousemove', seguirCursor);
+      
+      // Cleanup function para remover o evento
+      return () => {
+        document.removeEventListener('mousemove', seguirCursor);
+      };
+    } else {
+      body.classList.remove('guia-leitura-ativa');
+      
+      // Remover elemento da guia
+      const guiaElement = document.getElementById('guia-leitura');
+      if (guiaElement) {
+        guiaElement.remove();
+      }
     }
-
-    salvarConfiguracao('readingGuide', readingGuide);
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [readingGuide, salvarConfiguracao]);
-
-  // Aplicar outras configurações
-  useEffect(() => {
-    const root = document.documentElement;
     
-    // Focus modes
-    root.classList.remove('focus-normal', 'focus-destacado', 'focus-maximo');
-    switch(focusMode) {
-      case 1:
-        root.classList.add('focus-destacado');
-        break;
-      case 2:
-        root.classList.add('focus-maximo');
-        break;
-      default:
-        root.classList.add('focus-normal');
-    }
-
-    // Outras funcionalidades
-    root.classList.toggle('remover-imagens', removeImages);
-    root.classList.toggle('remover-cabecalhos', removeHeaders);
-    root.classList.toggle('destacar-links', highlightLinks);
-    root.classList.toggle('lupa-ativa', magnifier);
-    root.classList.toggle('pausar-animacoes', pauseAnimations);
-    root.classList.toggle('cursor-grande', bigCursor);
-    root.classList.toggle('leitor-ativo', speechReader);
-
-    // Intensidade de cores
-    root.style.setProperty('--color-intensity', `${colorIntensity}%`);
-
-    // Modo daltônico
-    root.classList.remove('daltonico-normal', 'daltonico-protanopia', 'daltonico-deuteranopia', 'daltonico-tritanopia');
-    switch(colorBlindMode) {
-      case 1:
-        root.classList.add('daltonico-protanopia');
-        break;
-      case 2:
-        root.classList.add('daltonico-deuteranopia');
-        break;
-      case 3:
-        root.classList.add('daltonico-tritanopia');
-        break;
-      default:
-        root.classList.add('daltonico-normal');
-    }
-
-    // Salvar configurações
-    salvarConfiguracao('focusMode', focusMode);
-    salvarConfiguracao('removeImages', removeImages);
-    salvarConfiguracao('removeHeaders', removeHeaders);
-    salvarConfiguracao('highlightLinks', highlightLinks);
-    salvarConfiguracao('magnifier', magnifier);
-    salvarConfiguracao('colorIntensity', colorIntensity);
-    salvarConfiguracao('colorBlindMode', colorBlindMode);
-    salvarConfiguracao('pauseAnimations', pauseAnimations);
-    salvarConfiguracao('bigCursor', bigCursor);
-    salvarConfiguracao('speechReader', speechReader);
-  }, [focusMode, removeImages, removeHeaders, highlightLinks, magnifier, colorIntensity, colorBlindMode, pauseAnimations, bigCursor, speechReader, salvarConfiguracao]);
-
-  // Atalhos de teclado
-  useEffect(() => {
-    const handleKeyPress = (event) => {
-      if (event.altKey && event.key === 'a') {
-        event.preventDefault();
-        setIsOpen(prev => !prev);
-      }
-      if (event.altKey && event.key === 'c') {
-        event.preventDefault();
-        setContrastMode(prev => (prev + 1) % 3);
-      }
-      if (event.altKey && event.key === 'd') {
-        event.preventDefault();
-        setDarkMode(prev => (prev + 1) % 3);
-      }
-      if (event.altKey && event.key === '+') {
-        event.preventDefault();
-        setFontSize(prev => Math.min(prev + 5, 150)); // Incrementos menores
-      }
-      if (event.altKey && event.key === '-') {
-        event.preventDefault();
-        setFontSize(prev => Math.max(prev - 5, 80));
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyPress);
-    return () => document.removeEventListener('keydown', handleKeyPress);
-  }, []);
+    // Salvar no localStorage
+    salvarConfiguracao('guiaLeitura', guiaLeitura);
+  }, [guiaLeitura]);
 
   const togglePanel = () => {
     setIsOpen(!isOpen);
@@ -340,96 +214,54 @@ const AccessibilityControlsComplete = () => {
     setLineHeight(1.5);
   };
 
+  const alternarAltoContraste = () => {
+    setModoAltoContraste(prev => !prev);
+  };
+
+  const alternarMascaraLeitura = () => {
+    setMascaraLeitura(prev => !prev);
+  };
+
+  const alternarGuiaLeitura = () => {
+    setGuiaLeitura(prev => !prev);
+  };
+
   const resetAll = () => {
     setFontSize(100);
     setLetterSpacing(0);
     setLineHeight(1.5);
-    setContrastMode(0);
-    setDarkMode(0);
-    setReadingGuide(0);
-    setFocusMode(0);
-    setRemoveImages(false);
-    setRemoveHeaders(false);
-    setHighlightLinks(false);
-    setMagnifier(false);
-    setColorIntensity(100);
-    setColorBlindMode(0);
-    setPauseAnimations(false);
-    setBigCursor(false);
-    setSpeechReader(false);
+    setModoAltoContraste(false);
+    setMascaraLeitura(false);
+    setGuiaLeitura(false);
     
     // Limpar localStorage
-    const chaves = [
-      'fontSize', 'letterSpacing', 'lineHeight', 'contrastMode', 'darkMode',
-      'readingGuide', 'focusMode', 'removeImages', 'removeHeaders', 'highlightLinks',
-      'magnifier', 'colorIntensity', 'colorBlindMode', 'pauseAnimations', 'bigCursor', 'speechReader'
-    ];
+    try {
+      localStorage.removeItem('acessibilidade_fontSize');
+      localStorage.removeItem('acessibilidade_letterSpacing');
+      localStorage.removeItem('acessibilidade_lineHeight');
+      localStorage.removeItem('acessibilidade_modoAltoContraste');
+      localStorage.removeItem('acessibilidade_mascaraLeitura');
+      localStorage.removeItem('acessibilidade_guiaLeitura');
+    } catch (error) {
+      console.warn('Erro ao limpar configurações de acessibilidade:', error);
+    }
     
-    chaves.forEach(chave => {
-      try {
-        localStorage.removeItem(`acessibilidade_${chave}`);
-      } catch (error) {
-        console.warn('Erro ao limpar configuração:', error);
-      }
-    });
+    // Remover classes do body
+    const body = document.body;
+    body.classList.remove('acessibilidade-ativa');
+    body.classList.remove('modo-alto-contraste');
+    body.classList.remove('mascara-leitura-ativa');
+    body.classList.remove('guia-leitura-ativa');
     
-    // Remover classes do elemento raiz
-    const root = document.documentElement;
-    const classes = [
-      'acessibilidade-ativa', 'contraste-alto', 'contraste-invertido', 'modo-escuro', 'modo-automatico',
-      'guia-linha', 'guia-mascara', 'focus-destacado', 'focus-maximo', 'remover-imagens',
-      'remover-cabecalhos', 'destacar-links', 'lupa-ativa', 'pausar-animacoes', 'cursor-grande', 'leitor-ativo',
-      'daltonico-protanopia', 'daltonico-deuteranopia', 'daltonico-tritanopia'
-    ];
+    // Remover elementos criados dinamicamente
+    const mascaraElement = document.getElementById('mascara-leitura');
+    if (mascaraElement) {
+      mascaraElement.remove();
+    }
     
-    classes.forEach(classe => root.classList.remove(classe));
-    
-    // Limpar guia de leitura
-    if (mouseGuideRef.current) {
-      mouseGuideRef.current.remove();
-      mouseGuideRef.current = null;
-    }
-  };
-
-  // Função para obter texto do modo atual
-  const getContrastModeText = () => {
-    switch(contrastMode) {
-      case 1: return 'Alto';
-      case 2: return 'Invertido';
-      default: return 'Normal';
-    }
-  };
-
-  const getDarkModeText = () => {
-    switch(darkMode) {
-      case 1: return 'Escuro';
-      case 2: return 'Auto';
-      default: return 'Claro';
-    }
-  };
-
-  const getReadingGuideText = () => {
-    switch(readingGuide) {
-      case 1: return 'Linha';
-      case 2: return 'Máscara';
-      default: return 'Desligado';
-    }
-  };
-
-  const getFocusModeText = () => {
-    switch(focusMode) {
-      case 1: return 'Destacado';
-      case 2: return 'Máximo';
-      default: return 'Normal';
-    }
-  };
-
-  const getColorBlindModeText = () => {
-    switch(colorBlindMode) {
-      case 1: return 'Protanopia';
-      case 2: return 'Deuteranopia';
-      case 3: return 'Tritanopia';
-      default: return 'Normal';
+    const guiaElement = document.getElementById('guia-leitura');
+    if (guiaElement) {
+      guiaElement.remove();
     }
   };
 
@@ -757,8 +589,100 @@ const AccessibilityControlsComplete = () => {
               </div>
             </div>
 
-            {/* Botão de Reset */}
-            <div className="reset-section-complete">
+            {/* Controle de Altura da Linha */}
+            <div className="control-group">
+              <div className="control-header">
+                <AlignJustify size={16} />
+                <span>Espaço entre Linhas</span>
+                <span className="control-value">{lineHeight.toFixed(1)}</span>
+              </div>
+              <div className="control-buttons">
+                <button 
+                  onClick={decreaseLineHeight}
+                  className="control-btn decrease"
+                  aria-label="Diminuir altura da linha"
+                >
+                  -
+                </button>
+                <button 
+                  onClick={resetLineHeight}
+                  className="control-btn reset"
+                  aria-label="Resetar altura da linha"
+                >
+                  1.5
+                </button>
+                <button 
+                  onClick={increaseLineHeight}
+                  className="control-btn increase"
+                  aria-label="Aumentar altura da linha"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            {/* Controle de Alto Contraste */}
+            <div className="control-group">
+              <div className="control-header">
+                <Contrast size={16} />
+                <span>Alto Contraste</span>
+                <span className={`control-value ${modoAltoContraste ? 'ativo' : 'inativo'}`}>
+                  {modoAltoContraste ? 'Ativo' : 'Inativo'}
+                </span>
+              </div>
+              <div className="control-buttons">
+                <button 
+                  onClick={alternarAltoContraste}
+                  className={`control-btn toggle-contrast ${modoAltoContraste ? 'ativo' : 'inativo'}`}
+                  aria-label={modoAltoContraste ? "Desativar alto contraste" : "Ativar alto contraste"}
+                >
+                  {modoAltoContraste ? 'Desativar' : 'Ativar'}
+                </button>
+              </div>
+            </div>
+
+            {/* Controle de Máscara de Leitura */}
+            <div className="control-group">
+              <div className="control-header">
+                <Eye size={16} />
+                <span>Máscara de Leitura</span>
+                <span className={`control-value ${mascaraLeitura ? 'ativo' : 'inativo'}`}>
+                  {mascaraLeitura ? 'Ativo' : 'Inativo'}
+                </span>
+              </div>
+              <div className="control-buttons">
+                <button 
+                  onClick={alternarMascaraLeitura}
+                  className={`control-btn toggle-mascara ${mascaraLeitura ? 'ativo' : 'inativo'}`}
+                  aria-label={mascaraLeitura ? "Desativar máscara de leitura" : "Ativar máscara de leitura"}
+                >
+                  {mascaraLeitura ? 'Desativar' : 'Ativar'}
+                </button>
+              </div>
+            </div>
+
+            {/* Controle de Guia de Leitura */}
+            <div className="control-group">
+              <div className="control-header">
+                <Minus size={16} />
+                <span>Guia de Leitura</span>
+                <span className={`control-value ${guiaLeitura ? 'ativo' : 'inativo'}`}>
+                  {guiaLeitura ? 'Ativo' : 'Inativo'}
+                </span>
+              </div>
+              <div className="control-buttons">
+                <button 
+                  onClick={alternarGuiaLeitura}
+                  className={`control-btn toggle-guia ${guiaLeitura ? 'ativo' : 'inativo'}`}
+                  aria-label={guiaLeitura ? "Desativar guia de leitura" : "Ativar guia de leitura"}
+                >
+                  {guiaLeitura ? 'Desativar' : 'Ativar'}
+                </button>
+              </div>
+            </div>
+
+            {/* Botão de Reset Geral */}
+            <div className="reset-all-container">
               <button 
                 onClick={resetAll}
                 className="reset-all-btn-complete"
@@ -789,5 +713,5 @@ const AccessibilityControlsComplete = () => {
   );
 };
 
-export default AccessibilityControlsComplete;
+export default AccessibilityControls;
 

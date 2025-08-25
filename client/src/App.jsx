@@ -7,22 +7,13 @@ import Cadastro from "./paginas/cadastro/cadastro.jsx";
 import Inicio from "./paginas/inicio/inicio.jsx";
 import PainelControle from "@componentes/acessibilidade/controles";
 
-const CustomRouter = ({ children }) => {
-  return (
-    <BrowserRouter
-      future={{
-        v7_startTransition: true,
-        v7_relativeSplatPath: true
-      }}
-    >
-      {children}
-    </BrowserRouter>
-  );
-};
-
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter
+    future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true
+      }}>
       <PainelControle />
       <Routes>
         <Route path="/" element={<Inicio />} />

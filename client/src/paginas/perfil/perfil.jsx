@@ -2,6 +2,7 @@ import React from "react";
 import "./perfil.css";
 import Corpo from "@componentes/layout/corpo";
 import { useProfissional } from "@ganchos/useProfissional"; // Hook personalizado para buscar dados
+import { useParams } from 'react-router-dom';
 import {
   Star,
   MapPin,
@@ -17,45 +18,45 @@ const Perfil = () => {
   const { profissional, loading, error } = useProfissional(id);
 
   if (loading) {
-  return (
-    <Corpo>
-      <div className="container">
-        <div style={{textAlign: 'center', padding: '2rem'}}>
-          <h2>Carregando perfil...</h2>
-          <p>Isso pode levar alguns instantes</p>
+    return (
+      <Corpo>
+        <div className="container">
+          <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <h2>Carregando perfil...</h2>
+            <p>Isso pode levar alguns instantes</p>
+          </div>
         </div>
-      </div>
-    </Corpo>
-  );
-}
-if (!id) {
-  return (
-    <Corpo>
-      <div className="container">
-        <div style={{textAlign: 'center', padding: '2rem'}}>
-          <h2>ID do profissional não especificado</h2>
-          <p>Por favor, verifique o URL e tente novamente.</p>
+      </Corpo>
+    );
+  }
+  if (!id) {
+    return (
+      <Corpo>
+        <div className="container">
+          <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <h2>ID do profissional não especificado</h2>
+            <p>Por favor, verifique o URL e tente novamente.</p>
+          </div>
         </div>
-      </div>
-    </Corpo>
-  );
-}
+      </Corpo>
+    );
+  }
 
-if (error) {
-  return (
-    <Corpo>
-      <div className="container">
-        <div style={{textAlign: 'center', padding: '2rem', color: 'red'}}>
-          <h2>Erro ao carregar perfil</h2>
-          <p>{error}</p>
-          <button onClick={() => window.location.reload()}>
-            Tentar novamente
-          </button>
+  if (error) {
+    return (
+      <Corpo>
+        <div className="container">
+          <div style={{ textAlign: 'center', padding: '2rem', color: 'red' }}>
+            <h2>Erro ao carregar perfil</h2>
+            <p>{error}</p>
+            <button onClick={() => window.location.reload()}>
+              Tentar novamente
+            </button>
+          </div>
         </div>
-      </div>
-    </Corpo>
-  );
-}
+      </Corpo>
+    );
+  }
   if (error) return <div>Erro ao carregar perfil: {error.message}</div>;
   if (!profissional) return <div>Profissional não encontrado</div>;
 
@@ -77,8 +78,11 @@ if (error) {
           <div className="colunaFoto">
             <img
               className="imagemPerfil"
-              src={profissional.foto}
-              alt={`${profissional.nome} - ${profissional.desc} em ${profissional.localizacao?.nome}`}
+              src={profissional.foto || '/caminho/para/imagem/padrao.jpg'}
+              alt={`${profissional.nome} - ${profissional.desc}`}
+              onError={(e) => {
+                e.target.src = '/caminho/para/imagem/padrao.jpg';
+              }}
             />
           </div>
           <div className="cartaoDestaque variacao3">
@@ -94,11 +98,11 @@ if (error) {
                   <Star
                     key={i}
                     size={20}
-                    fill={i < Math.floor(profissional.nota) ? "#54453B" : "none"}
+                    fill={i < Math.floor(profissional.nota || 0) ? "#54453B" : "none"}
                     stroke="#54453B"
                   />
                 ))}
-                <span className="valorAvaliacao">{profissional.nota}</span>
+                <span className="valorAvaliacao">{profissional.nota || 'N/A'}</span>
               </div>
             </div>
           </div>
@@ -121,38 +125,27 @@ if (error) {
         </div>
 
         {/* Histórico Acadêmico */}
-        <div className="secaoHistorico">
-          <h2>Histórico Acadêmico</h2>
-          <div className="listaAcademica">
-            {profissional.historicoAcademico?.map((item, index) => (
-              <div key={index} className="cartaoDestaque variacao2">
-                <h3>{item.nome}</h3>
-                <p>{item.desc}</p>
-              </div>
-            ))}
+        {profissional.historicoAcademico?.length > 0 && (
+          <div className="secaoHistorico">
+            <h2>Histórico Acadêmico</h2>
+            <div className="listaAcademica">
+              {profissional.historicoAcademico.map((item, index) => (
+        "conteúdo do histórico acadêmico"
+      ))};
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Histórico Profissional */}
-        <div className="secaoHistorico">
-          <h2>Histórico Profissional</h2>
-          <div className="listaProfissional">
-            {profissional.historicoProfissional?.map((item, index) => (
-              <div key={index} className="cartaoDestaque variacao2">
-                <div className="imagemProfissional">
-                  <img
-                    src={item.foto}
-                    alt={`${item.nome} - Local de trabalho de ${profissional.nome}`}
-                  />
-                </div>
-                <div className="infoProfissional">
-                  <h3>{item.nome}</h3>
-                  <p>{item.desc}</p>
-                </div>
-              </div>
-            ))}
+        {profissional.historicoProfissional?.length > 0 && (
+          <div className="secaoHistorico">
+            <h2>Histórico Profissional</h2>
+            <div className="listaProfissional">
+              {profissional.historicoProfissional.map((item, index) => (
+        "conteúdo do histórico profissional"
+      ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </Corpo>
   );

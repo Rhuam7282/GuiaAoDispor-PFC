@@ -9,22 +9,22 @@ export const useProfissional = (id) => {
   useEffect(() => {
     const fetchProfissional = async () => {
       try {
-        console.log('Buscando profissional com ID:', id);
-        
-        if (!id || id === 'undefined') {
-          throw new Error('ID não fornecido');
+        if (!id) {
+          setError('ID não fornecido');
+          setLoading(false);
+          return;
         }
-
+        
+        console.log('Buscando profissional com ID:', id);
         const response = await servicoProfissional.buscarPorId(id);
         console.log('Resposta da API:', response);
-        
-        // Ajuste conforme a estrutura da sua API
-        if (!response) {
-          throw new Error('Nenhum dado retornado pela API');
+
+        // Ajuste para a estrutura de resposta da sua API
+        if (response.status === 'sucesso') {
+          setProfissional(response.data);
+        } else {
+          throw new Error(response.message || 'Erro ao carregar profissional');
         }
-        
-        setProfissional(response);
-        setError(null);
       } catch (err) {
         console.error('Erro no hook useProfissional:', err);
         setError(err.message || 'Erro ao carregar perfil');
