@@ -16,15 +16,28 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
   }
 
   try {
+    console.log(`Fazendo requisição ${metodo} para: ${url}`);
     const resposta = await fetch(url, opcoes);
-
+    
     // Verificar se a resposta é JSON
     const contentType = resposta.headers.get('content-type');
+    
+    // Se não for JSON, tentar obter o texto para debug
+    const text = await resposta.text();
+    
     if (!contentType || !contentType.includes('application/json')) {
-      throw new Error('Resposta não é JSON');
+      console.error('Resposta não é JSON:', text.substring(0, 200));
+      
+      // Se for um erro 500, verificar se o servidor está rodando
+      if (resposta.status === 500) {
+        throw new Error('Erro interno do servidor. Verifique os logs do backend.');
+      }
+      
+      throw new Error('Resposta da API não é JSON');
     }
 
-    const dadosResposta = await resposta.json();
+    // Se for JSON, parsear a resposta
+    const dadosResposta = JSON.parse(text);
 
     if (!resposta.ok) {
       const mensagemErro =
@@ -35,7 +48,7 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
     return dadosResposta;
   } catch (erro) {
     console.error('Erro na requisição:', erro);
-    throw new Error(erro.message || "Erro de conexão");
+    throw new Error(erro.message || "Erro de conexão com o servidor");
   }
 };
 

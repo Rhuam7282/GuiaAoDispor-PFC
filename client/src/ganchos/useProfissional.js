@@ -9,7 +9,7 @@ export const useProfissional = (id) => {
   useEffect(() => {
     const fetchProfissional = async () => {
       try {
-        if (!id) {
+        if (!id || id === 'undefined') {
           setError('ID não fornecido');
           setLoading(false);
           return;
@@ -20,10 +20,10 @@ export const useProfissional = (id) => {
         console.log('Resposta da API:', response);
 
         // Ajuste para a estrutura de resposta da sua API
-        if (response.status === 'sucesso') {
+        if (response && response.status === 'sucesso') {
           setProfissional(response.data);
         } else {
-          throw new Error(response.message || 'Erro ao carregar profissional');
+          throw new Error(response?.message || 'Erro ao carregar profissional');
         }
       } catch (err) {
         console.error('Erro no hook useProfissional:', err);

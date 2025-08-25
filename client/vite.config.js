@@ -19,6 +19,13 @@ export default defineConfig({
     hmr: {
       clientPort: 5173,
     },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
   },
   build: {
     outDir: path.resolve(__dirname, '../dist'),

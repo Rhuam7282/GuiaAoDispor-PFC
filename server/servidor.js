@@ -34,7 +34,7 @@ mongoose.connect(mongoURI)
   .then(() => console.log('✅ Conexão com o MongoDB estabelecida!'))
   .catch(err => {
     console.error('❌ Erro ao conectar com o MongoDB:', err);
-    process.exit(1); // Encerra o processo em caso de erro
+    process.exit(1);
   });
 
 // Rota raiz
@@ -75,19 +75,29 @@ apiRouter.get('/profissionais', async (req, res) => {
 });
 
 apiRouter.get('/profissionais/:id', async (req, res) => {
-    try {
-        const profissional = await Profissional.findById(req.params.id)
-            .populate('localizacao')
-            .populate('historicoAcademico')
-            .populate('historicoProfissional');
-
-        if (!profissional) {
-            return res.status(404).json({ status: 'erro', message: 'Profissional não encontrado' });
-        }
-        res.status(200).json({ status: 'sucesso', data: profissional });
-    } catch (error) {
-        res.status(500).json({ status: 'erro', message: error.message });
+  try {
+    console.log('Buscando profissional com ID:', req.params.id);
+    
+    // Verifique se o ID é válido
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ status: 'erro', message: 'ID inválido' });
     }
+
+    const profissional = await Profissional.findById(req.params.id)
+      .populate('localizacao')
+      .populate('historicoAcademico')
+      .populate('historicoProfissional');
+
+    if (!profissional) {
+      return res.status(404).json({ status: 'erro', message: 'Profissional não encontrado' });
+    }
+    
+    console.log('Profissional encontrado:', profissional);
+    res.status(200).json({ status: 'sucesso', data: profissional });
+  } catch (error) {
+    console.error('Erro ao buscar profissional:', error);
+    res.status(500).json({ status: 'erro', message: error.message });
+  }
 });
 
 apiRouter.post('/profissionais', async (req, res) => {

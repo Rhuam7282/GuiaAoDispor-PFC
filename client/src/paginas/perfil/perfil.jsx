@@ -1,7 +1,7 @@
 import React from "react";
 import "./perfil.css";
 import Corpo from "@componentes/layout/corpo";
-import { useProfissional } from "@ganchos/useProfissional"; // Hook personalizado para buscar dados
+import { useProfissional } from "@ganchos/useProfissional";
 import { useParams } from 'react-router-dom';
 import {
   Star,
@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 const Perfil = () => {
-  const { id } = useParams(); // Obtenha o ID da URL
+  const { id } = useParams();
   const { profissional, loading, error } = useProfissional(id);
 
   if (loading) {
@@ -29,6 +29,7 @@ const Perfil = () => {
       </Corpo>
     );
   }
+
   if (!id) {
     return (
       <Corpo>
@@ -57,8 +58,19 @@ const Perfil = () => {
       </Corpo>
     );
   }
-  if (error) return <div>Erro ao carregar perfil: {error.message}</div>;
-  if (!profissional) return <div>Profissional não encontrado</div>;
+
+  if (!profissional) {
+    return (
+      <Corpo>
+        <div className="container">
+          <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <h2>Profissional não encontrado</h2>
+            <p>O profissional solicitado não existe ou foi removido.</p>
+          </div>
+        </div>
+      </Corpo>
+    );
+  }
 
   // Mapear redes sociais
   const redesSociais = [
@@ -78,10 +90,10 @@ const Perfil = () => {
           <div className="colunaFoto">
             <img
               className="imagemPerfil"
-              src={profissional.foto || '/caminho/para/imagem/padrao.jpg'}
+              src={profissional.foto || '/imagens/padrao.jpg'}
               alt={`${profissional.nome} - ${profissional.desc}`}
               onError={(e) => {
-                e.target.src = '/caminho/para/imagem/padrao.jpg';
+                e.target.src = '/imagens/padrao.jpg';
               }}
             />
           </div>
@@ -90,7 +102,7 @@ const Perfil = () => {
             <div className="detalhesPerfil">
               <div className="icone">
                 <MapPin size={20} />
-                <span>{profissional.localizacao?.nome}</span>
+                <span>{profissional.localizacao?.nome || 'Localização não informada'}</span>
               </div>
 
               <div className="icone">
@@ -130,19 +142,37 @@ const Perfil = () => {
             <h2>Histórico Acadêmico</h2>
             <div className="listaAcademica">
               {profissional.historicoAcademico.map((item, index) => (
-        "conteúdo do histórico acadêmico"
-      ))};
+                <div key={index} className="cartaoDestaque variacao2">
+                  <h3>{item.nome}</h3>
+                  <p>{item.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
         )}
 
+        {/* Histórico Profissional */}
         {profissional.historicoProfissional?.length > 0 && (
           <div className="secaoHistorico">
             <h2>Histórico Profissional</h2>
             <div className="listaProfissional">
               {profissional.historicoProfissional.map((item, index) => (
-        "conteúdo do histórico profissional"
-      ))}
+                <div key={index} className="cartaoDestaque variacao2">
+                  <div className="imagemProfissional">
+                    <img
+                      src={item.foto || '/imagens/padrao-profissional.jpg'}
+                      alt={`${item.nome} - Local de trabalho de ${profissional.nome}`}
+                      onError={(e) => {
+                        e.target.src = '/imagens/padrao-profissional.jpg';
+                      }}
+                    />
+                  </div>
+                  <div className="infoProfissional">
+                    <h3>{item.nome}</h3>
+                    <p>{item.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
