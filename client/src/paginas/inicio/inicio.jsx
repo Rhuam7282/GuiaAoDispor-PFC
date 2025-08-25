@@ -11,8 +11,6 @@ const Inicio = () => {
   return (
     <Corpo>
       <main className="pagina-inicial">
-        {/* Logo como fundo fixo */}
-          <img id='fundo' src={logo} alt="Logo" />
         
         {/* Conteúdo principal */}
         <div className="container conteudoPrincipalInicio">
