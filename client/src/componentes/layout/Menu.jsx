@@ -30,7 +30,7 @@ const Menu = () => {
   }, [location.pathname]);
 
   return (
-    <menu>
+    <menu >
       <div className="fachada">
         <img src={logo} alt="logo da empresa" className="logo" />
         <p>Guia ao Dispor</p>
@@ -43,7 +43,7 @@ const Menu = () => {
           const ativo = item.texto === paginaAtiva;
           
           return (
-            <li
+            <li 
               key={item.texto}
               onClick={() => {
                 setPaginaAtiva(item.texto);
