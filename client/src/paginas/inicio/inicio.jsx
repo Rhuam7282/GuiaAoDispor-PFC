@@ -10,20 +10,20 @@ const Inicio = () => {
   };
   return (
     <Corpo>
-      <main className="pagina-inicial">
+      <main className="paginaInicial">
         
         {/* Conteúdo principal */}
         <div className="container conteudoPrincipalInicio">
-          <h1 className="titulo-principal">Guia ao Dispor</h1>
+          <h1>Guia ao Dispor</h1>
           <p className="slogan">
             Conectando pessoas com necessidades específicas<br />
             a profissionais qualificados em cuidados especiais<br />
             e acessibilidade. Juntos construímos inclusão.
           </p>
-         <button onClick={redirecionarParaQualificados}>
+         <button onClick={redirecionarParaQualificados} className="botaoPrimario">
               Venha fazer parte
             </button>
-          <section className="texto-explicativo">
+          <section className="textoExplicativo">
           <h2>Sobre o Projeto</h2>
           <p>
             Iniciado em 2024 como um trabalho para o componente curricular Projeto Integrador II, 

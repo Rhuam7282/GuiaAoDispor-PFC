@@ -1,50 +1,52 @@
+/* Estilos específicos do menu */
 menu {
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
   height: 100vh;
-  background-color: #7FCCD4;
+  background-color: var(--corAzulDestaque);
   text-align: center;
-  filter: drop-shadow(0px 0px 8px #303538);
+  filter: drop-shadow(var(--sombra) var(--corNeutraEscura));
 }
-.fachada{
+
+.fachada {
   margin: auto;
   font-weight: bold;
   font-size: 20pt;
   line-height: 40px;
 }
+
 menu img {
   width: 100px;
   border-radius: 100%;
-  filter: drop-shadow(0px 0px 8px #1B3133);
+  filter: drop-shadow(var(--sombra) var(--corAzulEscuro));
 }
 
-menu ul{
-  font-size: 16pt;
-  list-style: none;
-  margin: auto;
-  color: #1B3133;
-  align-items: center !important;
-}
-.menu-item {
+.itemMenu {
   line-height: 40px;
   cursor: pointer;
-  border-radius: 8px;
-  box-shadow: 0 0px 8px #303538;
+  border-radius: var(--bordaArredondada);
+  box-shadow: var(--sombra) var(--corNeutraEscura);
   padding: 3px;
   width: 200px;
+  font-size: var(--tamanhoFonteTextoMenor);
+  color: var(--corAzulEscuro);
+  align-items: center !important;
 }
-.pag-ativa {
+
+.paginaAtiva {
   font-size: 18pt;
   font-weight: bold;
-  color: #303538;
+  color: var(--corNeutraEscura);
   background-color: rgba(211, 163, 127, 0.6);
 }
+
 footer {
-  border-top: 1px solid rgba(28, 49, 52, 1);
-  color:rgba(28, 49, 52, 1);
+  border-top: 1px solid var(--corAzulEscuro);
+  color: var(--corAzulEscuro);
   line-height: 16px;
   font-weight: light;
-  font-size: 12pt;
-  padding: 15px;
+  font-size: var(--tamanhoFonteTextoMicro);
+  padding: var(--espacamentoPequeno);
   margin-top: auto;
 }
+

@@ -35,7 +35,7 @@ const Menu = () => {
         <img src={logo} alt="logo da empresa" className="logo" />
         <p>Guia ao Dispor</p>
       </div>
-     <ul className="listaIcones vertical">
+     <ul className="listaIcones vertical listaSemEstilo">
       <Interrogacao>
         Texto auxiliar muito legal 👍
       </Interrogacao>
@@ -49,7 +49,7 @@ const Menu = () => {
                 setPaginaAtiva(item.texto);
                 navigate(item.rota);
               }}
-              className={`menu-item ${ativo ? 'pag-ativa' : ''}`}
+              className={`itemMenu ${ativo ? 'paginaAtiva' : ''}`}
             >
               <span className="icone">
                 <item.Icone 

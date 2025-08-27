@@ -50,35 +50,35 @@ const Filtro = ({
 
   return (
     <div 
-      className={`cartaoDestaque variacao3 ${classeAdicional}`} 
+      className={`cartao cartaoTextoEsquerda ${classeAdicional}`} 
       ref={menuRef}
     >
       <div 
-        className="controle-seletor"
+        className="controleSeletor"
         onClick={alternarMenu}
       >
-        <span className="rotulo-seletor">{titulo}</span>
-        <div className="opcao-selecionada">
+        <span className="rotuloSeletor">{titulo}</span>
+        <div className="opcaoSelecionada">
           {opcoes.find(op => op.value === opcaoSelecionada)?.label || 'Selecione'}
         </div>
         <ChevronDown 
-          className={`icone-seta ${menuAberto ? 'aberto' : ''}`} 
+          className={`iconeSeta ${menuAberto ? 'aberto' : ''}`} 
           size={16} 
         />
       </div>
       
       {menuAberto && (
-        <div className="lista-opcoes">
+        <div className="listaOpcoes">
           {/* Campo de pesquisa - Só mostra se prop for true e houver opções */}
           {mostrarPesquisa && opcoes.length > 5 && (
-            <div className="container-pesquisa">
-              <Search size={16} className="icone-pesquisa" />
+            <div className="containerPesquisa">
+              <Search size={16} className="iconePesquisa" />
               <input
                 type="text"
                 placeholder="Pesquisar..."
                 value={termoPesquisa}
                 onChange={(e) => setTermoPesquisa(e.target.value)}
-                className="input-pesquisa"
+                className="inputPesquisa"
                 onClick={(e) => e.stopPropagation()} // Impede fechar ao clicar no input
               />
         </div>
@@ -89,7 +89,7 @@ const Filtro = ({
             opcoesFiltradas.map((opcao) => (
               <div
                 key={opcao.value}
-                className={`item-opcao ${opcaoSelecionada === opcao.value ? 'selecionada' : ''}`}
+                className={`itemOpcao ${opcaoSelecionada === opcao.value ? 'selecionada' : ''}`}
                 onClick={() => selecionarOpcao(opcao.value)}
               >
                 {opcao.label}
@@ -97,7 +97,7 @@ const Filtro = ({
             ))
           ) : (
             // Feedback quando nenhum resultado for encontrado
-            <div className="nenhum-resultado">
+            <div className="nenhumResultado">
               {`Nenhuma opção encontrada para "${termoPesquisa}"`}
             </div>
           )}

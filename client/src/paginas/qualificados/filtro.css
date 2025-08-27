@@ -1,106 +1,100 @@
-.seletor-filtro {
-  background-color: rgba(211, 163, 127, 0.3);
-  border-radius: 8px;
-  padding: 12px;
-  display: inline-block;
-  position: relative;
-  margin-bottom: 20px;
-  cursor: pointer;
-  min-width: 200px;
-}
-
-.controle-seletor {
+/* Estilos específicos do componente de filtro */
+.controleSeletor {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  cursor: pointer;
 }
 
-.rotulo-seletor {
-  font-size: 16px;
+.rotuloSeletor {
+  font-size: var(--tamanhoFonteTextoMenor);
   font-weight: bold;
   margin-right: 10px;
 }
 
-.opcao-selecionada {
+.opcaoSelecionada {
   flex-grow: 1;
   text-align: right;
   padding-right: 8px;
 }
 
-.icone-seta {
+.iconeSeta {
   transition: transform 0.3s ease;
 }
 
-.icone-seta.aberto {
+.iconeSeta.aberto {
   transform: rotate(180deg);
 }
 
-.lista-opcoes {
+.listaOpcoes {
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
-  background-color: white;
-  border-radius: 8px;
+  background-color: var(--corNeutraClara);
+  border-radius: var(--bordaArredondada);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   margin-top: 8px;
   z-index: 100;
   overflow: hidden;
 }
 
-.item-opcao {
-  padding: 10px 15px;
+.itemOpcao {
+  padding: 10px var(--espacamentoPequeno);
   transition: background-color 0.2s;
+  cursor: pointer;
 }
 
-.item-opcao:hover {
-  background-color: rgba(211, 163, 127, 0.2);
+.itemOpcao:hover {
+  background-color: var(--corMarromDestaqueTransparente);
 }
 
-.item-opcao.selecionada {
-  background-color: rgba(211, 163, 127, 0.4);
+.itemOpcao.selecionada {
+  background-color: var(--corMarromDestaque);
   font-weight: bold;
 }
 
-@media (max-width: 768px) {
-  .seletor-filtro {
-    width: 100%;
-    margin-bottom: 15px;
-  }
-}
-/* Novos estilos para funcionalidade de pesquisa */
-.container-pesquisa {
+/* Estilos para funcionalidade de pesquisa */
+.containerPesquisa {
   position: relative;
-  padding: 10px 15px;
+  padding: 10px var(--espacamentoPequeno);
   border-bottom: 1px solid #eee;
 }
 
-.icone-pesquisa {
+.iconePesquisa {
   position: absolute;
   left: 25px;
   top: 50%;
   transform: translateY(-50%);
-  color: #777;
+  color: var(--corMarromOfuscado);
 }
 
-.input-pesquisa {
+.inputPesquisa {
   width: 100%;
   padding: 8px 8px 8px 32px;
   border: 1px solid #ddd;
   border-radius: 4px;
   box-sizing: border-box;
-  font-size: 14px;
+  font-size: var(--tamanhoFonteTextoMinimo);
 }
 
-.input-pesquisa:focus {
+.inputPesquisa:focus {
   outline: none;
-  border-color: #d3a37f;
-  box-shadow: 0 0 0 2px rgba(211, 163, 127, 0.2);
+  border-color: var(--corMarromDestaque);
+  box-shadow: 0 0 0 2px var(--corMarromDestaqueTransparente);
 }
 
-.nenhum-resultado {
-  padding: 15px;
+.nenhumResultado {
+  padding: var(--espacamentoPequeno);
   text-align: center;
-  color: #777;
+  color: var(--corMarromOfuscado);
   font-style: italic;
 }
+
+@media (max-width: 768px) {
+  .cartao {
+    width: 100%;
+    margin-bottom: var(--espacamentoPequeno);
+  }
+}
+

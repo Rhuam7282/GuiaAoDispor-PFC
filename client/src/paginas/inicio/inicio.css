@@ -1,7 +1,8 @@
-.pagina-inicial {
+/* Estilos específicos da página inicial */
+.paginaInicial {
   width: 100%;
   min-height: 100vh;
-  background-color: var(--cor-destaque-secundaria);
+  background-color: var(--corAzulDestaque);
   background-image: url('@recursos/logo.png');
   background-size: contain;
   background-repeat: no-repeat;
@@ -30,84 +31,65 @@
   align-items: center;
 }
 
-.titulo-principal {
-  font-size: 4rem;
-  font-weight: bold;
-  color: var(--cor-texto-principal);
-  margin-bottom: 20px;
-}
-
 .slogan {
   font-size: 1.5rem;
-  color: var(--cor-texto-principal);
+  color: var(--corMarromEscuro);
   line-height: 1.6;
   margin-bottom: 40px;
   max-width: 600px;
 }
 
 /* Texto explicativo */
-.texto-explicativo {
+.textoExplicativo {
   position: relative;
   padding: 40px;
   margin-top: 40px;
   margin-left: auto;
 }
 
-.texto-explicativo h2 {
-  color: var(--cor-texto-principal);
-  font-size: 2rem;
-  margin-bottom: 20px;
+.textoExplicativo h2 {
+  color: var(--corMarromEscuro);
+  margin-bottom: var(--espacamentoMedio);
 }
 
-.texto-explicativo p {
-  color: var(--cor-texto-principal);
+.textoExplicativo p {
+  color: var(--corMarromEscuro);
   line-height: 1.6;
-  margin-bottom: 20px;
+  margin-bottom: var(--espacamentoMedio);
   text-align: justify;
 }
 
 /* Responsividade */
 @media (max-width: 900px) {
-  .logo-fundo {
+  .logoFundo {
     left: -50%;
     width: 100%;
   }
   
-  .conteudo-principal {
-    padding: 40px 20px 20px 20px;
+  .conteudoPrincipalInicio {
+    padding: 40px var(--espacamentoMedio) var(--espacamentoMedio) var(--espacamentoMedio);
     align-items: center;
     text-align: center;
-  }
-  
-  .titulo-principal {
-    font-size: 3rem;
   }
   
   .slogan {
     font-size: 1.2rem;
   }
   
-  .texto-explicativo {
-    margin: 20px;
-    padding: 20px;
+  .textoExplicativo {
+    margin: var(--espacamentoMedio);
+    padding: var(--espacamentoMedio);
   }
 }
 
 @media (max-width: 600px) {
-  .titulo-principal {
-    font-size: 2.5rem;
-  }
-  
   .slogan {
     font-size: 1.1rem;
   }
   
-  .texto-explicativo {
+  .textoExplicativo {
     margin: 10px;
-    padding: 15px;
-  }
-  
-  .texto-explicativo h2 {
-    font-size: 1.5rem;
+    padding: var(--espacamentoPequeno);
   }
 }
+
