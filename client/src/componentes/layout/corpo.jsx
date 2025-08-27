@@ -7,9 +7,9 @@ const Corpo = ({ children }) => {
   const paginaInicial = localizacao.pathname === '/';
   
   return (
-    <div className={`container-layout ${paginaInicial ? 'pagina-inicial' : ''}`}>
+    <div className={`containerLayout gridContainer ${paginaInicial ? 'gridUmaColuna' : 'gridDuasColunas'}`}>
       {!paginaInicial && <Menu className="menu" />}
-      <main className={`conteudo-principal ${paginaInicial ? 'conteudo-inteiro' : ''}`}>
+      <main className={`conteudoPrincipal transicaoSuave ${paginaInicial ? 'larguraViewport' : ''}`}>
         {children}
       </main>
     </div>

@@ -1,43 +1,42 @@
+/* Estilos específicos da página de qualificados */
 .imagemPerfil {
   width: 100px;
   height: 100px;
-  border-radius: 100%;
-  object-fit: cover;
-  box-shadow: 0 0px 8px var(--cor-texto-principal);
 }
 
-.profile-text-content {
+.conteudoTextoPerfil {
   text-align: left;
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 
-.profile-name {
-  color: #303538;
-  font-size: 20px;
+.nomePerfil {
+  color: var(--corNeutraEscura);
+  font-size: var(--tamanhoFonteTextoMedio);
   font-weight: bold;
 }
 
-.profile-location {
-  color: #54453B;
-  font-size: 16px;
+.localizacaoPerfil {
+  color: var(--corMarromEscuro);
+  font-size: var(--tamanhoFonteTextoMenor);
 }
 
-.profile-experience {
-  color: #54453B;
-  font-size: 16px;
+.experienciaPerfil {
+  color: var(--corMarromEscuro);
+  font-size: var(--tamanhoFonteTextoMenor);
 }
 
-.profile-list {
+.listaPerfis {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
-  margin-top: 30px;
+  gap: var(--espacamentoGrande);
+  margin-top: var(--espacamentoGrande);
 }
 
 @media (max-width: 768px) {
-  .profile-list {
+  .listaPerfis {
     grid-template-columns: 1fr;
   }
 }
+

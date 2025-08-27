@@ -1,136 +1,834 @@
-/* :root contém as variáveis de design do site */
+/* :root contém as variáveis de design do site - valores reutilizáveis em todo o projeto */
 :root {
-    --cor-fundo-principal: #FDF9EE;
-    --cor-texto-principal: #54453B;
-    --cor-sombra: #303538;
-    --cor-destaque-primaria: rgba(211, 163, 127, 0.3);
-    --cor-destaque-secundaria: rgba(127, 204, 212, 1);
-    --cor-destaque-secundaria-transparente: rgba(127, 204, 212, 0.3);
-    --cor-botao-principal: rgba(127, 204, 212, 1);
+  /* Cores Neutras - tons básicos para fundos e textos */
+  --corNeutraEscura: #303538; /* Cor escura neutra para textos e elementos destacados */
+  --corNeutraClara: #fdf9ee; /* Cor clara neutra para fundos principais */
+
+  /* Cores Marrons - paleta principal marrom/terrosa */
+  --corMarromDestaque: #d3a27f; /* Cor marrom destacada para elementos principais */
+  --corMarromOfuscado: #94877e; /* Cor marrom suave para elementos secundários */
+  --corMarromEscuro: #54453b; /* Cor marrom escura para textos e títulos */
+
+  /* Cores Azuis - paleta secundária azul/acuática */
+  --corAzulDestaque: #7fccd4; /* Cor azul destacada para botões e elementos interativos */
+  --corAzulOfuscado: #6e7d7f; /* Cor azul suave para elementos secundários */
+  --corAzulEscuro: #1b3133; /* Cor azul escura para textos e detalhes */
+
+  /* Transparências - versões transparentes para overlays e efeitos */
+  --corMarromDestaqueTransparente: rgba(
+    211,
+    163,
+    127,
+    0.3
+  ); /* Versão transparente do marrom destaque */
+  --corAzulDestaqueTransparente: rgba(
+    127,
+    204,
+    212,
+    0.3
+  ); /* Versão transparente do azul destaque */
+
+  /* Valores Comuns - medidas padronizadas para consistência visual */
+  --sombra: 0 0 8px; /* Sombra padrão para elementos elevados */
+  --bordaArredondada: 8px; /* Raio de borda padrão para elementos arredondados */
+  --espacamentoPequeno: 15px; /* Espaçamento pequeno entre elementos */
+  --espacamentoMedio: 20px; /* Espaçamento médio entre elementos */
+  --espacamentoGrande: 30px; /* Espaçamento grande entre seções */
+  --espacamentoExtraGrande: 60px; /* Espaçamento extra grande para containers */
+  --espacamentoMaximo: 90px; /* Espaçamento máximo para containers grandes */
+
+  /* Tipografia - configurações de fonte e tamanhos textuais */
+  --fontePrincipal: "Trebuchet MS", "Calibri", "Arial", sans-serif; /* Família de fontes principal */
+  --tamanhoFonteTitulo: 48px; /* Tamanho para títulos principais (h1) */
+  --tamanhoFonteSubtitulo: 36px; /* Tamanho para subtítulos (h2) */
+  --tamanhoFonteTexto: 24px; /* Tamanho para textos destacados (h3) */
+  --tamanhoFonteTextoMedio: 20px; /* Tamanho para textos médios (h4) */
+  --tamanhoFonteTextoMenor: 16px; /* Tamanho para textos menores (h5) */
+  --tamanhoFonteTextoMinimo: 14px; /* Tamanho mínimo para textos legíveis */
+  --tamanhoFonteTextoMicro: 12px; /* Tamanho micro para informações secundárias */
+
+  /* Configurações de Acessibilidade - ajustes para recursos de acessibilidade */
+  --acessibilidadeTamanhoFonte: 100%; /* Tamanho base da fonte para controle de zoom */
+  --acessibilidadeEspacamentoLetras: 0px; /* Espaçamento entre letras para melhor legibilidade */
+  --acessibilidadeAlturaLinha: 1.5; /* Altura da linha para melhor legibilidade */
 }
 
-/* Reset e Estilos Base */
+/* Reset e Estilos Base - remove estilos padrão do navegador e define base consistente */
 * {
-    padding: 0;
-    margin: 0;
-    font-family: 'Trebuchet MS', 'Calibri', 'Arial', sans-serif;
-    box-sizing: border-box;
+  padding: 0; /* Remove padding padrão */
+  margin: 0; /* Remove margin padrão */
+  font-family: var(
+    --fontePrincipal
+  ); /* Aplica fonte principal a todos os elementos */
+  box-sizing: border-box; /* Inclui padding e border na largura/altura dos elementos */
 }
 
+/* Define cor de fundo base para toda a página */
 html {
-    background-color: var(--cor-fundo-principal);
+  background-color: var(--corNeutraClara);
+  font-size: var(
+    --acessibilidadeTamanhoFonte
+  ); /* Aplica tamanho de fonte acessível */
 }
 
+/* Estilos base para o corpo do documento */
 body {
-    overflow: hidden;
+  overflow: hidden; /* Remove barras de rolagem padrão */
+  color: var(--corMarromEscuro); /* Cor padrão para textos */
+  letter-spacing: var(
+    --acessibilidadeEspacamentoLetras
+  ); /* Espaçamento entre letras acessível */
+  line-height: var(--acessibilidadeAlturaLinha); /* Altura de linha acessível */
 }
 
+/* Container principal da aplicação */
 main {
-    overflow-y: auto;
-    height: 100vh;
-    text-align: center;
+  overflow-y: auto; /* Permite rolagem vertical quando necessário */
+  height: 100vh; /* Ocupa toda a altura da viewport */
+  text-align: center; /* Centraliza conteúdo por padrão */
 }
 
+/* TIPOGRAFIA - Estilos para elementos textuais e hierarquia de conteúdo */
+
+/* Título principal - usado para títulos de página ou seções principais */
+h1 {
+  font-size: var(--tamanhoFonteTitulo);
+  font-weight: bold;
+  color: var(--corMarromEscuro);
+  margin-bottom: var(--espacamentoGrande);
+}
+
+/* Subtítulo - usado para seções secundárias */
+h2 {
+  font-size: var(--tamanhoFonteSubtitulo);
+  font-weight: bold;
+  color: var(--corMarromEscuro);
+  margin-bottom: var(--espacamentoMedio);
+}
+
+/* Título terciário - usado para subseções */
+h3 {
+  font-size: var(--tamanhoFonteTexto);
+  font-weight: bold;
+  color: var(--corMarromEscuro);
+  margin-bottom: var(--espacamentoPequeno);
+}
+
+/* Título quaternário - usado para grupos de conteúdo */
+h4 {
+  font-size: var(--tamanhoFonteTextoMedio);
+  font-weight: bold;
+  color: var(--corMarromEscuro);
+  margin-bottom: var(--espacamentoPequeno);
+}
+
+/* Título quinário - usado para labels destacadas */
+h5 {
+  font-size: var(--tamanhoFonteTextoMenor);
+  font-weight: bold;
+  color: var(--corMarromEscuro);
+  margin-bottom: var(--espacamentoPequeno);
+}
+
+/* Parágrafos - estilos para blocos de texto */
 p {
-    line-height: 1.6;
+  line-height: 1.6; /* Altura de linha melhorada para legibilidade */
+  color: var(--corMarromEscuro);
+  margin-bottom: var(--espacamentoPequeno);
 }
 
-/* Componentes Comuns */
-.titulo {
-    font-size: 48px;
-    font-weight: bold;
-    color: var(--cor-texto-principal);
-    margin-bottom: 30px;
+/* Texto em negrito - destaque forte em textos */
+strong {
+  font-weight: bold;
+  color: var(--corMarromEscuro);
 }
 
-.container {
-    padding: 60px;
-    text-align: center;
-    overflow: visible;
+/* Links - elementos clicáveis para navegação */
+a {
+  color: var(--corAzulEscuro);
+  text-decoration: none; /* Remove sublinhado padrão */
+  transition: color 0.3s; /* Transição suave para hover */
 }
 
-.cartaoDestaque {
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 30px;
-    width: auto;
+/* Estado hover dos links - feedback visual ao passar o mouse */
+a:hover {
+  color: var(--corAzulDestaque);
 }
 
-.cartaoDestaque.variacao1 {
-    cursor: pointer;
-    background-color: var(--cor-destaque-primaria);
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
-    box-shadow: 0 0px 8px var(--cor-sombra);
+/* LAYOUT - FLEXBOX - Sistema de posicionamento flexível */
+
+/* Centraliza elementos horizontal e verticalmente no container */
+.flexCentro {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.cartaoDestaque.variacao2 {
-    background-color: var(--cor-destaque-secundaria-transparente);
+/* Alinha elementos no início do container */
+.flexInicio {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
-.cartaoDestaque.variacao3 {
-    background-color: var(--cor-destaque-primaria);
-    text-align: left;
+/* Alinha elementos no final do container */
+.flexFim {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
 }
 
-.imagemPerfil {
-    border-radius: 100%;
-    object-fit: cover;
-    box-shadow: 0 0px 8px var(--cor-texto-principal);
+/* Distribui elementos com espaço entre eles */
+.flexEntre {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
+/* Disposição em coluna vertical */
+.flexColuna {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Disposição em linha horizontal */
+.flexLinha {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Permite quebra de linha em containers flex */
+.flexWrap {
+  flex-wrap: wrap;
+}
+
+/* LAYOUT - GRID - Sistema de posicionamento em grade */
+
+/* Container base para layout em grid */
+.gridContainer {
+  display: grid;
+}
+
+/* Grid com duas colunas (1 parte para primeira, 5 partes para segunda) */
+.gridDuasColunas {
+  grid-template-columns: 1fr 5fr;
+}
+
+/* Grid com uma única coluna */
+.gridUmaColuna {
+  grid-template-columns: 1fr;
+}
+
+/* Grid com três linhas de tamanho igual */
+.gridTresLinhas {
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+/* LISTAS - Estilos para diferentes tipos de listas */
+
+/* Lista vertical com espaçamento entre itens */
+.listaVertical {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacamentoPequeno);
+}
+
+/* Lista horizontal com espaçamento entre itens */
+.listaHorizontal {
+  display: flex;
+  flex-direction: row;
+  gap: var(--espacamentoPequeno);
+  justify-content: center;
+}
+
+/* Lista de ícones alinhados horizontalmente */
 .listaIcones {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
+/* Lista de ícones em disposição vertical */
 .listaIcones.vertical {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
 }
 
-/* Estilos de Formulário Globais */
-.lista {
-    justify-content: center;
-    display: flex;
-    gap: 12px;
+/* Remove marcadores padrão de listas */
+.listaSemEstilo {
+  list-style: none;
 }
 
+/* CONTAINERS - Elementos de agrupamento de conteúdo */
+
+/* Container padrão com padding generoso */
+.container {
+  padding: var(--espacamentoExtraGrande);
+  text-align: center;
+  overflow: visible;
+}
+
+/* Container com padding reduzido */
+.containerPequeno {
+  padding: var(--espacamentoGrande);
+}
+
+/* Container com padding médio */
+.containerMedio {
+  padding: var(--espacamentoExtraGrande);
+}
+
+/* Container com padding máximo */
+.containerGrande {
+  padding: var(--espacamentoMaximo);
+}
+
+/* CARTÕES - Elementos de interface com destaque visual */
+
+/* Estilo base para cartões */
+.cartao {
+  border-radius: var(--bordaArredondada);
+  padding: var(--espacamentoPequeno);
+  margin-bottom: var(--espacamentoGrande);
+  width: auto;
+  box-shadow: var(--sombra) var(--corNeutraEscura);
+}
+
+/* Cartão de destaque com fundo transparente marrom */
+.cartaoDestaque {
+  background-color: var(--corMarromDestaqueTransparente);
+  cursor: pointer; /* Indica elemento clicável */
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espacamentoPequeno);
+}
+
+/* Cartão secundário com fundo transparente azul */
+.cartaoSecundario {
+  background-color: var(--corAzulDestaqueTransparente);
+}
+
+/* Cartão com texto alinhado à esquerda */
+.cartaoTextoEsquerda {
+  background-color: var(--corMarromDestaqueTransparente);
+  text-align: left;
+}
+
+/* BOTÕES - Elementos interativos para ações do usuário */
+
+/* Estilo base para botões */
 button {
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 30px;
-    width: auto;
-    background-color: var(--cor-botao-principal);
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    color: var(--cor-texto-principal);
-    transition: background-color 0.3s;
-    box-shadow: 0 0px 8px var(--cor-sombra);
+  border-radius: var(--bordaArredondada);
+  padding: var(--espacamentoPequeno);
+  margin-bottom: var(--espacamentoGrande);
+  width: auto;
+  background-color: var(--corAzulDestaque);
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--corMarromEscuro);
+  transition: all 0.3s;
+  box-shadow: var(--sombra) var(--corNeutraEscura);
 }
 
+/* Efeito hover para botões */
 button:hover {
-    filter: brightness(0.95);
+  filter: brightness(0.95); /* Leve escurecimento ao passar o mouse */
 }
 
-.ativo {
-  background-color: var(--cor-texto-principal);
-  color: var(--cor-fundo-principal);
+/* Estado ativo para botões */
+.botaoAtivo {
+  background-color: var(--corMarromEscuro);
+  color: var(--corNeutraClara);
 }
 
+/* Botão primário - ação principal */
+.botaoPrimario {
+  background-color: var(--corAzulDestaque);
+  color: var(--corMarromEscuro);
+}
+
+/* Botão secundário - ação alternativa */
+.botaoSecundario {
+  background-color: var(--corMarromDestaque);
+  color: var(--corMarromEscuro);
+}
+
+/* Botão de ação perigosa (excluir, cancelar) */
+.botaoPerigo {
+  background-color: var(--corMarromEscuro);
+  color: var(--corNeutraClara);
+}
+
+/* Botão com estilo outline/borda */
+.botaoTransparente {
+  background: transparent;
+  border: 1px solid var(--corMarromDestaque);
+  color: var(--corMarromEscuro);
+}
+
+/* FORMULÁRIOS - Elementos para entrada de dados */
+
+/* Campos de entrada de texto */
 input,
 textarea {
-    background: var(--cor-destaque-primaria);
-    border: none;
-    border-radius: 8px;
-    padding: 15px;
-    font-size: 1rem;
+  background: var(--corMarromDestaqueTransparente);
+  border: none;
+  border-radius: var(--bordaArredondada);
+  padding: var(--espacamentoPequeno);
+  font-size: 1rem;
+  width: 100%;
+  resize: none; /* Desabilita redimensionamento padrão */
+  color: var(--corMarromEscuro);
+  transition: all 0.3s;
+}
+
+/* Estado de foco para campos */
+input:focus,
+textarea:focus {
+  outline: none; /* Remove contorno padrão */
+  box-shadow: var(--sombra) var(--corAzulDestaque); /* Destaque visual no foco */
+}
+
+/* Grupo de campo de formulário com margem inferior */
+.campoFormulario {
+  margin-bottom: var(--espacamentoPequeno);
+}
+
+/* Label para campos de formulário */
+.labelFormulario {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: var(--corMarromEscuro);
+}
+
+/* MENSAGENS - Elementos de feedback para o usuário */
+
+/* Mensagem de erro - feedback negativo */
+.mensagemErro {
+  background-color: var(--corMarromEscuro);
+  color: var(--corNeutraClara);
+  padding: var(--espacamentoPequeno);
+  border-radius: var(--bordaArredondada);
+  margin-bottom: var(--espacamentoPequeno);
+  text-align: center;
+}
+
+/* Mensagem de sucesso - feedback positivo */
+.mensagemSucesso {
+  background-color: var(--corAzulDestaque);
+  color: var(--corMarromEscuro);
+  padding: var(--espacamentoPequeno);
+  border-radius: var(--bordaArredondada);
+  margin-bottom: var(--espacamentoPequeno);
+  text-align: center;
+}
+
+/* Mensagem de aviso - feedback informativo */
+.mensagemAviso {
+  background-color: var(--corMarromDestaque);
+  color: var(--corMarromEscuro);
+  padding: var(--espacamentoPequeno);
+  border-radius: var(--bordaArredondada);
+  margin-bottom: var(--espacamentoPequeno);
+  text-align: center;
+}
+
+/* IMAGENS - Estilos para elementos visuais */
+
+/* Imagem de perfil com formato circular */
+.imagemPerfil {
+  border-radius: 100%;
+  object-fit: cover; /* Mantém proporção e preenche espaço */
+  box-shadow: var(--sombra) var(--corMarromEscuro);
+}
+
+/* Imagem responsiva que se adapta ao container */
+.imagemResponsiva {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Imagem com formato circular */
+.imagemCircular {
+  border-radius: 100%;
+}
+
+/* Imagem com bordas arredondadas */
+.imagemArredondada {
+  border-radius: var(--bordaArredondada);
+}
+
+/* UTILITÁRIOS DE ESPAÇAMENTO - Classes para controle de margens e paddings */
+
+/* Margens em todos os lados com tamanho pequeno */
+.margemPequena {
+  margin: var(--espacamentoPequeno);
+}
+
+/* Margens em todos os lados com tamanho médio */
+.margemMedia {
+  margin: var(--espacamentoMedio);
+}
+
+/* Margens em todos os lados com tamanho grande */
+.margemGrande {
+  margin: var(--espacamentoGrande);
+}
+
+/* Margens em todos os lados com tamanho extra grande */
+.margemExtraGrande {
+  margin: var(--espacamentoExtraGrande);
+}
+
+/* Margens em todos os lados com tamanho máximo */
+.margemMaxima {
+  margin: var(--espacamentoMaximo);
+}
+
+/* Padding em todos os lados com tamanho pequeno */
+.paddingPequeno {
+  padding: var(--espacamentoPequeno);
+}
+
+/* Padding em todos os lados com tamanho médio */
+.paddingMedio {
+  padding: var(--espacamentoMedio);
+}
+
+/* Padding em todos os lados com tamanho grande */
+.paddingGrande {
+  padding: var(--espacamentoGrande);
+}
+
+/* Padding em todos os lados com tamanho extra grande */
+.paddingExtraGrande {
+  padding: var(--espacamentoExtraGrande);
+}
+
+/* Padding em todos os lados com tamanho máximo */
+.paddingMaximo {
+  padding: var(--espacamentoMaximo);
+}
+
+/* UTILITÁRIOS DE TEXTO - Classes para controle de alinhamento e formatação */
+
+/* Alinha texto à esquerda */
+.textoEsquerda {
+  text-align: left;
+}
+
+/* Centraliza texto */
+.textoCentro {
+  text-align: center;
+}
+
+/* Alinha texto à direita */
+.textoDireita {
+  text-align: right;
+}
+
+/* Aplica peso de fonte negrito */
+.textoNegrito {
+  font-weight: bold;
+}
+
+/* Aplica estilo de fonte itálico */
+.textoItalico {
+  font-style: italic;
+}
+
+/* Transforma texto em maiúsculas */
+.textoMaiusculo {
+  text-transform: uppercase;
+}
+
+/* Transforma texto em minúsculas */
+.textoMinusculo {
+  text-transform: lowercase;
+}
+
+/* Capitaliza primeira letra de cada palavra */
+.textoCapitalizado {
+  text-transform: capitalize;
+}
+
+/* CORES DE TEXTO - Classes para aplicação de cores textuais */
+
+/* Texto na cor marrom escuro */
+.textoMarromEscuro {
+  color: var(--corMarromEscuro);
+}
+
+/* Texto na cor marrom destaque */
+.textoMarromDestaque {
+  color: var(--corMarromDestaque);
+}
+
+/* Texto na cor marrom ofuscado */
+.textoMarromOfuscado {
+  color: var(--corMarromOfuscado);
+}
+
+/* Texto na cor azul escuro */
+.textoAzulEscuro {
+  color: var(--corAzulEscuro);
+}
+
+/* Texto na cor azul destaque */
+.textoAzulDestaque {
+  color: var(--corAzulDestaque);
+}
+
+/* Texto na cor azul ofuscado */
+.textoAzulOfuscado {
+  color: var(--corAzulOfuscado);
+}
+
+/* Texto na cor neutra escura */
+.textoNeutroEscuro {
+  color: var(--corNeutraEscura);
+}
+
+/* Texto na cor neutra clara */
+.textoNeutroClaro {
+  color: var(--corNeutraClara);
+}
+
+/* CORES DE FUNDO - Classes para aplicação de cores de fundo */
+
+/* Fundo na cor marrom escuro */
+.fundoMarromEscuro {
+  background-color: var(--corMarromEscuro);
+}
+
+/* Fundo na cor marrom destaque */
+.fundoMarromDestaque {
+  background-color: var(--corMarromDestaque);
+}
+
+/* Fundo na cor marrom ofuscado */
+.fundoMarromOfuscado {
+  background-color: var(--corMarromOfuscado);
+}
+
+/* Fundo na cor azul escuro */
+.fundoAzulEscuro {
+  background-color: var(--corAzulEscuro);
+}
+
+/* Fundo na cor azul destaque */
+.fundoAzulDestaque {
+  background-color: var(--corAzulDestaque);
+}
+
+/* Fundo na cor azul ofuscado */
+.fundoAzulOfuscado {
+  background-color: var(--corAzulOfuscado);
+}
+
+/* Fundo na cor neutra escura */
+.fundoNeutroEscuro {
+  background-color: var(--corNeutraEscura);
+}
+
+/* Fundo na cor neutra clara */
+.fundoNeutroClaro {
+  background-color: var(--corNeutraClara);
+}
+
+/* Fundo na cor marrom destaque transparente */
+.fundoMarromDestaqueTransparente {
+  background-color: var(--corMarromDestaqueTransparente);
+}
+
+/* Fundo na cor azul destaque transparente */
+.fundoAzulDestaqueTransparente {
+  background-color: var(--corAzulDestaqueTransparente);
+}
+
+/* UTILITÁRIOS DE VISIBILIDADE - Classes para controle de exibição */
+
+/* Oculta elemento (remove do fluxo de layout) */
+.oculto {
+  display: none;
+}
+
+/* Exibe elemento como bloco */
+.visivel {
+  display: block;
+}
+
+/* Oculta elemento mantendo espaço no layout */
+.invisivel {
+  visibility: hidden;
+}
+
+/* Torna elemento transparente mantendo interatividade */
+.transparente {
+  opacity: 0;
+}
+
+/* Torna elemento totalmente opaco */
+.opaco {
+  opacity: 1;
+}
+
+/* UTILITÁRIOS DE POSICIONAMENTO - Classes para controle de posição */
+
+/* Posicionamento relativo (referência própria) */
+.posicaoRelativa {
+  position: relative;
+}
+
+/* Posicionamento absoluto (referência ao ancestral posicionado mais próximo) */
+.posicaoAbsoluta {
+  position: absolute;
+}
+
+/* Posicionamento fixo (referência à viewport) */
+.posicaoFixa {
+  position: fixed;
+}
+
+/* Posicionamento sticky (híbrido entre relativo e fixo) */
+.posicaoSticky {
+  position: sticky;
+}
+
+/* UTILITÁRIOS DE LARGURA - Classes para controle de dimensões */
+
+/* Largura completa do container pai */
+.larguraCompleta {
+  width: 100%;
+}
+
+/* Largura automática baseada no conteúdo */
+.larguraAuto {
+  width: auto;
+}
+
+/* Altura completa do container pai */
+.alturaCompleta {
+  height: 100%;
+}
+
+/* Altura automática baseada no conteúdo */
+.alturaAuto {
+  height: auto;
+}
+
+/* Altura igual à altura da viewport */
+.alturaViewport {
+  height: 100vh;
+}
+
+/* Largura igual à largura da viewport */
+.larguraViewport {
+  width: 100vw;
+}
+
+/* TRANSIÇÕES - Classes para efeitos de transição suave */
+
+/* Transição suave para todas as propriedades */
+.transicaoSuave {
+  transition: all 0.3s ease;
+}
+
+/* Transição rápida para todas as propriedades */
+.transicaoRapida {
+  transition: all 0.15s ease;
+}
+
+/* Transição lenta para todas as propriedades */
+.transicaoLenta {
+  transition: all 0.6s ease;
+}
+
+/* SOMBRAS - Classes para aplicação de efeitos de sombra */
+
+/* Sombra pequena para elevação sutil */
+.sombraPequena {
+  box-shadow: var(--sombra) var(--corNeutraEscura);
+}
+
+/* Sombra média para elevação moderada */
+.sombraMedia {
+  box-shadow: 0 4px 12px var(--corNeutraEscura);
+}
+
+/* Sombra grande para elevação destacada */
+.sombraGrande {
+  box-shadow: 0 8px 24px var(--corNeutraEscura);
+}
+
+/* BORDAS - Classes para controle de arredondamento de bordas */
+
+/* Borda arredondada com raio padrão */
+.bordaArredondada {
+  border-radius: var(--bordaArredondada);
+}
+
+/* Borda completamente circular (para elementos quadrados) */
+.bordaCircular {
+  border-radius: 50%;
+}
+
+/* Remove arredondamento de bordas */
+.bordaSemArredondamento {
+  border-radius: 0;
+}
+
+/* RESPONSIVIDADE BÁSICA - Media queries para adaptação a diferentes tamanhos de tela */
+
+/* Tablets e dispositivos médios */
+@media (max-width: 768px) {
+  .container {
+    padding: var(--espacamentoGrande); /* Reduz padding em tablets */
+  }
+
+  /* Reduz tamanho de título em dispositivos menores */
+  h1 {
+    font-size: 36px;
+  }
+
+  /* Reduz tamanho de subtítulo em dispositivos menores */
+  h2 {
+    font-size: 28px;
+  }
+
+  /* Converte grid de duas colunas em uma coluna */
+  .gridDuasColunas {
+    grid-template-columns: 1fr;
+  }
+
+  /* Converte lista horizontal em vertical */
+  .listaHorizontal {
+    flex-direction: column;
+  }
+}
+
+/* Dispositivos móveis pequenos */
+@media (max-width: 480px) {
+  .container {
+    padding: var(--espacamentoMedio); /* Reduz ainda mais o padding */
+  }
+
+  /* Ajusta tamanho de título para mobile */
+  h1 {
+    font-size: 28px;
+  }
+
+  /* Ajusta tamanho de subtítulo para mobile */
+  h2 {
+    font-size: 24px;
+  }
+
+  /* Botões ocupam largura total em mobile */
+  button {
     width: 100%;
-    resize: none;
-    gap: 12px;
+  }
 }

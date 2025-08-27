@@ -1,8 +1,8 @@
-/* Interrogacao.css */
+/* Estilos específicos do componente de interrogação */
 .interogacao {
   position: fixed;
-  top: 15px;
-  right: 15px;
+  top: var(--espacamentoPequeno);
+  right: var(--espacamentoPequeno);
   width: 18px !important;
   height: 18px !important;
   font-weight: bold;
@@ -12,16 +12,16 @@
   justify-content: center !important;
 }
 
-.conteudo-interrogacao {
+.conteudoInterrogacao {
   position: fixed;
   top: 60px;
-  right: 15px;
+  right: var(--espacamentoPequeno);
   max-width: 210px;
   z-index: 1001;
-  border-radius: 8px;
+  border-radius: var(--bordaArredondada);
   animation: aparecer 0.3s;
-  background-color: rgba(211, 163, 127, 1) !important;
-  box-shadow: 0 0px 8px var(--cor-sombra) !important;
+  background-color: var(--corMarromDestaque) !important;
+  box-shadow: var(--sombra) var(--corNeutraEscura) !important;
 }
 
 @keyframes aparecer {
@@ -32,3 +32,4 @@
     opacity: 1;
   }
 }
+

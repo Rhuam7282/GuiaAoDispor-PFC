@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import './controles.css';
 import { 
   Type, 
   AlignJustify, 
@@ -13,7 +14,6 @@ import {
   X,
   Accessibility,
   Link,
-  Palette,
   EyeOff,
   BookOpen
 } from 'lucide-react';
@@ -37,6 +37,31 @@ const ControlesAcessibilidade = () => {
   
   const guiaMouseRef = useRef(null);
   const mascaraRef = useRef(null);
+
+  // Efeito para aplicar estilos de acessibilidade textual globalmente
+  useEffect(() => {
+    const aplicarEstilosTexto = () => {
+      const estiloDinamico = document.getElementById('estiloAcessibilidadeTexto');
+      const conteudoEstilo = `
+        :root {
+          --fatorEscala: ${tamanhoFonte / 100};
+          --espacamentoLetras: ${espacamentoLetras}px;
+          --alturaLinha: ${alturaLinha};
+        }
+      `;
+      
+      if (!estiloDinamico) {
+        const style = document.createElement('style');
+        style.id = 'estiloAcessibilidadeTexto';
+        style.textContent = conteudoEstilo;
+        document.head.appendChild(style);
+      } else {
+        estiloDinamico.textContent = conteudoEstilo;
+      }
+    };
+
+    aplicarEstilosTexto();
+  }, [tamanhoFonte, espacamentoLetras, alturaLinha]);
 
   const salvarConfiguracao = useCallback((chave, valor) => {
     try {
@@ -89,10 +114,10 @@ const ControlesAcessibilidade = () => {
   useEffect(() => {
     const raiz = document.documentElement;
     
-    // Aplicar configurações de texto de forma mais suave
-    raiz.style.setProperty('--acessibilidade-tamanho-fonte', `${tamanhoFonte}%`);
-    raiz.style.setProperty('--acessibilidade-espacamento-letras', `${espacamentoLetras}px`);
-    raiz.style.setProperty('--acessibilidade-altura-linha', alturaLinha);
+    // Aplicar configurações de texto
+    raiz.style.setProperty('--acessibilidadeTamanhoFonte', `${tamanhoFonte}%`);
+    raiz.style.setProperty('--acessibilidadeEspacamentoLetras', `${espacamentoLetras}px`);
+    raiz.style.setProperty('--acessibilidadeAlturaLinha', alturaLinha);
 
     salvarConfiguracao('tamanhoFonte', tamanhoFonte);
     salvarConfiguracao('espacamentoLetras', espacamentoLetras);
@@ -102,14 +127,14 @@ const ControlesAcessibilidade = () => {
   useEffect(() => {
     const raiz = document.documentElement;
     
-    raiz.classList.remove('contraste-leve', 'contraste-intenso');
+    raiz.classList.remove('contrasteLeve', 'contrasteIntenso');
     
     switch(modoContraste) {
       case 1:
-        raiz.classList.add('contraste-leve');
+        raiz.classList.add('contrasteLeve');
         break;
       case 2:
-        raiz.classList.add('contraste-intenso');
+        raiz.classList.add('contrasteIntenso');
         break;
       default:
         // Nada a fazer para desativado
@@ -121,10 +146,10 @@ const ControlesAcessibilidade = () => {
   useEffect(() => {
     const raiz = document.documentElement;
     
-    raiz.classList.remove('tema-escuro');
+    raiz.classList.remove('temaEscuro');
     
     if (modoEscuro === 1) {
-      raiz.classList.add('tema-escuro');
+      raiz.classList.add('temaEscuro');
     }
     
     salvarConfiguracao('modoEscuro', modoEscuro);
@@ -146,7 +171,7 @@ const ControlesAcessibilidade = () => {
       if (guiaLeitura === 1 && guiaMouseRef.current) {
         guiaMouseRef.current.style.top = `${e.clientY}px`;
         
-        const indicador = guiaMouseRef.current.querySelector('.cursor-indicator');
+        const indicador = guiaMouseRef.current.querySelector('.indicadorCursor');
         if (indicador) {
           indicador.style.left = `${e.clientX}px`;
         }
@@ -161,14 +186,14 @@ const ControlesAcessibilidade = () => {
     if (guiaLeitura === 1) {
       document.addEventListener('mousemove', manipularMovimentoMouse);
       const guia = document.createElement('div');
-      guia.className = 'horizontal-reading-guide';
-      guia.innerHTML = '<div class="cursor-indicator"></div>';
+      guia.className = 'guiaLeituraHorizontal';
+      guia.innerHTML = '<div class="indicadorCursor"></div>';
       document.body.appendChild(guia);
       guiaMouseRef.current = guia;
     } else if (guiaLeitura === 2) {
       document.addEventListener('mousemove', manipularMovimentoMouse);
       const mascara = document.createElement('div');
-      mascara.className = 'reading-mask';
+      mascara.className = 'mascaraLeitura';
       document.body.appendChild(mascara);
       mascaraRef.current = mascara;
     }
@@ -183,22 +208,22 @@ const ControlesAcessibilidade = () => {
   useEffect(() => {
     const raiz = document.documentElement;
     
-    raiz.classList.toggle('remover-imagens', removerImagens);
-    raiz.classList.toggle('remover-cabecalhos', removerCabecalhos);
-    raiz.classList.toggle('destacar-links', destacarLinks);
-    raiz.classList.toggle('pausar-animacoes', pausarAnimacoes);
-    raiz.classList.toggle('cursor-grande', cursorGrande);
+    raiz.classList.toggle('removerImagens', removerImagens);
+    raiz.classList.toggle('removerCabecalhos', removerCabecalhos);
+    raiz.classList.toggle('destacarLinks', destacarLinks);
+    raiz.classList.toggle('pausarAnimacoes', pausarAnimacoes);
+    raiz.classList.toggle('cursorGrande', cursorGrande);
 
-    raiz.classList.remove('daltonico-protanopia', 'daltonico-deuteranopia', 'daltonico-tritanopia');
+    raiz.classList.remove('daltonicoProtanopia', 'daltonicoDeuteranopia', 'daltonicoTritanopia');
     switch(modoDaltonico) {
       case 1:
-        raiz.classList.add('daltonico-protanopia');
+        raiz.classList.add('daltonicoProtanopia');
         break;
       case 2:
-        raiz.classList.add('daltonico-deuteranopia');
+        raiz.classList.add('daltonicoDeuteranopia');
         break;
       case 3:
-        raiz.classList.add('daltonico-tritanopia');
+        raiz.classList.add('daltonicoTritanopia');
         break;
       default:
         // Nada a fazer para normal
@@ -245,11 +270,11 @@ const ControlesAcessibilidade = () => {
   };
 
   const aumentarTamanhoFonte = () => {
-    setTamanhoFonte(prev => Math.min(prev + 10, 150));
+    setTamanhoFonte(prev => Math.min(prev + 5, 130));
   };
 
   const diminuirTamanhoFonte = () => {
-    setTamanhoFonte(prev => Math.max(prev - 10, 80));
+    setTamanhoFonte(prev => Math.max(prev - 5, 80));
   };
 
   const redefinirTamanhoFonte = () => {
@@ -310,17 +335,17 @@ const ControlesAcessibilidade = () => {
     
     const raiz = document.documentElement;
     const classes = [
-      'contraste-leve', 'contraste-intenso', 'tema-escuro',
-      'remover-imagens', 'remover-cabecalhos', 'destacar-links', 
-      'pausar-animacoes', 'cursor-grande',
-      'daltonico-protanopia', 'daltonico-deuteranopia', 'daltonico-tritanopia'
+      'contrasteLeve', 'contrasteIntenso', 'temaEscuro',
+      'removerImagens', 'removerCabecalhos', 'destacarLinks', 
+      'pausarAnimacoes', 'cursorGrande',
+      'daltonicoProtanopia', 'daltonicoDeuteranopia', 'daltonicoTritanopia'
     ];
     
     classes.forEach(classe => raiz.classList.remove(classe));
     
-    raiz.style.setProperty('--acessibilidade-tamanho-fonte', '100%');
-    raiz.style.setProperty('--acessibilidade-espacamento-letras', '0px');
-    raiz.style.setProperty('--acessibilidade-altura-linha', '1.5');
+    raiz.style.setProperty('--acessibilidadeTamanhoFonte', '100%');
+    raiz.style.setProperty('--acessibilidadeEspacamentoLetras', '0px');
+    raiz.style.setProperty('--acessibilidadeAlturaLinha', '1.5');
     
     limparGuiasLeitura();
   };
@@ -355,9 +380,9 @@ const ControlesAcessibilidade = () => {
   };
 
   return (
-    <div className="accessibility-controls">
+    <div className="controlesAcessibilidade">
       <button 
-        className="accessibility-toggle"
+        className="botaoAlternarAcessibilidade"
         onClick={alternarPainel}
         aria-label="Abrir controles de acessibilidade (Alt + A)"
         title="Controles de Acessibilidade (Alt + A)"
@@ -366,14 +391,14 @@ const ControlesAcessibilidade = () => {
       </button>
 
       {estaAberto && (
-        <div className="accessibility-panel" role="dialog" aria-label="Painel de controles de acessibilidade">
-          <div className="accessibility-header">
-            <div className="header-title">
+        <div className="painelAcessibilidade" role="dialog" aria-label="Painel de controles de acessibilidade">
+          <div className="cabecalhoAcessibilidade">
+            <div className="tituloHeader">
               <Accessibility size={20} />
               <h3>Acessibilidade</h3>
             </div>
             <button 
-              className="close-button"
+              className="botaoFechar"
               onClick={alternarPainel}
               aria-label="Fechar controles"
             >
@@ -381,219 +406,219 @@ const ControlesAcessibilidade = () => {
             </button>
           </div>
 
-          <div className="accessibility-content">
-            <div className="section">
-              <h4 className="section-title">1. Controles de Texto</h4>
+          <div className="conteudoAcessibilidade">
+            <div className="secao">
+              <h4 className="tituloSecao">1. Controles de Texto</h4>
               
-              <div className="control-group">
-                <div className="control-header">
+              <div className="grupoControle">
+                <div className="cabecalhoControle">
                   <Type size={16} />
                   <span>Tamanho da Fonte</span>
-                  <span className="control-value">{tamanhoFonte}%</span>
+                  <span className="valorControle">{tamanhoFonte}%</span>
                 </div>
-                <div className="control-buttons">
-                  <button onClick={diminuirTamanhoFonte} className="control-btn decrease">A-</button>
-                  <button onClick={redefinirTamanhoFonte} className="control-btn reset">A</button>
-                  <button onClick={aumentarTamanhoFonte} className="control-btn increase">A+</button>
+                <div className="botoesControle">
+                  <button onClick={diminuirTamanhoFonte} className="botaoControle diminuir">A-</button>
+                  <button onClick={redefinirTamanhoFonte} className="botaoControle resetar">A</button>
+                  <button onClick={aumentarTamanhoFonte} className="botaoControle aumentar">A+</button>
                 </div>
               </div>
 
-              <div className="control-group">
-                <div className="control-header">
+              <div className="grupoControle">
+                <div className="cabecalhoControle">
                   <MoreHorizontal size={16} />
                   <span>Espaço entre Letras</span>
-                  <span className="control-value">{espacamentoLetras.toFixed(1)}px</span>
+                  <span className="valorControle">{espacamentoLetras.toFixed(1)}px</span>
                 </div>
-                <div className="control-buttons">
-                  <button onClick={diminuirEspacamentoLetras} className="control-btn decrease">-</button>
-                  <button onClick={redefinirEspacamentoLetras} className="control-btn reset">0</button>
-                  <button onClick={aumentarEspacamentoLetras} className="control-btn increase">+</button>
+                <div className="botoesControle">
+                  <button onClick={diminuirEspacamentoLetras} className="botaoControle diminuir">-</button>
+                  <button onClick={redefinirEspacamentoLetras} className="botaoControle resetar">0</button>
+                  <button onClick={aumentarEspacamentoLetras} className="botaoControle aumentar">+</button>
                 </div>
               </div>
 
-              <div className="control-group">
-                <div className="control-header">
+              <div className="grupoControle">
+                <div className="cabecalhoControle">
                   <AlignJustify size={16} />
                   <span>Espaço entre Linhas</span>
-                  <span className="control-value">{alturaLinha.toFixed(1)}</span>
+                  <span className="valorControle">{alturaLinha.toFixed(1)}</span>
                 </div>
-                <div className="control-buttons">
-                  <button onClick={diminuirAlturaLinha} className="control-btn decrease">-</button>
-                  <button onClick={redefinirAlturaLinha} className="control-btn reset">1.5</button>
-                  <button onClick={aumentarAlturaLinha} className="control-btn increase">+</button>
+                <div className="botoesControle">
+                  <button onClick={diminuirAlturaLinha} className="botaoControle diminuir">-</button>
+                  <button onClick={redefinirAlturaLinha} className="botaoControle resetar">1.5</button>
+                  <button onClick={aumentarAlturaLinha} className="botaoControle aumentar">+</button>
                 </div>
               </div>
             </div>
 
-            <div className="section">
-              <h4 className="section-title">2. Aparência</h4>
+            <div className="secao">
+              <h4 className="tituloSecao">2. Cores e Contraste</h4>
               
-              <div className="multi-option-control">
-                <div className="control-header">
+              <div className="controleMultiOpcao">
+                <div className="cabecalhoControle">
                   <Contrast size={16} />
                   <span>Contraste</span>
-                  <span className="control-value">{obterTextoModoContraste()}</span>
+                  <span className="valorControle">{obterTextoModoContraste()}</span>
                 </div>
-                <div className="multi-buttons">
+                <div className="botoesMulti">
                   <button 
                     onClick={() => setModoContraste(0)}
-                    className={`multi-btn ${modoContraste === 0 ? 'active' : ''}`}
+                    className={`botaoMulti ${modoContraste === 0 ? 'botaoAtivo' : ''}`}
                   >Desativado</button>
                   <button 
                     onClick={() => setModoContraste(1)}
-                    className={`multi-btn ${modoContraste === 1 ? 'active' : ''}`}
+                    className={`botaoMulti ${modoContraste === 1 ? 'botaoAtivo' : ''}`}
                   >Leve</button>
                   <button 
                     onClick={() => setModoContraste(2)}
-                    className={`multi-btn ${modoContraste === 2 ? 'active' : ''}`}
+                    className={`botaoMulti ${modoContraste === 2 ? 'botaoAtivo' : ''}`}
                   >Intenso</button>
                 </div>
               </div>
 
-              <div className="multi-option-control">
-                <div className="control-header">
+              <div className="controleMultiOpcao">
+                <div className="cabecalhoControle">
                   {modoEscuro === 1 ? <Moon size={16} /> : <Sun size={16} />}
                   <span>Modo Escuro</span>
-                  <span className="control-value">{obterTextoModoEscuro()}</span>
+                  <span className="valorControle">{obterTextoModoEscuro()}</span>
                 </div>
-                <div className="multi-buttons">
+                <div className="botoesMulti">
                   <button 
                     onClick={() => setModoEscuro(0)}
-                    className={`multi-btn ${modoEscuro === 0 ? 'active' : ''}`}
+                    className={`botaoMulti ${modoEscuro === 0 ? 'botaoAtivo' : ''}`}
                   >Desativado</button>
                   <button 
                     onClick={() => setModoEscuro(1)}
-                    className={`multi-btn ${modoEscuro === 1 ? 'active' : ''}`}
+                    className={`botaoMulti ${modoEscuro === 1 ? 'botaoAtivo' : ''}`}
                   >Ativado</button>
                 </div>
               </div>
 
-              <div className="multi-option-control">
-                <div className="control-header">
+              <div className="controleMultiOpcao">
+                <div className="cabecalhoControle">
                   <Eye size={16} />
                   <span>Modo Daltônico</span>
-                  <span className="control-value">{obterTextoModoDaltonico()}</span>
+                  <span className="valorControle">{obterTextoModoDaltonico()}</span>
                 </div>
-                <div className="multi-buttons">
+                <div className="botoesMulti">
                   <button 
                     onClick={() => setModoDaltonico(0)}
-                    className={`multi-btn ${modoDaltonico === 0 ? 'active' : ''}`}
+                    className={`botaoMulti ${modoDaltonico === 0 ? 'botaoAtivo' : ''}`}
                   >Normal</button>
                   <button 
                     onClick={() => setModoDaltonico(1)}
-                    className={`multi-btn ${modoDaltonico === 1 ? 'active' : ''}`}
+                    className={`botaoMulti ${modoDaltonico === 1 ? 'botaoAtivo' : ''}`}
                   >Protanopia</button>
                   <button 
                     onClick={() => setModoDaltonico(2)}
-                    className={`multi-btn ${modoDaltonico === 2 ? 'active' : ''}`}
+                    className={`botaoMulti ${modoDaltonico === 2 ? 'botaoAtivo' : ''}`}
                   >Deuteranopia</button>
                   <button 
                     onClick={() => setModoDaltonico(3)}
-                    className={`multi-btn ${modoDaltonico === 3 ? 'active' : ''}`}
+                    className={`botaoMulti ${modoDaltonico === 3 ? 'botaoAtivo' : ''}`}
                   >Tritanopia</button>
                 </div>
               </div>
             </div>
 
-            <div className="section">
-              <h4 className="section-title">3. Navegação</h4>
+            <div className="secao">
+              <h4 className="tituloSecao">3. Navegação</h4>
               
-              <div className="multi-option-control">
-                <div className="control-header">
+              <div className="controleMultiOpcao">
+                <div className="cabecalhoControle">
                   <BookOpen size={16} />
                   <span>Guia de Leitura</span>
-                  <span className="control-value">{obterTextoGuiaLeitura()}</span>
+                  <span className="valorControle">{obterTextoGuiaLeitura()}</span>
                 </div>
-                <div className="multi-buttons">
+                <div className="botoesMulti">
                   <button 
                     onClick={() => setGuiaLeitura(0)}
-                    className={`multi-btn ${guiaLeitura === 0 ? 'active' : ''}`}
+                    className={`botaoMulti ${guiaLeitura === 0 ? 'botaoAtivo' : ''}`}
                   >Desativado</button>
                   <button 
                     onClick={() => setGuiaLeitura(1)}
-                    className={`multi-btn ${guiaLeitura === 1 ? 'active' : ''}`}
+                    className={`botaoMulti ${guiaLeitura === 1 ? 'botaoAtivo' : ''}`}
                   >Barra</button>
                   <button 
                     onClick={() => setGuiaLeitura(2)}
-                    className={`multi-btn ${guiaLeitura === 2 ? 'active' : ''}`}
+                    className={`botaoMulti ${guiaLeitura === 2 ? 'botaoAtivo' : ''}`}
                   >Máscara</button>
                 </div>
               </div>
 
-              <div className="toggle-control">
-                <div className="toggle-header">
+              <div className="controleToggle">
+                <div className="cabecalhoToggle">
                   <Link size={16} />
                   <span>Destacar Links</span>
                 </div>
                 <button 
                   onClick={() => setDestacarLinks(prev => !prev)}
-                  className={`toggle-btn ${destacarLinks ? 'ativo' : ''}`}
+                  className={`botaoToggle ${destacarLinks ? 'botaoAtivo' : ''}`}
                 >
-                  <div className="toggle-slider"></div>
+                  <div className="sliderToggle"></div>
                 </button>
               </div>
 
-              <div className="toggle-control">
-                <div className="toggle-header">
+              <div className="controleToggle">
+                <div className="cabecalhoToggle">
                   <MousePointer size={16} />
                   <span>Cursor Grande</span>
                 </div>
                 <button 
                   onClick={() => setCursorGrande(prev => !prev)}
-                  className={`toggle-btn ${cursorGrande ? 'ativo' : ''}`}
+                  className={`botaoToggle ${cursorGrande ? 'botaoAtivo' : ''}`}
                 >
-                  <div className="toggle-slider"></div>
+                  <div className="sliderToggle"></div>
                 </button>
               </div>
 
-              <div className="toggle-control">
-                <div className="toggle-header">
+              <div className="controleToggle">
+                <div className="cabecalhoToggle">
                   <Pause size={16} />
                   <span>Pausar Animações</span>
                 </div>
                 <button 
                   onClick={() => setPausarAnimacoes(prev => !prev)}
-                  className={`toggle-btn ${pausarAnimacoes ? 'ativo' : ''}`}
+                  className={`botaoToggle ${pausarAnimacoes ? 'botaoAtivo' : ''}`}
                 >
-                  <div className="toggle-slider"></div>
+                  <div className="sliderToggle"></div>
                 </button>
               </div>
             </div>
 
-            <div className="section">
-              <h4 className="section-title">4. Leitores de Tela</h4>
+            <div className="secao">
+              <h4 className="tituloSecao">4. Leitores de Tela</h4>
               
-              <div className="toggle-control">
-                <div className="toggle-header">
+              <div className="controleToggle">
+                <div className="cabecalhoToggle">
                   <EyeOff size={16} />
                   <span>Remover Imagens</span>
                 </div>
                 <button 
                   onClick={() => setRemoverImagens(prev => !prev)}
-                  className={`toggle-btn ${removerImagens ? 'ativo' : ''}`}
+                  className={`botaoToggle ${removerImagens ? 'botaoAtivo' : ''}`}
                 >
-                  <div className="toggle-slider"></div>
+                  <div className="sliderToggle"></div>
                 </button>
               </div>
 
-              <div className="toggle-control">
-                <div className="toggle-header">
+              <div className="controleToggle">
+                <div className="cabecalhoToggle">
                   <Type size={16} />
                   <span>Remover Cabeçalhos</span>
                 </div>
                 <button 
                   onClick={() => setRemoverCabecalhos(prev => !prev)}
-                  className={`toggle-btn ${removerCabecalhos ? 'ativo' : ''}`}
+                  className={`botaoToggle ${removerCabecalhos ? 'botaoAtivo' : ''}`}
                 >
-                  <div className="toggle-slider"></div>
+                  <div className="sliderToggle"></div>
                 </button>
               </div>
             </div>
 
-            <div className="shortcuts-section">
+            <div className="secaoAtalhos">
               <details>
                 <summary>Atalhos de Teclado</summary>
-                <div className="shortcuts-list">
+                <div className="listaAtalhos">
                   <div><kbd>Alt + A</kbd> Abrir/Fechar painel</div>
                   <div><kbd>Alt + C</kbd> Alternar contraste</div>
                   <div><kbd>Alt + D</kbd> Alternar tema</div>
@@ -604,10 +629,10 @@ const ControlesAcessibilidade = () => {
             </div>
           </div>
 
-          <div className="reset-section">
+          <div className="secaoReset">
             <button 
               onClick={redefinirTudo}
-              className="reset-all-btn"
+              className="botaoResetarTudo"
               aria-label="Resetar todas as configurações"
             >
               <RotateCcw size={16} />
@@ -621,3 +646,4 @@ const ControlesAcessibilidade = () => {
 };
 
 export default ControlesAcessibilidade;
+
