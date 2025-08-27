@@ -6,6 +6,7 @@ import Qualificados from "./paginas/qualificados/qualificados.jsx";
 import Cadastro from "./paginas/cadastro/cadastro.jsx";
 import Inicio from "./paginas/inicio/inicio.jsx";
 import PainelControle from "@componentes/acessibilidade/controles";
+import VLibrasWidget from "./componentes/acessibilidade/VLibrasWidget"; // Adicione esta linha
 
 function App() {
   return (
@@ -15,12 +16,11 @@ function App() {
         v7_relativeSplatPath: true
       }}>
       <PainelControle />
+      <VLibrasWidget /> {/* Adicione esta linha */}
       <Routes>
         <Route path="/" element={<Inicio />} />
         <Route path="/qualificados" element={<Qualificados />} />
         <Route path="/perfil" element={<Perfil />} />
-        {/* Temporariamente inativo */}
-        {/* <Route path="/mensagem" element={<Mensagem />} /> */}
         <Route path="/sobreNos" element={<SobreNos />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/perfil/:id" element={<Perfil />} />

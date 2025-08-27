@@ -9,7 +9,7 @@
     <link rel="canonical" href="https://www.guiaaodispor.com.br" />
     <link rel="icon" href="/client/src/recursos/logo.png">
     <script>
-    // Aplica configurações antes da renderização
+      // Configurações de acessibilidade
       (function() {
         function getSetting(key, defaultValue) {
           try {
@@ -26,12 +26,10 @@
         const lineHeight = getSetting('lineHeight', 1.5);
         const highContrast = getSetting('modoAltoContraste', false);
 
-        // Aplica variáveis CSS
         root.style.setProperty('--accessibility-font-size', `${fontSize}%`);
         root.style.setProperty('--accessibility-letter-spacing', `${letterSpacing}px`);
         root.style.setProperty('--accessibility-line-height', lineHeight);
 
-        // Aplica classes
         if (fontSize !== 100 || letterSpacing !== 0 || lineHeight !== 1.5) {
           root.classList.add('acessibilidade-ativa');
         }
@@ -44,6 +42,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="main.jsx"></script>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
