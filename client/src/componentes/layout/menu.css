@@ -11,7 +11,7 @@ menu {
 .fachada {
   margin: auto;
   font-weight: bold;
-  font-size: 20pt;
+  font-size: var(--tamanhoFonteTexto);
   line-height: 40px;
 }
 
@@ -21,23 +21,35 @@ menu img {
   filter: drop-shadow(var(--sombra) var(--corAzulEscuro));
 }
 
+/* Centralizando a lista verticalmente */
+.listaIcones.vertical {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center !important;
+  gap: 12px;
+}
+
 .itemMenu {
-  line-height: 40px;
+  line-height: 20px;
   cursor: pointer;
   border-radius: var(--bordaArredondada);
   box-shadow: var(--sombra) var(--corNeutraEscura);
-  padding: 3px;
+  padding: var(--espacamentoPequeno);
   width: 200px;
   font-size: var(--tamanhoFonteTextoMenor);
   color: var(--corAzulEscuro);
-  align-items: center !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .paginaAtiva {
-  font-size: 18pt;
+  font-size: var(--tamanhoFonteTextoMedio);
   font-weight: bold;
   color: var(--corNeutraEscura);
-  background-color: rgba(211, 163, 127, 0.6);
+  background-color: var(--corMarromDestaqueTransparente);
 }
 
 footer {
@@ -49,4 +61,3 @@ footer {
   padding: var(--espacamentoPequeno);
   margin-top: auto;
 }
-

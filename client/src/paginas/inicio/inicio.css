@@ -11,16 +11,11 @@
   overflow: hidden;
 }
 
-/* Logo como fundo fixo */
-#fundo {
-  position: fixed;
-  top: 10%;
-  height: 80%;
-  left: 0;
-  z-index: 1;
+/* Aplicando sombra aos cartões de destaque */
+.cartaoDestaque.variacao1 {
+  box-shadow: var(--sombra) var(--corNeutraEscura);
 }
 
-/* Conteúdo principal */
 .conteudoPrincipalInicio {
   z-index: 2;
   width: 70%;
@@ -32,18 +27,17 @@
 }
 
 .slogan {
-  font-size: 1.5rem;
+  font-size: var(--tamanhoFonteTextoMedio);
   color: var(--corMarromEscuro);
   line-height: 1.6;
-  margin-bottom: 40px;
+  margin-bottom: var(--espacamentoGrande);
   max-width: 600px;
 }
 
-/* Texto explicativo */
 .textoExplicativo {
   position: relative;
-  padding: 40px;
-  margin-top: 40px;
+  padding: var(--espacamentoExtraGrande);
+  margin-top: var(--espacamentoGrande);
   margin-left: auto;
 }
 
@@ -61,19 +55,15 @@
 
 /* Responsividade */
 @media (max-width: 900px) {
-  .logoFundo {
-    left: -50%;
+  .conteudoPrincipalInicio {
+    padding: var(--espacamentoExtraGrande) var(--espacamentoMedio) var(--espacamentoMedio);
+    align-items: center;
+    text-align: center;
     width: 100%;
   }
   
-  .conteudoPrincipalInicio {
-    padding: 40px var(--espacamentoMedio) var(--espacamentoMedio) var(--espacamentoMedio);
-    align-items: center;
-    text-align: center;
-  }
-  
   .slogan {
-    font-size: 1.2rem;
+    font-size: var(--tamanhoFonteTextoMenor);
   }
   
   .textoExplicativo {
@@ -84,12 +74,11 @@
 
 @media (max-width: 600px) {
   .slogan {
-    font-size: 1.1rem;
+    font-size: var(--tamanhoFonteTextoMenor);
   }
   
   .textoExplicativo {
-    margin: 10px;
+    margin: var(--espacamentoPequeno);
     padding: var(--espacamentoPequeno);
   }
 }
-

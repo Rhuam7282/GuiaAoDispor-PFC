@@ -5,6 +5,10 @@
   object-fit: cover;
   box-shadow: 0 0px 8px var(--cor-texto-principal);
 }
+/* Aplicando sombra aos cartões de destaque */
+.cartaoDestaque.variacao1 {
+  box-shadow: var(--sombra) var(--corNeutraEscura);
+}
 
 .profile-text-content {
   text-align: left;
