@@ -302,6 +302,8 @@ a:hover {
   display: flex;
   align-items: flex-start;
   gap: var(--espacamentoPequeno);
+  padding: var(--espacamentoPequeno);
+  border-radius: var(--bordaArredondada);
 }
 
 /* Cartão secundário com fundo transparente azul */
@@ -831,4 +833,68 @@ textarea:focus {
   button {
     width: 100%;
   }
+}
+
+/* Novas classes para o perfil */
+.gridTresColunas {
+  grid-template-columns: 1fr 2fr 1fr;
+}
+
+.gridColunasAuto {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.imagemPerfilGrande {
+  width: 235px;
+  height: 235px;
+}
+
+.containerImagem {
+  width: 100%;
+  border-radius: var(--bordaArredondada);
+  overflow: hidden;
+}
+
+.imagemAspecto {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+
+.alinharEsticar {
+  align-items: stretch;
+}
+
+.bordaInferiorSubtle {
+  border-bottom: 1px solid var(--corBordaSubtle);
+  padding-bottom: 5px;
+}
+
+.margemSuperiorZero {
+  margin-top: 0;
+}
+
+.gapMedio {
+  gap: var(--espacamentoMedio);
+}
+
+/* Media queries para responsividade */
+@media (max-width: 768px) {
+  .gridTresColunas {
+    grid-template-columns: 1fr;
+  }
+  
+  .gridColunasAuto {
+    grid-template-columns: 1fr;
+  }
+  
+  .alinharCentro {
+    align-self: center;
+  }
+}
+
+/* Adicionar esta variável no :root */
+:root {
+  --corBordaSubtle: rgba(84, 69, 59, 0.3);
 }

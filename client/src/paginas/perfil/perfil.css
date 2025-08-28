@@ -1,68 +1,84 @@
+/* Estilos específicos para a página de perfil */
 .containerPrincipal {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
-  gap: 30px;
-  margin-bottom: 30px;
+  gap: var(--espacamentoGrande);
+  margin-bottom: var(--espacamentoGrande);
 }
-.colunaFoto .imagemPerfil{
+
+/* Margem pequena para o cartão de descrição */
+.cartaoDestaque.fundoMarromDestaqueTransparente {
+  margin: var(--espacamentoPequeno);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Distribui espaço entre os elementos */
+  min-height: 200px; /* Altura mínima para garantir espaço */
+}
+
+/* Faz as listas de ícones ficarem no final da div */
+.cartaoDestaque .flexLinha {
+  margin-top: auto;
+}
+
+.colunaFoto .imagemPerfil {
   width: 235px;
   height: 235px;
 }
+
 .detalhesPerfil {
-  margin-top: auto;
   display: flex;
-  gap: 15px;
+  gap: var(--espacamentoPequeno);
 }
-main .icone {
+
+.icone {
   display: flex;
   gap: 2px;
 }
+
 .colunaContatos {
   flex: 0 0 250px;
 }
+
 .secaoHistorico {
-  margin-bottom: 30px;
-}
-.secaoHistorico h2 {
-  margin-bottom: 15px;
-  font-size: 24px;
-  color: #54453B;
-  padding-bottom: 5px;
-  border-bottom: 1px solid rgba(84, 69, 59, 0.3);
-}
-.listaAcademica {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  margin-bottom: var(--espacamentoGrande);
 }
 
-.itemAcademico {
-  background-color: rgba(127, 204, 212, 1);
-  border-radius: 8px;
-  padding: 15px;
+.secaoHistorico h2 {
+  margin-bottom: var(--espacamentoPequeno);
+  font-size: var(--tamanhoFonteSubtitulo);
+  color: var(--corMarromEscuro);
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--corBordaSubtle);
 }
+
+.listaAcademica,
 .listaProfissional {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  gap: var(--espacamentoMedio);
+}
+
+.itemAcademico,
+.itemProfissional {
+  background-color: var(--corAzulDestaque);
+  border-radius: var(--bordaArredondada);
+  padding: var(--espacamentoPequeno);
 }
 
 .itemProfissional {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  background-color: rgba(127, 204, 212, 1);
-  border-radius: 8px;
-  padding: 15px;
-  gap: 15px;
+  gap: var(--espacamentoPequeno);
 }
 
 .imagemProfissional {
   width: 100%;
   height: auto;
-  border-radius: 8px;
+  border-radius: var(--bordaArredondada);
   overflow: hidden;
 }
+
 .imagemProfissional img {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -75,9 +91,40 @@ main .icone {
   margin-top: 0;
 }
 
+/* Estilos para estados de carregamento e erro */
+.carregando, .erro {
+  text-align: center;
+  padding: var(--espacamentoExtraGrande) var(--espacamentoMedio);
+  color: var(--corMarromEscuro);
+}
+
+.carregando h2, .erro h2 {
+  margin-bottom: var(--espacamentoPequeno);
+  font-size: var(--tamanhoFonteSubtitulo);
+}
+
+.erro p {
+  color: #d32f2f;
+  font-size: var(--tamanhoFonteTextoMenor);
+}
+
+.aviso-erro {
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: var(--bordaArredondada);
+  padding: var(--espacamentoPequeno);
+  margin-bottom: var(--espacamentoMedio);
+  color: #856404;
+}
+
+.aviso-erro p {
+  margin: 0;
+  font-size: var(--tamanhoFonteTextoMicro);
+}
+
 @media (max-width: 768px) {
   .containerPrincipal {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
   
   .colunaFoto {
