@@ -366,11 +366,11 @@
 }
 
 /* Guia de leitura */
-.guiaLeituraHorizontal {
+.guiaLeituraHorizontal{
   position: fixed;
   pointer-events: none;
   z-index: 10001;
-  background: linear-gradient(90deg, transparent, var(--corAzulDestaque), transparent);
+  background: linear-gradient(90deg, transparent, var(--cor-destaque-secundaria), transparent);
   height: 2px;
   width: 100vw;
   left: 0;
@@ -381,18 +381,20 @@
   top: -8px;
   width: 16px;
   height: 16px;
-  background: var(--corAzulDestaque);
+  background: white; /* Interior branco */
+  border: 2px solid black; /* Margem preta */
   border-radius: 50%;
   transform: translateX(-50%);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5); /* Sombra suave para melhor visibilidade */
 }
 
 .mascaraLeitura {
   position: fixed;
   pointer-events: none;
   z-index: 10001;
-  width: 300px;
-  height: 200px;
-  border: 3px solid var(--corAzulDestaque);
+  width: 1500px;  /* Tamanho aumentado conforme solicitado */
+  height: 200px;  /* Tamanho aumentado conforme solicitado */
+  border: 3px solid var(--cor-destaque-secundaria);
   border-radius: 12px;
   background: transparent;
   box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
