@@ -16,16 +16,16 @@ const ProfileCard = ({ profile }) => {
   };
 
   return (
-    <div className="cartao cartaoDestaque" onClick={handleCardClick}>
+    <div className="cartaoDestaque variacao1" onClick={handleCardClick}>
       <img
         src={profile.image}
         alt={`Perfil de ${profile.name}`}
         className="imagemPerfil"
       />
-      <div className="conteudoTextoPerfil">
-        <h3 className="nomePerfil">{profile.name}</h3>
-        <p className="localizacaoPerfil">{profile.location}</p>
-        <p className="experienciaPerfil">{profile.experience}</p>
+      <div className="profile-text-content">
+        <h3 className="profile-name">{profile.name}</h3>
+        <p className="profile-location">{profile.location}</p>
+        <p className="profile-experience">{profile.experience}</p>
       </div>
     </div>
   );
@@ -77,7 +77,7 @@ function Qualificados() {
   return (
     <Corpo>
       <div className="container">
-        <h2>Profissionais</h2>
+        <h2 className="titulo">Profissionais</h2>
         {/* Componente de filtro com todas as props necessárias */}
         <Filtro
           title="Filtros:"
@@ -85,7 +85,7 @@ function Qualificados() {
           selectedOption={selectedFilter}
           onChange={setSelectedFilter}
         />
-        <div className="listaPerfis">
+        <div className="profile-list">
           {localProfiles.map((profile, index) => (
             <ProfileCard key={index} profile={profile} />
           ))}
