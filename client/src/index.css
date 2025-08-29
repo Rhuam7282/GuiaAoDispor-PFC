@@ -898,3 +898,54 @@ textarea:focus {
 :root {
   --corBordaSubtle: rgba(84, 69, 59, 0.3);
 }
+/* MODO ESCURO - Estilos para tema escuro usando variáveis existentes */
+.temaEscuro {
+  /* Inverte as cores principais para modo escuro */
+  --corNeutraEscura: #fdf9ee; /* Cor clara vira escura */
+  --corNeutraClara: #303538; /* Cor escura vira clara */
+  
+  /* Ajusta cores marrons para modo escuro */
+  --corMarromEscuro: #d3a27f; /* Marrom escuro vira destaque */
+  --corMarromDestaque: #94877e; /* Destaque vira ofuscado */
+  --corMarromOfuscado: #54453b; /* Ofuscado vira escuro */
+  
+  /* Ajusta cores azuis para modo escuro */
+  --corAzulEscuro: #7fccd4; /* Azul escuro vira destaque */
+  --corAzulDestaque: #6e7d7f; /* Destaque vira ofuscado */
+  --corAzulOfuscado: #1b3133; /* Ofuscado vira escuro */
+  
+  /* Ajusta transparências para modo escuro */
+  --corMarromDestaqueTransparente: rgba(148, 135, 126, 0.3);
+  --corAzulDestaqueTransparente: rgba(110, 125, 127, 0.3);
+}
+
+/* Transições suaves para mudança de tema */
+.temaEscuro * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Ajustes específicos para elementos em modo escuro */
+.temaEscuro img {
+  opacity: 0.9; /* Reduz levemente a opacidade das imagens */
+  filter: brightness(0.9); /* Reduz o brilho das imagens */
+}
+
+/* Ajustes para inputs e formulários em modo escuro */
+.temaEscuro input,
+.temaEscuro textarea,
+.temaEscuro select {
+  background-color: var(--corNeutraEscura);
+  color: var(--corNeutraClara);
+  border-color: var(--corMarromOfuscado);
+}
+
+/* Ajustes para botões em modo escuro */
+.temaEscuro button {
+  border-color: var(--corMarromOfuscado);
+}
+
+/* Ajustes para cards e elementos destacados em modo escuro */
+.temaEscuro .cartaoDestaque {
+  box-shadow: var(--sombra) rgba(0, 0, 0, 0.5);
+}
+

@@ -61,3 +61,89 @@ footer {
   padding: var(--espacamentoPequeno);
   margin-top: auto;
 }
+/* RESPONSIVIDADE DO MENU - Adaptações para diferentes tamanhos de tela */
+
+/* Tablets e telas médias */
+@media (max-width: 1024px) {
+  /* Reduz o tamanho da imagem do logo */
+  menu img {
+    width: 80px;
+  }
+  
+  /* Reduz a largura dos itens do menu */
+  .itemMenu {
+    width: 180px;
+    font-size: var(--tamanhoFonteTextoMinimo);
+    padding: 12px;
+  }
+  
+  /* Ajusta o tamanho da fonte da fachada */
+  .fachada {
+    font-size: var(--tamanhoFonteTextoMedio);
+    line-height: 35px;
+  }
+}
+
+/* Dispositivos móveis */
+@media (max-width: 768px) {
+  /* Menu se torna horizontal em mobile */
+  menu {
+    grid-template-rows: auto;
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 100vh;
+    padding: var(--espacamentoMedio);
+  }
+  
+  /* Logo menor em mobile */
+  menu img {
+    width: 60px;
+  }
+  
+  /* Itens do menu ocupam largura total em mobile */
+  .itemMenu {
+    width: 100%;
+    max-width: 250px;
+    margin: 0 auto;
+  }
+  
+  /* Fachada com fonte menor */
+  .fachada {
+    font-size: var(--tamanhoFonteTextoMedio);
+    line-height: 30px;
+    margin-bottom: var(--espacamentoMedio);
+  }
+  
+  /* Lista de ícones com espaçamento maior */
+  .listaIcones.vertical {
+    gap: var(--espacamentoPequeno);
+    margin: var(--espacamentoMedio) 0;
+  }
+}
+
+/* Dispositivos móveis pequenos */
+@media (max-width: 480px) {
+  /* Logo ainda menor */
+  menu img {
+    width: 50px;
+  }
+  
+  /* Itens do menu com padding reduzido */
+  .itemMenu {
+    padding: 10px;
+    font-size: var(--tamanhoFonteTextoMinimo);
+  }
+  
+  /* Fachada compacta */
+  .fachada {
+    font-size: var(--tamanhoFonteTextoMenor);
+    line-height: 25px;
+  }
+  
+  /* Footer com fonte menor */
+  footer {
+    font-size: 10px;
+    padding: 10px;
+  }
+}
+
