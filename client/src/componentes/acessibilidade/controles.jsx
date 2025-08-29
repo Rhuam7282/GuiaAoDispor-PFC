@@ -12,10 +12,12 @@ import {
   Pause,
   RotateCcw,
   X,
-  Accessibility,
+  PersonStanding,
   Link,
   EyeOff,
-  BookOpen
+  BookOpen,
+  CheckCircle,
+  Volume2
 } from 'lucide-react';
 
 const ControlesAcessibilidade = () => {
@@ -535,7 +537,7 @@ return (
       aria-label="Abrir controles de acessibilidade (Alt + A)"
       title="Controles de Acessibilidade (Alt + A)"
     >
-      <Accessibility size={24} />
+      <PersonStanding size={24} />
       {vlibrasStatus === 'loading' && (
           <span className="vlibras-loading-indicator"></span>
         )}
@@ -545,7 +547,7 @@ return (
       <div className="painelAcessibilidade" role="dialog" aria-label="Painel de controles de acessibilidade">
         <div className="cabecalhoAcessibilidade">
           <div className="tituloHeader">
-            <Accessibility size={20} />
+            <PersonStanding size={20} />
             <h3>Acessibilidade</h3>
           </div>
           <button
