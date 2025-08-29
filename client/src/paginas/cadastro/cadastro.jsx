@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Corpo from "@componentes/layout/corpo.jsx";
+import GoogleLoginButton from '@componentes/auth/botaoLoginGoogle.jsx';
 import { servicoCadastro } from '@/servicos/apiService';
 import './cadastro.css';
 
@@ -206,6 +207,37 @@ const Cadastro = () => {
     <Corpo>
       <div className="container">
         <h1 className="titulo">Criar Conta</h1>
+        
+        {/* Seção de login com Google */}
+        <div className="google-login-section" style={{ 
+          textAlign: 'center', 
+          marginBottom: '30px', 
+          padding: '20px', 
+          border: '1px solid #e0e0e0', 
+          borderRadius: '8px',
+          backgroundColor: '#f9f9f9'
+        }}>
+          <h3 style={{ marginBottom: '15px', color: '#333' }}>Entre rapidamente com sua conta Google</h3>
+          <GoogleLoginButton 
+            text="Entrar com Google"
+            onSuccess={(userData) => {
+              console.log('Login Google realizado:', userData);
+              // Usuário já foi logado automaticamente pelo componente
+            }}
+            onError={() => {
+              console.error('Erro no login com Google');
+            }}
+          />
+          <p style={{ 
+            marginTop: '15px', 
+            fontSize: '14px', 
+            color: '#666',
+            borderTop: '1px solid #ddd',
+            paddingTop: '15px'
+          }}>
+            Ou preencha o formulário abaixo para criar uma conta tradicional
+          </p>
+        </div>
         
         <form onSubmit={aoEnviarFormulario} className="formulario-cadastro">
           <div className="conteudo-formulario">
