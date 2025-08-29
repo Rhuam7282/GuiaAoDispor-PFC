@@ -3,38 +3,27 @@ import React, { useEffect, useRef, useState } from 'react';
 
 /* Componente principal que renderiza o widget VLibras para tradução em Libras */
 const VLibrasWidget = () => {
-  /* Referência para o player do VLibras */
-  const reprodutorRef = useRef(null);
-  
-  /* Referência para o elemento que envolve o player */
-  const envolvedor = useRef(null);
-  
-  /* Estado para controlar se o VLibras foi carregado com sucesso */
-  const [estaCarregado, setEstaCarregado] = useState(false);
-  
-  /* Estado para controlar se o painel do VLibras está visível */
-  const [estaVisivel, setEstaVisivel] = useState(false);
+  const playerRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
-  /* Hook para inicializar o VLibras quando o componente é montado */
   useEffect(() => {
-    /* Verifica se o script UnityLoader.js já foi carregado */
+    // Verifica se o script UnityLoader.js já foi carregado
     if (document.querySelector('script[src="/target/UnityLoader.js"]')) {
-      /* Se já foi carregado, inicializa o player VLibras diretamente */
-      if (window.VLibras && window.VLibras.Player && envolvedor.current) {
+      // Se já foi carregado, inicializa o player VLibras diretamente
+      if (window.VLibras && window.VLibras.Player && wrapperRef.current) {
         try {
-          /* Cria uma nova instância do player VLibras */
-          reprodutorRef.current = new window.VLibras.Player({
+          playerRef.current = new window.VLibras.Player({
             target: { name: 'rnp_webgl', path: '/target' }
           });
 
-          /* Define callback para quando o player for carregado */
-          reprodutorRef.current.on('load', function () {
+          playerRef.current.on('load', function () {
             console.log('VLibras Player carregado com sucesso');
-            setEstaCarregado(true);
+            setIsLoaded(true);
           });
 
-          /* Carrega o player no elemento envolvedor */
-          reprodutorRef.current.load(envolvedor.current);
+          playerRef.current.load(wrapperRef.current);
         } catch (error) {
           console.error('Erro ao inicializar VLibras Player:', error);
         }
@@ -42,41 +31,34 @@ const VLibrasWidget = () => {
       return;
     }
 
-    /* Carrega o UnityLoader.js se ainda não foi carregado */
+    // Carrega o UnityLoader.js se ainda não foi carregado
     const script = document.createElement('script');
     script.src = '/target/UnityLoader.js';
     script.async = true;
-    
-    /* Callback executado após o carregamento do script */
     script.onload = () => {
-      /* Após o carregamento do UnityLoader.js, inicializa o player VLibras */
-      if (window.VLibras && window.VLibras.Player && envolvedor.current) {
+      // Após o carregamento do UnityLoader.js, inicializa o player VLibras
+      if (window.VLibras && window.VLibras.Player && wrapperRef.current) {
         try {
-          reprodutorRef.current = new window.VLibras.Player({
+          playerRef.current = new window.VLibras.Player({
             target: { name: 'rnp_webgl', path: '/target' }
           });
 
-          reprodutorRef.current.on('load', function () {
+          playerRef.current.on('load', function () {
             console.log('VLibras Player carregado com sucesso');
-            setEstaCarregado(true);
+            setIsLoaded(true);
           });
 
-          reprodutorRef.current.load(envolvedor.current);
+          playerRef.current.load(wrapperRef.current);
         } catch (error) {
           console.error('Erro ao inicializar VLibras Player:', error);
         }
       }
     };
-    
-    /* Adiciona o script ao documento */
     document.body.appendChild(script);
 
     /* Cleanup: remove o script quando o componente é desmontado */
     return () => {
-      const existingScript = document.querySelector('script[src="/target/UnityLoader.js"]');
-      if (existingScript) {
-        document.body.removeChild(existingScript);
-      }
+      // Limpeza opcional se necessário
     };
   }, []);
 
@@ -85,57 +67,54 @@ const VLibrasWidget = () => {
     setEstaVisivel(!estaVisivel);
   };
 
-  /* Função para traduzir texto específico usando o VLibras */
-  const traduzirTexto = (texto) => {
-    /* Verifica se o player está carregado antes de traduzir */
-    if (reprodutorRef.current && estaCarregado) {
+  const translateText = (text) => {
+    if (playerRef.current && isLoaded) {
       try {
-        reprodutorRef.current.translate(texto);
+        playerRef.current.translate(text);
       } catch (error) {
         console.error('Erro ao traduzir texto:', error);
       }
     }
   };
 
-  /* Função para traduzir o conteúdo da página atual */
-  const traduzirConteudoPagina = () => {
-    /* Busca o título principal da página */
-    const tituloPagina = document.querySelector('h1')?.textContent;
-    if (tituloPagina) {
-      traduzirTexto(tituloPagina);
+  // Exemplo de uso: traduzir texto da página
+  const translatePageContent = () => {
+    const pageTitle = document.querySelector('h1')?.textContent;
+    if (pageTitle) {
+      translateText(pageTitle);
     }
   };
 
   return (
     <>
-      {/* Botão flutuante para abrir/fechar o painel VLibras */}
+      {/* Botão para mostrar/ocultar o player */}
       <button
-        onClick={alternarVisibilidade}
+        onClick={toggleVisibility}
         style={{
-          position: 'fixed', /* Posicionamento fixo no canto inferior direito */
+          position: 'fixed',
           bottom: '20px',
           right: '20px',
-          zIndex: 10000, /* Z-index alto para ficar sobre outros elementos */
-          backgroundColor: '#007bff', /* Cor azul padrão */
+          zIndex: 10000,
+          backgroundColor: '#007bff',
           color: 'white',
           border: 'none',
-          borderRadius: '50%', /* Formato circular */
+          borderRadius: '50%',
           width: '60px',
           height: '60px',
           fontSize: '24px',
           cursor: 'pointer',
-          boxShadow: '0 4px 8px rgba(0,0,0,0.3)' /* Sombra para destaque */
+          boxShadow: '0 4px 8px rgba(0,0,0,0.3)'
         }}
         title="VLibras - Tradutor de Libras"
       >
-        🤟 {/* Emoji de mão em Libras */}
+        🤟
       </button>
 
-      {/* Painel do VLibras - renderizado condicionalmente quando visível */}
-      {estaVisivel && (
+      {/* Player VLibras */}
+      {isVisible && (
         <div
           style={{
-            position: 'fixed', /* Posicionado acima do botão */
+            position: 'fixed',
             bottom: '90px',
             right: '20px',
             zIndex: 9999,
@@ -143,10 +122,9 @@ const VLibrasWidget = () => {
             border: '2px solid #007bff',
             borderRadius: '8px',
             padding: '10px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.3)' /* Sombra mais pronunciada */
+            boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
           }}
         >
-          {/* Cabeçalho do painel com título e botão de fechar */}
           <div
             style={{
               display: 'flex',
@@ -156,9 +134,8 @@ const VLibrasWidget = () => {
             }}
           >
             <h4 style={{ margin: 0, color: '#007bff' }}>VLibras</h4>
-            {/* Botão para fechar o painel */}
             <button
-              onClick={alternarVisibilidade}
+              onClick={toggleVisibility}
               style={{
                 background: 'none',
                 border: 'none',
@@ -170,31 +147,28 @@ const VLibrasWidget = () => {
             </button>
           </div>
           
-          {/* Área onde o player VLibras será renderizado */}
           <div
-            ref={envolvedor}
+            ref={wrapperRef}
             style={{
               width: '300px',
               height: '200px',
-              backgroundColor: '#f8f9fa', /* Fundo claro */
-              border: '1px solid #dee2e6', /* Borda sutil */
+              backgroundColor: '#f8f9fa',
+              border: '1px solid #dee2e6',
               borderRadius: '4px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
             }}
           >
-            {/* Mensagem de carregamento exibida enquanto o VLibras não está pronto */}
-            {!estaCarregado && <p>Carregando VLibras...</p>}
+            {!isLoaded && <p>Carregando VLibras...</p>}
           </div>
 
-          {/* Botão de tradução - exibido apenas quando o VLibras está carregado */}
-          {estaCarregado && (
+          {isLoaded && (
             <div style={{ marginTop: '10px' }}>
               <button
-                onClick={traduzirConteudoPagina}
+                onClick={translatePageContent}
                 style={{
-                  backgroundColor: '#28a745', /* Cor verde para ação positiva */
+                  backgroundColor: '#28a745',
                   color: 'white',
                   border: 'none',
                   padding: '8px 16px',
@@ -215,4 +189,5 @@ const VLibrasWidget = () => {
 
 /* Exporta o componente para uso em outras partes da aplicação */
 export default VLibrasWidget;
+
 
