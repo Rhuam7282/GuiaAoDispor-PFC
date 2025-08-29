@@ -40,13 +40,16 @@ const ControlesAcessibilidade = () => {
   const [vlibrasMessage, setVlibrasMessage] = useState('Carregando VLibras...');
   const [loadAttempts, setLoadAttempts] = useState(0);
   const [progressoCarregamento, setProgressoCarregamento] = useState(0);
-  
+  const vlibrasInicializado = useRef(false);
+
   const guiaMouseRef = useRef(null);
   const mascaraRef = useRef(null);
   const vlibrasScriptRef = useRef(null);
 
   // Função para inicializar o VLibras
   const inicializarVLibras = useCallback(() => {
+    if (vlibrasInicializado.current) return;
+
     console.log('Iniciando carregamento do VLibras...');
     setVlibrasStatus('loading');
     setVlibrasMessage('Inicializando VLibras...');
@@ -136,7 +139,10 @@ const ControlesAcessibilidade = () => {
 
   useEffect(() => {
     // Inicializar o VLibras quando o componente for montado
-    inicializarVLibras();
+    if (!vlibrasInicializado.current) {
+      inicializarVLibras();
+      vlibrasInicializado.current = true;
+    }
 
     // Cleanup
     return () => {
