@@ -8,6 +8,10 @@ const VLibrasWidget = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
+  const toggleVisibility = () => {
+    setIsVisible(!isVisible);
+  };
+
   useEffect(() => {
     // Verifica se o script UnityLoader.js já foi carregado
     if (document.querySelector('script[src="/target/UnityLoader.js"]')) {
