@@ -20,7 +20,6 @@
 /* Conteúdo principal responsivo */
 .conteudoPrincipal {
   /* Padding responsivo baseado no tamanho da tela */
-  padding: var(--espacamentoMedio);
   min-height: 100vh; /* Garante altura mínima */
 }
 

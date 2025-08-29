@@ -67,7 +67,7 @@ const Menu = () => {
                 /* Navega para a rota correspondente */
                 navigate(item.rota);
               }}
-              className={`itemMenu cartaoDestaque variacao2 ${ativo ? 'paginaAtiva' : ''}`}
+              className={`itemMenu ${ativo ? 'paginaAtiva' : ''}`}
             >
               {/* Renderiza o ícone do item */}
               <item.Icone size={20} />

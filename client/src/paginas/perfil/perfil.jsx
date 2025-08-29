@@ -197,9 +197,9 @@ const Perfil = () => {
               alt={`${dadosPerfil.nome} - ${dadosPerfil.descricao} em ${dadosPerfil.localizacao}`}
             />
           </div>
-          <div className="cartaoDestaque fundoMarromDestaqueTransparente textoEsquerda">
+          <div className="cartaoDestaque fundoMarromDestaqueTransparente textoEsquerda flexWrap ">
             <p>{dadosPerfil.descricao}</p>
-            <div className="flexLinha gapPequeno">
+            <div className="listaHorizontal">
               <div className="listaIcones">
                 <MapPin size={20} />
                 <span>{dadosPerfil.localizacao}</span>

@@ -1,4 +1,4 @@
-import Menu from './Menu';
+import Menu from './menu';
 import './corpo.css';
 import { useLocation } from 'react-router-dom';
 
