@@ -35,8 +35,116 @@ const ControlesAcessibilidade = () => {
   const [pausarAnimacoes, setPausarAnimacoes] = useState(false);
   const [cursorGrande, setCursorGrande] = useState(false);
 
+  // Novos estados para o VLibras
+  const [vlibrasStatus, setVlibrasStatus] = useState('pending');
+  const [vlibrasMessage, setVlibrasMessage] = useState('Carregando VLibras...');
+  const [loadAttempts, setLoadAttempts] = useState(0);
+  const [progressoCarregamento, setProgressoCarregamento] = useState(0);
+  
   const guiaMouseRef = useRef(null);
   const mascaraRef = useRef(null);
+  const vlibrasScriptRef = useRef(null);
+
+  // Função para inicializar o VLibras
+  const inicializarVLibras = useCallback(() => {
+    console.log('Iniciando carregamento do VLibras...');
+    setVlibrasStatus('loading');
+    setVlibrasMessage('Inicializando VLibras...');
+    setProgressoCarregamento(10);
+    setLoadAttempts(prev => prev + 1);
+
+    // Verificar se o script já foi carregado
+    if (window.VLibras) {
+      console.log('VLibras já está disponível globalmente');
+      configurarWidgetVLibras();
+      return;
+    }
+
+    // Verificar se já existe um script carregado
+    if (document.querySelector('script[src*="vlibras-plugin"]')) {
+      console.log('Script do VLibras já foi carregado, aguardando inicialização...');
+      // Aguardar um pouco para que o script possa ter tempo de carregar
+      setTimeout(() => {
+        if (window.VLibras) {
+          configurarWidgetVLibras();
+        } else {
+          setVlibrasStatus('error');
+          setVlibrasMessage('Falha ao detectar VLibras após carregamento do script');
+        }
+      }, 2000);
+      return;
+    }
+
+    // Carregar o script do VLibras
+    console.log('Carregando script do VLibras...');
+    const script = document.createElement('script');
+    script.src = 'https://vlibras.gov.br/app/vlibras-plugin.js';
+    script.async = true;
+    script.defer = true;
+    
+    script.onload = () => {
+      console.log('Script do VLibras carregado com sucesso');
+      setProgressoCarregamento(50);
+      configurarWidgetVLibras();
+    };
+    
+    script.onerror = () => {
+      console.error('Erro ao carregar script do VLibras');
+      setVlibrasStatus('error');
+      setVlibrasMessage('Falha ao carregar o VLibras. Verifique sua conexão.');
+      setProgressoCarregamento(0);
+    };
+    
+    document.head.appendChild(script);
+    vlibrasScriptRef.current = script;
+  }, []);
+
+  // Função para configurar o widget do VLibras
+  const configurarWidgetVLibras = useCallback(() => {
+    console.log('Configurando widget do VLibras...');
+    setProgressoCarregamento(70);
+    
+    try {
+      if (window.VLibras && window.VLibras.Widget) {
+        console.log('Criando nova instância do widget VLibras');
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+        
+        // Aguardar um tempo para a inicialização completa
+        setTimeout(() => {
+          console.log('VLibras inicializado com sucesso');
+          setVlibrasStatus('success');
+          setVlibrasMessage('VLibras carregado com sucesso!');
+          setProgressoCarregamento(100);
+        }, 1500);
+      } else {
+        throw new Error('API do VLibras não encontrada');
+      }
+    } catch (error) {
+      console.error('Erro ao configurar widget VLibras:', error);
+      setVlibrasStatus('error');
+      setVlibrasMessage(`Erro: ${error.message}`);
+      setProgressoCarregamento(0);
+      
+      // Tentar novamente se não excedeu o número máximo de tentativas
+      if (loadAttempts < 3) {
+        setTimeout(() => {
+          inicializarVLibras();
+        }, 3000);
+      }
+    }
+  }, [loadAttempts, inicializarVLibras]);
+
+  useEffect(() => {
+    // Inicializar o VLibras quando o componente for montado
+    inicializarVLibras();
+
+    // Cleanup
+    return () => {
+      if (vlibrasScriptRef.current) {
+        document.head.removeChild(vlibrasScriptRef.current);
+      }
+    };
+  }, [inicializarVLibras]);
 
   // Efeito para aplicar estilos de acessibilidade textual globalmente
   useEffect(() => {
@@ -381,6 +489,44 @@ const obterTextoModoDaltonico = () => {
   }
 };
 
+const obterIconeStatusVLibras = () => {
+    switch(vlibrasStatus) {
+      case 'success': return <CheckCircle size={16} className="status-success" />;
+      case 'error': return <AlertCircle size={16} className="status-error" />;
+      case 'loading': return <Loader size={16} className="status-loading" />;
+      default: return <Loader size={16} className="status-loading" />;
+    }
+  };
+
+  const reiniciarVLibras = () => {
+    setVlibrasStatus('pending');
+    setVlibrasMessage('Reiniciando VLibras...');
+    setProgressoCarregamento(0);
+    setLoadAttempts(0);
+    
+    // Remover script existente
+    if (vlibrasScriptRef.current) {
+      document.head.removeChild(vlibrasScriptRef.current);
+      vlibrasScriptRef.current = null;
+    }
+    
+    // Limpar qualquer instância existente
+    if (window.VLibras) {
+      try {
+        // Tentar limpar qualquer widget existente
+        const vlibrasElements = document.querySelectorAll('[vw], [vw-plugin-wrapper]');
+        vlibrasElements.forEach(el => el.remove());
+      } catch (error) {
+        console.warn('Erro ao limpar VLibras anterior:', error);
+      }
+    }
+    
+    // Recarregar
+    setTimeout(() => {
+      inicializarVLibras();
+    }, 500);
+  };
+
 return (
   <div className="controlesAcessibilidade">
     <button
@@ -390,6 +536,9 @@ return (
       title="Controles de Acessibilidade (Alt + A)"
     >
       <Accessibility size={24} />
+      {vlibrasStatus === 'loading' && (
+          <span className="vlibras-loading-indicator"></span>
+        )}
     </button>
 
     {estaAberto && (
@@ -410,6 +559,45 @@ return (
 
         <div className="conteudoAcessibilidade">
           <div className="secao">
+             <h4 className="section-title">
+                <Volume2 size={16} />
+                Status do VLibras
+              </h4>
+              
+              <div className="vlibras-status">
+                <div className="vlibras-status-header">
+                  <span>{obterIconeStatusVLibras()} {vlibrasMessage}</span>
+                  <button 
+                    onClick={reiniciarVLibras}
+                    className="vlibras-retry-btn"
+                    disabled={vlibrasStatus === 'loading'}
+                  >
+                    Reiniciar
+                  </button>
+                </div>
+                
+                <div className="progress-bar">
+                  <div 
+                    className="progress-fill" 
+                    style={{ width: `${progressoCarregamento}%` }}
+                  ></div>
+                </div>
+                
+                <div className="vlibras-status-details">
+                  <div className="status-item">
+                    <span>Script:</span> 
+                    <span>{window.VLibras ? 'Carregado' : 'Pendente'}</span>
+                  </div>
+                  <div className="status-item">
+                    <span>Widget:</span> 
+                    <span>{vlibrasStatus === 'success' ? 'Inicializado' : 'Pendente'}</span>
+                  </div>
+                  <div className="status-item">
+                    <span>Tentativas:</span> 
+                    <span>{loadAttempts}</span>
+                  </div>
+                </div>
+              </div>
             <h4 className="tituloSecao">1. Controles de Texto</h4>
 
             <div className="grupoControle">
