@@ -16,9 +16,6 @@
 }
 
 /* Faz as listas de ícones ficarem no final da div */
-.cartaoDestaque .flexLinha {
-  margin-top: auto;
-}
 
 .colunaFoto .imagemPerfil {
   width: 235px;
