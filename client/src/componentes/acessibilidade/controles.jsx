@@ -17,6 +17,8 @@ import {
   EyeOff,
   BookOpen,
   CheckCircle,
+  AlertCircle,
+  Loader,
   Volume2
 } from 'lucide-react';
 
