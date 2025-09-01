@@ -209,35 +209,21 @@ const Cadastro = () => {
         <h1 className="titulo">Criar Conta</h1>
         
         {/* Seção de login com Google */}
-        <div className="google-login-section" style={{ 
-          textAlign: 'center', 
-          marginBottom: '30px', 
-          padding: '20px', 
-          border: '1px solid #e0e0e0', 
-          borderRadius: '8px',
-          backgroundColor: '#f9f9f9'
-        }}>
-          <h3 style={{ marginBottom: '15px', color: '#333' }}>Entre rapidamente com sua conta Google</h3>
-          <GoogleLoginButton 
-            text="Entrar com Google"
-            onSuccess={(userData) => {
-              console.log('Login Google realizado:', userData);
-              // Usuário já foi logado automaticamente pelo componente
-            }}
-            onError={() => {
-              console.error('Erro no login com Google');
-            }}
-          />
-          <p style={{ 
-            marginTop: '15px', 
-            fontSize: '14px', 
-            color: '#666',
-            borderTop: '1px solid #ddd',
-            paddingTop: '15px'
-          }}>
-            Ou preencha o formulário abaixo para criar uma conta tradicional
-          </p>
-        </div>
+        <div className="cartao cartaoSecundario textoCentro margemGrande paddingMedio bordaArredondada flexWrap">
+  <h3 className="margemInferiorPequena textoMarromEscuro">Entre rapidamente com sua conta Google</h3>
+  <GoogleLoginButton className="alinharCentro"
+    text="Entrar com Google"
+    onSuccess={(userData) => {
+      console.log('Login Google realizado:', userData);
+    }}
+    onError={() => {
+      console.error('Erro no login com Google');
+    }}
+  />
+  <p className="margemSuperiorPequena textoMinimo textoMarromOfuscado bordaSuperiorSubtle paddingSuperiorPequeno">
+    Ou preencha o formulário abaixo para criar uma conta tradicional
+  </p>
+</div>
         
         <form onSubmit={aoEnviarFormulario} className="formulario-cadastro">
           <div className="conteudo-formulario">
@@ -335,7 +321,7 @@ const Cadastro = () => {
                 </div>
               </div>
 
-              <div className="cartaoDestaque variacao2">
+              <div className="cartaoDestaque variacao2" id='tipo-perfil'>
                 <div>
                   <span>Tipo de Perfil</span>
                 </div>
@@ -502,7 +488,7 @@ const Cadastro = () => {
             </div>
             
             <div className="secao-upload-imagem">
-              <div className="area-upload-imagem">
+              <div className="area-upload-imagem sombraPequena fundoMarromDestaqueTransparente">
                 <input
                   type="file"
                   id="foto"

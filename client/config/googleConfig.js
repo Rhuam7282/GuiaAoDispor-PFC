@@ -28,4 +28,3 @@ export default {
   API_CONFIG,
   AUTH_CONFIG
 };
-
