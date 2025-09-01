@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Corpo from "@componentes/layout/corpo";
-import { servicoProfissional, servicoHCurricular, servicoHProfissional } from "@servicos/apiService";
+import { servicoProfissional, servicoHCurricular, servicoHProfissional, servicoAuth } from "@servicos/apiService";
+import { useAuth } from "@/contextos/AuthContext";
 
 import {
   Star,
@@ -21,11 +22,15 @@ import portugues from "@recursos/portugues.jpg";
 
 const Perfil = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
+  
   const [dadosPerfil, setDadosPerfil] = useState(null);
   const [historicoAcademico, setHistoricoAcademico] = useState([]);
   const [historicoProfissional, setHistoricoProfissional] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
+  const [modoEdicao, setModoEdicao] = useState(false);
 
   // Dados estáticos como fallback quando não há ID
   const dadosEstaticos = {
@@ -74,7 +79,25 @@ const Perfil = () => {
 
   useEffect(() => {
     const carregarDadosPerfil = async () => {
-      // Se não há ID, usar dados estáticos
+      // Se não há ID e o usuário está logado, redirecionar para seu próprio perfil
+      if (!id && isAuthenticated() && user) {
+        try {
+          const resposta = await servicoAuth.buscarPerfilLogado(user._id);
+          setDadosPerfil(resposta.data);
+          setCarregando(false);
+          return;
+        } catch (erro) {
+          console.error('Erro ao buscar perfil do usuário logado:', erro);
+          // Se der erro, usar dados estáticos
+          setDadosPerfil(dadosEstaticos);
+          setHistoricoAcademico(dadosEstaticos.historicoAcademico);
+          setHistoricoProfissional(dadosEstaticos.historicoProfissional);
+          setCarregando(false);
+          return;
+        }
+      }
+      
+      // Se não há ID e não está logado, usar dados estáticos
       if (!id) {
         setDadosPerfil(dadosEstaticos);
         setHistoricoAcademico(dadosEstaticos.historicoAcademico);
@@ -151,7 +174,7 @@ const Perfil = () => {
     };
 
     carregarDadosPerfil();
-  }, [id]);
+  }, [id, user, isAuthenticated]);
 
   if (carregando) {
     return (
@@ -200,24 +223,33 @@ const Perfil = () => {
           <div className="cartaoDestaque fundoMarromDestaqueTransparente textoEsquerda flexWrap ">
             <p>{dadosPerfil.descricao}</p>
             <div className="listaHorizontal">
-              <div className="listaIcones">
-                <MapPin size={20} />
-                <span>{dadosPerfil.localizacao}</span>
-              </div>
-
-              <div className="listaIcones">
+               <div className="flexLinha gapMedio alinharCentro">
+              <div className="flexLinha gapPequeno alinharCentro">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    size={20}
-                    fill={
-                      i < Math.floor(dadosPerfil.avaliacao) ? "var(--corMarromEscuro)" : "none"
+                    size={16}
+                    className={
+                      i < Math.floor(dadosPerfil.avaliacao)
+                        ? "textoAmarelo preenchido"
+                        : "textoMarromOfuscado"
                     }
-                    stroke="var(--corMarromEscuro)"
                   />
                 ))}
-                <span className="textoNegrito">{dadosPerfil.avaliacao}</span>
+                <span className="textoMarromEscuro">
+                  {dadosPerfil.avaliacao.toFixed(1)}
+                </span>
               </div>
+              
+              {/* Botão de edição para usuário logado */}
+              {isAuthenticated() && user && (!id || user._id === id) && (
+                <button 
+                  className="botao botaoSecundario"
+                  onClick={() => setModoEdicao(!modoEdicao)}
+                >
+                  {modoEdicao ? 'Cancelar Edição' : 'Editar Perfil'}
+                </button>
+              )}
             </div>
           </div>
 
@@ -285,8 +317,9 @@ const Perfil = () => {
           </div>
         </div>
       </div>
+      </div>
     </Corpo>
   );
-};
+}
 
 export default Perfil;
