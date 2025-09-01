@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './controles.css';
-import VLibrasWidget from './VLibras/VLibrasWidget'; // Importa o VLibrasWidget
+// import VLibrasWidget from './VLibras/VLibrasWidget'; // Importa o VLibrasWidget
 import {
   Type,
   AlignJustify,
@@ -40,28 +40,23 @@ const ControlesAcessibilidade = () => {
   const [pausarAnimacoes, setPausarAnimacoes] = useState(false);
   const [cursorGrande, setCursorGrande] = useState(false);
 
-  // Estados para o VLibras, gerenciados pelo ControlesAcessibilidade
-  const [vlibrasStatus, setVlibrasStatus] = useState({ status: 'pending', message: 'Aguardando VLibras...', progress: 0, error: null });
-  const [vlibrasVisibility, setVlibrasVisibility] = useState(false); // State to control VLibrasWidget visibility
-  const vlibrasWidgetRef = useRef(null); // Ref to VLibrasWidget
+  // VLibras - Estados e refs comentados
+  // const [vlibrasStatus, setVlibrasStatus] = useState({ status: 'pending', message: 'Aguardando VLibras...', progress: 0, error: null });
+  // const [vlibrasVisibility, setVlibrasVisibility] = useState(false); // State to control VLibrasWidget visibility
+  // const vlibrasWidgetRef = useRef(null); // Ref to VLibrasWidget
 
   const guiaMouseRef = useRef(null);
   const mascaraRef = useRef(null);
 
   // Callback para receber o status do VLibrasWidget
-  const handleVlibrasStatusChange = useCallback((statusObj) => {
-    setVlibrasStatus(statusObj);
-    if (statusObj.status === 'success') {
-      // Se o VLibras carregou com sucesso, salvamos o estado de visibilidade
-      // Note: This might cause an issue if user manually closes VLibras but it successfully loads.
-      // We should only set visibility to true if the user *intends* to open it and it loads.
-      // For now, let's keep it as is, but be aware.
-      // salvarConfiguracao('vlibrasVisibility', true); // Removed this to avoid auto-enabling
-      // setVlibrasVisibility(true); // Removed this to avoid auto-enabling
-    }
-    // No error, keep the current visibility state.
-    // If there was an error, the widget itself might handle hiding/showing.
-  }, []);
+  // const handleVlibrasStatusChange = useCallback((statusObj) => {
+  //   setVlibrasStatus(statusObj);
+  //   if (statusObj.status === 'success') {
+  //     // Se o VLibras carregou com sucesso, salvamos o estado de visibilidade
+  //     // salvarConfiguracao('vlibrasVisibility', true); // Removed this to avoid auto-enabling
+  //     // setVlibrasVisibility(true); // Removed this to avoid auto-enabling
+  //   }
+  // }, []);
 
   useEffect(() => {
     const aplicarEstilosTexto = () => {
@@ -123,7 +118,7 @@ const ControlesAcessibilidade = () => {
       modoDaltonico: carregarConfiguracao('modoDaltonico', 0),
       pausarAnimacoes: carregarConfiguracao('pausarAnimacoes', false),
       cursorGrande: carregarConfiguracao('cursorGrande', false),
-      vlibrasVisibility: carregarConfiguracao('vlibrasVisibility', false) 
+      // vlibrasVisibility: carregarConfiguracao('vlibrasVisibility', false) 
     };
 
     setTamanhoFonte(configuracoes.tamanhoFonte);
@@ -138,7 +133,7 @@ const ControlesAcessibilidade = () => {
     setModoDaltonico(configuracoes.modoDaltonico);
     setPausarAnimacoes(configuracoes.pausarAnimacoes);
     setCursorGrande(configuracoes.cursorGrande);
-    setVlibrasVisibility(configuracoes.vlibrasVisibility); // Set initial VLibras visibility
+    // setVlibrasVisibility(configuracoes.vlibrasVisibility); // Set initial VLibras visibility
   }, [carregarConfiguracao]);
 
   // Efeito para aplicar configurações de cores e contraste
@@ -275,14 +270,13 @@ const ControlesAcessibilidade = () => {
     setModoDaltonico(0);
     setPausarAnimacoes(false);
     setCursorGrande(false);
-    setVlibrasVisibility(false); // Reset VLibras visibility to hidden initially
-    setVlibrasStatus({ status: 'pending', message: 'Aguardando VLibras...', progress: 0, error: null });
-
+    // setVlibrasVisibility(false); // Reset VLibras visibility to hidden initially
+    // setVlibrasStatus({ status: 'pending', message: 'Aguardando VLibras...', progress: 0, error: null });
 
     const chaves = [
       'tamanhoFonte', 'espacamentoLetras', 'alturaLinha', 'modoContraste', 'modoEscuro',
       'guiaLeitura', 'removerImagens', 'removerCabecalhos', 'destacarLinks',
-      'modoDaltonico', 'pausarAnimacoes', 'cursorGrande', 'vlibrasVisibility'
+      'modoDaltonico', 'pausarAnimacoes', 'cursorGrande'/*, 'vlibrasVisibility'*/
     ];
 
     chaves.forEach(chave => {
@@ -306,9 +300,9 @@ const ControlesAcessibilidade = () => {
 
     limparGuiasLeitura();
     // Forçar reinício do VLibras se ele estiver visível
-    if (vlibrasWidgetRef.current && vlibrasWidgetRef.current.restartVlibras) {
-      vlibrasWidgetRef.current.restartVlibras();
-    }
+    // if (vlibrasWidgetRef.current && vlibrasWidgetRef.current.restartVlibras) {
+    //   vlibrasWidgetRef.current.restartVlibras();
+    // }
   };
 
   const obterTextoModoContraste = () => {
@@ -324,45 +318,36 @@ const ControlesAcessibilidade = () => {
     switch (modoDaltonico) { case 1: return 'Protanopia'; case 2: return 'Deuteranopia'; case 3: return 'Tritanopia'; default: return 'Normal'; }
   };
 
-  const obterIconeStatusVLibras = () => {
-    switch(vlibrasStatus.status) {
-      case 'success': return <CheckCircle size={16} className="status-success" />;
-      case 'error': return <AlertCircle size={16} className="status-error" />;
-      case 'loading': return <Loader size={16} className="status-loading" />;
-      default: return <Loader size={16} className="status-loading" />;
-    }
-  };
+  // VLibras - Funções e componentes comentados
+  // const obterIconeStatusVLibras = () => {
+  //   switch(vlibrasStatus.status) {
+  //     case 'success': return <CheckCircle size={16} className="status-success" />;
+  //     case 'error': return <AlertCircle size={16} className="status-error" />;
+  //     case 'loading': return <Loader size={16} className="status-loading" />;
+  //     default: return <Loader size={16} className="status-loading" />;
+  //   }
+  // };
 
-  const toggleVlibrasVisibility = () => {
-    setVlibrasVisibility(prev => {
-        const newVisibility = !prev;
-        salvarConfiguracao('vlibrasVisibility', newVisibility);
-        // Se estamos ativando a visibilidade, e o VLibras ainda não foi carregado ou deu erro,
-        // tentamos inicializá-lo/reiniciá-lo.
-        if (newVisibility && (vlibrasStatus.status !== 'success' || vlibrasStatus.error)) {
-            reiniciarVLibras();
-        }
-        return newVisibility;
-    });
-  };
+  // const toggleVlibrasVisibility = () => {
+  //   setVlibrasVisibility(prev => {
+  //       const newVisibility = !prev;
+  //       salvarConfiguracao('vlibrasVisibility', newVisibility);
+  //       if (newVisibility && (vlibrasStatus.status !== 'success' || vlibrasStatus.error)) {
+  //           reiniciarVLibras();
+  //       }
+  //       return newVisibility;
+  //   });
+  // };
 
-  const reiniciarVLibras = () => {
-    // Definimos o status para loading imediatamente para feedback ao usuário
-    setVlibrasStatus({ status: 'loading', message: 'Reiniciando VLibras...', progress: 10, error: null });
-    
-    if (vlibrasWidgetRef.current && vlibrasWidgetRef.current.restartVlibras) {
-        vlibrasWidgetRef.current.restartVlibras();
-    } else {
-        console.warn('VLibrasWidget não está pronto para ser reiniciado ou a função restartVlibras não está disponível. Tentando nova inicialização.');
-        // Fallback for when the ref is not yet connected or method not available
-        // Set the status to error, which might trigger a re-render of VLibrasWidget with propIsVisible=true
-        setVlibrasStatus({ status: 'error', message: 'Erro ao tentar reiniciar VLibras. Tente novamente mais tarde.', progress: 0, error: new Error('Restart function not found or widget not ready') });
-        // Also ensure visibility if it was intended to be visible, so VLibrasWidget can attempt to initialize itself.
-        // This might cause double initialization if VLibrasWidget also has useEffect for initial load.
-        // It's better to let VLibrasWidget manage its own internal load based on isVisible prop.
-    }
-  };
-
+  // const reiniciarVLibras = () => {
+  //   setVlibrasStatus({ status: 'loading', message: 'Reiniciando VLibras...', progress: 10, error: null });
+  //   if (vlibrasWidgetRef.current && vlibrasWidgetRef.current.restartVlibras) {
+  //       vlibrasWidgetRef.current.restartVlibras();
+  //   } else {
+  //       console.warn('VLibrasWidget não está pronto para ser reiniciado ou a função restartVlibras não está disponível. Tentando nova inicialização.');
+  //       setVlibrasStatus({ status: 'error', message: 'Erro ao tentar reiniciar VLibras. Tente novamente mais tarde.', progress: 0, error: new Error('Restart function not found or widget not ready') });
+  //   }
+  // };
 
   return (
     <>
@@ -374,9 +359,10 @@ const ControlesAcessibilidade = () => {
           title="Controles de Acessibilidade (Alt + A)"
         >
           <PersonStanding size={24} />
-          {vlibrasVisibility && vlibrasStatus.status === 'loading' && (
+          {/* VLibras - Indicador de carregamento comentado */}
+          {/* {vlibrasVisibility && vlibrasStatus.status === 'loading' && (
               <span className="vlibras-loading-indicator"></span>
-            )}
+            )} */}
         </button>
 
         {estaAberto && (
@@ -396,8 +382,8 @@ const ControlesAcessibilidade = () => {
             </div>
 
             <div className="conteudoAcessibilidade">
-              {/* Seção VLibras */}
-              <div className="secao">
+              {/* Seção VLibras comentada */}
+              {/* <div className="secao">
                 <h4 className="tituloSecao">
                   <Volume2 size={16} />
                   VLibras
@@ -435,7 +421,7 @@ const ControlesAcessibilidade = () => {
                     </div>
                   )}
                 </div>
-              </div>
+              </div> */}
 
               {/* Controles de Texto */}
               <div className="secao">
@@ -587,7 +573,8 @@ const ControlesAcessibilidade = () => {
         )}
       </div>
 
-      <VLibrasWidget ref={vlibrasWidgetRef} onStatusChange={handleVlibrasStatusChange} isVisible={vlibrasVisibility} />
+      {/* VLibrasWidget comentado */}
+      {/* <VLibrasWidget ref={vlibrasWidgetRef} onStatusChange={handleVlibrasStatusChange} isVisible={vlibrasVisibility} /> */}
     </>
   );
 };
