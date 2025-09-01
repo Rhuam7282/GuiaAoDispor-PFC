@@ -2,7 +2,6 @@ import { API_CONFIG } from '@config/apiConfig.js';
 
 const URL_BASE = API_CONFIG.BASE_URL;
 
-// Função utilitária para fazer requisições usando fetch
 const fazerRequisicao = async (url, metodo, dados = null) => {
   const opcoes = {
     method: metodo,
@@ -19,16 +18,13 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
     console.log(`Fazendo requisição ${metodo} para: ${url}`);
     const resposta = await fetch(url, opcoes);
     
-    // Verificar se a resposta é JSON
     const contentType = resposta.headers.get('content-type');
     
-    // Se não for JSON, tentar obter o texto para debug
     const text = await resposta.text();
     
     if (!contentType || !contentType.includes('application/json')) {
       console.error('Resposta não é JSON:', text.substring(0, 200));
       
-      // Se for um erro 500, verificar se o servidor está rodando
       if (resposta.status === 500) {
         throw new Error('Erro interno do servidor. Verifique os logs do backend.');
       }
@@ -36,7 +32,6 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
       throw new Error('Resposta da API não é JSON');
     }
 
-    // Se for JSON, parsear a resposta
     const dadosResposta = JSON.parse(text);
 
     if (!resposta.ok) {
@@ -52,7 +47,6 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
   }
 };
 
-// Serviços para Localização
 export const servicoLocalizacao = {
   criar: (dadosLocalizacao) =>
     fazerRequisicao(`${URL_BASE}/localizacoes`, "POST", dadosLocalizacao),
@@ -63,7 +57,6 @@ export const servicoLocalizacao = {
   deletar: (id) => fazerRequisicao(`${URL_BASE}/localizacoes/${id}`, "DELETE"),
 };
 
-// Serviços para Usuário
 export const servicoUsuario = {
   criar: (dadosUsuario) =>
     fazerRequisicao(`${URL_BASE}/usuarios`, "POST", dadosUsuario),
@@ -74,7 +67,6 @@ export const servicoUsuario = {
   deletar: (id) => fazerRequisicao(`${URL_BASE}/usuarios/${id}`, "DELETE"),
 };
 
-// Serviços para Profissional
 export const servicoProfissional = {
   criar: (dadosProfissional) =>
     fazerRequisicao(`${URL_BASE}/profissionais`, "POST", dadosProfissional),
@@ -90,7 +82,6 @@ export const servicoProfissional = {
   deletar: (id) => fazerRequisicao(`${URL_BASE}/profissionais/${id}`, "DELETE"),
 };
 
-// Serviços para Avaliação
 export const servicoAvaliacao = {
   criar: (dadosAvaliacao) =>
     fazerRequisicao(`${URL_BASE}/avaliacoes`, "POST", dadosAvaliacao),
@@ -101,7 +92,6 @@ export const servicoAvaliacao = {
   deletar: (id) => fazerRequisicao(`${URL_BASE}/avaliacoes/${id}`, "DELETE"),
 };
 
-// Serviços para HCurricular
 export const servicoHCurricular = {
   criar: (dadosHCurricular) =>
     fazerRequisicao(`${URL_BASE}/hcurriculares`, "POST", dadosHCurricular),
@@ -113,7 +103,6 @@ export const servicoHCurricular = {
   deletar: (id) => fazerRequisicao(`${URL_BASE}/hcurriculares/${id}`, "DELETE"),
 };
 
-// Serviços para HProfissional
 export const servicoHProfissional = {
   criar: (dadosHProfissional) =>
     fazerRequisicao(`${URL_BASE}/hprofissionais`, "POST", dadosHProfissional),
@@ -130,7 +119,6 @@ export const servicoHProfissional = {
     fazerRequisicao(`${URL_BASE}/hprofissionais/${id}`, "DELETE"),
 };
 
-// Serviço especializado para cadastro
 export const servicoCadastro = {
   cadastrarUsuario: async (dadosUsuario, dadosLocalizacao) => {
     try {
@@ -149,12 +137,10 @@ export const servicoCadastro = {
 
   cadastrarProfissional: async (dadosProfissional, dadosLocalizacao) => {
     try {
-      // Primeiro cria a localização
       const respostaLocalizacao = await servicoLocalizacao.criar(
         dadosLocalizacao
       );
 
-      // Depois cria o profissional com a referência da localização
       const respostaProfissional = await servicoProfissional.criar({
         ...dadosProfissional,
         localizacao: respostaLocalizacao.data._id
@@ -173,7 +159,6 @@ export const servicoCadastro = {
     historicosProfissionais
   ) => {
     try {
-      // Primeiro cria a localização
       const respostaLocalizacao = await servicoLocalizacao.criar(
         dadosLocalizacao
       );
@@ -184,7 +169,6 @@ export const servicoCadastro = {
       });
       const idProfissional =
         respostaProfissional.data._id || respostaProfissional.dados._id;
-      // Cadastra cada histórico curricular
       for (const hc of historicosCurriculares) {
         await servicoHCurricular.criar({
           ...hc,
@@ -192,7 +176,6 @@ export const servicoCadastro = {
         });
       }
 
-      // Cadastra cada histórico profissional
       for (const hp of historicosProfissionais) {
         await servicoHProfissional.criar({
           ...hp,
@@ -206,9 +189,7 @@ export const servicoCadastro = {
     }
   },
 };
-// Serviços de Autenticação
 export const servicoAuth = {
-  // Função para fazer login do usuário
   login: async (email, senha) => {
     try {
       const resposta = await fazerRequisicao(`${URL_BASE}/auth/login`, "POST", {
@@ -221,7 +202,6 @@ export const servicoAuth = {
     }
   },
 
-  // Função para buscar perfil do usuário logado
   buscarPerfilLogado: async (id) => {
     try {
       const resposta = await fazerRequisicao(`${URL_BASE}/auth/perfil/${id}`, "GET");

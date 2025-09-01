@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './controles.css';
-// import VLibrasWidget from './VLibras/VLibrasWidget'; // Importa o VLibrasWidget
 import {
   Type,
   AlignJustify,
@@ -40,23 +39,10 @@ const ControlesAcessibilidade = () => {
   const [pausarAnimacoes, setPausarAnimacoes] = useState(false);
   const [cursorGrande, setCursorGrande] = useState(false);
 
-  // VLibras - Estados e refs comentados
-  // const [vlibrasStatus, setVlibrasStatus] = useState({ status: 'pending', message: 'Aguardando VLibras...', progress: 0, error: null });
-  // const [vlibrasVisibility, setVlibrasVisibility] = useState(false); // State to control VLibrasWidget visibility
-  // const vlibrasWidgetRef = useRef(null); // Ref to VLibrasWidget
 
   const guiaMouseRef = useRef(null);
   const mascaraRef = useRef(null);
 
-  // Callback para receber o status do VLibrasWidget
-  // const handleVlibrasStatusChange = useCallback((statusObj) => {
-  //   setVlibrasStatus(statusObj);
-  //   if (statusObj.status === 'success') {
-  //     // Se o VLibras carregou com sucesso, salvamos o estado de visibilidade
-  //     // salvarConfiguracao('vlibrasVisibility', true); // Removed this to avoid auto-enabling
-  //     // setVlibrasVisibility(true); // Removed this to avoid auto-enabling
-  //   }
-  // }, []);
 
   useEffect(() => {
     const aplicarEstilosTexto = () => {
@@ -66,7 +52,7 @@ const ControlesAcessibilidade = () => {
           --fatorEscala: ${tamanhoFonte / 100};
           --espacamentoLetras: ${espacamentoLetras}px;
           --alturaLinha: ${alturaLinha};
-          font-size: calc(16px * var(--fatorEscala)); /* Aplica o fator de escala globalmente */
+          font-size: calc(16px * var(--fatorEscala)); 
         }
         body {
           letter-spacing: var(--espacamentoLetras);
@@ -118,7 +104,6 @@ const ControlesAcessibilidade = () => {
       modoDaltonico: carregarConfiguracao('modoDaltonico', 0),
       pausarAnimacoes: carregarConfiguracao('pausarAnimacoes', false),
       cursorGrande: carregarConfiguracao('cursorGrande', false),
-      // vlibrasVisibility: carregarConfiguracao('vlibrasVisibility', false) 
     };
 
     setTamanhoFonte(configuracoes.tamanhoFonte);
@@ -133,10 +118,8 @@ const ControlesAcessibilidade = () => {
     setModoDaltonico(configuracoes.modoDaltonico);
     setPausarAnimacoes(configuracoes.pausarAnimacoes);
     setCursorGrande(configuracoes.cursorGrande);
-    // setVlibrasVisibility(configuracoes.vlibrasVisibility); // Set initial VLibras visibility
   }, [carregarConfiguracao]);
 
-  // Efeito para aplicar configurações de cores e contraste
   useEffect(() => {
     const raiz = document.documentElement;
     raiz.classList.remove('contrasteLeve', 'contrasteIntenso');
@@ -148,7 +131,6 @@ const ControlesAcessibilidade = () => {
     salvarConfiguracao('modoContraste', modoContraste);
   }, [modoContraste, salvarConfiguracao]);
 
-  // Efeito para aplicar modo escuro
   useEffect(() => {
     const raiz = document.documentElement;
     raiz.classList.toggle('temaEscuro', modoEscuro === 1);
@@ -270,13 +252,11 @@ const ControlesAcessibilidade = () => {
     setModoDaltonico(0);
     setPausarAnimacoes(false);
     setCursorGrande(false);
-    // setVlibrasVisibility(false); // Reset VLibras visibility to hidden initially
-    // setVlibrasStatus({ status: 'pending', message: 'Aguardando VLibras...', progress: 0, error: null });
 
     const chaves = [
       'tamanhoFonte', 'espacamentoLetras', 'alturaLinha', 'modoContraste', 'modoEscuro',
       'guiaLeitura', 'removerImagens', 'removerCabecalhos', 'destacarLinks',
-      'modoDaltonico', 'pausarAnimacoes', 'cursorGrande'/*, 'vlibrasVisibility'*/
+      'modoDaltonico', 'pausarAnimacoes', 'cursorGrande'
     ];
 
     chaves.forEach(chave => {
@@ -292,17 +272,11 @@ const ControlesAcessibilidade = () => {
     ];
     classes.forEach(classe => raiz.classList.remove(classe));
 
-    // Reset inline styles applied by JS
     raiz.style.setProperty('--fatorEscala', '1');
     raiz.style.setProperty('--espacamentoLetras', '0px');
     raiz.style.setProperty('--alturaLinha', '1.5');
-    raiz.style.fontSize = '16px'; // Reset base font size
 
     limparGuiasLeitura();
-    // Forçar reinício do VLibras se ele estiver visível
-    // if (vlibrasWidgetRef.current && vlibrasWidgetRef.current.restartVlibras) {
-    //   vlibrasWidgetRef.current.restartVlibras();
-    // }
   };
 
   const obterTextoModoContraste = () => {
@@ -318,36 +292,8 @@ const ControlesAcessibilidade = () => {
     switch (modoDaltonico) { case 1: return 'Protanopia'; case 2: return 'Deuteranopia'; case 3: return 'Tritanopia'; default: return 'Normal'; }
   };
 
-  // VLibras - Funções e componentes comentados
-  // const obterIconeStatusVLibras = () => {
-  //   switch(vlibrasStatus.status) {
-  //     case 'success': return <CheckCircle size={16} className="status-success" />;
-  //     case 'error': return <AlertCircle size={16} className="status-error" />;
-  //     case 'loading': return <Loader size={16} className="status-loading" />;
-  //     default: return <Loader size={16} className="status-loading" />;
-  //   }
-  // };
 
-  // const toggleVlibrasVisibility = () => {
-  //   setVlibrasVisibility(prev => {
-  //       const newVisibility = !prev;
-  //       salvarConfiguracao('vlibrasVisibility', newVisibility);
-  //       if (newVisibility && (vlibrasStatus.status !== 'success' || vlibrasStatus.error)) {
-  //           reiniciarVLibras();
-  //       }
-  //       return newVisibility;
-  //   });
-  // };
 
-  // const reiniciarVLibras = () => {
-  //   setVlibrasStatus({ status: 'loading', message: 'Reiniciando VLibras...', progress: 10, error: null });
-  //   if (vlibrasWidgetRef.current && vlibrasWidgetRef.current.restartVlibras) {
-  //       vlibrasWidgetRef.current.restartVlibras();
-  //   } else {
-  //       console.warn('VLibrasWidget não está pronto para ser reiniciado ou a função restartVlibras não está disponível. Tentando nova inicialização.');
-  //       setVlibrasStatus({ status: 'error', message: 'Erro ao tentar reiniciar VLibras. Tente novamente mais tarde.', progress: 0, error: new Error('Restart function not found or widget not ready') });
-  //   }
-  // };
 
   return (
     <>
@@ -359,7 +305,7 @@ const ControlesAcessibilidade = () => {
           title="Controles de Acessibilidade (Alt + A)"
         >
           <PersonStanding size={24} />
-          {/* VLibras - Indicador de carregamento comentado */}
+          {}
           {/* {vlibrasVisibility && vlibrasStatus.status === 'loading' && (
               <span className="vlibras-loading-indicator"></span>
             )} */}
@@ -382,7 +328,7 @@ const ControlesAcessibilidade = () => {
             </div>
 
             <div className="conteudoAcessibilidade">
-              {/* Seção VLibras comentada */}
+              {}
               {/* <div className="secao">
                 <h4 className="tituloSecao">
                   <Volume2 size={16} />
@@ -423,7 +369,7 @@ const ControlesAcessibilidade = () => {
                 </div>
               </div> */}
 
-              {/* Controles de Texto */}
+              {}
               <div className="secao">
                 <h4 className="tituloSecao">
                   <Type size={16} /> Tamanho do Texto
@@ -460,7 +406,7 @@ const ControlesAcessibilidade = () => {
                 </div>
               </div>
 
-              {/* Controles de Cores e Contraste */}
+              {}
               <div className="secao">
                 <h4 className="tituloSecao">
                   <Contrast size={16} /> Modo de Contraste
@@ -483,7 +429,7 @@ const ControlesAcessibilidade = () => {
                 </div>
               </div>
 
-              {/* Ferramentas de Leitura */}
+              {}
               <div className="secao">
                 <h4 className="tituloSecao">
                   <Eye size={16} /> Guia de Leitura
@@ -506,7 +452,7 @@ const ControlesAcessibilidade = () => {
                 </div>
               </div>
 
-              {/* Outras Ferramentas */}
+              {}
               <div className="secao">
                 <h4 className="tituloSecao">
                   <EyeOff size={16} /> Ocultar Imagens
@@ -562,7 +508,7 @@ const ControlesAcessibilidade = () => {
                 </div>
               </div>
 
-              {/* Botão de Redefinir Tudo */}
+              {}
               <div className="secao secaoRedefinir">
                 <button onClick={redefinirTudo} className="botaoRedefinir" aria-label="Redefinir todas as configurações de acessibilidade">
                   <RotateCcw size={18} /> Redefinir Tudo
@@ -573,8 +519,8 @@ const ControlesAcessibilidade = () => {
         )}
       </div>
 
-      {/* VLibrasWidget comentado */}
-      {/* <VLibrasWidget ref={vlibrasWidgetRef} onStatusChange={handleVlibrasStatusChange} isVisible={vlibrasVisibility} /> */}
+      {}
+      {}
     </>
   );
 };

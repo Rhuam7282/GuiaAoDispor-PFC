@@ -1,10 +1,10 @@
-/* Componente GoogleLoginButton - Botão de login com Google OAuth */
+
 import React from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../../contextos/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-/* Função para decodificar JWT token do Google */
+
 const decodeJWT = (token) => {
   try {
     const base64Url = token.split('.')[1];
@@ -22,19 +22,19 @@ const decodeJWT = (token) => {
   }
 };
 
-/* Componente principal do botão de login Google */
+
 const GoogleLoginButton = ({ onSuccess, onError, text = "Entrar com Google" }) => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  /* Função chamada quando login é bem-sucedido */
+  
   const handleSuccess = (credentialResponse) => {
     try {
-      /* Decodifica o token JWT para obter dados do usuário */
+      
       const userInfo = decodeJWT(credentialResponse.credential);
       
       if (userInfo) {
-        /* Cria objeto com dados do usuário */
+        
         const userData = {
           id: userInfo.sub,
           name: userInfo.name,
@@ -46,14 +46,14 @@ const GoogleLoginButton = ({ onSuccess, onError, text = "Entrar com Google" }) =
           loginTime: new Date().toISOString()
         };
 
-        /* Faz login do usuário */
+        
         login(userData);
 
-        /* Chama callback personalizado se fornecido */
+        
         if (onSuccess) {
           onSuccess(userData);
         } else {
-          /* Redireciona para página inicial por padrão */
+          
           navigate('/');
         }
 
@@ -65,7 +65,7 @@ const GoogleLoginButton = ({ onSuccess, onError, text = "Entrar com Google" }) =
     }
   };
 
-  /* Função chamada quando há erro no login */
+  
   const handleError = () => {
     console.error('Erro no login com Google');
     if (onError) {
