@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ContatosPerfil = ({ redesSociais }) => {
+const ContatosPerfil = ({ redesSociais = [] }) => {
   return (
     <div>
       <h3>Contatos</h3>

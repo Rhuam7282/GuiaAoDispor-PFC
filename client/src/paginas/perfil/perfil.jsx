@@ -79,7 +79,7 @@ const Perfil = () => {
     const carregarDadosPerfil = async () => {
       if (!id && isAuthenticated() && user) {
         try {
-          const resposta = await servicoAuth.buscarPerfilLogado(user._id);
+          const resposta = await servicoAuth.buscarPerfilLogado(user.usuario._id);
           setDadosPerfil(resposta.data);
           setCarregando(false);
           return;
@@ -119,11 +119,11 @@ const Perfil = () => {
           descricao: perfil.desc || "Descrição não informada",
           avaliacao: perfil.avaliacao || 0,
           redesSociais: [
-            { icone: Mail, usuario: perfil.email || "Email não informado" },
-            { icone: Facebook, usuario: perfil.face || "Facebook não informado" },
-            { icone: Instagram, usuario: perfil.instagram || "Instagram não informado" },
-            { icone: Linkedin, usuario: perfil.linkedin || "LinkedIn não informado" },
-          ].filter(rede => rede.usuario && rede.usuario !== "não informado")
+            { icone: Mail, usuario: perfil.email || "" },
+            { icone: Facebook, usuario: perfil.face || "" },
+            { icone: Instagram, usuario: perfil.instagram || "" },
+            { icone: Linkedin, usuario: perfil.linkedin || "" },
+          ].filter(rede => rede.usuario !== ""),
         };
 
         const academicoFormatado = hcurriculares.map(hc => ({
@@ -137,10 +137,6 @@ const Perfil = () => {
           imagem: hp.imagem || micheleto,
           alt: hp.empresa || "Empresa",
         }));
-
-        setDadosPerfil(perfilFormatado);
-        setHistoricoAcademico(academicoFormatado);
-        setHistoricoProfissional(profissionalFormatado);
 
       } catch (error) {
         console.error('Erro ao carregar dados do perfil:', error);

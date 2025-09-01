@@ -185,38 +185,12 @@ const Cadastro = () => {
         dadosPerfil.linkedin = dadosFormulario.linkedin;
       }
 
-      let resposta;
-      if (dadosFormulario.tipoPerfil === 'Pessoal') {
-        resposta = await servicoCadastro.cadastrarUsuario(dadosPerfil, dadosLocalizacao);
-      } else {
-        resposta = await servicoCadastro.cadastrarProfissionalComHistoricos(
-          dadosPerfil, 
-          dadosLocalizacao, 
-          dadosFormulario.historicosCurriculares, 
-          dadosFormulario.historicosProfissionais
-        );
-      }
+      const respostaCadastro = await servicoCadastro.cadastrarUsuario(dadosPerfil, dadosLocalizacao);
 
-      setMensagemSucesso('Cadastro realizado com sucesso!');
-      
-      setDadosFormulario({
-        nome: '',
-        email: '',
-        senha: '',
-        confirmarSenha: '',
-        cep: '',
-        cidade: '',
-        estado: '',
-        descricao: '',
-        instituicao: '',
-        facebook: '',
-        telefone: '',
-        linkedin: '',
-        tipoPerfil: 'Pessoal',
-        foto: null,
-        historicosCurriculares: [],
-        historicosProfissionais: []
-      });
+      // Login automático após o cadastro
+      const respostaLogin = await servicoAuth.login(dadosFormulario.email, dadosFormulario.senha);
+      login(respostaLogin.data);
+      navigate("/perfil");
 
     } catch (erro) {
       console.error('Erro no cadastro:', erro);
