@@ -401,3 +401,78 @@ process.on('SIGINT', () => {
         });
     });
 });
+// Rotas de Autenticação
+apiRouter.post('/auth/login', async (req, res) => {
+    try {
+        const { email, senha } = req.body;
+        
+        if (!email || !senha) {
+            return res.status(400).json({ 
+                status: 'erro', 
+                message: 'Email e senha são obrigatórios' 
+            });
+        }
+
+        // Buscar usuário por email
+        const usuario = await Usuario.findOne({ email }).populate('localizacao');
+        
+        if (!usuario) {
+            return res.status(401).json({ 
+                status: 'erro', 
+                message: 'Credenciais inválidas' 
+            });
+        }
+
+        // Verificar senha (em produção, usar hash)
+        if (usuario.senha !== senha) {
+            return res.status(401).json({ 
+                status: 'erro', 
+                message: 'Credenciais inválidas' 
+            });
+        }
+
+        // Remover senha da resposta
+        const usuarioResposta = usuario.toObject();
+        delete usuarioResposta.senha;
+
+        res.status(200).json({ 
+            status: 'sucesso', 
+            data: usuarioResposta,
+            message: 'Login realizado com sucesso'
+        });
+    } catch (error) {
+        res.status(500).json({ 
+            status: 'erro', 
+            message: error.message 
+        });
+    }
+});
+
+// Rota para buscar perfil do usuário logado
+apiRouter.get('/auth/perfil/:id', async (req, res) => {
+    try {
+        const usuario = await Usuario.findById(req.params.id).populate('localizacao');
+        
+        if (!usuario) {
+            return res.status(404).json({ 
+                status: 'erro', 
+                message: 'Usuário não encontrado' 
+            });
+        }
+
+        // Remover senha da resposta
+        const usuarioResposta = usuario.toObject();
+        delete usuarioResposta.senha;
+
+        res.status(200).json({ 
+            status: 'sucesso', 
+            data: usuarioResposta 
+        });
+    } catch (error) {
+        res.status(500).json({ 
+            status: 'erro', 
+            message: error.message 
+        });
+    }
+});
+
