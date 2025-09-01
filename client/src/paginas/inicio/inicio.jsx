@@ -28,7 +28,7 @@ const Inicio = () => {
           <h1>Guia ao Dispor</h1>
           <p className="slogan">
             Conectando pessoas com necessidades específicas<br />
-            a profissionais qualificados em cuidados especiais<br />
+            a qualificados em cuidados especiais<br />
             e acessibilidade. Juntos construímos inclusão.
           </p>
          <button onClick={handleButtonClick} className="botaoPrimario">
