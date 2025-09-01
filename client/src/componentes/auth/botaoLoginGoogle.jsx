@@ -74,7 +74,7 @@ const GoogleLoginButton = ({ onSuccess, onError, text = "Entrar com Google" }) =
   };
 
   return (
-    <div className="google-login-container">
+    <div className="google-login-container flexCentro">
       <GoogleLogin
         onSuccess={handleSuccess}
         onError={handleError}

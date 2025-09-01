@@ -209,22 +209,6 @@ const Cadastro = () => {
         <h1 className="titulo">Criar Conta</h1>
         
         {/* Seção de login com Google */}
-        <div className="cartao cartaoSecundario textoCentro margemGrande paddingMedio bordaArredondada flexWrap">
-  <h3 className="margemInferiorPequena textoMarromEscuro">Entre rapidamente com sua conta Google</h3>
-  <GoogleLoginButton className="alinharCentro"
-    text="Entrar com Google"
-    onSuccess={(userData) => {
-      console.log('Login Google realizado:', userData);
-    }}
-    onError={() => {
-      console.error('Erro no login com Google');
-    }}
-  />
-  <p className="margemSuperiorPequena textoMinimo textoMarromOfuscado bordaSuperiorSubtle paddingSuperiorPequeno">
-    Ou preencha o formulário abaixo para criar uma conta tradicional
-  </p>
-</div>
-        
         <form onSubmit={aoEnviarFormulario} className="formulario-cadastro">
           <div className="conteudo-formulario">
             <div className="campos-formulario">
@@ -506,6 +490,22 @@ const Cadastro = () => {
                   )}
                 </label>
               </div>
+        <div className="cartao cartaoSecundario textoCentro margemGrande paddingMedio bordaArredondada">
+  <h3 className="margemInferiorPequena textoMarromEscuro">Entre rapidamente com sua conta Google</h3>
+  <GoogleLoginButton
+    text="Entrar com Google"
+    onSuccess={(userData) => {
+      console.log('Login Google realizado:', userData);
+    }}
+    onError={() => {
+      console.error('Erro no login com Google');
+    }}
+  />
+  <p className="margemSuperiorPequena textoMinimo textoMarromOfuscado bordaSuperiorSubtle paddingSuperiorPequeno">
+    Ou preencha o formulário abaixo para criar uma conta tradicional
+  </p>
+</div>
+        
             </div>
           </div>
         </form>
