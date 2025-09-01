@@ -28,29 +28,24 @@ const Inicio = () => {
           <h1>Guia ao Dispor</h1>
           <p className="slogan">
             Conectando pessoas com necessidades específicas<br />
-            a qualificados em cuidados especiais<br />
-            e acessibilidade. Juntos construímos inclusão.
+            com qualificados em cuidados especiais<br />
+            e acessibilidade. <b>Juntos construímos inclusão</b>.
           </p>
          <button onClick={handleButtonClick} className="botaoPrimario">
               {isAuthenticated() ? 'Ver Qualificados' : 'Venha fazer parte'}
             </button>
           <section className="textoExplicativo">
-          <h2>Sobre o Projeto</h2>
+          <h2>Porque?</h2>
           <p>
-            Iniciado em 2024 como um trabalho para o componente curricular Projeto Integrador II, 
-            no curso técnico de Informática para a Internet do IFPR - Campus Assis Chateaubriand, 
-            este projeto evoluiu para o desenvolvimento de uma plataforma web dedicada a conectar 
-            pessoas com necessidades específicas a indivíduos e profissionais capacitados para auxiliá-las.
+            A Guia ao Dispor foi inteiramente pensada para o público com necessidades específicas, buscando facilitar o acesso a serviços da área.
           </p>
+          <h2>Como?</h2>
           <p>
-            A relevância do projeto foi validada por professoras do IFPR engajadas na área de inclusão, 
-            que confirmaram a dificuldade real em encontrar profissionais qualificados para atender 
-            demandas de acessibilidade, tanto para a instituição quanto para si mesmas.
+            Por meio de de uma plataforma que, além de acessível e baseada em estudos, reúne a comunidade de qualificados em cuidados especiais e acessibilidade.
           </p>
+          <h2>Sobre</h2>
           <p>
-            O projeto adota uma abordagem inclusiva, utilizando o termo <u>pessoas com particularidades</u> 
-            ou com <u>necessidades específicas</u> para abranger um público mais amplo que a definição legal 
-            de Pessoa com Deficiência (PCD).
+            Nascida de um projeto escolar, a Guia ao Dispor foi feita com pesquisa e auxilio de professores qualificados, pensando em criar uma ferramenta que ajude o mundo a ser mais acessível
           </p>
         </section>
         </div>

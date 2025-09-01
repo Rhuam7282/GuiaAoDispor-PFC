@@ -8,7 +8,7 @@
   background-repeat: no-repeat;
   background-position: left;
   position: relative;
-  overflow: hidden;
+  overflow: auto;
 }
 
 /* Aplicando sombra aos cartões de destaque */

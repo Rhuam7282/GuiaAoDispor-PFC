@@ -30,19 +30,37 @@ const SobreNosPage = () => {
           <section className="about-content">
             <article className="about-text">
               <img src={logo} alt="Logo do Guia ao Dispor - Plataforma de conexão para cuidados especiais"/>
+              <h2>Estudantes:</h2>
+              <h3>Lucas Narciso e Rhuam de Ré</h3>
               <p>
-                Iniciado em 2024 como um trabalho para o componente curricular Projeto Integrador II, no curso técnico de Informática para a Internet do IFPR - Campus Assis Chateaubriand, este projeto evoluiu para o desenvolvimento de uma plataforma web dedicada a conectar pessoas com necessidades específicas a indivíduos e profissionais capacitados para auxiliá-las. A ideia, que continua em desenvolvimento em 2025 como parte do Projeto Integrador III, visa criar um ecossistema de apoio e oportunidades no mercado de trabalho.
+                Formandos do ensino médio técnico em Técnico em Informática para a Internet, dentro do Instituto Federal do Paraná.
+                Os estudantes desenvolveram o projeto para trazer uma mudança social positiva dentro da comunidade.
+                Observando a dificuldade no cotidiano de pessoas com necessidades específicas próximas aos desenvolvedores.
+                Com profissionais se especializando em áreas cada vez mais únicas torna ainda mais difícil encontrar ajuda.
+                Visando resolver uma demanda real, o projeto foi desenvolvido com o objetivo de conectar pessoas com necessidades específicas a profissionais qualificados em cuidados especiais e acessibilidade.
+                Assim garantindo o atendiemento dessas pessoas dentro da sociedade de forma inclusiva.
               </p>
             </article>
             <article className="about-text">
+              <h2>Curso</h2>
               <p>
-                A relevância do projeto foi validada por professoras do IFPR engajadas na área de inclusão (Dr. Celina de Oliveira Barbosa Gomes e Me. Paula Fabiane de Souza), que confirmaram a dificuldade real em encontrar profissionais qualificados para atender demandas de acessibilidade, tanto para a instituição quanto para si mesmas. A pesquisa se fundamenta na atual fase dos direitos das pessoas com deficiência, focada na adaptação do ambiente para garantir a inclusão, superando modelos históricos de exclusão e assistencialismo.              </p>
+              Através do ensino técnico focado na criação de sistemas online, tais discetes trasnformaram a ideia do papel para dentro de um clique na rede.
+              Feito dentro dos regulamentos e com o apoio dos profissinais do Instituto Federal.
+              Por meio de matérias favoráveis ao desenvolvimento do projeto, como: Programação Web, IHC, Sistemas Gerenciadores de Conteúdo WEB entre outras.
+              </p>
               <img src={logo} alt="Logo" />
             </article>
             <article className="about-text">
               <img src={logo} alt="Logo"/>
+              <h2>Orientadoras</h2>
+              <h3>Paula Fabiane</h3>
               <p>
-                O projeto adota uma abordagem inclusiva, utilizando o termo <u>pessoas com particularidades</u> ou com <u>necessidades específicas</u> para abranger um público mais amplo que a definição legal de Pessoa com Deficiência (PCD). Isso inclui a comunidade surda (que possui uma identidade linguística própria com a LIBRAS), neurodivergentes, idosos e outros grupos que enfrentam barreiras, mas não necessariamente se enquadram ou se identificam como PCD. Do outro lado, o termo <u>sujeito habilitado</u> foi criado para designar qualquer pessoa com capacidade de oferecer ajuda, seja ela um profissional certificado ou não.              </p>
+                
+              </p>  
+              <h3>Caroline Barbieri</h3>
+              <p>
+                
+              </p>  
             </article>
           </section>
 
