@@ -14,7 +14,8 @@ export default defineConfig({
     port: 5173,
     open: true,
     strictPort: true,
-    host: true,
+    host: '0.0.0.0',
+    allowedHosts: ['5173-irh5g39yl0ymx7eyzdbhu-215cc903.manus.computer', 'all'],
     historyApiFallback: true,
     hmr: {
       clientPort: 5173,

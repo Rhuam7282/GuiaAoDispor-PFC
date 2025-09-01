@@ -17,6 +17,7 @@
   "author": "Lucas e Rhuam",
   "license": "ISC",
   "dependencies": {
+    "@react-oauth/google": "^0.12.2",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "express": "^4.21.2",

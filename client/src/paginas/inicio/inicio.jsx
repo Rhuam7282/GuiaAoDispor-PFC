@@ -1,13 +1,24 @@
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contextos/AuthContext';
 import './inicio.css';
 import Corpo from "@componentes/layout/corpo";
 import logo from '@recursos/logo.png';
 
 const Inicio = () => {
   const navigate = useNavigate();
-  const redirecionarParaQualificados = () => {
-    navigate('/qualificados');
+  const { isAuthenticated } = useAuth();
+  
+  /* Função para redirecionamento condicional do botão principal */
+  const handleButtonClick = () => {
+    if (isAuthenticated()) {
+      /* Se logado, vai para página de qualificados */
+      navigate('/qualificados');
+    } else {
+      /* Se não logado, vai para página de cadastro */
+      navigate('/cadastro');
+    }
   };
+
   return (
     <Corpo>
       <main className="paginaInicial">
@@ -17,11 +28,11 @@ const Inicio = () => {
           <h1>Guia ao Dispor</h1>
           <p className="slogan">
             Conectando pessoas com necessidades específicas<br />
-            a profissionais qualificados em cuidados especiais<br />
+            a qualificados em cuidados especiais<br />
             e acessibilidade. Juntos construímos inclusão.
           </p>
-         <button onClick={redirecionarParaQualificados} className="botaoPrimario">
-              Venha fazer parte
+         <button onClick={handleButtonClick} className="botaoPrimario">
+              {isAuthenticated() ? 'Ver Qualificados' : 'Venha fazer parte'}
             </button>
           <section className="textoExplicativo">
           <h2>Sobre o Projeto</h2>

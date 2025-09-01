@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Corpo from "@componentes/layout/corpo.jsx";
-import { servicoCadastro } from '@/servicos/apiService';
+import GoogleLoginButton from '@componentes/auth/botaoLoginGoogle.jsx';
+import { servicoCadastro, servicoAuth } from '@/servicos/apiService';
+import { useAuth } from '@/contextos/AuthContext';
 import './cadastro.css';
 
 const Cadastro = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  
+  // Estados para o formulário de cadastro
   const [dadosFormulario, setDadosFormulario] = useState({
     nome: '',
     email: '',
@@ -27,9 +34,27 @@ const Cadastro = () => {
   const [carregando, setCarregando] = useState(false);
   const [mensagemSucesso, setMensagemSucesso] = useState('');
 
+  // Estados para o formulário de login
+  const [dadosLogin, setDadosLogin] = useState({
+    email: '',
+    senha: ''
+  });
+  const [mostrarLogin, setMostrarLogin] = useState(false);
+  const [carregandoLogin, setCarregandoLogin] = useState(false);
+
   const aoAlterarCampo = (evento) => {
     const { name, value } = evento.target;
     setDadosFormulario(prev => ({ ...prev, [name]: value }));
+    
+    if (erros[name]) {
+      setErros(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  // Função para alterar campos do formulário de login
+  const aoAlterarCampoLogin = (evento) => {
+    const { name, value } = evento.target;
+    setDadosLogin(prev => ({ ...prev, [name]: value }));
     
     if (erros[name]) {
       setErros(prev => ({ ...prev, [name]: '' }));
@@ -202,10 +227,108 @@ const Cadastro = () => {
     }
   };
 
+  // Função para fazer login
+  const aoFazerLogin = async (evento) => {
+    evento.preventDefault();
+    
+    if (!dadosLogin.email || !dadosLogin.senha) {
+      setErros({ login: 'Email e senha são obrigatórios' });
+      return;
+    }
+
+    setCarregandoLogin(true);
+    setErros({});
+
+    try {
+      const resposta = await servicoAuth.login(dadosLogin.email, dadosLogin.senha);
+      
+      // Fazer login no contexto
+      login(resposta.data);
+      
+      // Redirecionar para o perfil
+      navigate('/perfil');
+      
+    } catch (erro) {
+      console.error('Erro no login:', erro);
+      setErros({ login: erro.message });
+    } finally {
+      setCarregandoLogin(false);
+    }
+  };
+
   return (
     <Corpo>
       <div className="container">
         <h1 className="titulo">Criar Conta</h1>
+        
+        {/* Seção de login com Google */}
+        <div className="cartao cartaoSecundario textoCentro margemGrande paddingMedio bordaArredondada flexWrap">
+  <h3 className="margemInferiorPequena textoMarromEscuro">Entre rapidamente com sua conta Google</h3>
+  <GoogleLoginButton className="alinharCentro"
+    text="Entrar com Google"
+    onSuccess={(userData) => {
+      console.log('Login Google realizado:', userData);
+    }}
+    onError={() => {
+      console.error('Erro no login com Google');
+    }}
+  />
+  <p className="margemSuperiorPequena textoMinimo textoMarromOfuscado bordaSuperiorSubtle paddingSuperiorPequeno">
+    Ou preencha o formulário abaixo para criar uma conta tradicional
+  </p>
+</div>
+
+        {/* Seção de login tradicional */}
+        <div className="cartao cartaoSecundario margemGrande paddingMedio bordaArredondada">
+          <div className="textoCentro margemInferiorMedia">
+            <h3 className="textoMarromEscuro">Já tem uma conta?</h3>
+            <button 
+              type="button" 
+              className="botao-link textoAzul"
+              onClick={() => setMostrarLogin(!mostrarLogin)}
+            >
+              {mostrarLogin ? 'Ocultar formulário de login' : 'Clique aqui para entrar'}
+            </button>
+          </div>
+          
+          {mostrarLogin && (
+            <form onSubmit={aoFazerLogin} className="formulario-login">
+              <div className="grupo-formulario">
+                <label htmlFor="emailLogin">Email</label>
+                <input
+                  type="email"
+                  id="emailLogin"
+                  name="email"
+                  value={dadosLogin.email}
+                  onChange={aoAlterarCampoLogin}
+                  className={erros.login ? 'erro' : ''}
+                />
+              </div>
+              
+              <div className="grupo-formulario">
+                <label htmlFor="senhaLogin">Senha</label>
+                <input
+                  type="password"
+                  id="senhaLogin"
+                  name="senha"
+                  value={dadosLogin.senha}
+                  onChange={aoAlterarCampoLogin}
+                  className={erros.login ? 'erro' : ''}
+                />
+              </div>
+              
+              {erros.login && <span className="mensagem-erro">{erros.login}</span>}
+              
+              <button 
+                type="submit" 
+                className="botao botaoPrimario margemSuperiorMedia"
+                disabled={carregandoLogin}
+              >
+                {carregandoLogin ? 'Entrando...' : 'Entrar'}
+              </button>
+            </form>
+          )}
+        </div>
         
         <form onSubmit={aoEnviarFormulario} className="formulario-cadastro">
           <div className="conteudo-formulario">
@@ -303,21 +426,21 @@ const Cadastro = () => {
                 </div>
               </div>
 
-              <div className="cartaoDestaque variacao2">
+              <div className="cartaoDestaque variacao2" id='tipo-perfil'>
                 <div>
                   <span>Tipo de Perfil</span>
                 </div>
                 <div className="listaIcones">
                   <button
                     type="button"
-                    className={dadosFormulario.tipoPerfil === 'Pessoal' ? 'ativo' : ''}
+                    className={dadosFormulario.tipoPerfil === 'Pessoal' ? 'botaoAtivo' : ''}
                     onClick={() => setDadosFormulario(prev => ({ ...prev, tipoPerfil: 'Pessoal' }))}
                   >
                     Pessoal
                   </button>
                   <button
                     type="button"
-                    className={dadosFormulario.tipoPerfil === 'Profissional' ? 'ativo' : ''}
+                    className={dadosFormulario.tipoPerfil === 'Profissional' ? 'botaoAtivo' : ''}
                     onClick={() => setDadosFormulario(prev => ({ ...prev, tipoPerfil: 'Profissional' }))}
                   >
                     Profissional
@@ -470,7 +593,7 @@ const Cadastro = () => {
             </div>
             
             <div className="secao-upload-imagem">
-              <div className="area-upload-imagem">
+              <div className="area-upload-imagem sombraPequena fundoMarromDestaqueTransparente">
                 <input
                   type="file"
                   id="foto"

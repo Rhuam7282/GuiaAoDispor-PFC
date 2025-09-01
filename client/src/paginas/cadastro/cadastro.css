@@ -1,3 +1,7 @@
+#tipo-perfil{
+  cursor: default;
+}
+
 .formulario-cadastro {
   background-color: var(--cor-destaque-primaria);
   border-radius: 8px;

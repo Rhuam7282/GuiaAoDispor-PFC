@@ -206,3 +206,29 @@ export const servicoCadastro = {
     }
   },
 };
+// Serviços de Autenticação
+export const servicoAuth = {
+  // Função para fazer login do usuário
+  login: async (email, senha) => {
+    try {
+      const resposta = await fazerRequisicao(`${URL_BASE}/auth/login`, "POST", {
+        email,
+        senha
+      });
+      return resposta;
+    } catch (erro) {
+      throw new Error(`Erro no login: ${erro.message}`);
+    }
+  },
+
+  // Função para buscar perfil do usuário logado
+  buscarPerfilLogado: async (id) => {
+    try {
+      const resposta = await fazerRequisicao(`${URL_BASE}/auth/perfil/${id}`, "GET");
+      return resposta;
+    } catch (erro) {
+      throw new Error(`Erro ao buscar perfil: ${erro.message}`);
+    }
+  }
+};
+

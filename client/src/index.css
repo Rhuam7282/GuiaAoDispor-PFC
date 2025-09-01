@@ -949,3 +949,28 @@ textarea:focus {
   box-shadow: var(--sombra) rgba(0, 0, 0, 0.5);
 }
 
+
+
+/* Classes para flexbox */
+.flexContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around; /* ou space-between, center, etc. */
+  align-items: flex-start;
+}
+
+.flexItem {
+  flex: 1; /* Permite que os itens cresçam e encolham */
+  min-width: 300px; /* Largura mínima para evitar que fiquem muito pequenos */
+  max-width: 48%; /* Para ter duas colunas com espaço entre elas */
+  margin: var(--espacamentoPequeno); /* Espaçamento entre os itens */
+}
+
+/* Media query para telas menores */
+@media (max-width: 768px) {
+  .flexItem {
+    max-width: 100%; /* Uma coluna em telas pequenas */
+  }
+}
+
+

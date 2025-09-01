@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './controles.css';
+// import VLibrasWidget from './VLibras/VLibrasWidget'; // Importa o VLibrasWidget
 import {
   Type,
   AlignJustify,
@@ -12,10 +13,14 @@ import {
   Pause,
   RotateCcw,
   X,
-  Accessibility,
+  PersonStanding,
   Link,
   EyeOff,
-  BookOpen
+  BookOpen,
+  CheckCircle,
+  AlertCircle,
+  Loader,
+  Volume2
 } from 'lucide-react';
 
 const ControlesAcessibilidade = () => {
@@ -35,29 +40,47 @@ const ControlesAcessibilidade = () => {
   const [pausarAnimacoes, setPausarAnimacoes] = useState(false);
   const [cursorGrande, setCursorGrande] = useState(false);
 
+  // VLibras - Estados e refs comentados
+  // const [vlibrasStatus, setVlibrasStatus] = useState({ status: 'pending', message: 'Aguardando VLibras...', progress: 0, error: null });
+  // const [vlibrasVisibility, setVlibrasVisibility] = useState(false); // State to control VLibrasWidget visibility
+  // const vlibrasWidgetRef = useRef(null); // Ref to VLibrasWidget
+
   const guiaMouseRef = useRef(null);
   const mascaraRef = useRef(null);
 
-  // Efeito para aplicar estilos de acessibilidade textual globalmente
+  // Callback para receber o status do VLibrasWidget
+  // const handleVlibrasStatusChange = useCallback((statusObj) => {
+  //   setVlibrasStatus(statusObj);
+  //   if (statusObj.status === 'success') {
+  //     // Se o VLibras carregou com sucesso, salvamos o estado de visibilidade
+  //     // salvarConfiguracao('vlibrasVisibility', true); // Removed this to avoid auto-enabling
+  //     // setVlibrasVisibility(true); // Removed this to avoid auto-enabling
+  //   }
+  // }, []);
+
   useEffect(() => {
     const aplicarEstilosTexto = () => {
-      const estiloDinamico = document.getElementById('estiloAcessibilidadeTexto');
+      let estiloDinamico = document.getElementById('estiloAcessibilidadeTexto');
       const conteudoEstilo = `
         :root {
           --fatorEscala: ${tamanhoFonte / 100};
           --espacamentoLetras: ${espacamentoLetras}px;
           --alturaLinha: ${alturaLinha};
+          font-size: calc(16px * var(--fatorEscala)); /* Aplica o fator de escala globalmente */
+        }
+        body {
+          letter-spacing: var(--espacamentoLetras);
+          line-height: var(--alturaLinha);
         }
       `;
 
       if (!estiloDinamico) {
         const style = document.createElement('style');
         style.id = 'estiloAcessibilidadeTexto';
-        style.textContent = conteudoEstilo;
         document.head.appendChild(style);
-      } else {
-        estiloDinamico.textContent = conteudoEstilo;
+        estiloDinamico = style;
       }
+      estiloDinamico.textContent = conteudoEstilo;
     };
 
     aplicarEstilosTexto();
@@ -94,7 +117,8 @@ const ControlesAcessibilidade = () => {
       destacarLinks: carregarConfiguracao('destacarLinks', false),
       modoDaltonico: carregarConfiguracao('modoDaltonico', 0),
       pausarAnimacoes: carregarConfiguracao('pausarAnimacoes', false),
-      cursorGrande: carregarConfiguracao('cursorGrande', false)
+      cursorGrande: carregarConfiguracao('cursorGrande', false),
+      // vlibrasVisibility: carregarConfiguracao('vlibrasVisibility', false) 
     };
 
     setTamanhoFonte(configuracoes.tamanhoFonte);
@@ -109,49 +133,25 @@ const ControlesAcessibilidade = () => {
     setModoDaltonico(configuracoes.modoDaltonico);
     setPausarAnimacoes(configuracoes.pausarAnimacoes);
     setCursorGrande(configuracoes.cursorGrande);
+    // setVlibrasVisibility(configuracoes.vlibrasVisibility); // Set initial VLibras visibility
   }, [carregarConfiguracao]);
 
+  // Efeito para aplicar configurações de cores e contraste
   useEffect(() => {
     const raiz = document.documentElement;
-
-    // Aplicar configurações de texto
-    raiz.style.setProperty('--acessibilidadeTamanhoFonte', `${tamanhoFonte}%`);
-    raiz.style.setProperty('--acessibilidadeEspacamentoLetras', `${espacamentoLetras}px`);
-    raiz.style.setProperty('--acessibilidadeAlturaLinha', alturaLinha);
-
-    salvarConfiguracao('tamanhoFonte', tamanhoFonte);
-    salvarConfiguracao('espacamentoLetras', espacamentoLetras);
-    salvarConfiguracao('alturaLinha', alturaLinha);
-  }, [tamanhoFonte, espacamentoLetras, alturaLinha, salvarConfiguracao]);
-
-  useEffect(() => {
-    const raiz = document.documentElement;
-
     raiz.classList.remove('contrasteLeve', 'contrasteIntenso');
-
     switch (modoContraste) {
-      case 1:
-        raiz.classList.add('contrasteLeve');
-        break;
-      case 2:
-        raiz.classList.add('contrasteIntenso');
-        break;
-      default:
-      // Nada a fazer para desativado
+      case 1: raiz.classList.add('contrasteLeve'); break;
+      case 2: raiz.classList.add('contrasteIntenso'); break;
+      default: break;
     }
-
     salvarConfiguracao('modoContraste', modoContraste);
   }, [modoContraste, salvarConfiguracao]);
 
+  // Efeito para aplicar modo escuro
   useEffect(() => {
     const raiz = document.documentElement;
-
-    raiz.classList.remove('temaEscuro');
-
-    if (modoEscuro === 1) {
-      raiz.classList.add('temaEscuro');
-    }
-
+    raiz.classList.toggle('temaEscuro', modoEscuro === 1);
     salvarConfiguracao('modoEscuro', modoEscuro);
   }, [modoEscuro, salvarConfiguracao]);
 
@@ -166,486 +166,417 @@ const ControlesAcessibilidade = () => {
     }
   }, []);
 
-useEffect(() => {
-  const manipularMovimentoMouse = (e) => {
-    if (guiaLeitura === 1 && guiaMouseRef.current) {
-      guiaMouseRef.current.style.top = `${e.clientY}px`;
-
-      const indicador = guiaMouseRef.current.querySelector('.cursor-indicator');
-      if (indicador) {
-        indicador.style.left = `${e.clientX}px`;
+  useEffect(() => {
+    const manipularMovimentoMouse = (e) => {
+      if (guiaLeitura === 1 && guiaMouseRef.current) {
+        guiaMouseRef.current.style.top = `${e.clientY}px`;
+        const indicador = guiaMouseRef.current.querySelector('.indicadorCursor');
+        if (indicador) {
+          indicador.style.left = `${e.clientX}px`;
+        }
+      } else if (guiaLeitura === 2 && mascaraRef.current) {
+        mascaraRef.current.style.top = `${e.clientY - 100}px`;
+        mascaraRef.current.style.left = `${e.clientX - 750}px`;
       }
-    } else if (guiaLeitura === 2 && mascaraRef.current) {
-      // Ajuste para centralizar a máscara de 1500x200 pixels
-      mascaraRef.current.style.top = `${e.clientY - 100}px`;  // Metade da altura (200/2)
-      mascaraRef.current.style.left = `${e.clientX - 750}px`; // Metade da largura (1500/2)
-    }
-  };
+    };
 
-  limparGuiasLeitura();
-
-  if (guiaLeitura === 1) {
-    document.addEventListener('mousemove', manipularMovimentoMouse);
-    const guia = document.createElement('div');
-    guia.className = 'guiaLeituraHorizontal';
-    guia.innerHTML = '<div class="indicadorCursor"></div>';
-    document.body.appendChild(guia);
-    guiaMouseRef.current = guia;
-  } else if (guiaLeitura === 2) {
-    document.addEventListener('mousemove', manipularMovimentoMouse);
-    const mascara = document.createElement('div');
-    mascara.className = 'mascaraLeitura';
-    document.body.appendChild(mascara);
-    mascaraRef.current = mascara;
-  }
-
-  salvarConfiguracao('guiaLeitura', guiaLeitura);
-
-  return () => {
-    document.removeEventListener('mousemove', manipularMovimentoMouse);
     limparGuiasLeitura();
+
+    if (guiaLeitura === 1) {
+      document.addEventListener('mousemove', manipularMovimentoMouse);
+      const guia = document.createElement('div');
+      guia.className = 'guiaLeituraHorizontal';
+      guia.innerHTML = '<div class="indicadorCursor"></div>';
+      document.body.appendChild(guia);
+      guiaMouseRef.current = guia;
+    } else if (guiaLeitura === 2) {
+      document.addEventListener('mousemove', manipularMovimentoMouse);
+      const mascara = document.createElement('div');
+      mascara.className = 'mascaraLeitura';
+      document.body.appendChild(mascara);
+      mascaraRef.current = mascara;
+    }
+
+    salvarConfiguracao('guiaLeitura', guiaLeitura);
+
+    return () => {
+      document.removeEventListener('mousemove', manipularMovimentoMouse);
+      limparGuiasLeitura();
+    };
+  }, [guiaLeitura, salvarConfiguracao, limparGuiasLeitura]);
+
+  useEffect(() => {
+    const raiz = document.documentElement;
+    raiz.classList.toggle('removerImagens', removerImagens);
+    raiz.classList.toggle('removerCabecalhos', removerCabecalhos);
+    raiz.classList.toggle('destacarLinks', destacarLinks);
+    raiz.classList.toggle('pausarAnimacoes', pausarAnimacoes);
+    raiz.classList.toggle('cursorGrande', cursorGrande);
+
+    raiz.classList.remove('daltonicoProtanopia', 'daltonicoDeuteranopia', 'daltonicoTritanopia');
+    switch (modoDaltonico) {
+      case 1: raiz.classList.add('daltonicoProtanopia'); break;
+      case 2: raiz.classList.add('daltonicoDeuteranopia'); break;
+      case 3: raiz.classList.add('daltonicoTritanopia'); break;
+      default: break;
+    }
+
+    salvarConfiguracao('removerImagens', removerImagens);
+    salvarConfiguracao('removerCabecalhos', removerCabecalhos);
+    salvarConfiguracao('destacarLinks', destacarLinks);
+    salvarConfiguracao('modoDaltonico', modoDaltonico);
+    salvarConfiguracao('pausarAnimacoes', pausarAnimacoes);
+    salvarConfiguracao('cursorGrande', cursorGrande);
+  }, [removerImagens, removerCabecalhos, destacarLinks, modoDaltonico, pausarAnimacoes, cursorGrande, salvarConfiguracao]);
+
+  useEffect(() => {
+    const manipularTeclaPressionada = (evento) => {
+      if (evento.altKey && evento.key === 'a') { evento.preventDefault(); setEstaAberto(prev => !prev); }
+      if (evento.altKey && evento.key === 'c') { evento.preventDefault(); setModoContraste(prev => (prev + 1) % 3); }
+      if (evento.altKey && evento.key === 'd') { evento.preventDefault(); setModoEscuro(prev => (prev + 1) % 2); }
+      if (evento.altKey && evento.key === '+') { evento.preventDefault(); setTamanhoFonte(prev => Math.min(prev + 10, 150)); }
+      if (evento.altKey && evento.key === '-') { evento.preventDefault(); setTamanhoFonte(prev => Math.max(prev - 10, 80)); }
+    };
+    document.addEventListener('keydown', manipularTeclaPressionada);
+    return () => document.removeEventListener('keydown', manipularTeclaPressionada);
+  }, []);
+
+  const alternarPainel = () => {
+    setEstaAberto(!estaAberto);
   };
-}, [guiaLeitura, salvarConfiguracao, limparGuiasLeitura]);
 
-useEffect(() => {
-  const raiz = document.documentElement;
+  const aumentarTamanhoFonte = () => setTamanhoFonte(prev => Math.min(prev + 5, 130));
+  const diminuirTamanhoFonte = () => setTamanhoFonte(prev => Math.max(prev - 5, 80));
+  const redefinirTamanhoFonte = () => setTamanhoFonte(100);
 
-  raiz.classList.toggle('removerImagens', removerImagens);
-  raiz.classList.toggle('removerCabecalhos', removerCabecalhos);
-  raiz.classList.toggle('destacarLinks', destacarLinks);
-  raiz.classList.toggle('pausarAnimacoes', pausarAnimacoes);
-  raiz.classList.toggle('cursorGrande', cursorGrande);
+  const aumentarEspacamentoLetras = () => setEspacamentoLetras(prev => Math.min(prev + 0.1, 0.5));
+  const diminuirEspacamentoLetras = () => setEspacamentoLetras(prev => Math.max(prev - 0.1, -0.5));
+  const redefinirEspacamentoLetras = () => setEspacamentoLetras(0);
 
-  raiz.classList.remove('daltonicoProtanopia', 'daltonicoDeuteranopia', 'daltonicoTritanopia');
-  switch (modoDaltonico) {
-    case 1:
-      raiz.classList.add('daltonicoProtanopia');
-      break;
-    case 2:
-      raiz.classList.add('daltonicoDeuteranopia');
-      break;
-    case 3:
-      raiz.classList.add('daltonicoTritanopia');
-      break;
-    default:
-    // Nada a fazer para normal
-  }
+  const aumentarAlturaLinha = () => setAlturaLinha(prev => Math.min(prev + 0.1, 2.0));
+  const diminuirAlturaLinha = () => setAlturaLinha(prev => Math.max(prev - 0.1, 1.0));
+  const redefinirAlturaLinha = () => setAlturaLinha(1.5);
 
-  salvarConfiguracao('removerImagens', removerImagens);
-  salvarConfiguracao('removerCabecalhos', removerCabecalhos);
-  salvarConfiguracao('destacarLinks', destacarLinks);
-  salvarConfiguracao('modoDaltonico', modoDaltonico);
-  salvarConfiguracao('pausarAnimacoes', pausarAnimacoes);
-  salvarConfiguracao('cursorGrande', cursorGrande);
-}, [removerImagens, removerCabecalhos, destacarLinks, modoDaltonico, pausarAnimacoes, cursorGrande, salvarConfiguracao]);
+  const redefinirTudo = () => {
+    setTamanhoFonte(100);
+    setEspacamentoLetras(0);
+    setAlturaLinha(1.5);
+    setModoContraste(0);
+    setModoEscuro(0);
+    setGuiaLeitura(0);
+    setRemoverImagens(false);
+    setRemoverCabecalhos(false);
+    setDestacarLinks(false);
+    setModoDaltonico(0);
+    setPausarAnimacoes(false);
+    setCursorGrande(false);
+    // setVlibrasVisibility(false); // Reset VLibras visibility to hidden initially
+    // setVlibrasStatus({ status: 'pending', message: 'Aguardando VLibras...', progress: 0, error: null });
 
-useEffect(() => {
-  const manipularTeclaPressionada = (evento) => {
-    if (evento.altKey && evento.key === 'a') {
-      evento.preventDefault();
-      setEstaAberto(prev => !prev);
-    }
-    if (evento.altKey && evento.key === 'c') {
-      evento.preventDefault();
-      setModoContraste(prev => (prev + 1) % 3);
-    }
-    if (evento.altKey && evento.key === 'd') {
-      evento.preventDefault();
-      setModoEscuro(prev => (prev + 1) % 2);
-    }
-    if (evento.altKey && evento.key === '+') {
-      evento.preventDefault();
-      setTamanhoFonte(prev => Math.min(prev + 10, 150));
-    }
-    if (evento.altKey && evento.key === '-') {
-      evento.preventDefault();
-      setTamanhoFonte(prev => Math.max(prev - 10, 80));
-    }
+    const chaves = [
+      'tamanhoFonte', 'espacamentoLetras', 'alturaLinha', 'modoContraste', 'modoEscuro',
+      'guiaLeitura', 'removerImagens', 'removerCabecalhos', 'destacarLinks',
+      'modoDaltonico', 'pausarAnimacoes', 'cursorGrande'/*, 'vlibrasVisibility'*/
+    ];
+
+    chaves.forEach(chave => {
+      try { localStorage.removeItem(`acessibilidade_${chave}`); } catch (error) { console.warn('Erro ao limpar configuração:', error); }
+    });
+
+    const raiz = document.documentElement;
+    const classes = [
+      'contrasteLeve', 'contrasteIntenso', 'temaEscuro',
+      'removerImagens', 'removerCabecalhos', 'destacarLinks',
+      'pausarAnimacoes', 'cursorGrande',
+      'daltonicoProtanopia', 'daltonicoDeuteranopia', 'daltonicoTritanopia'
+    ];
+    classes.forEach(classe => raiz.classList.remove(classe));
+
+    // Reset inline styles applied by JS
+    raiz.style.setProperty('--fatorEscala', '1');
+    raiz.style.setProperty('--espacamentoLetras', '0px');
+    raiz.style.setProperty('--alturaLinha', '1.5');
+    raiz.style.fontSize = '16px'; // Reset base font size
+
+    limparGuiasLeitura();
+    // Forçar reinício do VLibras se ele estiver visível
+    // if (vlibrasWidgetRef.current && vlibrasWidgetRef.current.restartVlibras) {
+    //   vlibrasWidgetRef.current.restartVlibras();
+    // }
   };
 
-  document.addEventListener('keydown', manipularTeclaPressionada);
-  return () => document.removeEventListener('keydown', manipularTeclaPressionada);
-}, []);
+  const obterTextoModoContraste = () => {
+    switch (modoContraste) { case 1: return 'Leve'; case 2: return 'Intenso'; default: return 'Desativado'; }
+  };
+  const obterTextoModoEscuro = () => {
+    return modoEscuro === 1 ? 'Ativado' : 'Desativado';
+  };
+  const obterTextoGuiaLeitura = () => {
+    switch (guiaLeitura) { case 1: return 'Barra'; case 2: return 'Máscara'; default: return 'Desativado'; }
+  };
+  const obterTextoModoDaltonico = () => {
+    switch (modoDaltonico) { case 1: return 'Protanopia'; case 2: return 'Deuteranopia'; case 3: return 'Tritanopia'; default: return 'Normal'; }
+  };
 
-const alternarPainel = () => {
-  setEstaAberto(!estaAberto);
-};
+  // VLibras - Funções e componentes comentados
+  // const obterIconeStatusVLibras = () => {
+  //   switch(vlibrasStatus.status) {
+  //     case 'success': return <CheckCircle size={16} className="status-success" />;
+  //     case 'error': return <AlertCircle size={16} className="status-error" />;
+  //     case 'loading': return <Loader size={16} className="status-loading" />;
+  //     default: return <Loader size={16} className="status-loading" />;
+  //   }
+  // };
 
-const aumentarTamanhoFonte = () => {
-  setTamanhoFonte(prev => Math.min(prev + 5, 130));
-};
+  // const toggleVlibrasVisibility = () => {
+  //   setVlibrasVisibility(prev => {
+  //       const newVisibility = !prev;
+  //       salvarConfiguracao('vlibrasVisibility', newVisibility);
+  //       if (newVisibility && (vlibrasStatus.status !== 'success' || vlibrasStatus.error)) {
+  //           reiniciarVLibras();
+  //       }
+  //       return newVisibility;
+  //   });
+  // };
 
-const diminuirTamanhoFonte = () => {
-  setTamanhoFonte(prev => Math.max(prev - 5, 80));
-};
+  // const reiniciarVLibras = () => {
+  //   setVlibrasStatus({ status: 'loading', message: 'Reiniciando VLibras...', progress: 10, error: null });
+  //   if (vlibrasWidgetRef.current && vlibrasWidgetRef.current.restartVlibras) {
+  //       vlibrasWidgetRef.current.restartVlibras();
+  //   } else {
+  //       console.warn('VLibrasWidget não está pronto para ser reiniciado ou a função restartVlibras não está disponível. Tentando nova inicialização.');
+  //       setVlibrasStatus({ status: 'error', message: 'Erro ao tentar reiniciar VLibras. Tente novamente mais tarde.', progress: 0, error: new Error('Restart function not found or widget not ready') });
+  //   }
+  // };
 
-const redefinirTamanhoFonte = () => {
-  setTamanhoFonte(100);
-};
+  return (
+    <>
+      <div className="controlesAcessibilidade">
+        <button
+          className="botaoAlternarAcessibilidade"
+          onClick={alternarPainel}
+          aria-label="Abrir controles de acessibilidade (Alt + A)"
+          title="Controles de Acessibilidade (Alt + A)"
+        >
+          <PersonStanding size={24} />
+          {/* VLibras - Indicador de carregamento comentado */}
+          {/* {vlibrasVisibility && vlibrasStatus.status === 'loading' && (
+              <span className="vlibras-loading-indicator"></span>
+            )} */}
+        </button>
 
-const aumentarEspacamentoLetras = () => {
-  setEspacamentoLetras(prev => Math.min(prev + 0.1, 0.5));
-};
-
-const diminuirEspacamentoLetras = () => {
-  setEspacamentoLetras(prev => Math.max(prev - 0.1, -0.5));
-};
-
-const redefinirEspacamentoLetras = () => {
-  setEspacamentoLetras(0);
-};
-
-const aumentarAlturaLinha = () => {
-  setAlturaLinha(prev => Math.min(prev + 0.1, 2.0));
-};
-
-const diminuirAlturaLinha = () => {
-  setAlturaLinha(prev => Math.max(prev - 0.1, 1.0));
-};
-
-const redefinirAlturaLinha = () => {
-  setAlturaLinha(1.5);
-};
-
-const redefinirTudo = () => {
-  setTamanhoFonte(100);
-  setEspacamentoLetras(0);
-  setAlturaLinha(1.5);
-  setModoContraste(0);
-  setModoEscuro(0);
-  setGuiaLeitura(0);
-  setRemoverImagens(false);
-  setRemoverCabecalhos(false);
-  setDestacarLinks(false);
-  setModoDaltonico(0);
-  setPausarAnimacoes(false);
-  setCursorGrande(false);
-
-  const chaves = [
-    'tamanhoFonte', 'espacamentoLetras', 'alturaLinha', 'modoContraste', 'modoEscuro',
-    'guiaLeitura', 'removerImagens', 'removerCabecalhos', 'destacarLinks',
-    'modoDaltonico', 'pausarAnimacoes', 'cursorGrande'
-  ];
-
-  chaves.forEach(chave => {
-    try {
-      localStorage.removeItem(`acessibilidade_${chave}`);
-    } catch (error) {
-      console.warn('Erro ao limpar configuração:', error);
-    }
-  });
-
-  const raiz = document.documentElement;
-  const classes = [
-    'contrasteLeve', 'contrasteIntenso', 'temaEscuro',
-    'removerImagens', 'removerCabecalhos', 'destacarLinks',
-    'pausarAnimacoes', 'cursorGrande',
-    'daltonicoProtanopia', 'daltonicoDeuteranopia', 'daltonicoTritanopia'
-  ];
-
-  classes.forEach(classe => raiz.classList.remove(classe));
-
-  raiz.style.setProperty('--acessibilidadeTamanhoFonte', '100%');
-  raiz.style.setProperty('--acessibilidadeEspacamentoLetras', '0px');
-  raiz.style.setProperty('--acessibilidadeAlturaLinha', '1.5');
-
-  limparGuiasLeitura();
-};
-
-const obterTextoModoContraste = () => {
-  switch (modoContraste) {
-    case 1: return 'Leve';
-    case 2: return 'Intenso';
-    default: return 'Desativado';
-  }
-};
-
-const obterTextoModoEscuro = () => {
-  return modoEscuro === 1 ? 'Ativado' : 'Desativado';
-};
-
-const obterTextoGuiaLeitura = () => {
-  switch (guiaLeitura) {
-    case 1: return 'Barra';
-    case 2: return 'Máscara';
-    default: return 'Desativado';
-  }
-};
-
-const obterTextoModoDaltonico = () => {
-  switch (modoDaltonico) {
-    case 1: return 'Protanopia';
-    case 2: return 'Deuteranopia';
-    case 3: return 'Tritanopia';
-    default: return 'Normal';
-  }
-};
-
-return (
-  <div className="controlesAcessibilidade">
-    <button
-      className="botaoAlternarAcessibilidade"
-      onClick={alternarPainel}
-      aria-label="Abrir controles de acessibilidade (Alt + A)"
-      title="Controles de Acessibilidade (Alt + A)"
-    >
-      <Accessibility size={24} />
-    </button>
-
-    {estaAberto && (
-      <div className="painelAcessibilidade" role="dialog" aria-label="Painel de controles de acessibilidade">
-        <div className="cabecalhoAcessibilidade">
-          <div className="tituloHeader">
-            <Accessibility size={20} />
-            <h3>Acessibilidade</h3>
-          </div>
-          <button
-            className="botaoFechar"
-            onClick={alternarPainel}
-            aria-label="Fechar controles"
-          >
-            <X size={18} />
-          </button>
-        </div>
-
-        <div className="conteudoAcessibilidade">
-          <div className="secao">
-            <h4 className="tituloSecao">1. Controles de Texto</h4>
-
-            <div className="grupoControle">
-              <div className="cabecalhoControle">
-                <Type size={16} />
-                <span>Tamanho da Fonte</span>
-                <span className="valorControle">{tamanhoFonte}%</span>
-              </div>
-              <div className="botoesControle">
-                <button onClick={diminuirTamanhoFonte} className="botaoControle diminuir">A-</button>
-                <button onClick={redefinirTamanhoFonte} className="botaoControle resetar">A</button>
-                <button onClick={aumentarTamanhoFonte} className="botaoControle aumentar">A+</button>
-              </div>
-            </div>
-
-            <div className="grupoControle">
-              <div className="cabecalhoControle">
-                <MoreHorizontal size={16} />
-                <span>Espaço entre Letras</span>
-                <span className="valorControle">{espacamentoLetras.toFixed(1)}px</span>
-              </div>
-              <div className="botoesControle">
-                <button onClick={diminuirEspacamentoLetras} className="botaoControle diminuir">-</button>
-                <button onClick={redefinirEspacamentoLetras} className="botaoControle resetar">0</button>
-                <button onClick={aumentarEspacamentoLetras} className="botaoControle aumentar">+</button>
-              </div>
-            </div>
-
-            <div className="grupoControle">
-              <div className="cabecalhoControle">
-                <AlignJustify size={16} />
-                <span>Espaço entre Linhas</span>
-                <span className="valorControle">{alturaLinha.toFixed(1)}</span>
-              </div>
-              <div className="botoesControle">
-                <button onClick={diminuirAlturaLinha} className="botaoControle diminuir">-</button>
-                <button onClick={redefinirAlturaLinha} className="botaoControle resetar">1.5</button>
-                <button onClick={aumentarAlturaLinha} className="botaoControle aumentar">+</button>
-              </div>
-            </div>
-          </div>
-
-          <div className="secao">
-            <h4 className="tituloSecao">2. Cores e Contraste</h4>
-
-            <div className="controleMultiOpcao">
-              <div className="cabecalhoControle">
-                <Contrast size={16} />
-                <span>Contraste</span>
-                <span className="valorControle">{obterTextoModoContraste()}</span>
-              </div>
-              <div className="botoesMulti">
-                <button
-                  onClick={() => setModoContraste(0)}
-                  className={`botaoMulti ${modoContraste === 0 ? 'botaoAtivo' : ''}`}
-                >Desativado</button>
-                <button
-                  onClick={() => setModoContraste(1)}
-                  className={`botaoMulti ${modoContraste === 1 ? 'botaoAtivo' : ''}`}
-                >Leve</button>
-                <button
-                  onClick={() => setModoContraste(2)}
-                  className={`botaoMulti ${modoContraste === 2 ? 'botaoAtivo' : ''}`}
-                >Intenso</button>
-              </div>
-            </div>
-
-            <div className="controleMultiOpcao">
-              <div className="cabecalhoControle">
-                {modoEscuro === 1 ? <Moon size={16} /> : <Sun size={16} />}
-                <span>Modo Escuro</span>
-                <span className="valorControle">{obterTextoModoEscuro()}</span>
-              </div>
-              <div className="botoesMulti">
-                <button
-                  onClick={() => setModoEscuro(0)}
-                  className={`botaoMulti ${modoEscuro === 0 ? 'botaoAtivo' : ''}`}
-                >Desativado</button>
-                <button
-                  onClick={() => setModoEscuro(1)}
-                  className={`botaoMulti ${modoEscuro === 1 ? 'botaoAtivo' : ''}`}
-                >Ativado</button>
-              </div>
-            </div>
-
-            <div className="controleMultiOpcao">
-              <div className="cabecalhoControle">
-                <Eye size={16} />
-                <span>Modo Daltônico</span>
-                <span className="valorControle">{obterTextoModoDaltonico()}</span>
-              </div>
-              <div className="botoesMulti">
-                <button
-                  onClick={() => setModoDaltonico(0)}
-                  className={`botaoMulti ${modoDaltonico === 0 ? 'botaoAtivo' : ''}`}
-                >Normal</button>
-                <button
-                  onClick={() => setModoDaltonico(1)}
-                  className={`botaoMulti ${modoDaltonico === 1 ? 'botaoAtivo' : ''}`}
-                >Protanopia</button>
-                <button
-                  onClick={() => setModoDaltonico(2)}
-                  className={`botaoMulti ${modoDaltonico === 2 ? 'botaoAtivo' : ''}`}
-                >Deuteranopia</button>
-                <button
-                  onClick={() => setModoDaltonico(3)}
-                  className={`botaoMulti ${modoDaltonico === 3 ? 'botaoAtivo' : ''}`}
-                >Tritanopia</button>
-              </div>
-            </div>
-          </div>
-
-          <div className="secao">
-            <h4 className="tituloSecao">3. Navegação</h4>
-
-            <div className="controleMultiOpcao">
-              <div className="cabecalhoControle">
-                <BookOpen size={16} />
-                <span>Guia de Leitura</span>
-                <span className="valorControle">{obterTextoGuiaLeitura()}</span>
-              </div>
-              <div className="botoesMulti">
-                <button
-                  onClick={() => setGuiaLeitura(0)}
-                  className={`botaoMulti ${guiaLeitura === 0 ? 'botaoAtivo' : ''}`}
-                >Desativado</button>
-                <button
-                  onClick={() => setGuiaLeitura(1)}
-                  className={`botaoMulti ${guiaLeitura === 1 ? 'botaoAtivo' : ''}`}
-                >Barra</button>
-                <button
-                  onClick={() => setGuiaLeitura(2)}
-                  className={`botaoMulti ${guiaLeitura === 2 ? 'botaoAtivo' : ''}`}
-                >Máscara</button>
-              </div>
-            </div>
-
-            <div className="controleToggle">
-              <div className="cabecalhoToggle">
-                <Link size={16} />
-                <span>Destacar Links</span>
+        {estaAberto && (
+          <div className="painelAcessibilidade" role="dialog" aria-label="Painel de controles de acessibilidade">
+            <div className="cabecalhoAcessibilidade">
+              <div className="tituloHeader">
+                <PersonStanding size={20} />
+                <h3>Acessibilidade</h3>
               </div>
               <button
-                onClick={() => setDestacarLinks(prev => !prev)}
-                className={`botaoToggle ${destacarLinks ? 'botaoAtivo' : ''}`}
+                className="botaoFechar"
+                onClick={alternarPainel}
+                aria-label="Fechar controles"
               >
-                <div className="sliderToggle"></div>
+                <X size={18} />
               </button>
             </div>
 
-            <div className="controleToggle">
-              <div className="cabecalhoToggle">
-                <MousePointer size={16} />
-                <span>Cursor Grande</span>
-              </div>
-              <button
-                onClick={() => setCursorGrande(prev => !prev)}
-                className={`botaoToggle ${cursorGrande ? 'botaoAtivo' : ''}`}
-              >
-                <div className="sliderToggle"></div>
-              </button>
-            </div>
+            <div className="conteudoAcessibilidade">
+              {/* Seção VLibras comentada */}
+              {/* <div className="secao">
+                <h4 className="tituloSecao">
+                  <Volume2 size={16} />
+                  VLibras
+                </h4>
+                <div className="vlibras-status-toggle-wrapper">
+                  <button
+                    onClick={toggleVlibrasVisibility}
+                    className={`toggle-vlibras-btn ${vlibrasVisibility ? 'active' : ''}`}
+                    aria-pressed={vlibrasVisibility}
+                  >
+                    {vlibrasVisibility ? 'Desativar VLibras' : 'Ativar VLibras'}
+                  </button>
+                  {vlibrasVisibility && (
+                    <div className="vlibras-status-display">
+                      <div className="vlibras-status-header">
+                        <span>{obterIconeStatusVLibras()} {vlibrasStatus.message}</span>
+                        <button 
+                          onClick={reiniciarVLibras}
+                          className="vlibras-retry-btn"
+                          disabled={vlibrasStatus.status === 'loading'}
+                          title="Reiniciar VLibras"
+                        >
+                          <RotateCcw size={16} /> Reiniciar
+                        </button>
+                      </div>
+                      <div className="progress-bar">
+                        <div 
+                          className="progress-fill" 
+                          style={{ width: `${vlibrasStatus.progress}%` }}
+                        ></div>
+                      </div>
+                      {vlibrasStatus.error && (
+                        <p className="vlibras-error-message">Erro: {vlibrasStatus.error.message}</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div> */}
 
-            <div className="controleToggle">
-              <div className="cabecalhoToggle">
-                <Pause size={16} />
-                <span>Pausar Animações</span>
+              {/* Controles de Texto */}
+              <div className="secao">
+                <h4 className="tituloSecao">
+                  <Type size={16} /> Tamanho do Texto
+                </h4>
+                <div className="controlesBotoes">
+                  <button onClick={diminuirTamanhoFonte} aria-label="Diminuir tamanho da fonte">-</button>
+                  <span>{tamanhoFonte}%</span>
+                  <button onClick={aumentarTamanhoFonte} aria-label="Aumentar tamanho da fonte">+</button>
+                  <button onClick={redefinirTamanhoFonte} aria-label="Redefinir tamanho da fonte">Redefinir</button>
+                </div>
               </div>
-              <button
-                onClick={() => setPausarAnimacoes(prev => !prev)}
-                className={`botaoToggle ${pausarAnimacoes ? 'botaoAtivo' : ''}`}
-              >
-                <div className="sliderToggle"></div>
-              </button>
+
+              <div className="secao">
+                <h4 className="tituloSecao">
+                  <AlignJustify size={16} /> Espaçamento de Letras
+                </h4>
+                <div className="controlesBotoes">
+                  <button onClick={diminuirEspacamentoLetras} aria-label="Diminuir espaçamento de letras">-</button>
+                  <span>{espacamentoLetras.toFixed(1)}px</span>
+                  <button onClick={aumentarEspacamentoLetras} aria-label="Aumentar espaçamento de letras">+</button>
+                  <button onClick={redefinirEspacamentoLetras} aria-label="Redefinir espaçamento de letras">Redefinir</button>
+                </div>
+              </div>
+
+              <div className="secao">
+                <h4 className="tituloSecao">
+                  <MoreHorizontal size={16} /> Altura da Linha
+                </h4>
+                <div className="controlesBotoes">
+                  <button onClick={diminuirAlturaLinha} aria-label="Diminuir altura da linha">-</button>
+                  <span>{alturaLinha.toFixed(1)}</span>
+                  <button onClick={aumentarAlturaLinha} aria-label="Aumentar altura da linha">+</button>
+                  <button onClick={redefinirAlturaLinha} aria-label="Redefinir altura da linha">Redefinir</button>
+                </div>
+              </div>
+
+              {/* Controles de Cores e Contraste */}
+              <div className="secao">
+                <h4 className="tituloSecao">
+                  <Contrast size={16} /> Modo de Contraste
+                </h4>
+                <div className="controlesBotoes">
+                  <button onClick={() => setModoContraste(prev => (prev + 1) % 3)} aria-label={`Alternar modo de contraste. Estado atual: ${obterTextoModoContraste()}`}>
+                    {obterTextoModoContraste()}
+                  </button>
+                </div>
+              </div>
+
+              <div className="secao">
+                <h4 className="tituloSecao">
+                  {modoEscuro === 1 ? <Moon size={16} /> : <Sun size={16} />} Tema Escuro
+                </h4>
+                <div className="controlesBotoes">
+                  <button onClick={() => setModoEscuro(prev => (prev + 1) % 2)} aria-label={`Alternar tema escuro. Estado atual: ${obterTextoModoEscuro()}`}>
+                    {obterTextoModoEscuro()}
+                  </button>
+                </div>
+              </div>
+
+              {/* Ferramentas de Leitura */}
+              <div className="secao">
+                <h4 className="tituloSecao">
+                  <Eye size={16} /> Guia de Leitura
+                </h4>
+                <div className="controlesBotoes">
+                  <button onClick={() => setGuiaLeitura(prev => (prev + 1) % 3)} aria-label={`Alternar guia de leitura. Estado atual: ${obterTextoGuiaLeitura()}`}>
+                    {obterTextoGuiaLeitura()}
+                  </button>
+                </div>
+              </div>
+
+              <div className="secao">
+                <h4 className="tituloSecao">
+                  <BookOpen size={16} /> Leitura Daltônica
+                </h4>
+                <div className="controlesBotoes">
+                  <button onClick={() => setModoDaltonico(prev => (prev + 1) % 4)} aria-label={`Alternar modo daltônico. Estado atual: ${obterTextoModoDaltonico()}`}>
+                    {obterTextoModoDaltonico()}
+                  </button>
+                </div>
+              </div>
+
+              {/* Outras Ferramentas */}
+              <div className="secao">
+                <h4 className="tituloSecao">
+                  <EyeOff size={16} /> Ocultar Imagens
+                </h4>
+                <div className="controlesBotoes">
+                  <button onClick={() => setRemoverImagens(!removerImagens)} aria-pressed={removerImagens}>
+                    {removerImagens ? 'Ativado' : 'Desativado'}
+                  </button>
+                </div>
+              </div>
+
+              <div className="secao">
+                <h4 className="tituloSecao">
+                  <EyeOff size={16} /> Ocultar Cabeçalhos
+                </h4>
+                <div className="controlesBotoes">
+                  <button onClick={() => setRemoverCabecalhos(!removerCabecalhos)} aria-pressed={removerCabecalhos}>
+                    {removerCabecalhos ? 'Ativado' : 'Desativado'}
+                  </button>
+                </div>
+              </div>
+
+              <div className="secao">
+                <h4 className="tituloSecao">
+                  <Link size={16} /> Destacar Links
+                </h4>
+                <div className="controlesBotoes">
+                  <button onClick={() => setDestacarLinks(!destacarLinks)} aria-pressed={destacarLinks}>
+                    {destacarLinks ? 'Ativado' : 'Desativado'}
+                  </button>
+                </div>
+              </div>
+
+              <div className="secao">
+                <h4 className="tituloSecao">
+                  <Pause size={16} /> Pausar Animações
+                </h4>
+                <div className="controlesBotoes">
+                  <button onClick={() => setPausarAnimacoes(!pausarAnimacoes)} aria-pressed={pausarAnimacoes}>
+                    {pausarAnimacoes ? 'Ativado' : 'Desativado'}
+                  </button>
+                </div>
+              </div>
+
+              <div className="secao">
+                <h4 className="tituloSecao">
+                  <MousePointer size={16} /> Cursor Grande
+                </h4>
+                <div className="controlesBotoes">
+                  <button onClick={() => setCursorGrande(!cursorGrande)} aria-pressed={cursorGrande}>
+                    {cursorGrande ? 'Ativado' : 'Desativado'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Botão de Redefinir Tudo */}
+              <div className="secao secaoRedefinir">
+                <button onClick={redefinirTudo} className="botaoRedefinir" aria-label="Redefinir todas as configurações de acessibilidade">
+                  <RotateCcw size={18} /> Redefinir Tudo
+                </button>
+              </div>
             </div>
           </div>
-
-          <div className="secao">
-            <h4 className="tituloSecao">4. Leitores de Tela</h4>
-
-            <div className="controleToggle">
-              <div className="cabecalhoToggle">
-                <EyeOff size={16} />
-                <span>Remover Imagens</span>
-              </div>
-              <button
-                onClick={() => setRemoverImagens(prev => !prev)}
-                className={`botaoToggle ${removerImagens ? 'botaoAtivo' : ''}`}
-              >
-                <div className="sliderToggle"></div>
-              </button>
-            </div>
-
-            <div className="controleToggle">
-              <div className="cabecalhoToggle">
-                <Type size={16} />
-                <span>Remover Cabeçalhos</span>
-              </div>
-              <button
-                onClick={() => setRemoverCabecalhos(prev => !prev)}
-                className={`botaoToggle ${removerCabecalhos ? 'botaoAtivo' : ''}`}
-              >
-                <div className="sliderToggle"></div>
-              </button>
-            </div>
-          </div>
-
-          <div className="secaoAtalhos">
-            <details>
-              <summary>Atalhos de Teclado</summary>
-              <div className="listaAtalhos">
-                <div><kbd>Alt + A</kbd> Abrir/Fechar painel</div>
-                <div><kbd>Alt + C</kbd> Alternar contraste</div>
-                <div><kbd>Alt + D</kbd> Alternar tema</div>
-                <div><kbd>Alt + +</kbd> Aumentar fonte</div>
-                <div><kbd>Alt + -</kbd> Diminuir fonte</div>
-              </div>
-            </details>
-          </div>
-        </div>
-
-        <div className="secaoReset">
-          <button
-            onClick={redefinirTudo}
-            className="botaoResetarTudo"
-            aria-label="Resetar todas as configurações"
-          >
-            <RotateCcw size={16} />
-            Resetar Tudo
-          </button>
-        </div>
+        )}
       </div>
-    )}
-  </div>
-);
-}
+
+      {/* VLibrasWidget comentado */}
+      {/* <VLibrasWidget ref={vlibrasWidgetRef} onStatusChange={handleVlibrasStatusChange} isVisible={vlibrasVisibility} /> */}
+    </>
+  );
+};
 
 export default ControlesAcessibilidade;
-
