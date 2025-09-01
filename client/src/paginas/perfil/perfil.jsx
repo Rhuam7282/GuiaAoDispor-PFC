@@ -237,7 +237,7 @@ const Perfil = () => {
                   />
                 ))}
                 <span className="textoMarromEscuro">
-                  {dadosPerfil.avaliacao.toFixed(1)}
+                  {dadosPerfil.avaliacao !== undefined && dadosPerfil.avaliacao !== null ? dadosPerfil.avaliacao.toFixed(1) : '0.0'}
                 </span>
               </div>
               
@@ -270,56 +270,59 @@ const Perfil = () => {
           </div>
         </div>
 
+        {/* Seção de Históricos */}
+        <div className="flexContainer gapGrande">
         {/* Histórico Acadêmico */}
-        <div className="margemInferiorGrande">
-          <h2 className="bordaInferiorSubtle">Histórico Acadêmico</h2>
-          <div className="gridContainer gridColunasAuto gapMedio">
-            {historicoAcademico.length > 0 ? (
-              historicoAcademico.map((item, index) => (
-                <div key={index} className="cartao fundoAzulDestaque">
-                  <h3>{item.nome}</h3>
-                  <p>{item.instituicao}</p>
-                  <p className="textoMarromEscuro">{item.periodo}</p>
-                </div>
-              ))
-            ) : (
-              <div className="cartao fundoAzulDestaque">
-                <p>Nenhum histórico acadêmico cadastrado.</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Histórico Profissional */}
-        <div className="margemInferiorGrande">
-          <h2 className="bordaInferiorSubtle">Histórico Profissional</h2>
-          <div className="gridContainer gridColunasAuto gapMedio">
-            {historicoProfissional.length > 0 ? (
-              historicoProfissional.map((item, index) => (
-                <div key={index} className="cartao fundoAzulDestaque flexColuna gapPequeno alinharEsticar">
-                  <div className="containerImagem">
-                    <img
-                      className="imagemAspecto"
-                      src={item.imagem}
-                      alt={`${item.nome} - Local de trabalho de ${dadosPerfil.nome}`}
-                    />
-                  </div>
-                  <div className="margemSuperiorZero">
+          <div className="flexItem margemInferiorGrande">
+            <h2 className="bordaInferiorSubtle">Histórico Acadêmico</h2>
+            <div className="gridContainer gridColunasAuto gapMedio">
+              {historicoAcademico.length > 0 ? (
+                historicoAcademico.map((item, index) => (
+                  <div key={index} className="cartao fundoAzulDestaque">
                     <h3>{item.nome}</h3>
+                    <p>{item.instituicao}</p>
+                    <p className="textoMarromEscuro">{item.periodo}</p>
                   </div>
+                ))
+              ) : (
+                <div className="cartao fundoAzulDestaque">
+                  <p>Nenhum histórico acadêmico cadastrado.</p>
                 </div>
-              ))
-            ) : (
-              <div className="cartao fundoAzulDestaque">
-                <p>Nenhum histórico profissional cadastrado.</p>
-              </div>
-            )}
+              )}
+            </div>
+          </div>
+
+          {/* Histórico Profissional */}
+          <div className="flexItem margemInferiorGrande">
+            <h2 className="bordaInferiorSubtle">Histórico Profissional</h2>
+            <div className="gridContainer gridColunasAuto gapMedio">
+              {historicoProfissional.length > 0 ? (
+                historicoProfissional.map((item, index) => (
+                  <div key={index} className="cartao fundoAzulDestaque flexColuna gapPequeno alinharEsticar">
+                    <div className="containerImagem">
+                      <img
+                        className="imagemAspecto"
+                        src={item.imagem}
+                        alt={`${item.nome} - Local de trabalho de ${dadosPerfil.nome}`}
+                      />
+                    </div>
+                    <div className="margemSuperiorZero">
+                      <h3>{item.nome}</h3>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="cartao fundoAzulDestaque">
+                  <p>Nenhum histórico profissional cadastrado.</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
       </div>
     </Corpo>
   );
-}
+};
 
 export default Perfil;
