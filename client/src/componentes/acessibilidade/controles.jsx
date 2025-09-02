@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import './controles.css';
-// import VLibrasWidget from './VLibras/VLibrasWidget'; // Importa o VLibrasWidget
+import useVLibras from '@ganchos/useVLibras';
 import {
   Type,
   AlignJustify,
@@ -17,9 +17,6 @@ import {
   Link,
   EyeOff,
   BookOpen,
-  CheckCircle,
-  AlertCircle,
-  Loader,
   Volume2
 } from 'lucide-react';
 
@@ -49,10 +46,8 @@ const ControlesAcessibilidade = () => {
   const [pausarAnimacoes, setPausarAnimacoes] = useState(false);
   const [cursorGrande, setCursorGrande] = useState(false);
 
-
   const guiaMouseRef = useRef(null);
   const mascaraRef = useRef(null);
-
 
   useEffect(() => {
     const aplicarEstilosTexto = () => {
@@ -249,45 +244,45 @@ const ControlesAcessibilidade = () => {
   const diminuirAlturaLinha = () => setAlturaLinha(prev => Math.max(prev - 0.1, 1.0));
   const redefinirAlturaLinha = () => setAlturaLinha(1.5);
 
-  const redefinirTudo = () => {
-    setTamanhoFonte(100);
-    setEspacamentoLetras(0);
-    setAlturaLinha(1.5);
-    setModoContraste(0);
-    setModoEscuro(0);
-    setGuiaLeitura(0);
-    setRemoverImagens(false);
-    setRemoverCabecalhos(false);
-    setDestacarLinks(false);
-    setModoDaltonico(0);
-    setPausarAnimacoes(false);
-    setCursorGrande(false);
+  // const redefinirTudo = () => {
+  //   setTamanhoFonte(100);
+  //   setEspacamentoLetras(0);
+  //   setAlturaLinha(1.5);
+  //   setModoContraste(0);
+  //   setModoEscuro(0);
+  //   setGuiaLeitura(0);
+  //   setRemoverImagens(false);
+  //   setRemoverCabecalhos(false);
+  //   setDestacarLinks(false);
+  //   setModoDaltonico(0);
+  //   setPausarAnimacoes(false);
+  //   setCursorGrande(false);
 
-    const chaves = [
-      'tamanhoFonte', 'espacamentoLetras', 'alturaLinha', 'modoContraste', 'modoEscuro',
-      'guiaLeitura', 'removerImagens', 'removerCabecalhos', 'destacarLinks',
-      'modoDaltonico', 'pausarAnimacoes', 'cursorGrande'
-    ];
+  //   const chaves = [
+  //     'tamanhoFonte', 'espacamentoLetras', 'alturaLinha', 'modoContraste', 'modoEscuro',
+  //     'guiaLeitura', 'removerImagens', 'removerCabecalhos', 'destacarLinks',
+  //     'modoDaltonico', 'pausarAnimacoes', 'cursorGrande'
+  //   ];
 
-    chaves.forEach(chave => {
-      try { localStorage.removeItem(`acessibilidade_${chave}`); } catch (error) { console.warn('Erro ao limpar configuração:', error); }
-    });
+  //   chaves.forEach(chave => {
+  //     try { localStorage.removeItem(`acessibilidade_${chave}`); } catch (error) { console.warn('Erro ao limpar configuração:', error); }
+  //   });
 
-    const raiz = document.documentElement;
-    const classes = [
-      'contrasteLeve', 'contrasteIntenso', 'temaEscuro',
-      'removerImagens', 'removerCabecalhos', 'destacarLinks',
-      'pausarAnimacoes', 'cursorGrande',
-      'daltonicoProtanopia', 'daltonicoDeuteranopia', 'daltonicoTritanopia'
-    ];
-    classes.forEach(classe => raiz.classList.remove(classe));
+  //   const raiz = document.documentElement;
+  //   const classes = [
+  //     'contrasteLeve', 'contrasteIntenso', 'temaEscuro',
+  //     'removerImagens', 'removerCabecalhos', 'destacarLinks',
+  //     'pausarAnimacoes', 'cursorGrande',
+  //     'daltonicoProtanopia', 'daltonicoDeuteranopia', 'daltonicoTritanopia'
+  //   ];
+  //   classes.forEach(classe => raiz.classList.remove(classe));
 
-    raiz.style.setProperty('--fatorEscala', '1');
-    raiz.style.setProperty('--espacamentoLetras', '0px');
-    raiz.style.setProperty('--alturaLinha', '1.5');
+  //   raiz.style.setProperty('--fatorEscala', '1');
+  //   raiz.style.setProperty('--espacamentoLetras', '0px');
+  //   raiz.style.setProperty('--alturaLinha', '1.5');
 
-    limparGuiasLeitura();
-  };
+  //   limparGuiasLeitura();
+  // };
 
   const obterTextoModoContraste = () => {
     switch (modoContraste) { case 1: return 'Leve'; case 2: return 'Intenso'; default: return 'Desativado'; }
@@ -302,236 +297,207 @@ const ControlesAcessibilidade = () => {
     switch (modoDaltonico) { case 1: return 'Protanopia'; case 2: return 'Deuteranopia'; case 3: return 'Tritanopia'; default: return 'Normal'; }
   };
 
-
-
-
   return (
-    <>
-      <div className="controlesAcessibilidade">
-        <button
-          className="botaoAlternarAcessibilidade"
-          onClick={alternarPainel}
-          aria-label="Abrir controles de acessibilidade (Alt + A)"
-          title="Controles de Acessibilidade (Alt + A)"
-        >
-          <PersonStanding size={24} />
-          {}
-          {/* {vlibrasVisibility && vlibrasStatus.status === 'loading' && (
-              <span className="vlibras-loading-indicator"></span>
-            )} */}
-        </button>
+    <div className="controlesAcessibilidade">
+      <button
+        className="botaoAlternarAcessibilidade"
+        onClick={alternarPainel}
+        aria-label="Abrir controles de acessibilidade (Alt + A)"
+        title="Controles de Acessibilidade (Alt + A)"
+      >
+        <PersonStanding size={24} />
+      </button>
 
-        {estaAberto && (
-          <div className="painelAcessibilidade" role="dialog" aria-label="Painel de controles de acessibilidade">
-            <div className="cabecalhoAcessibilidade">
-              <div className="tituloHeader">
-                <PersonStanding size={20} />
-                <h3>Acessibilidade</h3>
-              </div>
-              <button
-                className="botaoFechar"
-                onClick={alternarPainel}
-                aria-label="Fechar controles"
-              >
-                <X size={18} />
-              </button>
+      {estaAberto && (
+        <div className="painelAcessibilidade" role="dialog" aria-label="Painel de controles de acessibilidade">
+          <div className="cabecalhoAcessibilidade">
+            <div className="tituloHeader">
+              <PersonStanding size={20} />
+              <h3>Acessibilidade</h3>
             </div>
-
-            <div className="conteudoAcessibilidade">
-              {/* Seção VLibras comentada */}
-              {/* <div className="secao">
-                <h4 className="tituloSecao">
-                  <Volume2 size={16} />
-                  VLibras
-                </h4>
-                <div className="vlibras-status-toggle-wrapper">
-                  <button
-                    onClick={toggleVlibrasVisibility}
-                    className={`toggle-vlibras-btn ${vlibrasVisibility ? 'active' : ''}`}
-                    aria-pressed={vlibrasVisibility}
-                  >
-                    {vlibrasVisibility ? 'Desativar VLibras' : 'Ativar VLibras'}
-                  </button>
-                  {vlibrasVisibility && (
-                    <div className="vlibras-status-display">
-                      <div className="vlibras-status-header">
-                        <span>{obterIconeStatusVLibras()} {vlibrasStatus.message}</span>
-                        <button 
-                          onClick={reiniciarVLibras}
-                          className="vlibras-retry-btn"
-                          disabled={vlibrasStatus.status === 'loading'}
-                          title="Reiniciar VLibras"
-                        >
-                          <RotateCcw size={16} /> Reiniciar
-                        </button>
-                      </div>
-                      <div className="progress-bar">
-                        <div 
-                          className="progress-fill" 
-                          style={{ width: `${vlibrasStatus.progress}%` }}
-                        ></div>
-                      </div>
-                      {vlibrasStatus.error && (
-                        <p className="vlibras-error-message">Erro: {vlibrasStatus.error.message}</p>
-                      )}
-                    </div>
+            <button
+              className="botaoFechar"
+              onClick={alternarPainel}
+              aria-label="Fechar controles"
+            >
+              <X size={18} />
+            </button>
+          </div>
+          <div className="secao">
+            <Volume2 size={16} />
+            <h4>VLibras</h4>
+            <div className="vlibras-status-toggle-wrapper">
+              <button
+                onClick={toggleVlibrasVisibility}
+                className={`toggle-vlibras-btn ${vlibrasVisibility ? 'active' : ''}`}
+                aria-pressed={vlibrasVisibility}
+              >
+                {vlibrasVisibility ? 'Desativar VLibras' : 'Ativar VLibras'}
+              </button>
+              {vlibrasVisibility && (
+                <div className="vlibras-status-display">
+                  <div className="vlibras-status-header">
+                    <span>{obterIconeStatusVLibras()} {vlibrasStatus.message}</span>
+                    <button
+                      onClick={reiniciarVLibras}
+                      className="vlibras-retry-btn"
+                      disabled={vlibrasStatus.status === 'loading'}
+                      title="Reiniciar VLibras"
+                    >
+                      <RotateCcw size={16} /> Reiniciar
+                    </button>
+                  </div>
+                  <div className="progress-bar">
+                    <div
+                      className="progress-fill"
+                      style={{ width: `${vlibrasStatus.progress}%` }}
+                    ></div>
+                  </div>
+                  {vlibrasStatus.error && (
+                    <p className="vlibras-error-message">Erro: {vlibrasStatus.error.message}</p>
                   )}
                 </div>
-              </div>
-
-              {}
-              <div className="secao">
-                <h4 className="tituloSecao">
-                  <Type size={16} /> Tamanho do Texto
-                </h4>
-                <div className="controlesBotoes">
-                  <button onClick={diminuirTamanhoFonte} aria-label="Diminuir tamanho da fonte">-</button>
-                  <span>{tamanhoFonte}%</span>
-                  <button onClick={aumentarTamanhoFonte} aria-label="Aumentar tamanho da fonte">+</button>
-                  <button onClick={redefinirTamanhoFonte} aria-label="Redefinir tamanho da fonte">Redefinir</button>
-                </div>
-              </div>
-
-              <div className="secao">
-                <h4 className="tituloSecao">
-                  <AlignJustify size={16} /> Espaçamento de Letras
-                </h4>
-                <div className="controlesBotoes">
-                  <button onClick={diminuirEspacamentoLetras} aria-label="Diminuir espaçamento de letras">-</button>
-                  <span>{espacamentoLetras.toFixed(1)}px</span>
-                  <button onClick={aumentarEspacamentoLetras} aria-label="Aumentar espaçamento de letras">+</button>
-                  <button onClick={redefinirEspacamentoLetras} aria-label="Redefinir espaçamento de letras">Redefinir</button>
-                </div>
-              </div>
-
-              <div className="secao">
-                <h4 className="tituloSecao">
-                  <MoreHorizontal size={16} /> Altura da Linha
-                </h4>
-                <div className="controlesBotoes">
-                  <button onClick={diminuirAlturaLinha} aria-label="Diminuir altura da linha">-</button>
-                  <span>{alturaLinha.toFixed(1)}</span>
-                  <button onClick={aumentarAlturaLinha} aria-label="Aumentar altura da linha">+</button>
-                  <button onClick={redefinirAlturaLinha} aria-label="Redefinir altura da linha">Redefinir</button>
-                </div>
-              </div>
-
-              {}
-              <div className="secao">
-                <h4 className="tituloSecao">
-                  <Contrast size={16} /> Modo de Contraste
-                </h4>
-                <div className="controlesBotoes">
-                  <button onClick={() => setModoContraste(prev => (prev + 1) % 3)} aria-label={`Alternar modo de contraste. Estado atual: ${obterTextoModoContraste()}`}>
-                    {obterTextoModoContraste()}
-                  </button>
-                </div>
-              </div>
-
-              <div className="secao">
-                <h4 className="tituloSecao">
-                  {modoEscuro === 1 ? <Moon size={16} /> : <Sun size={16} />} Tema Escuro
-                </h4>
-                <div className="controlesBotoes">
-                  <button onClick={() => setModoEscuro(prev => (prev + 1) % 2)} aria-label={`Alternar tema escuro. Estado atual: ${obterTextoModoEscuro()}`}>
-                    {obterTextoModoEscuro()}
-                  </button>
-                </div>
-              </div>
-
-              {}
-              <div className="secao">
-                <h4 className="tituloSecao">
-                  <Eye size={16} /> Guia de Leitura
-                </h4>
-                <div className="controlesBotoes">
-                  <button onClick={() => setGuiaLeitura(prev => (prev + 1) % 3)} aria-label={`Alternar guia de leitura. Estado atual: ${obterTextoGuiaLeitura()}`}>
-                    {obterTextoGuiaLeitura()}
-                  </button>
-                </div>
-              </div>
-
-              <div className="secao">
-                <h4 className="tituloSecao">
-                  <BookOpen size={16} /> Leitura Daltônica
-                </h4>
-                <div className="controlesBotoes">
-                  <button onClick={() => setModoDaltonico(prev => (prev + 1) % 4)} aria-label={`Alternar modo daltônico. Estado atual: ${obterTextoModoDaltonico()}`}>
-                    {obterTextoModoDaltonico()}
-                  </button>
-                </div>
-              </div>
-
-              {}
-              <div className="secao">
-                <h4 className="tituloSecao">
-                  <EyeOff size={16} /> Ocultar Imagens
-                </h4>
-                <div className="controlesBotoes">
-                  <button onClick={() => setRemoverImagens(!removerImagens)} aria-pressed={removerImagens}>
-                    {removerImagens ? 'Ativado' : 'Desativado'}
-                  </button>
-                </div>
-              </div>
-
-              <div className="secao">
-                <h4 className="tituloSecao">
-                  <EyeOff size={16} /> Ocultar Cabeçalhos
-                </h4>
-                <div className="controlesBotoes">
-                  <button onClick={() => setRemoverCabecalhos(!removerCabecalhos)} aria-pressed={removerCabecalhos}>
-                    {removerCabecalhos ? 'Ativado' : 'Desativado'}
-                  </button>
-                </div>
-              </div>
-
-              <div className="secao">
-                <h4 className="tituloSecao">
-                  <Link size={16} /> Destacar Links
-                </h4>
-                <div className="controlesBotoes">
-                  <button onClick={() => setDestacarLinks(!destacarLinks)} aria-pressed={destacarLinks}>
-                    {destacarLinks ? 'Ativado' : 'Desativado'}
-                  </button>
-                </div>
-              </div>
-
-              <div className="secao">
-                <h4 className="tituloSecao">
-                  <Pause size={16} /> Pausar Animações
-                </h4>
-                <div className="controlesBotoes">
-                  <button onClick={() => setPausarAnimacoes(!pausarAnimacoes)} aria-pressed={pausarAnimacoes}>
-                    {pausarAnimacoes ? 'Ativado' : 'Desativado'}
-                  </button>
-                </div>
-              </div>
-
-              <div className="secao">
-                <h4 className="tituloSecao">
-                  <MousePointer size={16} /> Cursor Grande
-                </h4>
-                <div className="controlesBotoes">
-                  <button onClick={() => setCursorGrande(!cursorGrande)} aria-pressed={cursorGrande}>
-                    {cursorGrande ? 'Ativado' : 'Desativado'}
-                  </button>
-                </div>
-              </div>
-
-              {}
-              <div className="secao secaoRedefinir">
-                <button onClick={redefinirTudo} className="botaoRedefinir" aria-label="Redefinir todas as configurações de acessibilidade">
-                  <RotateCcw size={18} /> Redefinir Tudo
-                </button>
-              </div>
+              )}
             </div>
           </div>
-        )}
-      </div>
 
-      {}
-      {}
-    </>
+          <div className="secao">
+            <h4 className="tituloSecao">
+              <Type size={16} /> Tamanho do Texto
+            </h4>
+            <div className="controlesBotoes">
+              <button onClick={diminuirTamanhoFonte} aria-label="Diminuir tamanho da fonte">-</button>
+              <span>{tamanhoFonte}%</span>
+              <button onClick={aumentarTamanhoFonte} aria-label="Aumentar tamanho da fonte">+</button>
+              <button onClick={redefinirTamanhoFonte} aria-label="Redefinir tamanho da fonte">Redefinir</button>
+            </div>
+          </div>
+
+          <div className="secao">
+            <h4 className="tituloSecao">
+              <AlignJustify size={16} /> Espaçamento de Letras
+            </h4>
+            <div className="controlesBotoes">
+              <button onClick={diminuirEspacamentoLetras} aria-label="Diminuir espaçamento de letras">-</button>
+              <span>{espacamentoLetras.toFixed(1)}px</span>
+              <button onClick={aumentarEspacamentoLetras} aria-label="Aumentar espaçamento de letras">+</button>
+              <button onClick={redefinirEspacamentoLetras} aria-label="Redefinir espaçamento de letras">Redefinir</button>
+            </div>
+          </div>
+
+          <div className="secao">
+            <h4 className="tituloSecao">
+              <MoreHorizontal size={16} /> Altura da Linha
+            </h4>
+            <div className="controlesBotoes">
+              <button onClick={diminuirAlturaLinha} aria-label="Diminuir altura da linha">-</button>
+              <span>{alturaLinha.toFixed(1)}</span>
+              <button onClick={aumentarAlturaLinha} aria-label="Aumentar altura da linha">+</button>
+              <button onClick={redefinirAlturaLinha} aria-label="Redefinir altura da linha">Redefinir</button>
+            </div>
+          </div>
+
+          <div className="secao">
+            <h4 className="tituloSecao">
+              <Contrast size={16} /> Modo de Contraste
+            </h4>
+            <div className="controlesBotoes">
+              <button onClick={() => setModoContraste(prev => (prev + 1) % 3)} aria-label={`Alternar modo de contraste. Estado atual: ${obterTextoModoContraste()}`}>
+                {obterTextoModoContraste()}
+              </button>
+            </div>
+          </div>
+
+          <div className="secao">
+            <h4 className="tituloSecao">
+              {modoEscuro === 1 ? <Moon size={16} /> : <Sun size={16} />} Tema Escuro
+            </h4>
+            <div className="controlesBotoes">
+              <button onClick={() => setModoEscuro(prev => (prev + 1) % 2)} aria-label={`Alternar tema escuro. Estado atual: ${obterTextoModoEscuro()}`}>
+                {obterTextoModoEscuro()}
+              </button>
+            </div>
+          </div>
+
+          <div className="secao">
+            <h4 className="tituloSecao">
+              <Eye size={16} /> Guia de Leitura
+            </h4>
+            <div className="controlesBotoes">
+              <button onClick={() => setGuiaLeitura(prev => (prev + 1) % 3)} aria-label={`Alternar guia de leitura. Estado atual: ${obterTextoGuiaLeitura()}`}>
+                {obterTextoGuiaLeitura()}
+              </button>
+            </div>
+          </div>
+
+          <div className="secao">
+            <h4 className="tituloSecao">
+              <BookOpen size={16} /> Leitura Daltônica
+            </h4>
+            <div className="controlesBotoes">
+              <button onClick={() => setModoDaltonico(prev => (prev + 1) % 4)} aria-label={`Alternar modo daltônico. Estado atual: ${obterTextoModoDaltonico()}`}>
+                {obterTextoModoDaltonico()}
+              </button>
+            </div>
+          </div>
+
+          <div className="secao">
+            <h4 className="tituloSecao">
+              <EyeOff size={16} /> Ocultar Imagens
+            </h4>
+            <div className="controlesBotoes">
+              <button onClick={() => setRemoverImagens(!removerImagens)} aria-pressed={removerImagens}>
+                {removerImagens ? 'Ativado' : 'Desativado'}
+              </button>
+            </div>
+          </div>
+
+          <div className="secao">
+            <h4 className="tituloSecao">
+              <EyeOff size={16} /> Ocultar Cabeçalhos
+            </h4>
+            <div className="controlesBotoes">
+              <button onClick={() => setRemoverCabecalhos(!removerCabecalhos)} aria-pressed={removerCabecalhos}>
+                {removerCabecalhos ? 'Ativado' : 'Desativado'}
+              </button>
+            </div>
+          </div>
+
+          <div className="secao">
+            <h4 className="tituloSecao">
+              <Link size={16} /> Destacar Links
+            </h4>
+            <div className="controlesBotoes">
+              <button onClick={() => setDestacarLinks(!destacarLinks)} aria-pressed={destacarLinks}>
+                {destacarLinks ? 'Ativado' : 'Desativado'}
+              </button>
+            </div>
+          </div>
+
+          <div className="secao">
+            <h4 className="tituloSecao">
+              <Pause size={16} /> Pausar Animações
+            </h4>
+            <div className="controlesBotoes">
+              <button onClick={() => setPausarAnimacoes(!pausarAnimacoes)} aria-pressed={pausarAnimacoes}>
+                {pausarAnimacoes ? 'Ativado' : 'Desativado'}
+              </button>
+            </div>
+          </div>
+
+          <div className="secao">
+            <h4 className="tituloSecao">
+              <MousePointer size={16} /> Cursor Grande
+            </h4>
+            <div className="controlesBotoes">
+              <button onClick={() => setCursorGrande(!cursorGrande)} aria-pressed={cursorGrande}>
+                {cursorGrande ? 'Ativado' : 'Desativado'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

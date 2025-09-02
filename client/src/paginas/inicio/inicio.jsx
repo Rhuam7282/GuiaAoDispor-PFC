@@ -5,7 +5,14 @@ import BotaoAcao from './componentes/BotaoAcao';
 import SecaoSobre from './componentes/SecaoSobre';
 import './inicio.css';
 
+import { useAuth } from "../../contextos/AuthContext";
+
 const Inicio = () => {
+  const { isAuthenticated } = useAuth();
+
+  const handleButtonClick = () => {
+    // Lógica do botão aqui
+  };
   return (
     <Corpo>
       <main className="paginaInicial">
