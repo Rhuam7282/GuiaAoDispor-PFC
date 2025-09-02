@@ -614,3 +614,74 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* Estilos específicos para VLibras */
+.vlibras-status-toggle-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toggle-vlibras-btn {
+  background: var(--corAzulDestaque);
+  color: var(--corMarromEscuro);
+  border: none;
+  border-radius: var(--bordaArredondada);
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.toggle-vlibras-btn:hover {
+  filter: brightness(0.95);
+}
+
+.toggle-vlibras-btn.active {
+  background: var(--corVerdeDestaque);
+}
+
+.vlibras-status-display {
+  background: var(--corNeutraClara);
+  border: 1px solid var(--corMarromDestaqueTransparente);
+  border-radius: var(--bordaArredondada);
+  padding: 12px;
+}
+
+.vlibras-error-message {
+  color: var(--corVermelhoDestaque);
+  font-size: 12px;
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+/* Wrapper do VLibras */
+#vlibras-wrapper {
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  width: 200px !important;
+  height: 200px !important;
+  z-index: 9999 !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  overflow: hidden !important;
+  border: 2px solid var(--corAzulDestaque) !important;
+}
+
+#vlibras-wrapper #gameContainer {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Responsividade para VLibras */
+@media (max-width: 768px) {
+  #vlibras-wrapper {
+    width: 150px !important;
+    height: 150px !important;
+    bottom: 10px !important;
+    right: 10px !important;
+  }
+}
+

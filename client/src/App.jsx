@@ -7,7 +7,7 @@ import Qualificados from "./paginas/qualificados/qualificados.jsx";
 import Cadastro from "./paginas/cadastro/cadastro.jsx";
 import Inicio from "./paginas/inicio/inicio.jsx";
 import PainelControle from "@componentes/acessibilidade/controles";
-// import VLibrasWidget from "./componentes/acessibilidade/VLibras/VLibrasWidget.jsx";
+import VLibrasWidget from "../src/componentes/acessibilidade/VLibras/VLibrasWidget.jsx";
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
           v7_relativeSplatPath: true
         }}>
         <PainelControle />
-        {/* <VLibrasWidget /> */}
+        <VLibrasWidget />
         <Routes>
           <Route path="/" element={<Inicio />} />
           <Route path="/qualificados" element={<Qualificados />} />
