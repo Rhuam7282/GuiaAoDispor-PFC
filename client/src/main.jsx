@@ -5,7 +5,6 @@ import { GOOGLE_CONFIG } from '@config/googleConfig.js';
 import App from './App.jsx';
 import './index.css';
 
-// Renderização direta sem timeout
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>

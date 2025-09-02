@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import "./qualificados.css"; // Importe o arquivo CSS
-import Filtro from "./filtro"; // Importe o componente Filtro
 import Corpo from "../../componentes/layout/corpo";
+import Filtro from "./componentes/Filtro";
+import ListaProfissionais from "./componentes/ListaProfissionais";
+import "./qualificados.css";
 
 import mariaSilva from '../../recursos/mulher.png';
 import joaoOliveira from '../../recursos/homem1.avif';
@@ -9,90 +10,74 @@ import anaSantos from '../../recursos/mulher 3.webp';
 import lucianaFerreira from '../../recursos/mulher2.jpg';
 import carlosMendes from '../../recursos/homem2.jpg';
 
-const ProfileCard = ({ profile }) => {
-  const handleCardClick = () => {
-    console.log(`Card clicado: ${profile.name}`);
-    alert(`Você clicou no perfil de ${profile.name}`);
-  };
-
-  return (
-    <div className="cartaoDestaque variacao1" onClick={handleCardClick}>
-      <img
-        src={profile.image}
-        alt={`Perfil de ${profile.name}`}
-        className="imagemPerfil"
-      />
-      <div className="profile-text-content">
-        <h3 className="profile-name">{profile.name}</h3>
-        <p className="profile-location">{profile.location}</p>
-        <p className="profile-experience">{profile.experience}</p>
-      </div>
-    </div>
-  );
-};
-
 function Qualificados() {
-  const [selectedFilter, setSelectedFilter] = useState("localizacao");
+  const [filtroSelecionado, setFiltroSelecionado] = useState("localizacao");
 
-  // Opções de filtro formatadas corretamente como objetos
-  const filterOptions = [
+  const opcoesFiltro = [
     { value: "localizacao", label: "Localização" },
     { value: "disponibilidade", label: "Disponibilidade" },
     { value: "favoritos", label: "Favoritos" },
     { value: "avaliacao", label: "Bem avaliados" },
   ];
 
-  const localProfiles = [
+  const perfisProfissionais = [
     {
-      image: mariaSilva,
-      name: "Maria Silva",
-      location: "São Paulo, SP",
-      experience: "10 anos de experiência em enfermagem geriátrica",
+      imagem: mariaSilva,
+      nome: "Maria Silva",
+      localizacao: "São Paulo, SP",
+      experiencia: "10 anos de experiência em enfermagem geriátrica",
     },
     {
-      image: joaoOliveira,
-      name: "João Oliveira",
-      location: "Rio de Janeiro, RJ",
-      experience: "Especialista em LIBRAS com 8 anos de mercado",
+      imagem: joaoOliveira,
+      nome: "João Oliveira",
+      localizacao: "Rio de Janeiro, RJ",
+      experiencia: "Especialista em LIBRAS com 8 anos de mercado",
     },
     {
-      image: anaSantos,
-      name: "Ana Santos",
-      location: "Belo Horizonte, MG",
-      experience: "Fisioterapeuta especializada em reabilitação neurológica",
+      imagem: anaSantos,
+      nome: "Ana Santos",
+      localizacao: "Belo Horizonte, MG",
+      experiencia: "Fisioterapeuta especializada em reabilitação neurológica",
     },
     {
-      image: carlosMendes,
-      name: "Carlos Mendes",
-      location: "Porto Alegre, RS",
-      experience: "Psicólogo com foco em terceira idade - 12 anos",
+      imagem: carlosMendes,
+      nome: "Carlos Mendes",
+      localizacao: "Porto Alegre, RS",
+      experiencia: "Psicólogo com foco em terceira idade - 12 anos",
     },
     {
-      image: lucianaFerreira,
-      name: "Luciana Ferreira",
-      location: "Salvador, BA",
-      experience: "Terapeuta ocupacional com experiência domiciliar",
+      imagem: lucianaFerreira,
+      nome: "Luciana Ferreira",
+      localizacao: "Salvador, BA",
+      experiencia: "Terapeuta ocupacional com experiência domiciliar",
     },
   ];
+
+  const aoClicarPerfil = (perfil) => {
+    console.log(`Perfil selecionado: ${perfil.nome}`);
+    alert(`Você clicou no perfil de ${perfil.nome}`);
+  };
+
   return (
     <Corpo>
       <div className="container">
         <h2 className="titulo">Profissionais</h2>
-        {/* Componente de filtro com todas as props necessárias */}
+        
         <Filtro
-          title="Filtros:"
-          options={filterOptions}
-          selectedOption={selectedFilter}
-          onChange={setSelectedFilter}
+          titulo="Filtros:"
+          opcoes={opcoesFiltro}
+          opcaoSelecionada={filtroSelecionado}
+          aoMudar={setFiltroSelecionado}
         />
-        <div className="profile-list">
-          {localProfiles.map((profile, index) => (
-            <ProfileCard key={index} profile={profile} />
-          ))}
-        </div>
+        
+        <ListaProfissionais
+          profissionais={perfisProfissionais}
+          aoClicarPerfil={aoClicarPerfil}
+        />
       </div>
     </Corpo>
   );
 }
 
 export default Qualificados;
+

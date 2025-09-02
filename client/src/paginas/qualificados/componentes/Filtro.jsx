@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import './filtro.css';
+import './Filtro.css';
 import { ChevronDown, Search } from 'lucide-react';
 
 const Filtro = ({ 
@@ -24,7 +24,6 @@ const Filtro = ({
     setMenuAberto(false);
   };
 
-  // Fechar o menu ao clicar fora
   useEffect(() => {
     const cliqueFora = (evento) => {
       if (menuRef.current && !menuRef.current.contains(evento.target)) {
@@ -37,7 +36,6 @@ const Filtro = ({
     return () => document.removeEventListener('mousedown', cliqueFora);
   }, []);
 
-  // Função de filtragem (case-insensitive)
   const filtrarOpcoes = () => {
     if (!termoPesquisa) return opcoes;
     
@@ -69,7 +67,7 @@ const Filtro = ({
       
       {menuAberto && (
         <div className="listaOpcoes">
-          {/* Campo de pesquisa - Só mostra se prop for true e houver opções */}
+          {}
           {mostrarPesquisa && opcoes.length > 5 && (
             <div className="containerPesquisa">
               <Search size={16} className="iconePesquisa" />
@@ -79,12 +77,11 @@ const Filtro = ({
                 value={termoPesquisa}
                 onChange={(e) => setTermoPesquisa(e.target.value)}
                 className="inputPesquisa"
-                onClick={(e) => e.stopPropagation()} // Impede fechar ao clicar no input
               />
         </div>
       )}
 
-      {/* Lista de opções filtradas */}
+      {}
           {opcoesFiltradas.length > 0 ? (
             opcoesFiltradas.map((opcao) => (
               <div
@@ -96,7 +93,6 @@ const Filtro = ({
               </div>
             ))
           ) : (
-            // Feedback quando nenhum resultado for encontrado
             <div className="nenhumResultado">
               {`Nenhuma opção encontrada para "${termoPesquisa}"`}
             </div>

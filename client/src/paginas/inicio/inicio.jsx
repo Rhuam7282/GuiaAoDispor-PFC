@@ -1,29 +1,14 @@
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contextos/AuthContext';
-import './inicio.css';
+import React from 'react';
 import Corpo from "@componentes/layout/corpo";
-import logo from '@recursos/logo.png';
+import HeroPrincipal from './componentes/HeroPrincipal';
+import BotaoAcao from './componentes/BotaoAcao';
+import SecaoSobre from './componentes/SecaoSobre';
+import './inicio.css';
 
 const Inicio = () => {
-  const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
-  
-  /* Função para redirecionamento condicional do botão principal */
-  const handleButtonClick = () => {
-    if (isAuthenticated()) {
-      /* Se logado, vai para página de qualificados */
-      navigate('/qualificados');
-    } else {
-      /* Se não logado, vai para página de cadastro */
-      navigate('/cadastro');
-    }
-  };
-
   return (
     <Corpo>
       <main className="paginaInicial">
-        
-        {/* Conteúdo principal */}
         <div className="container conteudoPrincipalInicio">
           <h1>Guia ao Dispor</h1>
           <p className="slogan">
@@ -48,13 +33,14 @@ const Inicio = () => {
             Nascida de um projeto escolar, a Guia ao Dispor foi feita com pesquisa e auxilio de professores qualificados, pensando em criar uma ferramenta que ajude o mundo a ser mais acessível
           </p>
         </section>
+          <HeroPrincipal />
+          <BotaoAcao />
+          <SecaoSobre />
         </div>
-
-        {/* Texto explicativo abaixo */}
-        
       </main>
     </Corpo>
   );
 };
 
 export default Inicio;
+

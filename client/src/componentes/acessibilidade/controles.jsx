@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './controles.css';
-import useVLibras from '../../ganchos/useVLibras';
+// import VLibrasWidget from './VLibras/VLibrasWidget'; // Importa o VLibrasWidget
 import {
   Type,
   AlignJustify,
@@ -338,8 +338,8 @@ const ControlesAcessibilidade = () => {
             </div>
 
             <div className="conteudoAcessibilidade">
-              {/* Seção VLibras */}
-              <div className="secao">
+              {/* Seção VLibras comentada */}
+              {/* <div className="secao">
                 <h4 className="tituloSecao">
                   <Volume2 size={16} />
                   VLibras

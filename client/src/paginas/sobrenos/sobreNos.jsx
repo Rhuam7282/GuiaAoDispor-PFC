@@ -1,27 +1,10 @@
-//importações de funcionalidades e bibliotecas
 import React from 'react';
+import Corpo from "@componentes/layout/corpo";
+import SecaoSobre from './componentes/SecaoSobre';
+import FormularioContato from './componentes/FormularioContato';
 import './sobreNos.css';
-import Corpo from "@componentes/layout/corpo"
-
-//===========================================================
-//importações de imagens e ícones
-import logo from '@recursos/logo.png';
-import {Mail, Facebook, Instagram,} from 'lucide-react';
-
-
-//===========================================================
-
-//componente
-const redesSociais = [
-  { icone: Mail, usuario: "contato@guiaoadispor.com" },
-  { icone: Facebook, usuario: "Guia ao Dispor" },
-  { icone: Instagram, usuario: "@guiaoadispor" },
-];
 
 const SobreNosPage = () => {
-
-//===========================================================
-//Início do componente
   return (
     <Corpo>
       <main className="container">
@@ -88,7 +71,13 @@ const SobreNosPage = () => {
             </aside>
           </section>
         </main>
+        <h1 className='titulo'>Sobre</h1>
+        <SecaoSobre />
+        <FormularioContato />
+      </main>
     </Corpo>
   );
 };
+
 export default SobreNosPage;
+

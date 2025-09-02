@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Corpo from "@componentes/layout/corpo";
+import InformacoesPerfil from "./componentes/InformacoesPerfil";
+import ContatosPerfil from "./componentes/ContatosPerfil";
+import HistoricoAcademicoPerfil from "./componentes/HistoricoAcademicoPerfil";
+import HistoricoProfissionalPerfil from "./componentes/HistoricoProfissionalPerfil";
 import { servicoProfissional, servicoHCurricular, servicoHProfissional, servicoAuth } from "@servicos/apiService";
 import { useAuth } from "@/contextos/AuthContext";
 
 import {
-  Star,
-  MapPin,
   Mail,
   Facebook,
   Instagram,
   Linkedin,
 } from "lucide-react";
-import PainelControle from "@componentes/acessibilidade/controles";
 
-// Imagens padrão para fallback
 import mariaSilva from "@recursos/mulher.png";
 import micheleto from "@recursos/hospital.jpg";
 import butantan from "@recursos/butantan.webp";
@@ -32,13 +32,11 @@ const Perfil = () => {
   const [erro, setErro] = useState(null);
   const [modoEdicao, setModoEdicao] = useState(false);
 
-  // Dados estáticos como fallback quando não há ID
   const dadosEstaticos = {
     nome: "Maria Silva",
     foto: mariaSilva,
     localizacao: "Assis Chateaibriand, PR",
-    descricao:
-      "Enfermeira especializada em geriatria com 10 anos de experiência.",
+    descricao: "Enfermeira especializada em geriatria com 10 anos de experiência.",
     avaliacao: 4.8,
     redesSociais: [
       { icone: Mail, usuario: "maria.silva@exemplo.com" },
@@ -79,16 +77,14 @@ const Perfil = () => {
 
   useEffect(() => {
     const carregarDadosPerfil = async () => {
-      // Se não há ID e o usuário está logado, redirecionar para seu próprio perfil
       if (!id && isAuthenticated() && user) {
         try {
-          const resposta = await servicoAuth.buscarPerfilLogado(user._id);
+          const resposta = await servicoAuth.buscarPerfilLogado(user.usuario._id);
           setDadosPerfil(resposta.data);
           setCarregando(false);
           return;
         } catch (erro) {
           console.error('Erro ao buscar perfil do usuário logado:', erro);
-          // Se der erro, usar dados estáticos
           setDadosPerfil(dadosEstaticos);
           setHistoricoAcademico(dadosEstaticos.historicoAcademico);
           setHistoricoProfissional(dadosEstaticos.historicoProfissional);
@@ -97,8 +93,7 @@ const Perfil = () => {
         }
       }
       
-      // Se não há ID e não está logado, usar dados estáticos
-      if (!id) {
+      if (!id && !isAuthenticated()) {
         setDadosPerfil(dadosEstaticos);
         setHistoricoAcademico(dadosEstaticos.historicoAcademico);
         setHistoricoProfissional(dadosEstaticos.historicoProfissional);
@@ -107,64 +102,45 @@ const Perfil = () => {
       }
 
       try {
-        setCarregando(true);
-        setErro(null);
+        const [perfilResposta, hcurricularResposta, hprofissionalResposta] = await Promise.all([
+          servicoProfissional.buscarPorId(id),
+          servicoHCurricular.buscarPorProfissional(id),
+          servicoHProfissional.buscarPorProfissional(id)
+        ]);
 
-        // Buscar dados do profissional
-        const respostaProfissional = await servicoProfissional.buscarPorId(id);
-        const profissional = respostaProfissional.data;
+        const perfil = perfilResposta.data;
+        const hcurriculares = hcurricularResposta.data || [];
+        const hprofissionais = hprofissionalResposta.data || [];
 
-        // Buscar histórico curricular
-        const respostaHCurricular = await servicoHCurricular.listarTodos();
-        const hcurriculares = respostaHCurricular.data.filter(
-          hc => hc.profissional && hc.profissional._id === id
-        );
-
-        // Buscar histórico profissional
-        const respostaHProfissional = await servicoHProfissional.listarTodos();
-        const hprofissionais = respostaHProfissional.data.filter(
-          hp => hp.profissional && hp.profissional._id === id
-        );
-
-        // Montar dados do perfil
         const perfilFormatado = {
-          nome: profissional.nome,
-          foto: profissional.foto || mariaSilva,
-          localizacao: profissional.localizacao ? 
-            `${profissional.localizacao.cidade || ''}, ${profissional.localizacao.estado || ''}`.trim() :
-            "Localização não informada",
-          descricao: profissional.desc || "Descrição não informada",
-          avaliacao: profissional.nota || 0,
+          nome: perfil.nome || "Nome não informado",
+          foto: perfil.foto || mariaSilva,
+          localizacao: perfil.localizacao?.nome || "Localização não informada",
+          descricao: perfil.desc || "Descrição não informada",
+          avaliacao: perfil.avaliacao || 0,
           redesSociais: [
-            { icone: Mail, usuario: profissional.email || "Email não informado" },
-            { icone: Facebook, usuario: profissional.face || "Facebook não informado" },
-            { icone: Instagram, usuario: profissional.instagram || "Instagram não informado" },
-            { icone: Linkedin, usuario: profissional.linkedin || "LinkedIn não informado" },
-          ],
+            { icone: Mail, usuario: perfil.email || "" },
+            { icone: Facebook, usuario: perfil.face || "" },
+            { icone: Instagram, usuario: perfil.instagram || "" },
+            { icone: Linkedin, usuario: perfil.linkedin || "" },
+          ].filter(rede => rede.usuario !== ""),
         };
 
-        // Formatar histórico acadêmico
         const academicoFormatado = hcurriculares.map(hc => ({
-          nome: hc.curso || "Curso não informado",
-          instituicao: hc.inst || "Instituição não informada",
-          periodo: hc.periodo || "Período não informado",
+          nome: hc.nome || "Curso não informado",
+          instituicao: hc.instituicao || "Instituição não informada",
+          periodo: hc.periodo || "Período não informado"
         }));
 
-        // Formatar histórico profissional
         const profissionalFormatado = hprofissionais.map(hp => ({
           nome: hp.empresa || "Empresa não informada",
-          imagem: hp.imagem || micheleto, // Usar imagem padrão
+          imagem: hp.imagem || micheleto,
           alt: hp.empresa || "Empresa",
         }));
-
-        setDadosPerfil(perfilFormatado);
-        setHistoricoAcademico(academicoFormatado);
-        setHistoricoProfissional(profissionalFormatado);
 
       } catch (error) {
         console.error('Erro ao carregar dados do perfil:', error);
         setErro('Erro ao carregar dados do perfil. Tente novamente.');
-        // Em caso de erro, usar dados estáticos
         setDadosPerfil(dadosEstaticos);
         setHistoricoAcademico(dadosEstaticos.historicoAcademico);
         setHistoricoProfissional(dadosEstaticos.historicoProfissional);
@@ -212,117 +188,28 @@ const Perfil = () => {
           </div>
         )}
 
-        <div className="gridContainer gridTresColunas gapGrande margemInferiorGrande">
-          <div className="alinharCentro">
-            <img
-              className="imagemPerfil imagemPerfilGrande"
-              src={dadosPerfil.foto}
-              alt={`${dadosPerfil.nome} - ${dadosPerfil.descricao} em ${dadosPerfil.localizacao}`}
-            />
-          </div>
-          <div className="cartaoDestaque fundoMarromDestaqueTransparente textoEsquerda flexWrap ">
-            <p>{dadosPerfil.descricao}</p>
-            <div className="listaHorizontal">
-               <div className="flexLinha gapMedio alinharCentro">
-              <div className="flexLinha gapPequeno alinharCentro">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    size={16}
-                    className={
-                      i < Math.floor(dadosPerfil.avaliacao)
-                        ? "textoAmarelo preenchido"
-                        : "textoMarromOfuscado"
-                    }
-                  />
-                ))}
-                <span className="textoMarromEscuro">
-                  {dadosPerfil.avaliacao !== undefined && dadosPerfil.avaliacao !== null ? dadosPerfil.avaliacao.toFixed(1) : '0.0'}
-                </span>
-              </div>
-              
-              {/* Botão de edição para usuário logado */}
-              {isAuthenticated() && user && (!id || user._id === id) && (
-                <button 
-                  className="botao botaoSecundario"
-                  onClick={() => setModoEdicao(!modoEdicao)}
-                >
-                  {modoEdicao ? 'Cancelar Edição' : 'Editar Perfil'}
-                </button>
-              )}
-            </div>
-          </div>
+        <InformacoesPerfil 
+          dadosPerfil={dadosPerfil}
+          isAuthenticated={isAuthenticated}
+          user={user}
+          id={id}
+          modoEdicao={modoEdicao}
+          setModoEdicao={setModoEdicao}
+        />
 
-          {/* Coluna direita com contatos */}
-          <div>
-            <h3>Contatos</h3>
-            <div className="listaIcones vertical">
-              {dadosPerfil.redesSociais.map((rede, index) => {
-                const Icone = rede.icone;
-                return (
-                  <div key={index} className="listaIcones">
-                    <Icone size={18} />
-                    <span>{rede.usuario}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
+        <ContatosPerfil redesSociais={dadosPerfil.redesSociais} />
 
-        {/* Seção de Históricos */}
         <div className="flexContainer gapGrande">
-        {/* Histórico Acadêmico */}
-          <div className="flexItem margemInferiorGrande">
-            <h2 className="bordaInferiorSubtle">Histórico Acadêmico</h2>
-            <div className="gridContainer gridColunasAuto gapMedio">
-              {historicoAcademico.length > 0 ? (
-                historicoAcademico.map((item, index) => (
-                  <div key={index} className="cartao fundoAzulDestaque">
-                    <h3>{item.nome}</h3>
-                    <p>{item.instituicao}</p>
-                    <p className="textoMarromEscuro">{item.periodo}</p>
-                  </div>
-                ))
-              ) : (
-                <div className="cartao fundoAzulDestaque">
-                  <p>Nenhum histórico acadêmico cadastrado.</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Histórico Profissional */}
-          <div className="flexItem margemInferiorGrande">
-            <h2 className="bordaInferiorSubtle">Histórico Profissional</h2>
-            <div className="gridContainer gridColunasAuto gapMedio">
-              {historicoProfissional.length > 0 ? (
-                historicoProfissional.map((item, index) => (
-                  <div key={index} className="cartao fundoAzulDestaque flexColuna gapPequeno alinharEsticar">
-                    <div className="containerImagem">
-                      <img
-                        className="imagemAspecto"
-                        src={item.imagem}
-                        alt={`${item.nome} - Local de trabalho de ${dadosPerfil.nome}`}
-                      />
-                    </div>
-                    <div className="margemSuperiorZero">
-                      <h3>{item.nome}</h3>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="cartao fundoAzulDestaque">
-                  <p>Nenhum histórico profissional cadastrado.</p>
-                </div>
-              )}
-            </div>
-          </div>
+          <HistoricoAcademicoPerfil historicoAcademico={historicoAcademico} />
+          <HistoricoProfissionalPerfil 
+            historicoProfissional={historicoProfissional}
+            nomePerfil={dadosPerfil.nome}
+          />
         </div>
-      </div>
       </div>
     </Corpo>
   );
 };
 
 export default Perfil;
+
