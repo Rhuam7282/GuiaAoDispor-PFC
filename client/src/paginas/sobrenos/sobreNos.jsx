@@ -3,6 +3,7 @@ import Corpo from "@componentes/layout/corpo";
 import SecaoSobre from './componentes/SecaoSobre';
 import FormularioContato from './componentes/FormularioContato';
 import './sobreNos.css';
+import logo from '../../recursos/logo.png';
 
 const SobreNosPage = () => {
   return (
@@ -41,7 +42,7 @@ const SobreNosPage = () => {
 
             </p>
             <h3>Caroline Barbieri</h3>
-            <p>
+            <p>C:\Users\User\Documents\Coisinhas Lucas\IFPR IIW23-A\Outras atividades\IHC\index.html
 
             </p>
           </article>
