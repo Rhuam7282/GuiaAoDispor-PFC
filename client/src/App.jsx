@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './contextos/AuthContext';
+import { AuthProvider } from './contextos/autenticacao.jsx';
 import SobreNos from "./paginas/sobrenos/sobreNos.jsx";
 import Perfil from "./paginas/perfil/perfil.jsx";
 import Mensagem from "./paginas/mensagem/mensagem.jsx";

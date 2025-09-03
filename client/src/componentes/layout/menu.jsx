@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../contextos/AuthContext';
+import { useAuth } from '../../contextos/autenticacao';
 import logo from '@recursos/logo.png';
 import './menu.css';
 import { Home, User, MessageSquare, Mail, GalleryHorizontal, LogOut } from 'lucide-react';
@@ -63,6 +63,43 @@ const Menu = () => {
     navigate('/');
   };
 
+  
+  const renderItemPerfil = (item) => {
+    const ativo = item.texto === paginaAtiva;
+    const usuarioLogado = isAuthenticated() && user;
+    
+    return (
+      <li 
+        key={item.texto}
+        onClick={() => handleItemClick(item)}
+        className={`itemMenu ${ativo ? 'paginaAtiva' : ''}`}
+      >
+        <div className="itemPerfilContainer">
+          {/* Ícone padrão ou foto do usuário */}
+          {usuarioLogado && user.foto ? (
+            <img 
+              src={user.foto || user.picture} 
+              alt={`Foto de ${user.nome || user.name}`}
+              className="fotoPerfilMenu"
+            />
+          ) : (
+            <item.Icone size={20} />
+          )}
+          
+          {/* Texto do item */}
+          <span className="textoItemMenu">{item.texto}</span>
+          
+          {/* Indicador de usuário logado */}
+          {usuarioLogado && (
+            <span className="indicadorLogado" title={`Logado como ${user.nome || user.name}`}>
+              ●
+            </span>
+          )}
+        </div>
+      </li>
+    );
+  };
+
   return (
     
     <menu>
@@ -73,15 +110,14 @@ const Menu = () => {
         
         {}
         {isAuthenticated() && user && (
-          <div className="user-info">
+          <div className="informacoesUsuario">
             <img 
-              src={user.picture} 
-              alt={user.name} 
-              className="user-avatar"
-              style={{ width: '32px', height: '32px', borderRadius: '50%', marginTop: '8px' }}
+              src={user.foto || user.picture} 
+              alt={user.nome || user.name} 
+              className="avatarUsuario"
             />
-            <p className="user-name" style={{ fontSize: '12px', marginTop: '4px' }}>
-              {user.name}
+            <p className="nomeUsuario">
+              {user.nome || user.name}
             </p>
           </div>
         )}
@@ -97,6 +133,11 @@ const Menu = () => {
         {}
         {itensMenu.map((item) => {
           
+          if (item.texto === 'Perfil') {
+            return renderItemPerfil(item);
+          }
+          
+          
           const ativo = item.texto === paginaAtiva;
           
           return (
@@ -109,7 +150,7 @@ const Menu = () => {
               {}
               <item.Icone size={20} />
               {}
-              {item.texto}
+              <span className="textoItemMenu">{item.texto}</span>
             </li>
           );
         })}
@@ -118,11 +159,10 @@ const Menu = () => {
         {isAuthenticated() && (
           <li 
             onClick={handleLogout}
-            className="itemMenu logout-button"
-            style={{ marginTop: '20px', color: '#ff4444' }}
+            className="itemMenu botaoSair"
           >
             <LogOut size={20} />
-            Sair
+            <span className="textoItemMenu">Sair</span>
           </li>
         )}
       </ul>

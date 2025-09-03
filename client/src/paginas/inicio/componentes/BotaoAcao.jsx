@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../contextos/AuthContext';
+import { useAuth } from '../../../contextos/autenticacao';
 
 const BotaoAcao = () => {
   const navigate = useNavigate();

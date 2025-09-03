@@ -147,3 +147,106 @@ footer {
   }
 }
 
+
+/* Estilos para informações do usuário na fachada */
+.informacoesUsuario {
+  margin-top: var(--espacamentoPequeno);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.avatarUsuario {
+  width: 32px !important;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--corAzulEscuro);
+  object-fit: cover;
+}
+
+.nomeUsuario {
+  font-size: var(--tamanhoFonteTextoMinimo);
+  color: var(--corAzulEscuro);
+  margin: 0;
+  font-weight: normal;
+}
+
+/* Estilos para o item de perfil personalizado */
+.itemPerfilContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  position: relative;
+}
+
+.fotoPerfilMenu {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--corAzulEscuro);
+}
+
+.textoItemMenu {
+  flex: 1;
+  text-align: center;
+}
+
+.indicadorLogado {
+  color: var(--corVerdeDestaque, #4CAF50);
+  font-size: 8px;
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Estilos para o botão de sair */
+.botaoSair {
+  margin-top: var(--espacamentoMedio);
+  color: #ff4444 !important;
+  background-color: rgba(255, 68, 68, 0.1);
+  border: 1px solid #ff4444;
+}
+
+.botaoSair:hover {
+  background-color: rgba(255, 68, 68, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Responsividade para os novos elementos */
+@media (max-width: 768px) {
+  .avatarUsuario {
+    width: 28px !important;
+    height: 28px;
+  }
+  
+  .nomeUsuario {
+    font-size: 10px;
+  }
+  
+  .fotoPerfilMenu {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .indicadorLogado {
+    font-size: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .avatarUsuario {
+    width: 24px !important;
+    height: 24px;
+  }
+  
+  .fotoPerfilMenu {
+    width: 16px;
+    height: 16px;
+  }
+}
+
