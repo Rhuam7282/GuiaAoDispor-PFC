@@ -76,47 +76,35 @@ const Perfil = () => {
     ],
   };
 
-  useEffect(() => {
-    const carregarDadosPerfil = async () => {
-      setCarregando(true);
-      setErro(null);
+useEffect(() => {
+  const carregarDadosPerfil = async () => {
+    setCarregando(true);
+    setErro(null);
 
-      // Se não há ID na URL e o usuário está logado, carregar perfil do usuário logado
-      if (!id && isAuthenticated() && user) {
-        try {
-          // Buscar dados atualizados do servidor
-          const resposta = await servicoAuth.buscarPerfilLogado(user._id);
-          
-          if (resposta && resposta.data) {
-            const perfilFormatado = formatarDadosPerfil(resposta.data);
-            setDadosPerfil(perfilFormatado);
-            
-            // Atualizar dados no contexto se necessário
-            atualizarUsuario(resposta.data);
-          } else {
-            // Usar dados do contexto se a requisição falhar
-            const perfilFormatado = formatarDadosPerfil(user);
-            setDadosPerfil(perfilFormatado);
-          }
-          
-          setHistoricoAcademico([]);
-          setHistoricoProfissional([]);
-          
-        } catch (erro) {
-          console.error('Erro ao buscar perfil do usuário logado:', erro);
-          
-          // Usar dados do contexto como fallback
-          const perfilFormatado = formatarDadosPerfil(user);
+    // Se não há ID na URL e o usuário está logado, carregar perfil do usuário logado
+    if (!id && isAuthenticated() && user) {
+      try {
+        const resposta = await servicoAuth.buscarPerfilLogado(user._id);
+        
+        if (resposta && resposta.data) {
+          const perfilFormatado = formatarDadosPerfil(resposta.data);
           setDadosPerfil(perfilFormatado);
-          setHistoricoAcademico([]);
-          setHistoricoProfissional([]);
-          
-          setErro('Não foi possível carregar dados atualizados do servidor. Exibindo dados locais.');
+          console.log('✅ Perfil carregado do servidor com sucesso');
         }
         
-        setCarregando(false);
-        return;
+        setHistoricoAcademico([]);
+        setHistoricoProfissional([]);
+        
+      } catch (erro) {
+        console.error('❌ Erro ao buscar perfil:', erro);
+        const perfilFormatado = formatarDadosPerfil(user);
+        setDadosPerfil(perfilFormatado);
+        setErro(`Usando dados locais. Erro: ${erro.message}`);
       }
+      
+      setCarregando(false);
+      return;
+    }
       
       // Se não há ID e usuário não está logado, mostrar dados estáticos
       if (!id && !isAuthenticated()) {
@@ -172,8 +160,8 @@ const Perfil = () => {
       setCarregando(false);
     };
 
-    carregarDadosPerfil();
-  }, [id, user, isAuthenticated, atualizarUsuario]);
+  carregarDadosPerfil();
+}, [id]);
 
   // Função para formatar dados do perfil de forma consistente
   const formatarDadosPerfil = (dadosUsuario) => {

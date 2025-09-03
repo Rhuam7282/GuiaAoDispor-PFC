@@ -1,17 +1,19 @@
+// src/App.jsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './contextos/autenticacao.jsx';
+import { ProvedorAutenticacao } from './contextos/autenticacao.jsx';
 import SobreNos from "./paginas/sobrenos/sobreNos.jsx";
 import Perfil from "./paginas/perfil/perfil.jsx";
 import Mensagem from "./paginas/mensagem/mensagem.jsx";
 import Qualificados from "./paginas/qualificados/qualificados.jsx";
 import Cadastro from "./paginas/cadastro/cadastro.jsx";
 import Inicio from "./paginas/inicio/inicio.jsx";
-import PainelControle from "@componentes/acessibilidade/controles";
+import PainelControle from "@componentes/acessibilidade/PainelControle";
+
 function App() {
   return (
-    <AuthProvider>
+    <ProvedorAutenticacao>
       <BrowserRouter
-      future={{
+        future={{
           v7_startTransition: true,
           v7_relativeSplatPath: true
         }}>
@@ -25,7 +27,7 @@ function App() {
           <Route path="/perfil/:id" element={<Perfil />} />
         </Routes>
       </BrowserRouter>
-    </AuthProvider>
+    </ProvedorAutenticacao>
   );
 }
 

@@ -1,5 +1,5 @@
 /* Componente VLibras Widget - Integração com o tradutor de Libras do governo brasileiro */
-import React, { useEffect, useRef, useState, useCallback, useImperativeHandle, forwardRef } from 'react';
+import React, { useEffect, useRef, useState, useCallback, useImperativeHandle, forwardRef,  } from 'react';
 
 /* Componente principal que renderiza o widget VLibras para tradução em Libras */
 const VLibrasWidget = forwardRef(({ onStatusChange, isVisible: propIsVisible }, ref) => {

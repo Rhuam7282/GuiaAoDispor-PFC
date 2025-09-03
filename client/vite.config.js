@@ -61,7 +61,7 @@ export default defineConfig({
       '@recursos': path.resolve(__dirname, 'src/recursos'),
       '@ganchos': path.resolve(__dirname, 'src/ganchos'),
       '@contextos': path.resolve(__dirname, 'src/contextos'),
-      '@auth': path.resolve(__dirname, 'src/componentes/auth'),
+      '@autenticacao': path.resolve(__dirname, 'src/componentes/autenticacao'),
       '@formularios': path.resolve(__dirname, 'src/componentes/formularios'),
       '@layout': path.resolve(__dirname, 'src/componentes/layout'),
       '@perfil': path.resolve(__dirname, 'src/componentes/perfil'),

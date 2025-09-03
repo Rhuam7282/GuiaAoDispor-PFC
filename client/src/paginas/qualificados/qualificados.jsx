@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Corpo from "../../componentes/layout/corpo";
+import Corpo from "../../componentes/Layout/Corpo";
 import Filtro from "./componentes/Filtro";
 import ListaProfissionais from "./componentes/ListaProfissionais";
 import "./qualificados.css";
