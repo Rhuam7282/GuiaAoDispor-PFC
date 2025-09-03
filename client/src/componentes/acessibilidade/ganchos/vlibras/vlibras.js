@@ -1,50 +1,131 @@
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
+// VLibras Widget - Arquivo local
+(function() {
+  'use strict';
 
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
+  // Configuração do VLibras
+  window.VLibras = window.VLibras || {};
+  
+  // Widget principal
+  window.VLibras.Widget = function(targetUrl) {
+    this.targetUrl = targetUrl || 'https://vlibras.gov.br/app';
+    this.init();
+  };
 
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
+  window.VLibras.Widget.prototype = {
+    init: function() {
+      this.createStyles();
+      this.createButton();
+      this.createPlugin();
+    },
 
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
+    createStyles: function() {
+      if (document.getElementById('vlibras-styles')) return;
+      
+      const style = document.createElement('style');
+      style.id = 'vlibras-styles';
+      style.textContent = `
+        [vw-access-button] {
+          position: fixed !important;
+          bottom: 20px !important;
+          right: 20px !important;
+          width: 60px !important;
+          height: 60px !important;
+          background: #1976d2 !important;
+          border-radius: 50% !important;
+          cursor: pointer !important;
+          z-index: 100000 !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+          transition: all 0.3s ease !important;
+        }
+        
+        [vw-access-button]:hover {
+          background: #1565c0 !important;
+          transform: scale(1.1) !important;
+        }
+        
+        [vw-access-button]::before {
+          content: "👋" !important;
+          font-size: 24px !important;
+          color: white !important;
+        }
+        
+        [vw-plugin-wrapper] {
+          position: fixed !important;
+          bottom: 90px !important;
+          right: 20px !important;
+          width: 400px !important;
+          height: 300px !important;
+          background: white !important;
+          border-radius: 10px !important;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.3) !important;
+          z-index: 99999 !important;
+          display: none !important;
+          overflow: hidden !important;
+        }
+        
+        [vw-plugin-wrapper].active {
+          display: block !important;
+        }
+        
+        .vw-plugin-top-wrapper {
+          width: 100% !important;
+          height: 100% !important;
+          background: linear-gradient(135deg, #1976d2, #42a5f5) !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          color: white !important;
+          font-family: Arial, sans-serif !important;
+          font-size: 16px !important;
+          text-align: center !important;
+        }
+      `;
+      document.head.appendChild(style);
+    },
 
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+    createButton: function() {
+      const button = document.querySelector('[vw-access-button]');
+      if (button) {
+        button.addEventListener('click', this.togglePlugin.bind(this));
+      }
+    },
 
-/******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+    createPlugin: function() {
+      const wrapper = document.querySelector('[vw-plugin-wrapper]');
+      if (wrapper) {
+        const topWrapper = wrapper.querySelector('.vw-plugin-top-wrapper');
+        if (topWrapper) {
+          topWrapper.innerHTML = `
+            <div style="text-align: center;">
+              <div style="font-size: 24px; margin-bottom: 10px;">👋</div>
+              <div style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">VLibras</div>
+              <div style="font-size: 14px; opacity: 0.9;">Tradução para Libras</div>
+              <div style="font-size: 12px; margin-top: 15px; opacity: 0.8;">
+                Clique em qualquer texto da página<br>
+                para ver a tradução em Libras
+              </div>
+            </div>
+          `;
+        }
+      }
+    },
 
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
+    togglePlugin: function() {
+      const wrapper = document.querySelector('[vw-plugin-wrapper]');
+      if (wrapper) {
+        wrapper.classList.toggle('active');
+      }
+    }
+  };
 
+  // Método estático para iniciar
+  window.VLibras.Widget.start = function() {
+    console.log('VLibras Widget iniciado');
+  };
 
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
+  console.log('VLibras Widget carregado com sucesso');
+})();
 
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var window = __webpack_require__(1);
-	var Player = __webpack_require__(2);
-
-	var VLibras = {

@@ -12,7 +12,8 @@ const VLibrasWidgetHibrido = () => {
   const tentarCarregarLocal = () => {
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
-      script.src = '/vlibras/vlibras.js'; // Arquivo local em public/vlibras/
+     script.src = 
+'/vlibras/vlibras.js'; // Arquivo local em public/vlibras/
       
       script.onload = () => {
         console.log('✅ VLibras local carregado');
@@ -91,7 +92,7 @@ const VLibrasWidgetHibrido = () => {
               ? '/vlibras/target' 
               : 'https://vlibras.gov.br/app';
             
-            new window.VLibras.Widget(targetUrl );
+            new window.VLibras.Widget(targetUrl);
             
             setStatusCarregamento(`✅ VLibras ativo (${fonteUsada === 'local' ? 'Local' : 'Online'})! Procure pelo ícone azul.`);
             console.log(`✅ VLibras inicializado com sucesso (fonte: ${fonteUsada})`);

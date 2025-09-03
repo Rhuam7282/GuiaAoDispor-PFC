@@ -5,7 +5,7 @@ import RedesSociais from './componentes/RedesSociais';
 import FormularioContato from './componentes/FormularioContato';
 import logo from '@recursos/icones/logo.png';
 import './sobreNos.css';
-import logo from '../../recursos/logo.png';
+// import logo from '../../recursos/icones/logo.png';
 
 const SobreNosPage = () => {
   return (

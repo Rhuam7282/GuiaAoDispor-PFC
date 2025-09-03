@@ -222,3 +222,16 @@
   background-color: #000;
   color: #fff;
 }
+
+
+/* Garantir que o VLibras fique visível e abaixo do menu */
+.vw-plugin-wrapper {
+  z-index: 99999 !important; /* Valor alto para sobrepor outros elementos */
+}
+
+/* Ajustar a posição do botão de acessibilidade do VLibras */
+.vw-access-button {
+  z-index: 100000 !important; /* Ainda mais alto para o botão de acesso */
+}
+
+
