@@ -1,0 +1,38 @@
+/* src/componentes/layout/Menu/Menu.css */
+menu {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  height: 100vh;
+  background-color: var(--corAzulDestaque);
+  text-align: center;
+  filter: drop-shadow(var(--sombra) var(--corNeutraEscura));
+}
+
+/* Tablets e telas médias */
+@media (max-width: 1024px) {
+  menu {
+    grid-template-rows: auto;
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 100vh;
+    padding: var(--espacamentoMedio);
+  }
+}
+
+/* Dispositivos móveis */
+@media (max-width: 768px) {
+  menu {
+    grid-template-rows: auto;
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 100vh;
+    padding: var(--espacamentoMedio);
+  }
+}
+
+/* Dispositivos móveis pequenos */
+@media (max-width: 480px) {
+  menu {
+    padding: 10px;
+  }
+}

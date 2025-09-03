@@ -1,5 +1,5 @@
 import React from 'react';
-import GoogleLoginButton from '@componentes/auth/botaoLoginGoogle.jsx';
+import GoogleLoginButton from '@componentes/autenticacao/botaoLoginGoogle.jsx';
 
 const FormularioLoginGoogle = ({ aoSucesso, aoErro }) => {
   return (

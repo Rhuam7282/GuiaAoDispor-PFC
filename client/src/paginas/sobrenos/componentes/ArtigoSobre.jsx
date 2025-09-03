@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '@recursos/logo.png';
+import logo from '@recursos/icones/logo.png';
 
 const ArtigoSobre = ({ texto, posicaoImagem = 'esquerda' }) => {
   return (

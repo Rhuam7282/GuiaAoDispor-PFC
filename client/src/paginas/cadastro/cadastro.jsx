@@ -4,8 +4,8 @@ import Corpo from "@componentes/layout/corpo.jsx";
 import FormularioLoginGoogle from './componentes/FormularioLoginGoogle.jsx';
 import FormularioLogin from './componentes/FormularioLogin.jsx';
 import FormularioCadastro from './componentes/FormularioCadastro.jsx';
-import { servicoCadastro, servicoAuth } from '@/servicos/apiService';
-import { useAuth } from '@/contextos/AuthContext';
+import { servicoCadastro, servicoAuth } from '@/servicos/api';
+import { useAuth } from '@/contextos/autenticacao';
 import './cadastro.css';
 
 const Cadastro = () => {

@@ -15,7 +15,7 @@ export default defineConfig({
     open: true,
     strictPort: true,
     host: '0.0.0.0',
-    allowedHosts: ['5173-ibz7kyf3x5pshyom2cbrm-89af857f.manusvm.computer', 'all'],
+    allowedHosts: ['5173-iwnktope84q4hpntmr0kr-531a31c1.manusvm.computer', 'all'],
     historyApiFallback: true,
     hmr: {
       clientPort: 5173,
@@ -61,7 +61,7 @@ export default defineConfig({
       '@recursos': path.resolve(__dirname, 'src/recursos'),
       '@ganchos': path.resolve(__dirname, 'src/ganchos'),
       '@contextos': path.resolve(__dirname, 'src/contextos'),
-      '@auth': path.resolve(__dirname, 'src/componentes/auth'),
+      '@autenticacao': path.resolve(__dirname, 'src/componentes/autenticacao'),
       '@formularios': path.resolve(__dirname, 'src/componentes/formularios'),
       '@layout': path.resolve(__dirname, 'src/componentes/layout'),
       '@perfil': path.resolve(__dirname, 'src/componentes/perfil'),

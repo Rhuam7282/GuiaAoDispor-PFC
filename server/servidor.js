@@ -20,8 +20,11 @@ import HCurricular from './modelos/hcurricular.js';
 import HProfissional from './modelos/hprofissional.js';
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://5173-iwnktope84q4hpntmr0kr-531a31c1.manusvm.computer'],
+  credentials: true
+}));
+app.use(express.json({ limit: '20mb' }));
 
 // Conexão com MongoDB
 const mongoURI = process.env.MONGO_URI;
@@ -450,16 +453,20 @@ apiRouter.post('/auth/login', async (req, res) => {
 
 // Rota para buscar perfil do usuário logado
 apiRouter.get('/auth/perfil/:id', async (req, res) => {
+    console.log(`🔍 Requisição GET para /auth/perfil/${req.params.id}`);
     try {
+        console.log(`📋 Buscando usuário com ID: ${req.params.id}`);
         const usuario = await Usuario.findById(req.params.id).populate('localizacao');
         
         if (!usuario) {
+            console.log(`❌ Usuário não encontrado com ID: ${req.params.id}`);
             return res.status(404).json({ 
                 status: 'erro', 
                 message: 'Usuário não encontrado' 
             });
         }
 
+        console.log(`✅ Usuário encontrado: ${usuario.nome}`);
         // Remover senha da resposta
         const usuarioResposta = usuario.toObject();
         delete usuarioResposta.senha;
@@ -469,6 +476,7 @@ apiRouter.get('/auth/perfil/:id', async (req, res) => {
             data: usuarioResposta 
         });
     } catch (error) {
+        console.error(`💥 Erro ao buscar perfil:`, error);
         res.status(500).json({ 
             status: 'erro', 
             message: error.message 

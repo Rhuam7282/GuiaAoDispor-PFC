@@ -5,7 +5,7 @@ import BotaoAcao from './componentes/BotaoAcao';
 import SecaoSobre from './componentes/SecaoSobre';
 import './inicio.css';
 
-import { useAuth } from "../../contextos/AuthContext";
+import { useAuth } from "../../contextos/autenticacao";
 
 const Inicio = () => {
   const { isAuthenticated } = useAuth();
