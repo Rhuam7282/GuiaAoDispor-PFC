@@ -1,7 +1,6 @@
 // src/componentes/acessibilidade/SecaoVLibras/SecaoVLibras.jsx
 import useVLibras from '@ganchos/useVLibras';
 import { Volume2, RotateCcw } from 'lucide-react';
-import './SecaoVLibras.css';
 
 const SecaoVLibras = () => {
   const {

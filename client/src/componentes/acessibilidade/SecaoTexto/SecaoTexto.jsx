@@ -1,6 +1,5 @@
 // src/componentes/acessibilidade/SecaoTexto/SecaoTexto.jsx
 import { Type, AlignJustify, MoreHorizontal } from 'lucide-react';
-import './SecaoTexto.css';
 
 const SecaoTexto = ({ configuracoes, atualizarConfiguracao }) => {
   const aumentarTamanhoFonte = () => {

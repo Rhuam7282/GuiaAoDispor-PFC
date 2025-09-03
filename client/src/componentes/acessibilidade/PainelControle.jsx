@@ -3,10 +3,9 @@ import { useState, useEffect } from 'react';
 import { PersonStanding, X } from 'lucide-react';
 import { useConfiguracaoAcessibilidade } from './ganchos/useConfiguracaoAcessibilidade';
 import { useGuiasLeitura } from './ganchos/useGuiasLeitura';
-import SecaoVLibras from './SecaoVLIbras/SecaoVLIbras';
+import SecaoVLibras from './secaoVLIbras/secaoVLIbras';
 import SecaoTexto from './SecaoTexto/SecaoTexto';
 import SecaoVisao from './SecaoVisao/SecaoVisao';
-import SecaoLeitura from './SecaoLeitura/SecaoLeitura';
 import SecaoDaltonismo from './SecaoDaltonismo/SecaoDaltonismo';
 import SecaoConteudo from './SecaoConteudo/SecaoConteudo';
 import SecaoAnimacoesCursor from './SecaoAnimacoesCursor/SecaoAnimacoesCursor';
@@ -141,10 +140,6 @@ const PainelControle = () => {
             atualizarConfiguracao={atualizarConfiguracao}
           />
           <SecaoVisao 
-            configuracoes={configuracoes}
-            atualizarConfiguracao={atualizarConfiguracao}
-          />
-          <SecaoLeitura 
             configuracoes={configuracoes}
             atualizarConfiguracao={atualizarConfiguracao}
           />

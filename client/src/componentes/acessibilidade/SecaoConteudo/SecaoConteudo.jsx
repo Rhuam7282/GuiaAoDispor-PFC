@@ -1,6 +1,5 @@
 // src/componentes/acessibilidade/SecaoConteudo/SecaoConteudo.jsx
 import { EyeOff, Link } from 'lucide-react';
-import './SecaoConteudo.css';
 
 const SecaoConteudo = ({ configuracoes, atualizarConfiguracao }) => {
   return (

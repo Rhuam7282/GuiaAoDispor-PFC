@@ -1,6 +1,5 @@
 // src/componentes/acessibilidade/SecaoDaltonismo/SecaoDaltonismo.jsx
 import { BookOpen } from 'lucide-react';
-import './SecaoDaltonismo.css';
 
 const SecaoDaltonismo = ({ configuracoes, atualizarConfiguracao }) => {
   const obterTextoModoDaltonico = () => {

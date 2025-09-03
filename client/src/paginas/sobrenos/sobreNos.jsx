@@ -1,7 +1,9 @@
 import React from 'react';
 import Corpo from "@componentes/layout/corpo";
 import SecaoSobre from './componentes/SecaoSobre';
+import RedesSociais from './componentes/RedesSociais';
 import FormularioContato from './componentes/FormularioContato';
+import logo from '@recursos/icones/logo.png';
 import './sobreNos.css';
 
 const SobreNosPage = () => {
@@ -58,7 +60,7 @@ const SobreNosPage = () => {
           </form>
           <aside className='redes'>
             <div className="listaIcones vertical">
-              {redesSociais.map((rede, index) => {
+              {RedesSociais.map((rede, index) => {
                 const Icone = rede.icone;
                 return (
                   <div key={index} className="listaIcones">

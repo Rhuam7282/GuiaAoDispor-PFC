@@ -5,7 +5,7 @@ import InformacoesPerfil from "./componentes/InformacoesPerfil";
 import ContatosPerfil from "./componentes/ContatosPerfil";
 import HistoricoAcademicoPerfil from "./componentes/HistoricoAcademicoPerfil";
 import HistoricoProfissionalPerfil from "./componentes/HistoricoProfissionalPerfil";
-import { servicoProfissional, servicoHCurricular, servicoHProfissional, servicoAuth } from "@servicos/apiService";
+import { servicoProfissional, servicoHCurricular, servicoHProfissional, servicoAuth } from "@servicos/api";
 import { useAuth } from "@/contextos/autenticacao";
 
 import {
@@ -15,10 +15,10 @@ import {
   Linkedin,
 } from "lucide-react";
 
-import mariaSilva from "@recursos/mulher.png";
-import micheleto from "@recursos/hospital.jpg";
-import butantan from "@recursos/butantan.webp";
-import portugues from "@recursos/portugues.jpg";
+import mariaSilva from "@recursos/imagens/mulher.png";
+import micheleto from "@recursos/imagens/hospital.jpg";
+import butantan from "@recursos/imagens/butantan.webp";
+import portugues from "@recursos/imagens/portugues.jpg";
 
 const Perfil = () => {
   const { id } = useParams();
