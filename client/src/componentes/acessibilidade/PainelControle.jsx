@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { PersonStanding, X } from 'lucide-react';
 import { useConfiguracaoAcessibilidade } from './ganchos/useConfiguracaoAcessibilidade';
 import { useGuiasLeitura } from './ganchos/useGuiasLeitura';
-import SecaoVLibras from './secaoVLIbras/secaoVLIbras';
+import VLibrasWidgetHibrido from './VLibrasWidget/VLibrasWidgetHibrido';
 import SecaoTexto from './SecaoTexto/SecaoTexto';
 import SecaoVisao from './SecaoVisao/SecaoVisao';
 import SecaoDaltonismo from './SecaoDaltonismo/SecaoDaltonismo';
@@ -134,7 +134,7 @@ const PainelControle = () => {
             </button>
           </div>
 
-          <SecaoVLibras />
+          <VLibrasWidgetHibrido />
           <SecaoTexto 
             configuracoes={configuracoes}
             atualizarConfiguracao={atualizarConfiguracao}
