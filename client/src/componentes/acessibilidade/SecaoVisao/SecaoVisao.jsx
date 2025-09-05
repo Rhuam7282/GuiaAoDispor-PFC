@@ -1,6 +1,5 @@
 // src/componentes/acessibilidade/SecaoVisao/SecaoVisao.jsx
 import { Contrast, Moon, Sun, Eye } from 'lucide-react';
-import './SecaoVisao.css';
 
 const SecaoVisao = ({ configuracoes, atualizarConfiguracao }) => {
   const obterTextoModoContraste = () => {
