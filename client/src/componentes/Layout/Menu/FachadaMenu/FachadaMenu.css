@@ -12,14 +12,6 @@
   filter: drop-shadow(var(--sombra) var(--corAzulEscuro));
 }
 
-.informacoesUsuario {
-  margin-top: var(--espacamentoPequeno);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
 .avatarUsuario {
   width: 32px !important;
   height: 32px;

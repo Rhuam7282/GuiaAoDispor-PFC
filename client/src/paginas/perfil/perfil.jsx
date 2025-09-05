@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Corpo from "@componentes/layout/corpo";
+import Corpo from "@componentes/Layout/Corpo";
 import InformacoesPerfil from "./componentes/InformacoesPerfil";
-import ContatosPerfil from "./componentes/ContatosPerfil";
 import HistoricoAcademicoPerfil from "./componentes/HistoricoAcademicoPerfil";
 import HistoricoProfissionalPerfil from "./componentes/HistoricoProfissionalPerfil";
 import { servicoProfissional, servicoHCurricular, servicoHProfissional, servicoAuth } from "@servicos/api";
 import { useAuth } from "@/contextos/autenticacao";
+import "./perfil.css";
 
 import {
   Mail,
   Facebook,
   Instagram,
   Linkedin,
+  LogOut,
 } from "lucide-react";
 
 import mariaSilva from "@recursos/imagens/mulher.png";
 import micheleto from "@recursos/imagens/hospital.jpg";
 import butantan from "@recursos/imagens/butantan.webp";
 import portugues from "@recursos/imagens/portugues.jpg";
-
 const Perfil = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -31,6 +31,14 @@ const Perfil = () => {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
   const [modoEdicao, setModoEdicao] = useState(false);
+
+  // Função para logout
+  const handleLogout = () => {
+    if (typeof atualizarUsuario === "function") {
+      atualizarUsuario(null);
+    }
+    navigate("/cadastro");
+  };
 
   // Dados estáticos para fallback
   const dadosEstaticos = {
@@ -224,7 +232,25 @@ useEffect(() => {
   return (
     <Corpo>
       <div className="container">
-        <h1 className="titulo">{dadosPerfil.nome}</h1>
+        <div className="listaHorizontal flexCentro"> <h1 className="titulo">{dadosPerfil.nome}</h1> {isAuthenticated() && user && (!id || user._id === id) && (
+              <button 
+                className="botao botaoSecundario"
+                onClick={() => setModoEdicao(!modoEdicao)}
+              >
+                {modoEdicao ? 'Cancelar Edição' : 'Editar Perfil'}
+              </button>
+            )}
+            {isAuthenticated() && (
+        <button 
+          onClick={handleLogout}
+          className="botao botaoSecundario flexCentro"
+        >
+          <LogOut size={16} />
+          <span className="">Sair</span>
+        </button>
+      )}
+            </div>
+        
         
         {erro && (
           <div className="mensagemAviso" style={{ 
@@ -247,8 +273,6 @@ useEffect(() => {
           setModoEdicao={setModoEdicao}
           isPerfilProprio={isPerfilProprio()}
         />
-
-        <ContatosPerfil redesSociais={dadosPerfil.redesSociais} />
 
         <div className="flexContainer gapGrande">
           <HistoricoAcademicoPerfil 

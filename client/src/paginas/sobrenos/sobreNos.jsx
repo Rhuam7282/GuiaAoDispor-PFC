@@ -1,13 +1,12 @@
 import React from 'react';
-import Corpo from "@componentes/layout/corpo";
+import Corpo from "@componentes/Layout/Corpo";
 import SecaoSobre from './componentes/SecaoSobre';
 import RedesSociais from './componentes/RedesSociais';
 import FormularioContato from './componentes/FormularioContato';
 import logo from '@recursos/icones/logo.png';
 import './sobreNos.css';
-// import logo from '../../recursos/icones/logo.png';
 
-const SobreNosPage = () => {
+const SobreNos = () => {
   return (
     <Corpo>
       <main className="container">
@@ -44,7 +43,7 @@ const SobreNosPage = () => {
 
             </p>
             <h3>Caroline Barbieri</h3>
-            <p>C:\Users\User\Documents\Coisinhas Lucas\IFPR IIW23-A\Outras atividades\IHC\index.html
+            <p>
 
             </p>
           </article>
@@ -60,7 +59,7 @@ const SobreNosPage = () => {
             <button type="submit">Enviar</button>
           </form>
           <aside className='redes'>
-            <div className="listaIcones vertical">
+            {/* <div className="listaIcones vertical">
               {RedesSociais.map((rede, index) => {
                 const Icone = rede.icone;
                 return (
@@ -70,7 +69,7 @@ const SobreNosPage = () => {
                   </div>
                 );
               })}
-            </div>
+            </div> */}
           </aside>
         </section>
       </main>
@@ -82,5 +81,5 @@ const SobreNosPage = () => {
 };
 
 
-export default SobreNosPage;
+export default SobreNos;
 
