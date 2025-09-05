@@ -8,6 +8,7 @@
   font-family: var(--fontePrincipal);
 }
 
+
 .botaoAlternarAcessibilidade {
   width: 56px;
   height: 56px;
@@ -39,6 +40,46 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.painelAcessibilidade,
+.painelAcessibilidade * {
+  font-size: 14px !important;
+  letter-spacing: normal !important;
+  line-height: 1.4 !important;
+}
+
+  .botoesControle button {
+  font-size: 12px !important;
+}
+
+.tituloSecao {
+  font-size: 13px !important;
+}
+
+.botoesControle button:active {
+  box-shadow: 0 0 15px 5px rgba(0, 123, 255, 0.8) !important;
+  transition: box-shadow 0.1s ease-in-out !important;
+}
+
+.botoesControle {
+  justify-content: center !important;
+}
+
+.botoesControle button {
+  font-size: 16px !important; /* Aumentar fonte dos botões */
+  padding: 10px 15px !important; /* Aumentar padding */
+  min-width: 90px !important; /* Largura mínima maior */
+}
+
+.botaoAlternarAcessibilidade {
+  font-size: 24px !important;
+}
+
+.botaoAlternarAcessibilidade {
+  font-size: 24px !important; /* Manter tamanho do ícone */
 }
 
 .cabecalhoAcessibilidade {
@@ -152,14 +193,36 @@
   display: none !important;
 }
 
-.removerCabecalhos h1,
-.removerCabecalhos h2,
-.removerCabecalhos h3,
-.removerCabecalhos h4,
-.removerCabecalhos h5,
-.removerCabecalhos h6,
-.removerCabecalhos header {
+.removerCabecalhos h1:not(.manter-cabecalho),
+.removerCabecalhos h2:not(.manter-cabecalho),
+.removerCabecalhos h3:not(.manter-cabecalho),
+.removerCabecalhos h4:not(.manter-cabecalho),
+.removerCabecalhos h5:not(.manter-cabecalho),
+.removerCabecalhos h6:not(.manter-cabecalho),
+.removerCabecalhos header:not(.manter-cabecalho) {
   display: none !important;
+}
+
+.destacarLinks1 a {
+  background-color: #ffff00 !important;
+  color: #000000 !important;
+  text-decoration: underline !important;
+  font-weight: bold !important;
+  padding: 2px 4px !important;
+  border-radius: 3px !important;
+}
+
+.destacarLinks2 a {
+  border: 2px dashed #ff6600 !important;
+  padding: 2px 4px !important;
+  border-radius: 3px !important;
+  background-color: transparent !important;
+}
+
+/* Estilo para botões ativos */
+.botoesControle button.ativo {
+  background-color: var(--corAzulDestaque) !important;
+  color: white !important;
 }
 
 /* Destacar links */
@@ -202,7 +265,7 @@
 }
 
 /* Guia de leitura */
-.guiaLeituraHorizontal{
+.guiaLeituraHorizontal {
   position: fixed;
   pointer-events: none;
   z-index: 10001;
@@ -217,19 +280,24 @@
   top: -8px;
   width: 16px;
   height: 16px;
-  background: white; /* Interior branco */
-  border: 2px solid black; /* Margem preta */
+  background: white;
+  /* Interior branco */
+  border: 2px solid black;
+  /* Margem preta */
   border-radius: 50%;
   transform: translateX(-50%);
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5); /* Sombra suave para melhor visibilidade */
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+  /* Sombra suave para melhor visibilidade */
 }
 
 .mascaraLeitura {
   position: fixed;
   pointer-events: none;
   z-index: 10001;
-  width: 1500px;  /* Tamanho aumentado conforme solicitado */
-  height: 200px;  /* Tamanho aumentado conforme solicitado */
+  width: 1500px;
+  /* Tamanho aumentado conforme solicitado */
+  height: 200px;
+  /* Tamanho aumentado conforme solicitado */
   border: 3px solid var(--cor-destaque-secundaria);
   border-radius: 12px;
   background: transparent;
@@ -324,21 +392,21 @@
     top: 10px;
     right: 10px;
   }
-  
+
   .painelAcessibilidade {
     width: calc(100vw - 20px);
     right: -10px;
   }
-  
+
   .botaoAlternarAcessibilidade {
     width: 48px;
     height: 48px;
   }
-  
+
   .botoesControle {
     flex-direction: column;
   }
-  
+
   .botoesControle button {
     min-width: auto;
   }

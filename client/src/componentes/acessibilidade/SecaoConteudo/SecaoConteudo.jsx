@@ -1,12 +1,12 @@
 // src/componentes/acessibilidade/SecaoConteudo/SecaoConteudo.jsx
-import { EyeOff, Link } from 'lucide-react';
+import { Link, Image, Heading } from 'lucide-react';
 
 const SecaoConteudo = ({ configuracoes, atualizarConfiguracao }) => {
   return (
     <>
       <div className="secao">
         <h4 className="tituloSecao">
-          <EyeOff size={16} /> Ocultar Imagens
+          <Image size={16} /> Remover Imagens
         </h4>
         <div className="botoesControle">
           <button onClick={() => atualizarConfiguracao('removerImagens', !configuracoes.removerImagens)} 
@@ -18,7 +18,7 @@ const SecaoConteudo = ({ configuracoes, atualizarConfiguracao }) => {
 
       <div className="secao">
         <h4 className="tituloSecao">
-          <EyeOff size={16} /> Ocultar Cabeçalhos
+          <Heading size={16} /> Remover Cabeçalhos
         </h4>
         <div className="botoesControle">
           <button onClick={() => atualizarConfiguracao('removerCabecalhos', !configuracoes.removerCabecalhos)} 
@@ -33,9 +33,13 @@ const SecaoConteudo = ({ configuracoes, atualizarConfiguracao }) => {
           <Link size={16} /> Destacar Links
         </h4>
         <div className="botoesControle">
-          <button onClick={() => atualizarConfiguracao('destacarLinks', !configuracoes.destacarLinks)} 
-                  aria-pressed={configuracoes.destacarLinks}>
-            {configuracoes.destacarLinks ? 'Ativado' : 'Desativado'}
+          <button onClick={() => atualizarConfiguracao('destacarLinks', configuracoes.destacarLinks === 0 ? 1 : 0)} 
+                  className={configuracoes.destacarLinks === 1 ? 'ativo' : ''}>
+            Modo Cores
+          </button>
+          <button onClick={() => atualizarConfiguracao('destacarLinks', configuracoes.destacarLinks === 2 ? 0 : 2)} 
+                  className={configuracoes.destacarLinks === 2 ? 'ativo' : ''}>
+            Modo Borda
           </button>
         </div>
       </div>

@@ -9,7 +9,13 @@ import SecaoVisao from './SecaoVisao/SecaoVisao';
 import SecaoDaltonismo from './SecaoDaltonismo/SecaoDaltonismo';
 import SecaoConteudo from './SecaoConteudo/SecaoConteudo';
 import SecaoAnimacoesCursor from './SecaoAnimacoesCursor/SecaoAnimacoesCursor';
+import MaskLeitura from './mascaraLeitura/mascaraLeitura';
+import GuiaLeitura from './guialeitura/guiaLeitura';
+
 import './PainelControle.css';
+
+const [maskLeituraAtiva, setMaskLeituraAtiva] = useState(false);
+const [guiaLeituraAtiva, setGuiaLeituraAtiva] = useState(false);
 
 const PainelControle = () => {
   const [estaAberto, setEstaAberto] = useState(false);
@@ -20,17 +26,17 @@ const PainelControle = () => {
     const aplicarEstilosTexto = () => {
       let estiloDinamico = document.getElementById('estiloAcessibilidadeTexto');
       const conteudoEstilo = `
-        :root {
-          --fatorEscala: ${configuracoes.tamanhoFonte / 100};
-          --espacamentoLetras: ${configuracoes.espacamentoLetras}px;
-          --alturaLinha: ${configuracoes.alturaLinha};
-          font-size: calc(16px * var(--fatorEscala)); 
-        }
-        body {
-          letter-spacing: var(--espacamentoLetras);
-          line-height: var(--alturaLinha);
-        }
-      `;
+      :root {
+        --fatorEscala: ${configuracoes.tamanhoFonte / 100};
+        --espacamentoLetras: ${configuracoes.espacamentoLetras}px;
+        --alturaLinha: ${configuracoes.alturaLinha};
+      }
+      body:not(.painelAcessibilidade):not(.painelAcessibilidade *) {
+        font-size: calc(16px * var(--fatorEscala)) !important; 
+        letter-spacing: var(--espacamentoLetras) !important;
+        line-height: var(--alturaLinha) !important;
+      }
+    `;
 
       if (!estiloDinamico) {
         const style = document.createElement('style');
@@ -74,8 +80,8 @@ const PainelControle = () => {
       case 3: raiz.classList.add('daltonicoTritanopia'); break;
       default: break;
     }
-  }, [configuracoes.removerImagens, configuracoes.removerCabecalhos, configuracoes.destacarLinks, 
-      configuracoes.modoDaltonico, configuracoes.pausarAnimacoes, configuracoes.cursorGrande]);
+  }, [configuracoes.removerImagens, configuracoes.removerCabecalhos, configuracoes.destacarLinks,
+  configuracoes.modoDaltonico, configuracoes.pausarAnimacoes, configuracoes.cursorGrande]);
 
   useEffect(() => {
     const manipularTeclaPressionada = (evento) => {
@@ -100,7 +106,7 @@ const PainelControle = () => {
         atualizarConfiguracao('tamanhoFonte', Math.max(configuracoes.tamanhoFonte - 10, 80));
       }
     };
-    
+
     document.addEventListener('keydown', manipularTeclaPressionada);
     return () => document.removeEventListener('keydown', manipularTeclaPressionada);
   }, [configuracoes, atualizarConfiguracao]);
@@ -134,24 +140,50 @@ const PainelControle = () => {
             </button>
           </div>
 
+
           <VLibrasWidgetHibrido />
-          <SecaoTexto 
+
+          <div className="secao">
+            <h4 className="tituloSecao">Máscara de Leitura</h4>
+            <div className="botoesControle">
+              <button
+                onClick={() => setMaskLeituraAtiva(!maskLeituraAtiva)}
+                className={maskLeituraAtiva ? 'ativo' : ''}
+              >
+                {maskLeituraAtiva ? 'Desativar' : 'Ativar'}
+              </button>
+            </div>
+          </div>
+
+          <div className="secao">
+            <h4 className="tituloSecao">Guia de Leitura</h4>
+            <div className="botoesControle">
+              <button
+                onClick={() => setGuiaLeituraAtiva(!guiaLeituraAtiva)}
+                className={guiaLeituraAtiva ? 'ativo' : ''}
+              >
+                {guiaLeituraAtiva ? 'Desativar' : 'Ativar'}
+              </button>
+            </div>
+          </div>
+
+          <SecaoTexto
             configuracoes={configuracoes}
             atualizarConfiguracao={atualizarConfiguracao}
           />
-          <SecaoVisao 
+          <SecaoVisao
             configuracoes={configuracoes}
             atualizarConfiguracao={atualizarConfiguracao}
           />
-          <SecaoDaltonismo 
+          <SecaoDaltonismo
             configuracoes={configuracoes}
             atualizarConfiguracao={atualizarConfiguracao}
           />
-          <SecaoConteudo 
+          <SecaoConteudo
             configuracoes={configuracoes}
             atualizarConfiguracao={atualizarConfiguracao}
           />
-          <SecaoAnimacoesCursor 
+          <SecaoAnimacoesCursor
             configuracoes={configuracoes}
             atualizarConfiguracao={atualizarConfiguracao}
           />

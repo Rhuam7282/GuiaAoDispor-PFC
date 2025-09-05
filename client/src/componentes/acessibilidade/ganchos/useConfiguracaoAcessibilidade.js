@@ -7,13 +7,13 @@ export const useConfiguracaoAcessibilidade = () => {
     alturaLinha: 1.5,
     modoContraste: 0,
     modoEscuro: 0,
-    guiaLeitura: 0,
+    modoDaltonico: 0,
     removerImagens: false,
     removerCabecalhos: false,
-    destacarLinks: false,
-    modoDaltonico: 0,
+    destacarLinks: 0, // 0 = desativado, 1 = modo cores, 2 = modo borda
     pausarAnimacoes: false,
-    cursorGrande: false
+    cursorGrande: false,
+    guiaLeitura: false
   });
 
   const salvarConfiguracao = useCallback((chave, valor) => {
@@ -48,7 +48,7 @@ export const useConfiguracaoAcessibilidade = () => {
       pausarAnimacoes: carregarConfiguracao('pausarAnimacoes', false),
       cursorGrande: carregarConfiguracao('cursorGrande', false)
     };
-    
+
     setConfiguracoes(configuracoesSalvas);
   }, [carregarConfiguracao]);
 
