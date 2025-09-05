@@ -1,5 +1,5 @@
 import React from 'react';
-import Corpo from "@componentes/layout/corpo";
+import Corpo from "@componentes/Layout/Corpo";
 import SecaoSobre from './componentes/SecaoSobre';
 import RedesSociais from './componentes/RedesSociais';
 import FormularioContato from './componentes/FormularioContato';

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Corpo from "@componentes/layout/corpo";
+import Corpo from "@componentes/Layout/Corpo";
 import InformacoesPerfil from "./componentes/InformacoesPerfil";
 import ContatosPerfil from "./componentes/ContatosPerfil";
 import HistoricoAcademicoPerfil from "./componentes/HistoricoAcademicoPerfil";
