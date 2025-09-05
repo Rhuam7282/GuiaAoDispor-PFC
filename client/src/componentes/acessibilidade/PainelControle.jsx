@@ -1,4 +1,5 @@
 // src/componentes/acessibilidade/PainelControle.jsx
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { PersonStanding, X } from 'lucide-react';
 import { useConfiguracaoAcessibilidade } from './ganchos/useConfiguracaoAcessibilidade';
@@ -14,11 +15,14 @@ import GuiaLeitura from './guialeitura/guiaLeitura';
 
 import './PainelControle.css';
 
-const [maskLeituraAtiva, setMaskLeituraAtiva] = useState(false);
-const [guiaLeituraAtiva, setGuiaLeituraAtiva] = useState(false);
+
 
 const PainelControle = () => {
   const [estaAberto, setEstaAberto] = useState(false);
+
+  const [maskLeituraAtiva, setMaskLeituraAtiva] = useState(false);
+  const [guiaLeituraAtiva, setGuiaLeituraAtiva] = useState(false);
+
   const { configuracoes, atualizarConfiguracao } = useConfiguracaoAcessibilidade();
   useGuiasLeitura(configuracoes.guiaLeitura);
 
@@ -146,7 +150,7 @@ const PainelControle = () => {
           <div className="secao">
             <h4 className="tituloSecao">Máscara de Leitura</h4>
             <div className="botoesControle">
-              <button
+              <button 
                 onClick={() => setMaskLeituraAtiva(!maskLeituraAtiva)}
                 className={maskLeituraAtiva ? 'ativo' : ''}
               >
@@ -158,7 +162,7 @@ const PainelControle = () => {
           <div className="secao">
             <h4 className="tituloSecao">Guia de Leitura</h4>
             <div className="botoesControle">
-              <button
+              <button 
                 onClick={() => setGuiaLeituraAtiva(!guiaLeituraAtiva)}
                 className={guiaLeituraAtiva ? 'ativo' : ''}
               >
@@ -166,6 +170,11 @@ const PainelControle = () => {
               </button>
             </div>
           </div>
+
+          <MaskLeitura ativo={maskLeituraAtiva} />
+          <GuiaLeitura ativo={guiaLeituraAtiva} />
+        </div>
+        )}
 
           <SecaoTexto
             configuracoes={configuracoes}
@@ -188,9 +197,7 @@ const PainelControle = () => {
             atualizarConfiguracao={atualizarConfiguracao}
           />
         </div>
-      )}
-    </div>
-  );
-};
+  )
+}
 
 export default PainelControle;

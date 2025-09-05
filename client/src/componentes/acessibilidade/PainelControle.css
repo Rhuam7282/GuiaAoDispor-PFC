@@ -246,6 +246,50 @@
   scroll-behavior: auto !important;
 }
 
+.mascaraLeitura {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 100px;
+  border: 3px solid #ff9900;
+  border-radius: 12px;
+  background-color: transparent;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.guiaLeituraHorizontal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ff9900, transparent);
+  z-index: 10001;
+  pointer-events: none;
+}
+
+.indicadorCursor {
+  position: fixed;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border: 2px solid black;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10002;
+  pointer-events: none;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.botoesControle button.ativo {
+  background-color: var(--corAzulDestaque) !important;
+  color: white !important;
+}
+
 /* Cursor grande */
 .cursorGrande * {
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M2 2l28 12-12 2-4 14z" fill="black" stroke="white" stroke-width="2"/></svg>'), auto !important;
