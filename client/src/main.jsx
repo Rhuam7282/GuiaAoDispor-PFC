@@ -6,6 +6,10 @@ import App from './App.jsx';
 import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+console.log('React version:', React.version);
+console.log('ReactDOM version:', ReactDOM.version);
+
 root.render(
   <React.StrictMode>
     <GoogleOAuthProvider clientId={GOOGLE_CONFIG.CLIENT_ID}>
