@@ -3,22 +3,24 @@ import HistoricoCurricular from './HistoricoCurricular';
 import HistoricoProfissional from './HistoricoProfissional';
 import UploadImagem from './UploadImagem';
 
-const FormularioCadastro = ({ 
-  dadosFormulario, 
-  erros, 
-  carregando, 
+const FormularioCadastro = ({
+  dadosFormulario,
+  erros,
+  carregando,
   mensagemSucesso,
   aoAlterarCampo,
   aoSelecionarArquivo,
   aoEnviarFormulario,
-  setDadosFormulario,
   adicionarHistoricoCurricular,
   removerHistoricoCurricular,
   alterarHistoricoCurricular,
   adicionarHistoricoProfissional,
   removerHistoricoProfissional,
   alterarHistoricoProfissional,
-  alterarFotoHistoricoProfissional
+  alterarFotoHistoricoProfissional,
+  adicionarContato,
+  removerContato,
+  alterarContato
 }) => {
   return (
     <form onSubmit={aoEnviarFormulario} className="formulario-cadastro">
@@ -118,81 +120,108 @@ const FormularioCadastro = ({
           </div>
 
           <div className="cartaoDestaque variacao2" id='tipo-perfil'>
-            <div>
-              <span>Tipo de Perfil</span>
+            {/* Seção de Tipo de Perfil */}
+            <div className="grupo-formulario">
+              <label>Tipo de Perfil *</label>
+              <div className="botoes-tipo-perfil">
+                <button
+                  type="button"
+                  className={`botao-tipo ${dadosFormulario.tipoPerfil === 'Pessoal' ? 'ativo' : ''}`}
+                  onClick={() => aoAlterarCampo({ target: { name: 'tipoPerfil', value: 'Pessoal' } })}
+                >
+                  Pessoal
+                </button>
+                <button
+                  type="button"
+                  className={`botao-tipo ${dadosFormulario.tipoPerfil === 'Profissional' ? 'ativo' : ''}`}
+                  onClick={() => aoAlterarCampo({ target: { name: 'tipoPerfil', value: 'Profissional' } })}
+                >
+                  Profissional
+                </button>
+              </div>
             </div>
-            <div className="listaIcones">
+
+            {/* Campos básicos */}
+            <div className="grupo-formulario">
+              <label>Nome Completo *</label>
+              <input
+                type="text"
+                name="nome"
+                value={dadosFormulario.nome}
+                onChange={aoAlterarCampo}
+                placeholder="Seu nome completo"
+              />
+              {erros.nome && <span className="mensagem-erro">{erros.nome}</span>}
+            </div>
+
+            {/* Seção de Contatos */}
+            <div className="grupo-formulario">
+              <label>Contatos</label>
+              {dadosFormulario.contatos && dadosFormulario.contatos.map((contato, index) => (
+                <div key={index} className="item-contato">
+                  <select
+                    value={contato.tipo}
+                    onChange={(e) => alterarContato(index, 'tipo', e.target.value)}
+                  >
+                    <option value="">Selecione o tipo</option>
+                    <option value="Telefone">Telefone</option>
+                    <option value="Email">Email</option>
+                    <option value="Facebook">Facebook</option>
+                    <option value="LinkedIn">LinkedIn</option>
+                    <option value="Outro">Outro</option>
+                  </select>
+                  <input
+                    type="text"
+                    value={contato.valor}
+                    onChange={(e) => alterarContato(index, 'valor', e.target.value)}
+                    placeholder="Valor do contato"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removerContato(index)}
+                    className="botao-remover"
+                  >
+                    Remover
+                  </button>
+                </div>
+              ))}
               <button
                 type="button"
-                className={dadosFormulario.tipoPerfil === 'Pessoal' ? 'botaoAtivo' : ''}
-                onClick={() => setDadosFormulario(prev => ({ ...prev, tipoPerfil: 'Pessoal' }))}
+                onClick={adicionarContato}
+                className="botao-adicionar"
               >
-                Pessoal
-              </button>
-              <button
-                type="button"
-                className={dadosFormulario.tipoPerfil === 'Profissional' ? 'botaoAtivo' : ''}
-                onClick={() => setDadosFormulario(prev => ({ ...prev, tipoPerfil: 'Profissional' }))}
-              >
-                Profissional
+                + Adicionar Contato
               </button>
             </div>
-            <p className="texto-obrigatorio">* Campos obrigatórios</p>
-          </div>
 
-          {dadosFormulario.tipoPerfil === 'Profissional' && (
-            <>
-              <div className="grupo-formulario">
-                <label htmlFor="descricao">Descrição Profissional *</label>
-                <textarea
-                  id="descricao"
-                  name="descricao"
-                  value={dadosFormulario.descricao}
-                  onChange={aoAlterarCampo}
-                  rows="3"
-                  className={erros.descricao ? 'erro' : ''}
-                />
-                {erros.descricao && <span className="mensagem-erro">{erros.descricao}</span>}
-              </div>
-
-              <div className="grupo-formulario">
-                <label htmlFor="instituicao">Instituição/Formação</label>
-                <input
-                  type="text"
-                  id="instituicao"
-                  name="instituicao"
-                  value={dadosFormulario.instituicao}
-                  onChange={aoAlterarCampo}
-                />
-              </div>
-
-              <div className="grupo-formulario">
-                <label htmlFor="linkedin">LinkedIn</label>
-                <input
-                  type="url"
-                  id="linkedin"
-                  name="linkedin"
-                  value={dadosFormulario.linkedin}
-                  onChange={aoAlterarCampo}
-                />
-              </div>
-
-              <HistoricoCurricular
-                historicosCurriculares={dadosFormulario.historicosCurriculares}
-                adicionarHistoricoCurricular={adicionarHistoricoCurricular}
-                removerHistoricoCurricular={removerHistoricoCurricular}
-                alterarHistoricoCurricular={alterarHistoricoCurricular}
+            {/* Descrição (opcional) */}
+            <div className="grupo-formulario">
+              <label>Descrição</label>
+              <textarea
+                name="descricao"
+                value={dadosFormulario.descricao}
+                onChange={aoAlterarCampo}
+                rows="3"
+                placeholder="Uma breve descrição sobre você (opcional)"
+                className="textarea-pequeno"
               />
+            </div>
 
-              <HistoricoProfissional
-                historicosProfissionais={dadosFormulario.historicosProfissionais}
-                adicionarHistoricoProfissional={adicionarHistoricoProfissional}
-                removerHistoricoProfissional={removerHistoricoProfissional}
-                alterarHistoricoProfissional={alterarHistoricoProfissional}
-                alterarFotoHistoricoProfissional={alterarFotoHistoricoProfissional}
-              />
-            </>
-          )}
+            <HistoricoCurricular
+              historicosCurriculares={dadosFormulario.historicosCurriculares}
+              adicionarHistoricoCurricular={adicionarHistoricoCurricular}
+              removerHistoricoCurricular={removerHistoricoCurricular}
+              alterarHistoricoCurricular={alterarHistoricoCurricular}
+            />
+
+            <HistoricoProfissional
+              historicosProfissionais={dadosFormulario.historicosProfissionais}
+              adicionarHistoricoProfissional={adicionarHistoricoProfissional}
+              removerHistoricoProfissional={removerHistoricoProfissional}
+              alterarHistoricoProfissional={alterarHistoricoProfissional}
+              alterarFotoHistoricoProfissional={alterarFotoHistoricoProfissional}
+            />
+          </div> {/* Corrigido: era <div/> */}
 
           <div className="grupo-formulario">
             <label htmlFor="facebook">Facebook</label>
@@ -219,20 +248,19 @@ const FormularioCadastro = ({
           {mensagemSucesso && (
             <div className="mensagem-sucesso">{mensagemSucesso}</div>
           )}
-          
+
           {erros.submit && (
             <div className="mensagem-erro">{erros.submit}</div>
           )}
-          
-          <button 
-            type="submit" 
-            disabled={carregando}
-          >
-            {carregando ? 'Cadastrando...' : 'Criar Conta'}
+
+          <button type="submit" disabled={carregando}>
+            {carregando ? 'Cadastrando...' : 'Finalizar Cadastro'}
           </button>
+
+          {mensagemSucesso && <div className="mensagem-sucesso">{mensagemSucesso}</div>}
         </div>
-        
-        <UploadImagem 
+
+        <UploadImagem
           foto={dadosFormulario.foto}
           aoSelecionarArquivo={aoSelecionarArquivo}
         />
@@ -242,4 +270,3 @@ const FormularioCadastro = ({
 };
 
 export default FormularioCadastro;
-

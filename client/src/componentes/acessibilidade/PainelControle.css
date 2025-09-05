@@ -317,17 +317,6 @@
   transform: translate(-50%, -50%);
 }
 
-.guiaLeituraHorizontal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #ff9900, transparent);
-  z-index: 10001;
-  pointer-events: none;
-}
-
 .indicadorCursor {
   position: fixed;
   width: 16px;
@@ -367,27 +356,50 @@
 /* Guia de leitura */
 .guiaLeituraHorizontal {
   position: fixed;
-  pointer-events: none;
-  z-index: 10001;
-  background: linear-gradient(90deg, transparent, var(--cor-destaque-secundaria), transparent);
-  height: 2px;
-  width: 100vw;
+  top: 0;
   left: 0;
+  width: 100vw;
+  height: 4px;
+  background: var(--corNeutraClara);
+  border: var(--corNeutraEscura) 1px solid;
+  z-index: 10001;
+  pointer-events: none;
+}
+
+.indicadorSeta {
+  position: fixed;
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 20px solid var(--corNeutraClara); /* Corpo principal preto */
+  transform: translate(-50%, -35%);
+  z-index: 10002;
+  pointer-events: none;
 }
 
 .indicadorCursor {
+  position: fixed;
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 20px solid black;
+  transform: translate(-50%, -50%);
+  z-index: 10002;
+  pointer-events: none;
+}
+
+.indicadorSeta::after {
+  content: '';
   position: absolute;
-  top: -8px;
-  width: 16px;
-  height: 16px;
-  background: white;
-  /* Interior branco */
-  border: 2px solid black;
-  /* Margem preta */
-  border-radius: 50%;
-  transform: translateX(-50%);
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
-  /* Sombra suave para melhor visibilidade */
+  top: 3px;
+  left: -10px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 17px solid var(--corAzulEscuro); /* Interior branco */
 }
 
 .mascaraLeitura {

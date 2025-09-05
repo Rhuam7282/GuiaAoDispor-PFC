@@ -1,48 +1,74 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 const GuiaLeitura = ({ ativo }) => {
-  const [posicao, setPosicao] = useState({ x: 0, y: 0 });
+  const guiaRef = useRef(null);
+  const indicadorRef = useRef(null);
+  const animationRef = useRef(null);
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      setPosicao({ x: e.clientX, y: e.clientY });
+    if (!ativo) {
+      // Limpar animação se desativado
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+      return;
+    }
+
+    // Criar a barra horizontal
+    const guia = document.createElement('div');
+    guia.className = 'guiaLeituraHorizontal';
+    guiaRef.current = guia;
+    document.body.appendChild(guia);
+
+    // Criar o indicador (seta para cima)
+    const indicador = document.createElement('div');
+    indicador.className = 'indicadorSeta';
+    indicadorRef.current = indicador;
+    document.body.appendChild(indicador);
+
+    // Função para atualizar a posição com requestAnimationFrame
+    const updatePosition = (e) => {
+      if (!guiaRef.current || !indicadorRef.current) return;
+      
+      // Posicionar a barra horizontal na altura do cursor
+      guiaRef.current.style.top = `${e.clientY}px`;
+      
+      // Posicionar a seta no centro da barra
+      indicadorRef.current.style.left = `${e.clientX}px`;
+      indicadorRef.current.style.top = `${e.clientY}px`;
+      
+      // Continuar a animação
+      animationRef.current = requestAnimationFrame(() => {
+        // Esta função será chamada no próximo frame de animação
+      });
     };
 
-    if (ativo) {
-      document.addEventListener('mousemove', handleMouseMove);
-      
-      // Criar a barra horizontal
-      const guia = document.createElement('div');
-      guia.className = 'guiaLeituraHorizontal';
-      document.body.appendChild(guia);
+    // Usar requestAnimationFrame para atualização suave
+    const handleMouseMove = (e) => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      animationRef.current = requestAnimationFrame(() => updatePosition(e));
+    };
 
-      // Criar o indicador (seta)
-      const indicador = document.createElement('div');
-      indicador.className = 'indicadorCursor';
-      document.body.appendChild(indicador);
+    document.addEventListener('mousemove', handleMouseMove);
 
-      return () => {
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.body.removeChild(guia);
-        document.body.removeChild(indicador);
-      };
-    }
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      if (guiaRef.current) {
+        document.body.removeChild(guiaRef.current);
+        guiaRef.current = null;
+      }
+      if (indicadorRef.current) {
+        document.body.removeChild(indicadorRef.current);
+        indicadorRef.current = null;
+      }
+    };
   }, [ativo]);
-
-  // Atualizar posição da guia e do indicador
-  useEffect(() => {
-    const guia = document.querySelector('.guiaLeituraHorizontal');
-    const indicador = document.querySelector('.indicadorCursor');
-    
-    if (guia && indicador && ativo) {
-      // Posicionar a barra horizontal na altura do cursor
-      guia.style.top = `${posicao.y}px`;
-      
-      // Posicionar o indicador no centro da barra
-      indicador.style.left = `${posicao.x}px`;
-      indicador.style.top = `${posicao.y}px`;
-    }
-  }, [posicao, ativo]);
 
   return null;
 };
