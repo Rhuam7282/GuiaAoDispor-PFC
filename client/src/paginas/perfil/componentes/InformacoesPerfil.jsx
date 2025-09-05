@@ -13,9 +13,9 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
       </div>
       <div className="cartaoDestaque fundoMarromDestaqueTransparente textoEsquerda flexWrap">
         <p>{dadosPerfil.descricao}</p>
-        <div className="listaHorizontal">
-          <div className="flexLinha gapMedio alinharCentro">
-            <div className="flexLinha gapPequeno alinharCentro">
+        <div className="listaHorizontal ">
+          <div className="gapMedio">
+            <div className="flexCentro gapPequeno">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
@@ -31,16 +31,22 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
                 {dadosPerfil.avaliacao !== undefined && dadosPerfil.avaliacao !== null ? dadosPerfil.avaliacao.toFixed(1) : '0.0'}
               </span>
             </div>
-            
-            {isAuthenticated() && user && (!id || user._id === id) && (
-              <button 
-                className="botao botaoSecundario"
-                onClick={() => setModoEdicao(!modoEdicao)}
-              >
-                {modoEdicao ? 'Cancelar Edição' : 'Editar Perfil'}
-              </button>
-            )}
           </div>
+        </div>
+
+      </div>
+      <div>
+        <h3>Contatos</h3>
+        <div className="listaIcones vertical">
+          {(dadosPerfil.redesSociais || []).map((rede, index) => {
+            const Icone = rede.icone;
+            return (
+              <div key={index} className="listaIcones">
+                <Icone size={18} />
+                <span>{rede.usuario}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

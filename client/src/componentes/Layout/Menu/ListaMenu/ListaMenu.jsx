@@ -52,15 +52,6 @@ const ListaMenu = () => {
         />
       ))}
       
-      {isAuthenticated() && (
-        <li 
-          onClick={handleLogout}
-          className="itemMenu botaoSair"
-        >
-          <LogOut size={20} />
-          <span className="textoItemMenu">Sair</span>
-        </li>
-      )}
     </ul>
   );
 };

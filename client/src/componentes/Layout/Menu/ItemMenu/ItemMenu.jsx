@@ -10,25 +10,19 @@ const ItemMenu = ({ item, ativo, usuarioLogado, onClick }) => {
       onClick={onClick}
       className={`itemMenu ${ativo ? 'paginaAtiva' : ''}`}
     >
-      <div className="itemPerfilContainer">
+      <span className="textoItemMenu"><div className="itemPerfilContainer">
         {isPerfil && usuarioLogado && usuarioLogado.foto ? (
           <img 
             src={usuarioLogado.foto || usuarioLogado.picture} 
             alt={`Foto de ${usuarioLogado.nome || usuarioLogado.name}`}
-            className="fotoPerfilMenu"
+            className="fotoPerfilMenu sombraPequena"
           />
         ) : (
           <item.Icone size={20} />
         )}
         
-        <span className="textoItemMenu">{item.texto}</span>
-        
-        {isPerfil && usuarioLogado && (
-          <span className="indicadorLogado" title={`Logado como ${usuarioLogado.nome || usuarioLogado.name}`}>
-            ●
-          </span>
-        )}
-      </div>
+        {item.texto}
+      </div></span>
     </li>
   );
 };
