@@ -1,7 +1,6 @@
 // src/componentes/acessibilidade/PainelControle.jsx
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { PersonStanding, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { PersonStanding, X, Type, AlignJustify, MoreHorizontal, Eye, Contrast, Moon, Image, Heading, LinkIcon, BookOpen, Pause, MousePointer } from 'lucide-react';
 import { useConfiguracaoAcessibilidade } from './ganchos/useConfiguracaoAcessibilidade';
 import { useGuiasLeitura } from './ganchos/useGuiasLeitura';
 import VLibrasWidgetHibrido from './VLibrasWidget/VLibrasWidgetHibrido';
@@ -14,8 +13,6 @@ import MaskLeitura from './mascaraLeitura/mascaraLeitura';
 import GuiaLeitura from './guialeitura/guiaLeitura';
 
 import './PainelControle.css';
-
-
 
 const PainelControle = () => {
   const [estaAberto, setEstaAberto] = useState(false);
@@ -144,29 +141,100 @@ const PainelControle = () => {
             </button>
           </div>
 
+          <div className="conteudo-painel">
+            <VLibrasWidgetHibrido />
 
-          <VLibrasWidgetHibrido />
-
-          <div className="secao">
-            <h4 className="tituloSecao">Máscara de Leitura</h4>
-            <div className="botoesControle">
-              <button 
-                onClick={() => setMaskLeituraAtiva(!maskLeituraAtiva)}
-                className={maskLeituraAtiva ? 'ativo' : ''}
-              >
-                {maskLeituraAtiva ? 'Desativar' : 'Ativar'}
-              </button>
+            <div className="grupo-opcoes">
+              <h4 className="titulo-grupo">Texto</h4>
+              <SecaoTexto
+                configuracoes={configuracoes}
+                atualizarConfiguracao={atualizarConfiguracao}
+              />
             </div>
-          </div>
 
-          <div className="secao">
-            <h4 className="tituloSecao">Guia de Leitura</h4>
-            <div className="botoesControle">
-              <button 
-                onClick={() => setGuiaLeituraAtiva(!guiaLeituraAtiva)}
-                className={guiaLeituraAtiva ? 'ativo' : ''}
+            <div className="grupo-opcoes">
+              <h4 className="titulo-grupo">Visão</h4>
+              <SecaoVisao
+                configuracoes={configuracoes}
+                atualizarConfiguracao={atualizarConfiguracao}
+              />
+            </div>
+
+            <div className="grupo-opcoes">
+              <h4 className="titulo-grupo">Daltonismo</h4>
+              <SecaoDaltonismo
+                configuracoes={configuracoes}
+                atualizarConfiguracao={atualizarConfiguracao}
+              />
+            </div>
+
+            <div className="grupo-opcoes">
+              <h4 className="titulo-grupo">Conteúdo</h4>
+              <SecaoConteudo
+                configuracoes={configuracoes}
+                atualizarConfiguracao={atualizarConfiguracao}
+              />
+            </div>
+
+            <div className="grupo-opcoes">
+              <h4 className="titulo-grupo">Animação & Cursor</h4>
+              <SecaoAnimacoesCursor
+                configuracoes={configuracoes}
+                atualizarConfiguracao={atualizarConfiguracao}
+              />
+            </div>
+
+            <div className="grupo-opcoes">
+              <h4 className="titulo-grupo">Ferramentas de Leitura</h4>
+              <div className="secao">
+                <h4 className="tituloSecao">
+                  <Eye size={16} /> Máscara de Leitura
+                </h4>
+                <div className="botoesControle">
+                  <button
+                    onClick={() => setMaskLeituraAtiva(!maskLeituraAtiva)}
+                    className={maskLeituraAtiva ? 'ativo' : ''}
+                  >
+                    {maskLeituraAtiva ? 'Desativar' : 'Ativar'}
+                  </button>
+                </div>
+              </div>
+
+              <div className="secao">
+                <h4 className="tituloSecao">
+                  <AlignJustify size={16} /> Guia de Leitura
+                </h4>
+                <div className="botoesControle">
+                  <button
+                    onClick={() => setGuiaLeituraAtiva(!guiaLeituraAtiva)}
+                    className={guiaLeituraAtiva ? 'ativo' : ''}
+                  >
+                    {guiaLeituraAtiva ? 'Desativar' : 'Ativar'}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="secao-redefinir">
+              <button
+                className="botao-redefinir-tudo"
+                onClick={() => {
+                  atualizarConfiguracao('tamanhoFonte', 100);
+                  atualizarConfiguracao('espacamentoLetras', 0);
+                  atualizarConfiguracao('alturaLinha', 1.5);
+                  atualizarConfiguracao('modoContraste', 0);
+                  atualizarConfiguracao('modoEscuro', 0);
+                  atualizarConfiguracao('modoDaltonico', 0);
+                  atualizarConfiguracao('removerImagens', false);
+                  atualizarConfiguracao('removerCabecalhos', false);
+                  atualizarConfiguracao('destacarLinks', 0);
+                  atualizarConfiguracao('pausarAnimacoes', false);
+                  atualizarConfiguracao('cursorGrande', false);
+                  setMaskLeituraAtiva(false);
+                  setGuiaLeituraAtiva(false);
+                }}
               >
-                {guiaLeituraAtiva ? 'Desativar' : 'Ativar'}
+                Redefinir Tudo
               </button>
             </div>
           </div>
@@ -174,30 +242,9 @@ const PainelControle = () => {
           <MaskLeitura ativo={maskLeituraAtiva} />
           <GuiaLeitura ativo={guiaLeituraAtiva} />
         </div>
-        )}
-
-          <SecaoTexto
-            configuracoes={configuracoes}
-            atualizarConfiguracao={atualizarConfiguracao}
-          />
-          <SecaoVisao
-            configuracoes={configuracoes}
-            atualizarConfiguracao={atualizarConfiguracao}
-          />
-          <SecaoDaltonismo
-            configuracoes={configuracoes}
-            atualizarConfiguracao={atualizarConfiguracao}
-          />
-          <SecaoConteudo
-            configuracoes={configuracoes}
-            atualizarConfiguracao={atualizarConfiguracao}
-          />
-          <SecaoAnimacoesCursor
-            configuracoes={configuracoes}
-            atualizarConfiguracao={atualizarConfiguracao}
-          />
-        </div>
-  )
+      )}
+    </div>
+  );
 }
 
 export default PainelControle;

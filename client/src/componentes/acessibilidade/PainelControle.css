@@ -28,6 +28,21 @@
   filter: brightness(0.95);
 }
 
+.botao-redefinir-tudo {
+  padding: 10px 20px;
+  background: var(--corVermelhoDestaque);
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.botao-redefinir-tudo:hover {
+  background: var(--corVermelhoEscuro);
+}
+
 .painelAcessibilidade {
   position: absolute;
   top: 70px;
@@ -42,6 +57,17 @@
   flex-direction: column;
   max-height: 80vh;
   overflow-y: auto;
+}
+
+.conteudo-painel {
+  padding: 10px;
+}
+
+.grupo-opcoes {
+  margin-bottom: 15px;
+  border: 1px solid var(--corMarromDestaqueTransparente);
+  border-radius: 8px;
+  padding: 10px;
 }
 
 .painelAcessibilidade,
@@ -102,6 +128,16 @@
   font-size: 18px;
 }
 
+.titulo-grupo {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--corMarromEscuro);
+  text-transform: uppercase;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--corMarromDestaqueTransparente);
+}
+
 .botaoFechar {
   background: transparent;
   border: none;
@@ -114,9 +150,22 @@
   opacity: 0.8;
 }
 
+.botoesControle span {
+  min-width: 40px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 12px;
+}
+
 .secao {
-  padding: var(--espacamentoPequeno);
+  padding: 8px 0;
   border-bottom: 1px solid var(--corMarromDestaqueTransparente);
+}
+
+.secao-redefinir {
+  padding: 15px 0;
+  text-align: center;
+  border-top: 1px solid var(--corMarromDestaqueTransparente);
 }
 
 .secao:last-child {
@@ -124,32 +173,39 @@
 }
 
 .tituloSecao {
-  margin: 0 0 var(--espacamentoPequeno) 0;
-  font-size: var(--tamanhoFonteTextoMinimo);
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  font-weight: 600;
   color: var(--corMarromEscuro);
-  text-transform: uppercase;
 }
 
 .botoesControle {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
   align-items: center;
 }
 
 .botoesControle button {
   flex: 1;
-  min-width: 70px;
-  height: 36px;
+  min-width: 60px;
+  height: 32px;
   border: 1px solid var(--corMarromDestaqueTransparente);
   background: var(--corNeutraClara);
   color: var(--corMarromEscuro);
   border-radius: 6px;
   cursor: pointer;
-  font-size: var(--tamanhoFonteTextoMicro);
+  font-size: 12px;
   font-weight: 500;
   transition: all 0.2s;
+}
+
+.botoesControle button.ativo {
+  background: var(--corAzulDestaque);
+  color: white;
 }
 
 .botoesControle button:hover {
@@ -193,13 +249,14 @@
   display: none !important;
 }
 
-.removerCabecalhos h1:not(.manter-cabecalho),
-.removerCabecalhos h2:not(.manter-cabecalho),
-.removerCabecalhos h3:not(.manter-cabecalho),
-.removerCabecalhos h4:not(.manter-cabecalho),
-.removerCabecalhos h5:not(.manter-cabecalho),
-.removerCabecalhos h6:not(.manter-cabecalho),
-.removerCabecalhos header:not(.manter-cabecalho) {
+/* Substitua a regra existente por esta */
+.removerCabecalhos h1:not(.manter-cabecalho, .titulo-grupo, .tituloSecao, .tituloHeader h3),
+.removerCabecalhos h2:not(.manter-cabecalho, .titulo-grupo, .tituloSecao, .tituloHeader h3),
+.removerCabecalhos h3:not(.manter-cabecalho, .titulo-grupo, .tituloSecao, .tituloHeader h3),
+.removerCabecalhos h4:not(.manter-cabecalho, .titulo-grupo, .tituloSecao, .tituloHeader h3),
+.removerCabecalhos h5:not(.manter-cabecalho, .titulo-grupo, .tituloSecao, .tituloHeader h3),
+.removerCabecalhos h6:not(.manter-cabecalho, .titulo-grupo, .tituloSecao, .tituloHeader h3),
+.removerCabecalhos header:not(.manter-cabecalho, .cabecalhoAcessibilidade) {
   display: none !important;
 }
 
@@ -212,6 +269,7 @@
   border-radius: 3px !important;
 }
 
+/* Modo 2: Destacar com borda */
 .destacarLinks2 a {
   border: 2px dashed #ff6600 !important;
   padding: 2px 4px !important;
@@ -248,9 +306,6 @@
 
 .mascaraLeitura {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   width: 300px;
   height: 100px;
   border: 3px solid #ff9900;
@@ -259,6 +314,7 @@
   box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
   z-index: 10000;
   pointer-events: none;
+  transform: translate(-50%, -50%);
 }
 
 .guiaLeituraHorizontal {
@@ -437,21 +493,21 @@
     right: 10px;
   }
 
-  .painelAcessibilidade {
-    width: calc(100vw - 20px);
-    right: -10px;
-  }
-
   .botaoAlternarAcessibilidade {
     width: 48px;
     height: 48px;
   }
 
+  .painelAcessibilidade {
+    width: calc(100vw - 20px);
+    right: 10px;
+  }
+  
   .botoesControle {
     flex-direction: column;
   }
-
+  
   .botoesControle button {
-    min-width: auto;
+    width: 100%;
   }
 }
