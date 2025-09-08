@@ -189,6 +189,7 @@ export const servicoCadastro = {
     }
   },
 };
+
 export const servicoAuth = {
   login: async (email, senha) => {
     try {
@@ -209,6 +210,30 @@ export const servicoAuth = {
     } catch (erro) {
       throw new Error(`Erro ao buscar perfil: ${erro.message}`);
     }
+  },
+
+  editarPerfil: async (id, dadosAtualizacao) => {
+    try {
+      const resposta = await fazerRequisicao(
+        `${URL_BASE}/auth/perfil/${id}`, 
+        "PUT", 
+        dadosAtualizacao
+      );
+      return resposta;
+    } catch (erro) {
+      throw new Error(`Erro ao editar perfil: ${erro.message}`);
+    }
+  },
+
+  logout: async () => {
+    try {
+      const resposta = await fazerRequisicao(
+        `${URL_BASE}/auth/logout`, 
+        "POST"
+      );
+      return resposta;
+    } catch (erro) {
+      throw new Error(`Erro ao fazer logout: ${erro.message}`);
+    }
   }
 };
-
