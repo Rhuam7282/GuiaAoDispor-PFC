@@ -83,8 +83,12 @@
 }
 
 .area-upload-imagem {
-  width: 200px;
-  height: 200px;
+  width: auto;
+  height: auto;
+  min-width: 300px;
+  min-height: 300px;
+  max-width: 100%;
+  max-height: 100%;
   border-radius: 50%;
   border: 3px dashed var(--cor-texto-principal);
   display: flex;
@@ -155,6 +159,110 @@
   object-fit: cover;
   border-radius: 8px;
   margin-top: 10px;
+}
+
+.botoes-tipo-perfil {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 15px 0;
+}
+
+.botao-tipo {
+  padding: 12px 24px;
+  border: 2px solid var(--cor-botao-principal);
+  background-color: white;
+  color: var(--cor-botao-principal);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.botao-tipo.ativo {
+  background-color: var(--cor-botao-principal);
+  color: white;
+}
+
+.botao-tipo:hover {
+  background-color: var(--cor-botao-principal);
+  color: white;
+}
+
+/* Estilos para a seção de contatos */
+.item-contato {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.item-contato select,
+.item-contato input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.botao-remover {
+  padding: 8px 12px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.botao-adicionar {
+  padding: 10px 15px;
+  background-color: var(--cor-botao-principal);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* Estilo para a área de texto menor */
+.textarea-pequeno {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Seção de campos básicos ao lado da foto */
+.secao-campos-basicos {
+  margin-bottom: 20px;
+}
+
+/* Seções que ocupam o espaço completo */
+.secao-completa {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Botão de finalizar ocupando todo o espaço */
+.botao-finalizar-completo {
+  width: 100%;
+  padding: 15px;
+  background-color: var(--cor-botao-principal);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+}
+
+.botao-finalizar-completo:hover {
+  filter: brightness(0.95);
+}
+
+.botao-finalizar-completo:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 @media (max-width: 768px) {
