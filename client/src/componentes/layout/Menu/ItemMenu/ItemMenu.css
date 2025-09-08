@@ -1,0 +1,84 @@
+/* src/componentes/layout/Menu/ItemMenu/ItemMenu.css */
+.itemMenu {
+  line-height: 20px;
+  cursor: pointer;
+  border-radius: var(--bordaArredondada);
+  box-shadow: var(--sombra) var(--corNeutraEscura);
+  padding: var(--espacamentoPequeno);
+  width: 200px;
+  font-size: var(--tamanhoFonteTextoMenor);
+  color: var(--corAzulEscuro);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.paginaAtiva {
+  font-size: var(--tamanhoFonteTextoMedio);
+  font-weight: bold;
+  color: var(--corNeutraEscura);
+  background-color: var(--corMarromDestaqueTransparente);
+}
+
+.itemPerfilContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  position: relative;
+}
+
+.fotoPerfilMenu {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.textoItemMenu {
+  flex: 1;
+  text-align: center;
+}
+
+
+/* Tablets e telas médias */
+@media (max-width: 1024px) {
+  .itemMenu {
+    width: 180px;
+    font-size: var(--tamanhoFonteTextoMinimo);
+    padding: 12px;
+  }
+}
+
+/* Dispositivos móveis */
+@media (max-width: 768px) {
+  .itemMenu {
+    width: 100%;
+    max-width: 250px;
+    margin: 0 auto;
+  }
+  
+  .fotoPerfilMenu {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .indicadorLogado {
+    font-size: 6px;
+  }
+}
+
+/* Dispositivos móveis pequenos */
+@media (max-width: 480px) {
+  .itemMenu {
+    padding: 10px;
+    font-size: var(--tamanhoFonteTextoMinimo);
+  }
+  
+  .fotoPerfilMenu {
+    width: 16px;
+    height: 16px;
+  }
+}

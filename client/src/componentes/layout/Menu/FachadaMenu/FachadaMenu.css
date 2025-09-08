@@ -1,0 +1,70 @@
+/* src/componentes/layout/Menu/FachadaMenu/FachadaMenu.css */
+.fachada {
+  margin: auto;
+  font-weight: bold;
+  font-size: var(--tamanhoFonteTexto);
+  line-height: 40px;
+}
+
+.fachada img {
+  width: 100px;
+  border-radius: 100%;
+  filter: drop-shadow(var(--sombra) var(--corAzulEscuro));
+}
+
+.avatarUsuario {
+  width: 32px !important;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--corAzulEscuro);
+  object-fit: cover;
+}
+
+.nomeUsuario {
+  font-size: var(--tamanhoFonteTextoMinimo);
+  color: var(--corAzulEscuro);
+  margin: 0;
+  font-weight: normal;
+}
+
+/* Tablets e telas médias */
+@media (max-width: 1024px) {
+  .fachada img {
+    width: 80px;
+  }
+  
+  .fachada {
+    font-size: var(--tamanhoFonteTextoMedio);
+    line-height: 35px;
+  }
+}
+
+/* Dispositivos móveis */
+@media (max-width: 768px) {
+  .fachada img {
+    width: 60px;
+  }
+  
+  .fachada {
+    font-size: var(--tamanhoFonteTextoMedio);
+    line-height: 30px;
+    margin-bottom: var(--espacamentoMedio);
+  }
+}
+
+/* Dispositivos móveis pequenos */
+@media (max-width: 480px) {
+  .fachada img {
+    width: 50px;
+  }
+  
+  .fachada {
+    font-size: var(--tamanhoFonteTextoMenor);
+    line-height: 25px;
+  }
+  
+  .avatarUsuario {
+    width: 24px !important;
+    height: 24px;
+  }
+}
