@@ -3,12 +3,12 @@
   width: 100%;
   min-height: 100vh;
   background-color: var(--corAzulDestaque);
-  background-image: url('@recursos/logo.png');
+  background-image: url('@recursos/icones/logo.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: left;
   position: relative;
-  overflow: hidden;
+  overflow: auto;
 }
 
 /* Aplicando sombra aos cartões de destaque */

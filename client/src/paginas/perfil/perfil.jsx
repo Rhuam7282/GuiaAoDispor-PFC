@@ -1,29 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Corpo from "@componentes/layout/corpo";
+import Corpo from "@componentes/Layout/Corpo";
 import InformacoesPerfil from "./componentes/InformacoesPerfil";
-import ContatosPerfil from "./componentes/ContatosPerfil";
 import HistoricoAcademicoPerfil from "./componentes/HistoricoAcademicoPerfil";
 import HistoricoProfissionalPerfil from "./componentes/HistoricoProfissionalPerfil";
-import { servicoProfissional, servicoHCurricular, servicoHProfissional, servicoAuth } from "@servicos/apiService";
-import { useAuth } from "@/contextos/AuthContext";
+import { servicoProfissional, servicoHCurricular, servicoHProfissional, servicoAuth } from "@servicos/api";
+import { useAuth } from "@/contextos/autenticacao";
+import "./perfil.css";
 
 import {
   Mail,
   Facebook,
   Instagram,
   Linkedin,
+  LogOut,
 } from "lucide-react";
 
-import mariaSilva from "@recursos/mulher.png";
-import micheleto from "@recursos/hospital.jpg";
-import butantan from "@recursos/butantan.webp";
-import portugues from "@recursos/portugues.jpg";
-
+import mariaSilva from "@recursos/imagens/mulher.png";
+import micheleto from "@recursos/imagens/hospital.jpg";
+import butantan from "@recursos/imagens/butantan.webp";
+import portugues from "@recursos/imagens/portugues.jpg";
 const Perfil = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, atualizarUsuario } = useAuth();
   
   const [dadosPerfil, setDadosPerfil] = useState(null);
   const [historicoAcademico, setHistoricoAcademico] = useState([]);
@@ -32,6 +32,15 @@ const Perfil = () => {
   const [erro, setErro] = useState(null);
   const [modoEdicao, setModoEdicao] = useState(false);
 
+  // Função para logout
+  const handleLogout = () => {
+    if (typeof atualizarUsuario === "function") {
+      atualizarUsuario(null);
+    }
+    navigate("/cadastro");
+  };
+
+  // Dados estáticos para fallback
   const dadosEstaticos = {
     nome: "Maria Silva",
     foto: mariaSilva,
@@ -75,24 +84,37 @@ const Perfil = () => {
     ],
   };
 
-  useEffect(() => {
-    const carregarDadosPerfil = async () => {
-      if (!id && isAuthenticated() && user) {
-        try {
-          const resposta = await servicoAuth.buscarPerfilLogado(user.usuario._id);
-          setDadosPerfil(resposta.data);
-          setCarregando(false);
-          return;
-        } catch (erro) {
-          console.error('Erro ao buscar perfil do usuário logado:', erro);
-          setDadosPerfil(dadosEstaticos);
-          setHistoricoAcademico(dadosEstaticos.historicoAcademico);
-          setHistoricoProfissional(dadosEstaticos.historicoProfissional);
-          setCarregando(false);
-          return;
+useEffect(() => {
+  const carregarDadosPerfil = async () => {
+    setCarregando(true);
+    setErro(null);
+
+    // Se não há ID na URL e o usuário está logado, carregar perfil do usuário logado
+    if (!id && isAuthenticated() && user) {
+      try {
+        const resposta = await servicoAuth.buscarPerfilLogado(user._id);
+        
+        if (resposta && resposta.data) {
+          const perfilFormatado = formatarDadosPerfil(resposta.data);
+          setDadosPerfil(perfilFormatado);
+          console.log('✅ Perfil carregado do servidor com sucesso');
         }
+        
+        setHistoricoAcademico([]);
+        setHistoricoProfissional([]);
+        
+      } catch (erro) {
+        console.error('❌ Erro ao buscar perfil:', erro);
+        const perfilFormatado = formatarDadosPerfil(user);
+        setDadosPerfil(perfilFormatado);
+        setErro(`Usando dados locais. Erro: ${erro.message}`);
       }
       
+      setCarregando(false);
+      return;
+    }
+      
+      // Se não há ID e usuário não está logado, mostrar dados estáticos
       if (!id && !isAuthenticated()) {
         setDadosPerfil(dadosEstaticos);
         setHistoricoAcademico(dadosEstaticos.historicoAcademico);
@@ -101,56 +123,79 @@ const Perfil = () => {
         return;
       }
 
-      try {
-        const [perfilResposta, hcurricularResposta, hprofissionalResposta] = await Promise.all([
-          servicoProfissional.buscarPorId(id),
-          servicoHCurricular.buscarPorProfissional(id),
-          servicoHProfissional.buscarPorProfissional(id)
-        ]);
+      // Se há ID na URL, buscar perfil específico
+      if (id) {
+        try {
+          const [perfilResposta, hcurricularResposta, hprofissionalResposta] = await Promise.all([
+            servicoProfissional.buscarPorId(id),
+            servicoHCurricular.buscarPorProfissional(id),
+            servicoHProfissional.buscarPorProfissional(id)
+          ]);
 
-        const perfil = perfilResposta.data;
-        const hcurriculares = hcurricularResposta.data || [];
-        const hprofissionais = hprofissionalResposta.data || [];
+          const perfil = perfilResposta.data;
+          const hcurriculares = hcurricularResposta.data || [];
+          const hprofissionais = hprofissionalResposta.data || [];
 
-        const perfilFormatado = {
-          nome: perfil.nome || "Nome não informado",
-          foto: perfil.foto || mariaSilva,
-          localizacao: perfil.localizacao?.nome || "Localização não informada",
-          descricao: perfil.desc || "Descrição não informada",
-          avaliacao: perfil.avaliacao || 0,
-          redesSociais: [
-            { icone: Mail, usuario: perfil.email || "" },
-            { icone: Facebook, usuario: perfil.face || "" },
-            { icone: Instagram, usuario: perfil.instagram || "" },
-            { icone: Linkedin, usuario: perfil.linkedin || "" },
-          ].filter(rede => rede.usuario !== ""),
-        };
+          const perfilFormatado = formatarDadosPerfil(perfil);
+          setDadosPerfil(perfilFormatado);
 
-        const academicoFormatado = hcurriculares.map(hc => ({
-          nome: hc.nome || "Curso não informado",
-          instituicao: hc.instituicao || "Instituição não informada",
-          periodo: hc.periodo || "Período não informado"
-        }));
+          const academicoFormatado = hcurriculares.map(hc => ({
+            nome: hc.nome || "Curso não informado",
+            instituicao: hc.instituicao || "Instituição não informada",
+            periodo: hc.periodo || "Período não informado"
+          }));
 
-        const profissionalFormatado = hprofissionais.map(hp => ({
-          nome: hp.empresa || "Empresa não informada",
-          imagem: hp.imagem || micheleto,
-          alt: hp.empresa || "Empresa",
-        }));
+          const profissionalFormatado = hprofissionais.map(hp => ({
+            nome: hp.empresa || "Empresa não informada",
+            imagem: hp.imagem || micheleto,
+            alt: hp.empresa || "Empresa",
+          }));
 
-      } catch (error) {
-        console.error('Erro ao carregar dados do perfil:', error);
-        setErro('Erro ao carregar dados do perfil. Tente novamente.');
-        setDadosPerfil(dadosEstaticos);
-        setHistoricoAcademico(dadosEstaticos.historicoAcademico);
-        setHistoricoProfissional(dadosEstaticos.historicoProfissional);
-      } finally {
-        setCarregando(false);
+          setHistoricoAcademico(academicoFormatado);
+          setHistoricoProfissional(profissionalFormatado);
+
+        } catch (error) {
+          console.error('Erro ao carregar dados do perfil:', error);
+          setErro('Erro ao carregar dados do perfil. Tente novamente.');
+          
+          // Usar dados estáticos como fallback
+          setDadosPerfil(dadosEstaticos);
+          setHistoricoAcademico(dadosEstaticos.historicoAcademico);
+          setHistoricoProfissional(dadosEstaticos.historicoProfissional);
+        }
       }
+      
+      setCarregando(false);
     };
 
-    carregarDadosPerfil();
-  }, [id, user, isAuthenticated]);
+  carregarDadosPerfil();
+}, [id]);
+
+  // Função para formatar dados do perfil de forma consistente
+  const formatarDadosPerfil = (dadosUsuario) => {
+    if (!dadosUsuario) return dadosEstaticos;
+
+    return {
+      nome: dadosUsuario.nome || "Nome não informado",
+      foto: dadosUsuario.foto || dadosUsuario.picture || mariaSilva,
+      localizacao: dadosUsuario.localizacao?.nome || "Localização não informada",
+      descricao: dadosUsuario.desc || "Descrição não informada",
+      avaliacao: dadosUsuario.avaliacao || 0,
+      redesSociais: [
+        { icone: Mail, usuario: dadosUsuario.email || "" },
+        { icone: Facebook, usuario: dadosUsuario.face || "" },
+        { icone: Instagram, usuario: dadosUsuario.instagram || "" },
+        { icone: Linkedin, usuario: dadosUsuario.linkedin || "" },
+      ].filter(rede => rede.usuario !== ""),
+    };
+  };
+
+  // Função para verificar se é o perfil do próprio usuário
+  const isPerfilProprio = () => {
+    if (!isAuthenticated() || !user) return false;
+    if (id) return user._id === id;
+    return true; // Se não há ID na URL, é sempre o perfil próprio
+  };
 
   if (carregando) {
     return (
@@ -171,6 +216,13 @@ const Perfil = () => {
           <div className="erro textoCentro paddingGrande">
             <h2>Erro ao carregar perfil</h2>
             <p>{erro}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="botao botaoPrimario"
+              style={{ marginTop: '20px' }}
+            >
+              Tentar novamente
+            </button>
           </div>
         </div>
       </Corpo>
@@ -180,11 +232,35 @@ const Perfil = () => {
   return (
     <Corpo>
       <div className="container">
-        <h1 className="titulo">{dadosPerfil.nome}</h1>
+        <div className="listaHorizontal flexCentro"> <h1 className="titulo">{dadosPerfil.nome}</h1> {isAuthenticated() && user && (!id || user._id === id) && (
+              <button 
+                className="botao botaoSecundario"
+                onClick={() => setModoEdicao(!modoEdicao)}
+              >
+                {modoEdicao ? 'Cancelar Edição' : 'Editar Perfil'}
+              </button>
+            )}
+            {isAuthenticated() && (
+        <button 
+          onClick={handleLogout}
+          className="botao botaoSecundario flexCentro"
+        >
+          <LogOut size={16} />
+          <span className="">Sair</span>
+        </button>
+      )}
+            </div>
+        
         
         {erro && (
-          <div className="mensagemAviso">
-            <p>⚠️ {erro} Exibindo dados de exemplo.</p>
+          <div className="mensagemAviso" style={{ 
+            backgroundColor: '#fff3cd', 
+            border: '1px solid #ffeaa7', 
+            padding: '10px', 
+            borderRadius: '5px', 
+            marginBottom: '20px' 
+          }}>
+            <p>⚠️ {erro}</p>
           </div>
         )}
 
@@ -195,15 +271,18 @@ const Perfil = () => {
           id={id}
           modoEdicao={modoEdicao}
           setModoEdicao={setModoEdicao}
+          isPerfilProprio={isPerfilProprio()}
         />
 
-        <ContatosPerfil redesSociais={dadosPerfil.redesSociais} />
-
         <div className="flexContainer gapGrande">
-          <HistoricoAcademicoPerfil historicoAcademico={historicoAcademico} />
+          <HistoricoAcademicoPerfil 
+            historicoAcademico={historicoAcademico} 
+            isPerfilProprio={isPerfilProprio()}
+          />
           <HistoricoProfissionalPerfil 
             historicoProfissional={historicoProfissional}
             nomePerfil={dadosPerfil.nome}
+            isPerfilProprio={isPerfilProprio()}
           />
         </div>
       </div>

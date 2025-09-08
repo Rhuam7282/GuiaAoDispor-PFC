@@ -20,8 +20,11 @@ import HCurricular from './modelos/hcurricular.js';
 import HProfissional from './modelos/hprofissional.js';
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://5173-iwnktope84q4hpntmr0kr-531a31c1.manusvm.computer'],
+  credentials: true
+}));
+app.use(express.json({ limit: '20mb' }));
 
 // Conexão com MongoDB
 const mongoURI = process.env.MONGO_URI;
@@ -378,6 +381,78 @@ apiRouter.delete('/hprofissionais/:id', async (req, res) => {
     }
 });
 
+// Rota para editar perfil do usuário
+apiRouter.put('/auth/perfil/:id', async (req, res) => {
+    console.log(`✏️ Requisição PUT para editar perfil: ${req.params.id}`);
+    try {
+        const { senha, ...camposAtualizacao } = req.body;
+        
+        // Remover _id se presente para evitar tentativa de alteração
+        delete camposAtualizacao._id;
+        
+        console.log(`📝 Campos para atualização:`, camposAtualizacao);
+        
+        const usuarioAtualizado = await Usuario.findByIdAndUpdate(
+            req.params.id,
+            camposAtualizacao,
+            { new: true, runValidators: true }
+        ).populate('localizacao');
+        
+        if (!usuarioAtualizado) {
+            console.log(`❌ Usuário não encontrado para edição: ${req.params.id}`);
+            return res.status(404).json({ 
+                status: 'erro', 
+                message: 'Usuário não encontrado' 
+            });
+        }
+
+        console.log(`✅ Perfil atualizado: ${usuarioAtualizado.nome}`);
+        
+        // Remover senha da resposta
+        const usuarioResposta = usuarioAtualizado.toObject();
+        delete usuarioResposta.senha;
+
+        res.status(200).json({ 
+            status: 'sucesso', 
+            data: usuarioResposta,
+            message: 'Perfil atualizado com sucesso'
+        });
+    } catch (error) {
+        console.error(`💥 Erro ao editar perfil:`, error);
+        res.status(500).json({ 
+            status: 'erro', 
+            message: error.message 
+        });
+    }
+});
+
+// Rota para logout (apenas para logs)
+apiRouter.post('/auth/logout', async (req, res) => {
+    console.log(`🚪 Requisição de logout recebida`);
+    try {
+        // Em uma implementação real, aqui poderíamos invalidar tokens JWT
+        // ou limpar sessões. Como estamos usando autenticação simples,
+        // apenas registramos o logout para fins de auditoria.
+        
+        const { usuarioId } = req.body;
+        
+        if (usuarioId) {
+            console.log(`👋 Usuário ${usuarioId} realizou logout`);
+        }
+        
+        res.status(200).json({ 
+            status: 'sucesso', 
+            message: 'Logout realizado com sucesso' 
+        });
+    } catch (error) {
+        console.error(`💥 Erro durante logout:`, error);
+        res.status(500).json({ 
+            status: 'erro', 
+            message: error.message 
+        });
+    }
+});
+
 // Montar o router na aplicação
 app.use('/api', apiRouter);
 
@@ -450,16 +525,20 @@ apiRouter.post('/auth/login', async (req, res) => {
 
 // Rota para buscar perfil do usuário logado
 apiRouter.get('/auth/perfil/:id', async (req, res) => {
+    console.log(`🔍 Requisição GET para /auth/perfil/${req.params.id}`);
     try {
+        console.log(`📋 Buscando usuário com ID: ${req.params.id}`);
         const usuario = await Usuario.findById(req.params.id).populate('localizacao');
         
         if (!usuario) {
+            console.log(`❌ Usuário não encontrado com ID: ${req.params.id}`);
             return res.status(404).json({ 
                 status: 'erro', 
                 message: 'Usuário não encontrado' 
             });
         }
 
+        console.log(`✅ Usuário encontrado: ${usuario.nome}`);
         // Remover senha da resposta
         const usuarioResposta = usuario.toObject();
         delete usuarioResposta.senha;
@@ -469,6 +548,7 @@ apiRouter.get('/auth/perfil/:id', async (req, res) => {
             data: usuarioResposta 
         });
     } catch (error) {
+        console.error(`💥 Erro ao buscar perfil:`, error);
         res.status(500).json({ 
             status: 'erro', 
             message: error.message 
