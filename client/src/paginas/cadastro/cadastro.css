@@ -230,6 +230,41 @@
   resize: vertical;
 }
 
+/* Seção de campos básicos ao lado da foto */
+.secao-campos-basicos {
+  margin-bottom: 20px;
+}
+
+/* Seções que ocupam o espaço completo */
+.secao-completa {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Botão de finalizar ocupando todo o espaço */
+.botao-finalizar-completo {
+  width: 100%;
+  padding: 15px;
+  background-color: var(--cor-botao-principal);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+}
+
+.botao-finalizar-completo:hover {
+  filter: brightness(0.95);
+}
+
+.botao-finalizar-completo:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
   .conteudo-formulario {
     flex-direction: column;

@@ -22,13 +22,12 @@ const Cadastro = () => {
     estado: '',
     descricao: '',
     instituicao: '',
-    facebook: '',
-    telefone: '',
     linkedin: '',
     tipoPerfil: 'Pessoal',
     foto: null,
     historicosCurriculares: [],
-    historicosProfissionais: []
+    historicosProfissionais: [],
+    contatos: []
   });
   
   const [erros, setErros] = useState({});
@@ -130,28 +129,6 @@ const Cadastro = () => {
     }
   };
 
-  const validarFormulario = () => {
-    const novosErros = {};
-
-    if (!dadosFormulario.nome) novosErros.nome = 'Nome é obrigatório';
-    if (!dadosFormulario.email) novosErros.email = 'Email é obrigatório';
-    if (!dadosFormulario.senha) novosErros.senha = 'Senha é obrigatória';
-    if (dadosFormulario.senha !== dadosFormulario.confirmarSenha) {
-      novosErros.confirmarSenha = 'As senhas não coincidem';
-    }
-    if (!dadosFormulario.cep) novosErros.cep = 'CEP é obrigatório';
-    if (!dadosFormulario.cidade) novosErros.cidade = 'Cidade é obrigatória';
-
-    if (dadosFormulario.tipoPerfil === 'Profissional') {
-      if (!dadosFormulario.descricao) {
-        novosErros.descricao = 'Descrição é obrigatória para profissionais';
-      }
-    }
-
-    setErros(novosErros);
-    return Object.keys(novosErros).length === 0;
-  };
-
   const aoEnviarFormulario = async (evento) => {
     evento.preventDefault();
     
@@ -176,8 +153,6 @@ const Cadastro = () => {
         senha: dadosFormulario.senha,
         desc: dadosFormulario.descricao,
         inst: dadosFormulario.instituicao,
-        face: dadosFormulario.facebook,
-        num: dadosFormulario.telefone,
         foto: dadosFormulario.foto
       };
 
@@ -239,49 +214,43 @@ const Cadastro = () => {
   };
 
   const adicionarContato = () => {
-  setDadosFormulario(prev => ({
-    ...prev,
-    contatos: [...(prev.contatos || []), { tipo: '', valor: '' }]
-  }));
-};
+    setDadosFormulario(prev => ({
+      ...prev,
+      contatos: [...(prev.contatos || []), { tipo: '', valor: '' }]
+    }));
+  };
 
-const removerContato = (indice) => {
-  setDadosFormulario(prev => ({
-    ...prev,
-    contatos: prev.contatos.filter((_, i) => i !== indice)
-  }));
-};
+  const removerContato = (indice) => {
+    setDadosFormulario(prev => ({
+      ...prev,
+      contatos: prev.contatos.filter((_, i) => i !== indice)
+    }));
+  };
 
-const alterarContato = (indice, campo, valor) => {
-  setDadosFormulario(prev => ({
-    ...prev,
-    contatos: prev.contatos.map((contato, i) => 
-      i === indice ? { ...contato, [campo]: valor } : contato
-    )
-  }));
-};
+  const alterarContato = (indice, campo, valor) => {
+    setDadosFormulario(prev => ({
+      ...prev,
+      contatos: prev.contatos.map((contato, i) => 
+        i === indice ? { ...contato, [campo]: valor } : contato
+      )
+    }));
+  };
 
-// Modifique a validação para remover a obrigatoriedade da descrição
-const validarFormulario = () => {
-  const novosErros = {};
+  const validarFormulario = () => {
+    const novosErros = {};
 
-  if (!dadosFormulario.nome) novosErros.nome = 'Nome é obrigatório';
-  if (!dadosFormulario.email) novosErros.email = 'Email é obrigatório';
-  if (!dadosFormulario.senha) novosErros.senha = 'Senha é obrigatória';
-  if (dadosFormulario.senha !== dadosFormulario.confirmarSenha) {
-    novosErros.confirmarSenha = 'As senhas não coincidem';
-  }
-  if (!dadosFormulario.cep) novosErros.cep = 'CEP é obrigatório';
-  if (!dadosFormulario.cidade) novosErros.cidade = 'Cidade é obrigatória';
+    if (!dadosFormulario.nome) novosErros.nome = 'Nome é obrigatório';
+    if (!dadosFormulario.email) novosErros.email = 'Email é obrigatório';
+    if (!dadosFormulario.senha) novosErros.senha = 'Senha é obrigatória';
+    if (dadosFormulario.senha !== dadosFormulario.confirmarSenha) {
+      novosErros.confirmarSenha = 'As senhas não coincidem';
+    }
+    if (!dadosFormulario.cep) novosErros.cep = 'CEP é obrigatório';
+    if (!dadosFormulario.cidade) novosErros.cidade = 'Cidade é obrigatória';
 
-  // Removida a validação obrigatória da descrição
-  // if (dadosFormulario.tipoPerfil === 'Profissional' && !dadosFormulario.descricao) {
-  //   novosErros.descricao = 'Descrição é obrigatória para profissionais';
-  // }
-
-  setErros(novosErros);
-  return Object.keys(novosErros).length === 0;
-};
+    setErros(novosErros);
+    return Object.keys(novosErros).length === 0;
+  };
 
   return (
     <Corpo>
@@ -319,6 +288,9 @@ const validarFormulario = () => {
           removerHistoricoProfissional={removerHistoricoProfissional}
           alterarHistoricoProfissional={alterarHistoricoProfissional}
           alterarFotoHistoricoProfissional={alterarFotoHistoricoProfissional}
+          adicionarContato={adicionarContato}
+          removerContato={removerContato}
+          alterarContato={alterarContato}
         />
       </div>
     </Corpo>
