@@ -238,6 +238,51 @@ const Cadastro = () => {
     setMostrarLogin(!mostrarLogin);
   };
 
+  const adicionarContato = () => {
+  setDadosFormulario(prev => ({
+    ...prev,
+    contatos: [...(prev.contatos || []), { tipo: '', valor: '' }]
+  }));
+};
+
+const removerContato = (indice) => {
+  setDadosFormulario(prev => ({
+    ...prev,
+    contatos: prev.contatos.filter((_, i) => i !== indice)
+  }));
+};
+
+const alterarContato = (indice, campo, valor) => {
+  setDadosFormulario(prev => ({
+    ...prev,
+    contatos: prev.contatos.map((contato, i) => 
+      i === indice ? { ...contato, [campo]: valor } : contato
+    )
+  }));
+};
+
+// Modifique a validação para remover a obrigatoriedade da descrição
+const validarFormulario = () => {
+  const novosErros = {};
+
+  if (!dadosFormulario.nome) novosErros.nome = 'Nome é obrigatório';
+  if (!dadosFormulario.email) novosErros.email = 'Email é obrigatório';
+  if (!dadosFormulario.senha) novosErros.senha = 'Senha é obrigatória';
+  if (dadosFormulario.senha !== dadosFormulario.confirmarSenha) {
+    novosErros.confirmarSenha = 'As senhas não coincidem';
+  }
+  if (!dadosFormulario.cep) novosErros.cep = 'CEP é obrigatório';
+  if (!dadosFormulario.cidade) novosErros.cidade = 'Cidade é obrigatória';
+
+  // Removida a validação obrigatória da descrição
+  // if (dadosFormulario.tipoPerfil === 'Profissional' && !dadosFormulario.descricao) {
+  //   novosErros.descricao = 'Descrição é obrigatória para profissionais';
+  // }
+
+  setErros(novosErros);
+  return Object.keys(novosErros).length === 0;
+};
+
   return (
     <Corpo>
       <div className="container">
