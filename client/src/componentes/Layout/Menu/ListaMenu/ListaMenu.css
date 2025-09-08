@@ -1,0 +1,16 @@
+/* src/componentes/layout/Menu/ListaMenu/ListaMenu.css */
+.listaIcones.vertical {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center !important;
+  gap: 12px;
+}
+
+/* Dispositivos móveis */
+@media (max-width: 768px) {
+  .listaIcones.vertical {
+    gap: var(--espacamentoPequeno);
+    margin: var(--espacamentoMedio) 0;
+  }
+}

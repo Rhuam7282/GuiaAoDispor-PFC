@@ -1,0 +1,55 @@
+/* Botão de interrogação - posicionado fixo no canto superior direito */
+.interogacao {
+  position: fixed;
+  top: var(--espacamentoPequeno);
+  right: var(--espacamentoPequeno);
+  width: 18px !important;
+  height: 18px !important;
+  font-weight: bold;
+  z-index: 1000;
+  transition: all 0.3s;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Conteúdo do tooltip - posicionado fixo logo abaixo do botão de interrogação */
+.conteudo-interrogacao {
+  position: fixed;
+  top: calc(var(--espacamentoPequeno) + 35px); /* Posicionado logo abaixo do botão */
+  right: var(--espacamentoPequeno);
+  max-width: 210px;
+  z-index: 1001;
+  border-radius: var(--bordaArredondada);
+  animation: aparecer 0.3s;
+  background-color: var(--corMarromDestaque) !important;
+  box-shadow: var(--sombra) var(--corNeutraEscura) !important;
+  padding: var(--espacamentoPequeno);
+}
+
+/* Animação de aparecimento suave do tooltip */
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsividade para dispositivos móveis */
+@media (max-width: 768px) {
+  .conteudo-interrogacao {
+    max-width: 180px;
+    right: 10px;
+    top: calc(var(--espacamentoPequeno) + 30px);
+  }
+  
+  .interogacao {
+    width: 16px !important;
+    height: 16px !important;
+    font-size: 12px;
+  }
+}
+
