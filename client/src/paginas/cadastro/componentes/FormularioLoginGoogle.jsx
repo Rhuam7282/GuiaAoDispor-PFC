@@ -3,7 +3,7 @@ import GoogleLoginButton from '@componentes/Autenticacao/BotaoLoginGoogle.jsx';
 
 const FormularioLoginGoogle = ({ aoSucesso, aoErro }) => {
   return (
-    <div className="cartao cartaoSecundario textoCentro margemGrande paddingMedio bordaArredondada flexWrap">
+    <div className="cartao cartaoSecundario textoCentro margemGrande paddingMedio bordaArredondada flexWrap ">
       <h3 className="margemInferiorPequena textoMarromEscuro">Entre rapidamente com sua conta Google</h3>
       <GoogleLoginButton 
         className="alinharCentro"
