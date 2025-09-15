@@ -256,12 +256,7 @@ const Cadastro = () => {
     <Corpo>
       <div className="container">
         <h1 className="titulo">Criar Conta</h1>
-        
-        <FormularioLoginGoogle 
-          aoSucesso={aoSucessoLoginGoogle}
-          aoErro={aoErroLoginGoogle}
-        />
-
+        <div className='listaHorizontal'>
         <FormularioLogin 
           dadosLogin={dadosLogin}
           mostrarLogin={mostrarLogin}
@@ -271,6 +266,12 @@ const Cadastro = () => {
           aoFazerLogin={aoFazerLogin}
           alternarMostrarLogin={alternarMostrarLogin}
         />
+          <FormularioLoginGoogle 
+          aoSucesso={aoSucessoLoginGoogle}
+          aoErro={aoErroLoginGoogle}
+        />
+        </div>
+        
         
         <FormularioCadastro 
           dadosFormulario={dadosFormulario}

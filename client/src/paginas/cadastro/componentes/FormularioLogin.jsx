@@ -10,7 +10,7 @@ const FormularioLogin = ({
   alternarMostrarLogin 
 }) => {
   return (
-    <div className="cartao cartaoSecundario margemGrande paddingMedio bordaArredondada">
+    <div className="cartao cartaoSecundario margemGrande paddingMedio bordaArredondada larguraCompleta">
       <div className="textoCentro margemInferiorMedia">
         <h3 className="textoMarromEscuro">Já tem uma conta?</h3>
         <button 

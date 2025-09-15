@@ -40,6 +40,10 @@ app.get('/', (req, res) => {
 // Rotas da API
 const apiRouter = express.Router();
 
+const validarObjectId = (id) => {
+  return mongoose.Types.ObjectId.isValid(id) && new mongoose.Types.ObjectId(id).toString() === id;
+};
+
 // Rotas para Localização
 apiRouter.get('/localizacoes', async (req, res) => {
     try {
@@ -384,6 +388,14 @@ apiRouter.delete('/hprofissionais/:id', async (req, res) => {
 // Rota para editar perfil do usuário
 apiRouter.put('/auth/perfil/:id', async (req, res) => {
     console.log(`✏️ Requisição PUT para editar perfil: ${req.params.id}`);
+    if (!validarObjectId(req.params.id)) {
+      console.log(`❌ ID inválido: ${req.params.id}`);
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'ID de usuário inválido' 
+      });
+    }
+    
     try {
         const { senha, ...camposAtualizacao } = req.body;
         

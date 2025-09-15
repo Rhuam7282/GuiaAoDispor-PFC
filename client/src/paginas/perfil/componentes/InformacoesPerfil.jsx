@@ -325,19 +325,10 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
           )}
         </div>
         
-        {isAuthenticated && user && user._id === id && (
-          <button
-            onClick={() => setModoEdicao(true)}
-            className="botaoSecundario botaoPequeno margemSuperiorPequena flexCentro gapPequeno"
-          >
-            Editar Perfil
-            <Edit size={16} />
-          </button>
-        )}
+        
       </div>
       
       <div className="cartaoDestaque fundoMarromDestaqueTransparente textoEsquerda flexWrap">
-        <h2>{dadosPerfil.nome}</h2>
         <p>{dadosPerfil.descricao}</p>
         <div className="listaHorizontal ">
           <div className="gapMedio">
