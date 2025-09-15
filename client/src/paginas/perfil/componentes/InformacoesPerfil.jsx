@@ -3,7 +3,7 @@ import { Star, Facebook, Instagram, Linkedin, Save, X, Edit, Camera, Upload } fr
 import { useAuth } from '@contextos/autenticacao.jsx';
 import { servicoAuth } from '@servicos/api.js';
 
-const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao, setModoEdicao }) => {
+const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao, setModoEdicao, tipoUsuario }) => {
   const { atualizarUsuario } = useAuth();
   const [dadosEditaveis, setDadosEditaveis] = useState({
     nome: '',
@@ -97,7 +97,14 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
         }
       });
 
-      const resposta = await servicoAuth.editarPerfil(id, dadosAtualizacao);
+      let resposta;
+      
+      // Usar endpoint correto baseado no tipo de usuário
+      if (tipoUsuario === 'profissional') {
+        resposta = await servicoAuth.editarPerfilProfissional(id, dadosAtualizacao);
+      } else {
+        resposta = await servicoAuth.editarPerfil(id, dadosAtualizacao);
+      }
       
       if (resposta.status === 'sucesso') {
         // Atualizar contexto de autenticação

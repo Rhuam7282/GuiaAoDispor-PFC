@@ -38,7 +38,6 @@ const Cadastro = () => {
     email: '',
     senha: ''
   });
-  const [mostrarLogin, setMostrarLogin] = useState(false);
   const [carregandoLogin, setCarregandoLogin] = useState(false);
 
   const aoAlterarCampo = (evento) => {
@@ -209,10 +208,6 @@ const Cadastro = () => {
     console.error('Erro no login com Google');
   };
 
-  const alternarMostrarLogin = () => {
-    setMostrarLogin(!mostrarLogin);
-  };
-
   const adicionarContato = () => {
     setDadosFormulario(prev => ({
       ...prev,
@@ -257,21 +252,18 @@ const Cadastro = () => {
       <div className="container">
         <h1 className="titulo">Criar Conta</h1>
         <div className='listaHorizontal'>
-        <FormularioLogin 
-          dadosLogin={dadosLogin}
-          mostrarLogin={mostrarLogin}
-          carregandoLogin={carregandoLogin}
-          erros={erros}
-          aoAlterarCampoLogin={aoAlterarCampoLogin}
-          aoFazerLogin={aoFazerLogin}
-          alternarMostrarLogin={alternarMostrarLogin}
-        />
+          <FormularioLogin 
+            dadosLogin={dadosLogin}
+            carregandoLogin={carregandoLogin}
+            erros={erros}
+            aoAlterarCampoLogin={aoAlterarCampoLogin}
+            aoFazerLogin={aoFazerLogin}
+          />
           <FormularioLoginGoogle 
-          aoSucesso={aoSucessoLoginGoogle}
-          aoErro={aoErroLoginGoogle}
-        />
+            aoSucesso={aoSucessoLoginGoogle}
+            aoErro={aoErroLoginGoogle}
+          />
         </div>
-        
         
         <FormularioCadastro 
           dadosFormulario={dadosFormulario}
@@ -299,4 +291,3 @@ const Cadastro = () => {
 };
 
 export default Cadastro;
-

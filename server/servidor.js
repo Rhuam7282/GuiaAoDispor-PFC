@@ -132,7 +132,7 @@ apiRouter.get('/usuarios', async (req, res) => {
         const usuarios = await Usuario.find().populate('localizacao');
         res.status(200).json({ status: 'sucesso', data: usuarios });
     } catch (error) {
-        res.status(500).json({ status: 'erro', message: error.message });
+        pos.status(500).json({ status: 'erro', message: error.message });
     }
 });
 
@@ -385,6 +385,173 @@ apiRouter.delete('/hprofissionais/:id', async (req, res) => {
     }
 });
 
+// NOVAS ROTAS SOLICITADAS
+
+// Rota para verificar se ID é de usuário ou profissional
+apiRouter.get('/auth/tipo/:id', async (req, res) => {
+    console.log(`🔍 Verificando tipo de conta para ID: ${req.params.id}`);
+    
+    // Validação do ID
+    if (!validarObjectId(req.params.id)) {
+        console.log(`❌ ID inválido: ${req.params.id}`);
+        return res.status(400).json({ 
+            status: 'erro', 
+            message: 'ID inválido' 
+        });
+    }
+    
+    try {
+        // Verificar se é um usuário
+        const usuario = await Usuario.findById(req.params.id);
+        if (usuario) {
+            return res.status(200).json({ 
+                status: 'sucesso', 
+                data: { tipo: 'usuario' },
+                message: 'ID pertence a um usuário'
+            });
+        }
+        
+        // Verificar se é um profissional
+        const profissional = await Profissional.findById(req.params.id);
+        if (profissional) {
+            return res.status(200).json({ 
+                status: 'sucesso', 
+                data: { tipo: 'profissional' },
+                message: 'ID pertence a um profissional'
+            });
+        }
+        
+        // Se não encontrou em nenhum
+        console.log(`❌ ID não encontrado em usuários ou profissionais: ${req.params.id}`);
+        return res.status(404).json({ 
+            status: 'erro', 
+            message: 'ID não encontrado' 
+        });
+        
+    } catch (error) {
+        console.error(`💥 Erro ao verificar tipo de conta:`, error);
+        res.status(500).json({ 
+            status: 'erro', 
+            message: error.message 
+        });
+    }
+});
+
+// Rota para editar perfil de profissional
+apiRouter.put('/auth/perfil-profissional/:id', async (req, res) => {
+    console.log(`✏️ Requisição PUT para editar perfil profissional: ${req.params.id}`);
+    
+    // Validação do ID
+    if (!validarObjectId(req.params.id)) {
+        console.log(`❌ ID inválido: ${req.params.id}`);
+        return res.status(400).json({ 
+            status: 'erro', 
+            message: 'ID de profissional inválido' 
+        });
+    }
+    
+    try {
+        const { senha, ...camposAtualizacao } = req.body;
+        
+        // Remover _id se presente para evitar tentativa de alteração
+        delete camposAtualizacao._id;
+        
+        console.log(`📝 Campos para atualização:`, camposAtualizacao);
+        
+        const profissionalAtualizado = await Profissional.findByIdAndUpdate(
+            req.params.id,
+            camposAtualizacao,
+            { new: true, runValidators: true }
+        ).populate('localizacao');
+        
+        if (!profissionalAtualizado) {
+            console.log(`❌ Profissional não encontrado para edição: ${req.params.id}`);
+            return res.status(404).json({ 
+                status: 'erro', 
+                message: 'Profissional não encontrado' 
+            });
+        }
+
+        console.log(`✅ Perfil profissional atualizado: ${profissionalAtualizado.nome}`);
+        
+        // Remover senha da resposta
+        const profissionalResposta = profissionalAtualizado.toObject();
+        delete profissionalResposta.senha;
+
+        res.status(200).json({ 
+            status: 'sucesso', 
+            data: profissionalResposta,
+            message: 'Perfil profissional atualizado com sucesso'
+        });
+    } catch (error) {
+        console.error(`💥 Erro ao editar perfil profissional:`, error);
+        res.status(500).json({ 
+            status: 'erro', 
+            message: error.message 
+        });
+    }
+});
+
+// Rota para buscar histórico curricular por profissional
+apiRouter.get('/hcurriculares/profissional/:id', async (req, res) => {
+    console.log(`🔍 Buscando histórico curricular para profissional: ${req.params.id}`);
+    
+    // Validação do ID
+    if (!validarObjectId(req.params.id)) {
+        console.log(`❌ ID inválido: ${req.params.id}`);
+        return res.status(400).json({ 
+            status: 'erro', 
+            message: 'ID de profissional inválido' 
+        });
+    }
+    
+    try {
+        const hcurriculares = await HCurricular.find({ profissional: req.params.id });
+        
+        res.status(200).json({ 
+            status: 'sucesso', 
+            data: hcurriculares,
+            message: 'Histórico curricular encontrado'
+        });
+    } catch (error) {
+        console.error(`💥 Erro ao buscar histórico curricular:`, error);
+        res.status(500).json({ 
+            status: 'erro', 
+            message: error.message 
+        });
+    }
+});
+
+// Rota para buscar histórico profissional por profissional
+apiRouter.get('/hprofissionais/profissional/:id', async (req, res) => {
+    console.log(`🔍 Buscando histórico profissional para profissional: ${req.params.id}`);
+    
+    // Validação do ID
+    if (!validarObjectId(req.params.id)) {
+        console.log(`❌ ID inválido: ${req.params.id}`);
+        return res.status(400).json({ 
+            status: 'erro', 
+            message: 'ID de profissional inválido' 
+        });
+    }
+    
+    try {
+        const hprofissionais = await HProfissional.find({ profissional: req.params.id });
+        
+        res.status(200).json({ 
+            status: 'sucesso', 
+            data: hprofissionais,
+            message: 'Histórico profissional encontrado'
+        });
+    } catch (error) {
+        console.error(`💥 Erro ao buscar histórico profissional:`, error);
+        res.status(500).json({ 
+            status: 'erro', 
+            message: error.message 
+        });
+    }
+});
+
 // Rota para editar perfil do usuário
 apiRouter.put('/auth/perfil/:id', async (req, res) => {
     console.log(`✏️ Requisição PUT para editar perfil: ${req.params.id}`);
@@ -567,4 +734,3 @@ apiRouter.get('/auth/perfil/:id', async (req, res) => {
         });
     }
 });
-

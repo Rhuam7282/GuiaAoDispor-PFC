@@ -101,6 +101,8 @@ export const servicoHCurricular = {
   atualizar: (id, dadosHCurricular) =>
     fazerRequisicao(`${URL_BASE}/hcurriculares/${id}`, "PUT", dadosHCurricular),
   deletar: (id) => fazerRequisicao(`${URL_BASE}/hcurriculares/${id}`, "DELETE"),
+  buscarPorProfissional: (idProfissional) =>
+    fazerRequisicao(`${URL_BASE}/hcurriculares/profissional/${idProfissional}`, "GET"),
 };
 
 export const servicoHProfissional = {
@@ -117,6 +119,8 @@ export const servicoHProfissional = {
     ),
   deletar: (id) =>
     fazerRequisicao(`${URL_BASE}/hprofissionais/${id}`, "DELETE"),
+  buscarPorProfissional: (idProfissional) =>
+    fazerRequisicao(`${URL_BASE}/hprofissionais/profissional/${idProfissional}`, "GET"),
 };
 
 export const servicoCadastro = {
@@ -225,6 +229,19 @@ export const servicoAuth = {
     }
   },
 
+  editarPerfilProfissional: async (id, dadosAtualizacao) => {
+    try {
+      const resposta = await fazerRequisicao(
+        `${URL_BASE}/auth/perfil-profissional/${id}`, 
+        "PUT", 
+        dadosAtualizacao
+      );
+      return resposta;
+    } catch (erro) {
+      throw new Error(`Erro ao editar perfil profissional: ${erro.message}`);
+    }
+  },
+
   logout: async () => {
     try {
       const resposta = await fazerRequisicao(
@@ -234,6 +251,18 @@ export const servicoAuth = {
       return resposta;
     } catch (erro) {
       throw new Error(`Erro ao fazer logout: ${erro.message}`);
+    }
+  },
+
+  verificarTipo: async (id) => {
+    try {
+      const resposta = await fazerRequisicao(
+        `${URL_BASE}/auth/tipo/${id}`, 
+        "GET"
+      );
+      return resposta;
+    } catch (erro) {
+      throw new Error(`Erro ao verificar tipo de conta: ${erro.message}`);
     }
   }
 };
