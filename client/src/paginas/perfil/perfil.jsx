@@ -36,114 +36,86 @@ const Perfil = () => {
 
   useEffect(() => {
     const carregarDadosPerfil = async () => {
-      setCarregando(true);
-      setErro(null);
-
       // Se não há ID na URL e o usuário não está logado, redirecionar para cadastro
       if (!id && !isAuthenticated()) {
         navigate("/cadastro");
         return;
       }
 
-      // Se não há ID na URL mas o usuário está logado, carregar perfil do usuário logado
-      if (!id && isAuthenticated() && user) {
-        try {
-          const tipoResposta = await servicoAuth.verificarTipo(user._id);
-          setTipoUsuario(tipoResposta.data.tipo);
+      setCarregando(true);
+      setErro(null);
 
-          const resposta = await servicoAuth.buscarPerfilLogado(user._id);
-          
-          if (resposta && resposta.data) {
-            const perfilFormatado = formatarDadosPerfil(resposta.data);
-            setDadosPerfil(perfilFormatado);
-          }
-
-          if (tipoResposta.data.tipo === 'profissional') {
-            try {
-              const [hcurricularResposta, hprofissionalResposta] = await Promise.all([
-                servicoHCurricular.buscarPorProfissional(user._id),
-                servicoHProfissional.buscarPorProfissional(user._id)
-              ]);
-
-              const hcurriculares = hcurricularResposta.data || [];
-              const hprofissionais = hprofissionalResposta.data || [];
-
-              const academicoFormatado = hcurriculares.map(hc => ({
-                nome: hc.nome || "Curso não informado",
-                instituicao: hc.instituicao || "Instituição não informada",
-                periodo: hc.periodo || "Período não informado"
-              }));
-
-              const profissionalFormatado = hprofissionais.map(hp => ({
-                nome: hp.empresa || "Empresa não informada",
-                imagem: hp.imagem || null,
-                alt: hp.empresa || "Empresa",
-              }));
-
-              setHistoricoAcademico(academicoFormatado);
-              setHistoricoProfissional(profissionalFormatado);
-            } catch (error) {
-              console.error('Erro ao carregar históricos:', error);
-            }
-          }
-          
-        } catch (erro) {
-          console.error('Erro ao buscar perfil:', erro);
-          setErro(`Erro ao carregar perfil: ${erro.message}`);
-        } finally {
-          setCarregando(false);
+      try {
+        let perfilId = id;
+        let tipoUsuarioResposta;
+        
+        // Se não há ID na URL mas o usuário está logado, usar ID do usuário logado
+        if (!id && isAuthenticated() && user) {
+          perfilId = user._id;
+          tipoUsuarioResposta = await servicoAuth.verificarTipo(user._id);
+        } else if (id) {
+          // Se há ID na URL, verificar tipo do usuário
+          tipoUsuarioResposta = await servicoAuth.verificarTipo(id);
+        } else {
+          throw new Error('Usuário não autenticado');
         }
-        return;
-      }
+        
+        setTipoUsuario(tipoUsuarioResposta.data.tipo);
 
-      // Se há ID na URL, buscar perfil específico
-      if (id) {
-        try {
-          const tipoResposta = await servicoAuth.verificarTipo(id);
-          setTipoUsuario(tipoResposta.data.tipo);
+        // Buscar dados do perfil
+        const perfilResposta = tipoUsuarioResposta.data.tipo === 'profissional' 
+          ? await servicoProfissional.buscarPorId(perfilId)
+          : await servicoAuth.buscarPerfilLogado(perfilId);
 
-          const [perfilResposta, hcurricularResposta, hprofissionalResposta] = await Promise.all([
-            tipoResposta.data.tipo === 'profissional' 
-              ? servicoProfissional.buscarPorId(id)
-              : servicoAuth.buscarPerfilLogado(id),
-            servicoHCurricular.buscarPorProfissional(id),
-            servicoHProfissional.buscarPorProfissional(id)
-          ]);
+        if (!perfilResposta || !perfilResposta.data) {
+          throw new Error('Perfil não encontrado');
+        }
 
-          const perfil = perfilResposta.data;
-          const hcurriculares = hcurricularResposta.data || [];
-          const hprofissionais = hprofissionalResposta.data || [];
+        const perfil = perfilResposta.data;
+        const perfilFormatado = formatarDadosPerfil(perfil);
+        setDadosPerfil(perfilFormatado);
 
-          const perfilFormatado = formatarDadosPerfil(perfil);
-          setDadosPerfil(perfilFormatado);
+        // Se for perfil profissional, buscar históricos
+        if (tipoUsuarioResposta.data.tipo === 'profissional') {
+          try {
+            const [hcurricularResposta, hprofissionalResposta] = await Promise.all([
+              servicoHCurricular.buscarPorProfissional(perfilId),
+              servicoHProfissional.buscarPorProfissional(perfilId)
+            ]);
 
-          if (tipoResposta.data.tipo === 'profissional') {
+            const hcurriculares = hcurricularResposta.data || [];
+            const hprofissionais = hprofissionalResposta.data || [];
+
             const academicoFormatado = hcurriculares.map(hc => ({
-              nome: hc.nome || "Curso não informado",
-              instituicao: hc.instituicao || "Instituição não informada",
-              periodo: hc.periodo || "Período não informado"
+              _id: hc._id,
+              nome: hc.nome || "",
+              instituicao: hc.instituicao || "",
+              periodo: hc.periodo || ""
             }));
 
             const profissionalFormatado = hprofissionais.map(hp => ({
-              nome: hp.empresa || "Empresa não informada",
-              imagem: hp.imagem || null,
-              alt: hp.empresa || "Empresa",
+              _id: hp._id,
+              nome: hp.nome || hp.empresa || "",
+              imagem: hp.imagem || null
             }));
 
             setHistoricoAcademico(academicoFormatado);
             setHistoricoProfissional(profissionalFormatado);
+          } catch (error) {
+            console.error('Erro ao carregar históricos:', error);
           }
-
-        } catch (error) {
-          console.error('Erro ao carregar dados do perfil:', error);
-          setErro('Perfil não encontrado.');
-          // Redirecionar para página inicial após 2 segundos
-          setTimeout(() => {
-            navigate('/');
-          }, 2000);
-        } finally {
-          setCarregando(false);
         }
+        
+      } catch (erro) {
+        console.error('Erro ao buscar perfil:', erro);
+        setErro('Perfil não encontrado.');
+        
+        // Redirecionar para página inicial após 2 segundos
+        setTimeout(() => {
+          navigate('/');
+        }, 2000);
+      } finally {
+        setCarregando(false);
       }
     };
 
@@ -154,14 +126,14 @@ const Perfil = () => {
     if (!dadosUsuario) return null;
 
     return {
-      nome: dadosUsuario.nome || "Nome não informado",
+      nome: dadosUsuario.nome || "Usuário",
       foto: dadosUsuario.foto || dadosUsuario.picture || null,
-      localizacao: dadosUsuario.localizacao?.nome || "Localização não informada",
-      descricao: dadosUsuario.desc || dadosUsuario.descricao || "Descrição não informada",
+      localizacao: dadosUsuario.localizacao?.nome || "Não informado",
+      descricao: dadosUsuario.desc || dadosUsuario.descricao || "Não informado",
       avaliacao: dadosUsuario.avaliacao || 0,
-      email: dadosUsuario.email || "",
-      face: dadosUsuario.face || dadosUsuario.facebook || "",
-      inst: dadosUsuario.inst || dadosUsuario.instagram || "",
+      email: dadosUsuario.email || "Não informado",
+      facebook: dadosUsuario.face || dadosUsuario.facebook || "",
+      instagram: dadosUsuario.inst || dadosUsuario.instagram || "",
       linkedin: dadosUsuario.linkedin || "",
       redesSociais: [
         { icone: Mail, usuario: dadosUsuario.email || "" },
@@ -188,6 +160,7 @@ const Perfil = () => {
         <div className="container textoCentro paddingGrande">
           <div className="carregando">
             <h2>Carregando perfil...</h2>
+            <div className="animacaoCarregamento"></div>
           </div>
         </div>
       </Corpo>
@@ -249,27 +222,24 @@ const Perfil = () => {
           id={id || (user ? user._id : null)}
           modoEdicao={modoEdicao}
           setModoEdicao={setModoEdicao}
-          isPerfilProprio={isPerfilProprio()}
           tipoUsuario={tipoUsuario}
         />
 
         {isPerfilProfissional() && (
           <div className="flexContainer gapGrande">
-            {historicoAcademico.length > 0 && (
-              <HistoricoAcademicoPerfil 
-                historicoAcademico={historicoAcademico} 
-                isPerfilProprio={isPerfilProprio()}
-                modoEdicao={modoEdicao}
-              />
-            )}
-            {historicoProfissional.length > 0 && (
-              <HistoricoProfissionalPerfil 
-                historicoProfissional={historicoProfissional}
-                nomePerfil={dadosPerfil.nome}
-                isPerfilProprio={isPerfilProprio()}
-                modoEdicao={modoEdicao}
-              />
-            )}
+            <HistoricoAcademicoPerfil 
+              historicoAcademico={historicoAcademico} 
+              modoEdicao={modoEdicao}
+              setHistorico={setHistoricoAcademico}
+              idProfissional={id || (user ? user._id : null)}
+            />
+            <HistoricoProfissionalPerfil 
+              historicoProfissional={historicoProfissional}
+              nomePerfil={dadosPerfil.nome}
+              modoEdicao={modoEdicao}
+              setHistorico={setHistoricoProfissional}
+              idProfissional={id || (user ? user._id : null)}
+            />
           </div>
         )}
       </div>
