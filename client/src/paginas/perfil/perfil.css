@@ -118,7 +118,7 @@
 }
 
 /* Estilos para estados de carregamento e erro */
-.carregando, .erro {
+.carregando  {
   text-align: center;
   padding: var(--espacamentoExtraGrande) var(--espacamentoMedio);
   color: var(--corMarromEscuro);

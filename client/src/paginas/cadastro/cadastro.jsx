@@ -32,13 +32,14 @@ const Cadastro = () => {
   
   const [erros, setErros] = useState({});
   const [carregando, setCarregando] = useState(false);
+  const [carregandoLogin, setCarregandoLogin] = useState(false);
   const [mensagemSucesso, setMensagemSucesso] = useState('');
+  const [mensagemErro, setMensagemErro] = useState('');
 
   const [dadosLogin, setDadosLogin] = useState({
     email: '',
     senha: ''
   });
-  const [carregandoLogin, setCarregandoLogin] = useState(false);
 
   const aoAlterarCampo = (evento) => {
     const { name, value } = evento.target;
@@ -137,6 +138,7 @@ const Cadastro = () => {
 
     setCarregando(true);
     setMensagemSucesso('');
+    setMensagemErro('');
 
     try {
       const dadosLocalizacao = {
@@ -161,14 +163,22 @@ const Cadastro = () => {
 
       const respostaCadastro = await servicoCadastro.cadastrarUsuario(dadosPerfil, dadosLocalizacao);
 
-      // Login automático após o cadastro
-      const respostaLogin = await servicoAuth.login(dadosFormulario.email, dadosFormulario.senha);
-      login(respostaLogin.data);
-      navigate("/perfil");
+      if (respostaCadastro.status === 'sucesso') {
+        // Login automático após o cadastro
+        const respostaLogin = await servicoAuth.login({
+          email: dadosFormulario.email,
+          senha: dadosFormulario.senha
+        });
+        
+        login(respostaLogin.data);
+        navigate("/perfil");
+      } else {
+        setMensagemErro(respostaCadastro.mensagem || 'Erro ao realizar cadastro');
+      }
 
     } catch (erro) {
       console.error('Erro no cadastro:', erro);
-      setErros({ submit: erro.message });
+      setMensagemErro(erro.response?.data?.mensagem || 'Erro ao conectar com o servidor');
     } finally {
       setCarregando(false);
     }
@@ -178,23 +188,30 @@ const Cadastro = () => {
     evento.preventDefault();
     
     if (!dadosLogin.email || !dadosLogin.senha) {
-      setErros({ login: 'Email e senha são obrigatórios' });
+      setMensagemErro('Email e senha são obrigatórios');
       return;
     }
 
     setCarregandoLogin(true);
-    setErros({});
+    setMensagemErro('');
+    setMensagemSucesso('');
 
     try {
-      const resposta = await servicoAuth.login(dadosLogin.email, dadosLogin.senha);
+      const resposta = await servicoAuth.login({
+        email: dadosLogin.email,
+        senha: dadosLogin.senha
+      });
       
-      login(resposta.data);
-      
-      navigate('/perfil');
+      if (resposta.status === 'sucesso') {
+        login(resposta.data);
+        navigate('/perfil');
+      } else {
+        setMensagemErro(resposta.mensagem || 'Erro ao fazer login');
+      }
       
     } catch (erro) {
       console.error('Erro no login:', erro);
-      setErros({ login: erro.message });
+      setMensagemErro(erro.response?.data?.mensagem || 'Erro ao conectar com o servidor');
     } finally {
       setCarregandoLogin(false);
     }
@@ -251,6 +268,19 @@ const Cadastro = () => {
     <Corpo>
       <div className="container">
         <h1 className="titulo">Criar Conta</h1>
+        
+        {mensagemErro && (
+          <div className="mensagem-erro">
+            {mensagemErro}
+          </div>
+        )}
+        
+        {mensagemSucesso && (
+          <div className="mensagem-sucesso">
+            {mensagemSucesso}
+          </div>
+        )}
+        
         <div className='listaHorizontal'>
           <FormularioLogin 
             dadosLogin={dadosLogin}

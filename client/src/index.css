@@ -268,7 +268,7 @@ textarea:focus {
 .mensagemErro {
   background-color: var(--corMarromEscuro);
   color: var(--corNeutraClara);
-  padding: var(--espacamentoPequeno);
+  padding: var(--espacamentoPequeno) !important;
   border-radius: var(--bordaArredondada);
   margin-bottom: var(--espacamentoPequeno);
   text-align: center;
