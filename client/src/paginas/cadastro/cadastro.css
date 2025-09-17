@@ -140,7 +140,7 @@
 
 .item-historico button {
   background-color: var(--cor-botao-principal);
-  color: var(--cor-texto-principal);
+  color: var(--corAzulDestaqueTransparente);
   border: none;
   padding: 8px 15px;
   border-radius: 8px;
