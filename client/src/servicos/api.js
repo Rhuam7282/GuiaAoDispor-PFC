@@ -120,18 +120,33 @@ export const servicoHProfissional = {
 };
 
 export const servicoCadastro = {
-  cadastrarUsuario: async (dadosUsuario, dadosLocalizacao) => {
+  validarEmail: async (email) => {
     try {
-      const respostaLocalizacao = await servicoLocalizacao.criar(
-        dadosLocalizacao
-      );
-      const respostaUsuario = await servicoUsuario.criar({
-        ...dadosUsuario,
-        localizacao: respostaLocalizacao.data._id
-      });
+      const resposta = await fazerRequisicao(`${URL_BASE}/auth/validar-email`, "POST", { email });
+      return resposta;
+    } catch (erro) {
+      console.error('Erro ao validar email:', erro);
+      throw erro;
+    }
+  },
+
+  cadastrarUsuario: async (dadosPerfil, dadosLocalizacao) => {
+    try {
+      // Primeiro criar a localização
+      const respostaLocalizacao = await servicoLocalizacao.criar(dadosLocalizacao);
+      const localizacaoId = respostaLocalizacao.data._id;
+      
+      // Depois criar o usuário com a referência à localização
+      const dadosUsuario = {
+        ...dadosPerfil,
+        localizacao: localizacaoId
+      };
+      
+      const respostaUsuario = await servicoUsuario.criar(dadosUsuario);
       return respostaUsuario;
     } catch (erro) {
-      throw new Error(`Erro no cadastro: ${erro.mensagem}`);
+      console.error('Erro ao cadastrar usuário:', erro);
+      throw new Error(`Erro no cadastro: ${erro.message}`);
     }
   },
 
@@ -148,7 +163,7 @@ export const servicoCadastro = {
 
       return respostaProfissional;
     } catch (erro) {
-      throw new Error(`Erro no cadastro: ${erro.mensagem}`);
+      throw new Error(`Erro no cadastro: ${erro.message}`);
     }
   },
 
@@ -185,7 +200,7 @@ export const servicoCadastro = {
 
       return respostaProfissional;
     } catch (erro) {
-      throw new Error(`Erro no cadastro: ${erro.mensagem}`);
+      throw new Error(`Erro no cadastro: ${erro.message}`);
     }
   },
 };
