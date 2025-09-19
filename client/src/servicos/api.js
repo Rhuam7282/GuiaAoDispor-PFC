@@ -2,13 +2,24 @@ import { API_CONFIG } from '@config/apiConfig.js';
 
 const URL_BASE = API_CONFIG.BASE_URL;
 
+// Função para obter o token do localStorage
+const obterToken = () => {
+  return localStorage.getItem('token');
+};
+
 const fazerRequisicao = async (url, metodo, dados = null) => {
+  const token = obterToken();
   const opcoes = {
     method: metodo,
     headers: {
       "Content-Type": "application/json",
     },
   };
+
+  // Adicionar token ao header se disponível
+  if (token) {
+    opcoes.headers.Authorization = `Bearer ${token}`;
+  }
 
   if (dados && (metodo === 'POST' || metodo === 'PUT')) {
     opcoes.body = JSON.stringify(dados);
@@ -37,6 +48,15 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
     if (!resposta.ok) {
       const mensagemErro =
         dadosResposta.message || dadosResposta.mensagem || "Erro na requisição";
+      
+      // Se for erro de autenticação, fazer logout
+      if (resposta.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('isAuthenticated');
+        window.location.href = '/login';
+      }
+      
       throw new Error(mensagemErro);
     }
 
@@ -212,6 +232,12 @@ export const servicoAuth = {
         email,
         senha
       });
+      
+      // Salvar token no localStorage
+      if (resposta.token) {
+        localStorage.setItem('token', resposta.token);
+      }
+      
       return resposta;
     } catch (erro) {
       throw new Error(`Erro no login: ${erro.message}`);
