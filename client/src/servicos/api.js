@@ -1,64 +1,14 @@
 import { API_CONFIG } from '@config/apiConfig.js';
 
-// Verificar se a configuração da API está correta
-console.log('API Config:', API_CONFIG);
-
 const URL_BASE = API_CONFIG.BASE_URL;
 
-// Adicionar timeout para as requisições
-const TIMEOUT = 15000; // 15 segundos
-
-// Função para obter o token JWT do localStorage
-const obterToken = () => {
-  return localStorage.getItem('token');
-};
-
-// Função para armazenar o token JWT no localStorage
-const armazenarToken = (token) => {
-  if (token) {
-    localStorage.setItem('token', token);
-    localStorage.setItem('tokenTimestamp', Date.now().toString());
-  }
-};
-
-// Função para remover o token JWT do localStorage
-const removerToken = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('tokenTimestamp');
-};
-
-// Função para verificar se o token está expirado (7 dias)
-const tokenExpirado = () => {
-  const timestamp = localStorage.getItem('tokenTimestamp');
-  if (!timestamp) return true;
-  const agora = Date.now();
-  const seteDiasEmMs = 7 * 24 * 60 * 60 * 1000;
-  return (agora - parseInt(timestamp)) > seteDiasEmMs;
-};
-
 const fazerRequisicao = async (url, metodo, dados = null) => {
-  // Verificar se o token expirou
-  if (tokenExpirado() && url !== `${URL_BASE}/auth/login` && url !== `${URL_BASE}/auth/cadastro`) {
-    removerToken();
-    throw new Error('Sessão expirada. Faça login novamente.');
-  }
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
-
   const opcoes = {
     method: metodo,
     headers: {
       "Content-Type": "application/json",
     },
-    signal: controller.signal
   };
-
-  // Adicionar token de autenticação se disponível
-  const token = obterToken();
-  if (token) {
-    opcoes.headers.Authorization = `Bearer ${token}`;
-  }
 
   if (dados && (metodo === 'POST' || metodo === 'PUT')) {
     opcoes.body = JSON.stringify(dados);
@@ -67,49 +17,32 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
   try {
     console.log(`Fazendo requisição ${metodo} para: ${url}`);
     const resposta = await fetch(url, opcoes);
-    clearTimeout(timeoutId);
-
-    // Verificar se a resposta é JSON
+    
     const contentType = resposta.headers.get('content-type');
+    
     const text = await resposta.text();
-
+    
     if (!contentType || !contentType.includes('application/json')) {
       console.error('Resposta não é JSON:', text.substring(0, 200));
-
+      
       if (resposta.status === 500) {
         throw new Error('Erro interno do servidor. Verifique os logs do backend.');
       }
-
-      if (resposta.status === 401) {
-        removerToken();
-        throw new Error('Não autorizado. Faça login novamente.');
-      }
-
+      
       throw new Error('Resposta da API não é JSON');
     }
 
     const dadosResposta = JSON.parse(text);
 
     if (!resposta.ok) {
-      const mensagemErro = dadosResposta.message || dadosResposta.mensagem || "Erro na requisição";
-
-      if (resposta.status === 401) {
-        removerToken();
-        throw new Error('Não autorizado. Faça login novamente.');
-      }
-
+      const mensagemErro =
+        dadosResposta.message || dadosResposta.mensagem || "Erro na requisição";
       throw new Error(mensagemErro);
     }
 
     return dadosResposta;
   } catch (erro) {
-    clearTimeout(timeoutId);
     console.error('Erro na requisição:', erro);
-
-    if (erro.name === 'AbortError') {
-      throw new Error('Tempo de conexão excedido. Verifique se o servidor está rodando.');
-    }
-
     throw new Error(erro.message || "Erro de conexão com o servidor");
   }
 };
@@ -168,8 +101,6 @@ export const servicoHCurricular = {
   atualizar: (id, dadosHCurricular) =>
     fazerRequisicao(`${URL_BASE}/hcurriculares/${id}`, "PUT", dadosHCurricular),
   deletar: (id) => fazerRequisicao(`${URL_BASE}/hcurriculares/${id}`, "DELETE"),
-  buscarPorProfissional: (idProfissional) =>
-    fazerRequisicao(`${URL_BASE}/hcurriculares/profissional/${idProfissional}`, "GET"),
 };
 
 export const servicoHProfissional = {
@@ -186,56 +117,58 @@ export const servicoHProfissional = {
     ),
   deletar: (id) =>
     fazerRequisicao(`${URL_BASE}/hprofissionais/${id}`, "DELETE"),
-  buscarPorProfissional: (idProfissional) =>
-    fazerRequisicao(`${URL_BASE}/hprofissionais/profissional/${idProfissional}`, "GET"),
 };
 
 export const servicoCadastro = {
-  cadastrarUsuario: async (dadosUsuario) => {
+  cadastrarUsuario: async (dadosUsuario, dadosLocalizacao) => {
     try {
-      const resposta = await fazerRequisicao(`${URL_BASE}/auth/cadastro`, "POST", {
+      const respostaLocalizacao = await servicoLocalizacao.criar(
+        dadosLocalizacao
+      );
+      const respostaUsuario = await servicoUsuario.criar({
         ...dadosUsuario,
-        tipo: 'usuario'
+        localizacao: respostaLocalizacao.data._id
       });
-
-      if (resposta.token) {
-        armazenarToken(resposta.token);
-      }
-
-      return resposta;
+      return respostaUsuario;
     } catch (erro) {
-      throw new Error(`Erro no cadastro: ${erro.message}`);
+      throw new Error(`Erro no cadastro: ${erro.mensagem}`);
     }
   },
 
-  cadastrarProfissional: async (dadosProfissional) => {
+  cadastrarProfissional: async (dadosProfissional, dadosLocalizacao) => {
     try {
-      const resposta = await fazerRequisicao(`${URL_BASE}/auth/cadastro`, "POST", {
+      const respostaLocalizacao = await servicoLocalizacao.criar(
+        dadosLocalizacao
+      );
+
+      const respostaProfissional = await servicoProfissional.criar({
         ...dadosProfissional,
-        tipo: 'profissional'
+        localizacao: respostaLocalizacao.data._id
       });
 
-      if (resposta.token) {
-        armazenarToken(resposta.token);
-      }
-
-      return resposta;
+      return respostaProfissional;
     } catch (erro) {
-      throw new Error(`Erro no cadastro: ${erro.message}`);
+      throw new Error(`Erro no cadastro: ${erro.mensagem}`);
     }
   },
 
   cadastrarProfissionalComHistoricos: async (
     dadosProfissional,
+    dadosLocalizacao,
     historicosCurriculares,
     historicosProfissionais
   ) => {
     try {
-      // Primeiro cadastra o profissional
-      const respostaProfissional = await servicoCadastro.cadastrarProfissional(dadosProfissional);
-      const idProfissional = respostaProfissional.data._id;
-
-      // Depois cadastra os históricos
+      const respostaLocalizacao = await servicoLocalizacao.criar(
+        dadosLocalizacao
+      );
+      const respostaProfissional = await servicoProfissional.criar({
+        ...dadosProfissional,
+        localizacao:
+          respostaLocalizacao.data._id || respostaLocalizacao.dados._id,
+      });
+      const idProfissional =
+        respostaProfissional.data._id || respostaProfissional.dados._id;
       for (const hc of historicosCurriculares) {
         await servicoHCurricular.criar({
           ...hc,
@@ -252,7 +185,7 @@ export const servicoCadastro = {
 
       return respostaProfissional;
     } catch (erro) {
-      throw new Error(`Erro no cadastro: ${erro.message}`);
+      throw new Error(`Erro no cadastro: ${erro.mensagem}`);
     }
   },
 };
@@ -264,11 +197,6 @@ export const servicoAuth = {
         email,
         senha
       });
-
-      if (resposta.token) {
-        armazenarToken(resposta.token);
-      }
-
       return resposta;
     } catch (erro) {
       throw new Error(`Erro no login: ${erro.message}`);
@@ -284,68 +212,28 @@ export const servicoAuth = {
     }
   },
 
-  editarPerfilUsuario: async (id, dadosAtualizacao) => {
+  editarPerfil: async (id, dadosAtualizacao) => {
     try {
-      // Garantir que campos sensíveis não sejam enviados
-      const { _id, ...dadosSeguros } = dadosAtualizacao;
-
       const resposta = await fazerRequisicao(
-        `${URL_BASE}/auth/perfil/${id}`,
-        "PUT",
-        dadosSeguros
+        `${URL_BASE}/auth/perfil/${id}`, 
+        "PUT", 
+        dadosAtualizacao
       );
       return resposta;
     } catch (erro) {
-      throw new Error(`Erro ao editar perfil de usuário: ${erro.message}`);
-    }
-  },
-
-  editarPerfilProfissional: async (id, dadosAtualizacao) => {
-    try {
-      // Garantir que campos sensíveis não sejam enviados
-      const { _id, senha, ...dadosSeguros } = dadosAtualizacao;
-
-      const resposta = await fazerRequisicao(
-        `${URL_BASE}/auth/perfil-profissional/${id}`,
-        "PUT",
-        dadosSeguros
-      );
-      return resposta;
-    } catch (erro) {
-      throw new Error(`Erro ao editar perfil profissional: ${erro.message}`);
+      throw new Error(`Erro ao editar perfil: ${erro.message}`);
     }
   },
 
   logout: async () => {
     try {
-      removerToken();
       const resposta = await fazerRequisicao(
-        `${URL_BASE}/auth/logout`,
+        `${URL_BASE}/auth/logout`, 
         "POST"
       );
       return resposta;
     } catch (erro) {
-      // Mesmo se houver erro no servidor, remove o token localmente
-      removerToken();
       throw new Error(`Erro ao fazer logout: ${erro.message}`);
     }
-  },
-
-  verificarTipo: async (id) => {
-    try {
-      const resposta = await fazerRequisicao(
-        `${URL_BASE}/auth/tipo/${id}`,
-        "GET"
-      );
-      return resposta;
-    } catch (erro) {
-      throw new Error(`Erro ao verificar tipo de conta: ${erro.message}`);
-    }
-  },
-
-  // Novas funções para gerenciamento de token
-  obterToken,
-  armazenarToken,
-  removerToken,
-  tokenExpirado
+  }
 };
