@@ -31,4 +31,3 @@ const HistoricoProfissionalPerfil = ({ historicoProfissional, nomePerfil }) => {
 };
 
 export default HistoricoProfissionalPerfil;
-

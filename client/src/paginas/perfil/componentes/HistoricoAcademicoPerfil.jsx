@@ -24,4 +24,3 @@ const HistoricoAcademicoPerfil = ({ historicoAcademico }) => {
 };
 
 export default HistoricoAcademicoPerfil;
-

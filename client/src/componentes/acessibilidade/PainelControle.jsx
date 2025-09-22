@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { PersonStanding, X, Type, AlignJustify, MoreHorizontal, Eye, Contrast, Moon, Image, Heading, LinkIcon, BookOpen, Pause, MousePointer } from 'lucide-react';
 import { useConfiguracaoAcessibilidade } from './ganchos/useConfiguracaoAcessibilidade';
 import { useGuiasLeitura } from './ganchos/useGuiasLeitura';
-import VLibrasWidgetHibrido from './VLibrasWidget/VLibrasWidgetHibrido';
+// import VLibrasWidgetHibrido from './VLibrasWidget/VLibrasWidgetHibrido';
 import SecaoTexto from './SecaoTexto/SecaoTexto';
 import SecaoVisao from './SecaoVisao/SecaoVisao';
 import SecaoDaltonismo from './SecaoDaltonismo/SecaoDaltonismo';
@@ -142,7 +142,7 @@ const PainelControle = () => {
           </div>
 
           <div className="conteudo-painel">
-            <VLibrasWidgetHibrido />
+            {/* <VLibrasWidgetHibrido /> */}
 
             <div className="grupo-opcoes">
               <h4 className="titulo-grupo">Texto</h4>
