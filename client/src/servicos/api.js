@@ -2,13 +2,24 @@ import { API_CONFIG } from '@config/apiConfig.js';
 
 const URL_BASE = API_CONFIG.BASE_URL;
 
+// Função para obter o token do localStorage
+const obterToken = () => {
+  return localStorage.getItem('token');
+};
+
 const fazerRequisicao = async (url, metodo, dados = null) => {
+  const token = obterToken();
   const opcoes = {
     method: metodo,
     headers: {
       "Content-Type": "application/json",
     },
   };
+
+  // Adicionar token ao header se disponível
+  if (token) {
+    opcoes.headers.Authorization = `Bearer ${token}`;
+  }
 
   if (dados && (metodo === 'POST' || metodo === 'PUT')) {
     opcoes.body = JSON.stringify(dados);
@@ -37,6 +48,15 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
     if (!resposta.ok) {
       const mensagemErro =
         dadosResposta.message || dadosResposta.mensagem || "Erro na requisição";
+      
+      // Se for erro de autenticação, fazer logout
+      if (resposta.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('isAuthenticated');
+        window.location.href = '/login';
+      }
+      
       throw new Error(mensagemErro);
     }
 
@@ -120,18 +140,33 @@ export const servicoHProfissional = {
 };
 
 export const servicoCadastro = {
-  cadastrarUsuario: async (dadosUsuario, dadosLocalizacao) => {
+  validarEmail: async (email) => {
     try {
-      const respostaLocalizacao = await servicoLocalizacao.criar(
-        dadosLocalizacao
-      );
-      const respostaUsuario = await servicoUsuario.criar({
-        ...dadosUsuario,
-        localizacao: respostaLocalizacao.data._id
-      });
+      const resposta = await fazerRequisicao(`${URL_BASE}/auth/validar-email`, "POST", { email });
+      return resposta;
+    } catch (erro) {
+      console.error('Erro ao validar email:', erro);
+      throw erro;
+    }
+  },
+
+  cadastrarUsuario: async (dadosPerfil, dadosLocalizacao) => {
+    try {
+      // Primeiro criar a localização
+      const respostaLocalizacao = await servicoLocalizacao.criar(dadosLocalizacao);
+      const localizacaoId = respostaLocalizacao.data._id;
+      
+      // Depois criar o usuário com a referência à localização
+      const dadosUsuario = {
+        ...dadosPerfil,
+        localizacao: localizacaoId
+      };
+      
+      const respostaUsuario = await servicoUsuario.criar(dadosUsuario);
       return respostaUsuario;
     } catch (erro) {
-      throw new Error(`Erro no cadastro: ${erro.mensagem}`);
+      console.error('Erro ao cadastrar usuário:', erro);
+      throw new Error(`Erro no cadastro: ${erro.message}`);
     }
   },
 
@@ -148,7 +183,7 @@ export const servicoCadastro = {
 
       return respostaProfissional;
     } catch (erro) {
-      throw new Error(`Erro no cadastro: ${erro.mensagem}`);
+      throw new Error(`Erro no cadastro: ${erro.message}`);
     }
   },
 
@@ -185,7 +220,7 @@ export const servicoCadastro = {
 
       return respostaProfissional;
     } catch (erro) {
-      throw new Error(`Erro no cadastro: ${erro.mensagem}`);
+      throw new Error(`Erro no cadastro: ${erro.message}`);
     }
   },
 };
@@ -197,6 +232,12 @@ export const servicoAuth = {
         email,
         senha
       });
+      
+      // Salvar token no localStorage
+      if (resposta.token) {
+        localStorage.setItem('token', resposta.token);
+      }
+      
       return resposta;
     } catch (erro) {
       throw new Error(`Erro no login: ${erro.message}`);

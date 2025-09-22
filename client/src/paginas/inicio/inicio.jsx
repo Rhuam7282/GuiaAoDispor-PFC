@@ -1,5 +1,5 @@
 import React from 'react';
-import Corpo from "@componentes/layout/corpo";
+import Corpo from "@componentes/Layout/Corpo";
 import HeroPrincipal from './componentes/HeroPrincipal';
 import BotaoAcao from './componentes/BotaoAcao';
 import SecaoSobre from './componentes/SecaoSobre';

@@ -1,5 +1,17 @@
 import mongoose from 'mongoose';
 
+const contatoSchema = new mongoose.Schema({
+  tipo: {
+    type: String,
+    required: true,
+    enum: ['Email', 'Telefone', 'Facebook', 'LinkedIn', 'Outro']
+  },
+  valor: {
+    type: String,
+    required: true
+  }
+});
+
 const ProfissionalSchema = new mongoose.Schema({
   nome: {
     type: String,
@@ -23,7 +35,8 @@ const ProfissionalSchema = new mongoose.Schema({
     ref: 'Localizacao'
   },
   foto: String,
-  linkedin: String
+  linkedin: String,
+  contatos: [contatoSchema]
 });
 
 export default mongoose.model('Profissional', ProfissionalSchema);

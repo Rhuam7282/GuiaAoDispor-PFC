@@ -4,6 +4,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 // Configuração do dotenv
 const __filename = fileURLToPath(import.meta.url);
@@ -32,6 +34,29 @@ mongoose.connect(mongoURI)
     .then(() => console.log('✅ Conexão com o MongoDB estabelecida!'))
     .catch(err => console.error('❌ Erro ao conectar com o MongoDB:', err));
 
+// Middleware para verificar JWT
+const verificarToken = (req, res, next) => {
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+  
+  if (!token) {
+    return res.status(401).json({ 
+      status: 'erro', 
+      message: 'Acesso negado. Token não fornecido.' 
+    });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || '7282');
+    req.usuario = decoded;
+    next();
+  } catch (error) {
+    return res.status(400).json({ 
+      status: 'erro', 
+      message: 'Token inválido.' 
+    });
+  }
+};
+
 // Rota raiz
 app.get('/', (req, res) => {
   res.send('Bem-vindo à API do Guia ao Dispor!');
@@ -40,7 +65,58 @@ app.get('/', (req, res) => {
 // Rotas da API
 const apiRouter = express.Router();
 
+const validarObjectId = (id) => {
+  return mongoose.Types.ObjectId.isValid(id) && new mongoose.Types.ObjectId(id).toString() === id;
+};
+
 // Rotas para Localização
+
+apiRouter.post('/auth/validar-email', async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    if (!email) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'Email é obrigatório' 
+      });
+    }
+
+    // Validar formato do email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'Formato de email inválido' 
+      });
+    }
+
+    // Verificar se email já existe em Usuario ou Profissional
+    const usuarioExistente = await Usuario.findOne({ email });
+    const profissionalExistente = await Profissional.findOne({ email });
+
+    if (usuarioExistente || profissionalExistente) {
+      return res.status(200).json({ 
+        status: 'sucesso', 
+        valido: false,
+        message: 'Email já está em uso' 
+      });
+    }
+
+    res.status(200).json({ 
+      status: 'sucesso', 
+      valido: true,
+      message: 'Email disponível' 
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
+
 apiRouter.get('/localizacoes', async (req, res) => {
     try {
         const localizacoes = await Localizacao.find();
@@ -82,15 +158,65 @@ apiRouter.get('/profissionais/:id', async (req, res) => {
 });
 
 apiRouter.post('/profissionais', async (req, res) => {
-    try {
-        const novoProfissional = await Profissional.create(req.body);
-        res.status(201).json({ status: 'sucesso', data: novoProfissional });
-    } catch (error) {
-        res.status(400).json({ status: 'erro', message: error.message });
+  try {
+    const { email, senha, ...outrosDados } = req.body;
+
+    // Validar formato do email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'Formato de email inválido' 
+      });
     }
+
+    // Validar comprimento da senha
+    if (senha.length < 8) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'A senha deve ter pelo menos 8 caracteres' 
+      });
+    }
+
+    // Verificar se email já existe
+    const usuarioExistente = await Usuario.findOne({ email });
+    const profissionalExistente = await Profissional.findOne({ email });
+
+    if (usuarioExistente || profissionalExistente) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'Email já está em uso' 
+      });
+    }
+
+    // Hash da senha
+    const salt = await bcrypt.genSalt(10);
+    const senhaHash = await bcrypt.hash(senha, salt);
+
+    const novoProfissional = await Profissional.create({
+      ...outrosDados,
+      email,
+      senha: senhaHash
+    });
+    
+    // Remover senha da resposta
+    const profissionalResposta = novoProfissional.toObject();
+    delete profissionalResposta.senha;
+    
+    res.status(201).json({ 
+      status: 'sucesso', 
+      data: profissionalResposta 
+    });
+  } catch (error) {
+    res.status(400).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
 });
 
-apiRouter.put('/profissionais/:id', async (req, res) => {
+
+apiRouter.put('/profissionais/:id', verificarToken, async (req, res) => {
     try {
         const profissional = await Profissional.findByIdAndUpdate(
             req.params.id,
@@ -108,7 +234,7 @@ apiRouter.put('/profissionais/:id', async (req, res) => {
     }
 });
 
-apiRouter.delete('/profissionais/:id', async (req, res) => {
+apiRouter.delete('/profissionais/:id', verificarToken, async (req, res) => {
     try {
         const profissional = await Profissional.findByIdAndDelete(req.params.id);
         
@@ -145,15 +271,64 @@ apiRouter.get('/usuarios/:id', async (req, res) => {
 });
 
 apiRouter.post('/usuarios', async (req, res) => {
-    try {
-        const novoUsuario = await Usuario.create(req.body);
-        res.status(201).json({ status: 'sucesso', data: novoUsuario });
-    } catch (error) {
-        res.status(400).json({ status: 'erro', message: error.message });
+  try {
+    const { email, senha, ...outrosDados } = req.body;
+
+    // Validar formato do email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'Formato de email inválido' 
+      });
     }
+
+    // Validar comprimento da senha
+    if (senha.length < 8) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'A senha deve ter pelo menos 8 caracteres' 
+      });
+    }
+
+    // Verificar si email já existe
+    const usuarioExistente = await Usuario.findOne({ email });
+    const profissionalExistente = await Profissional.findOne({ email });
+
+    if (usuarioExistente || profissionalExistente) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'Email já está em uso' 
+      });
+    }
+
+    // Hash da senha
+    const salt = await bcrypt.genSalt(10);
+    const senhaHash = await bcrypt.hash(senha, salt);
+
+    const novoUsuario = await Usuario.create({
+      ...outrosDados,
+      email,
+      senha: senhaHash
+    });
+    
+    // Remover senha da resposta
+    const usuarioResposta = novoUsuario.toObject();
+    delete usuarioResposta.senha;
+    
+    res.status(201).json({ 
+      status: 'sucesso', 
+      data: usuarioResposta 
+    });
+  } catch (error) {
+    res.status(400).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
 });
 
-apiRouter.put('/usuarios/:id', async (req, res) => {
+apiRouter.put('/usuarios/:id', verificarToken, async (req, res) => {
     try {
         const usuario = await Usuario.findByIdAndUpdate(
             req.params.id,
@@ -171,7 +346,7 @@ apiRouter.put('/usuarios/:id', async (req, res) => {
     }
 });
 
-apiRouter.delete('/usuarios/:id', async (req, res) => {
+apiRouter.delete('/usuarios/:id', verificarToken, async (req, res) => {
     try {
         const usuario = await Usuario.findByIdAndDelete(req.params.id);
         
@@ -212,7 +387,7 @@ apiRouter.get('/avaliacoes/:id', async (req, res) => {
     }
 });
 
-apiRouter.post('/avaliacoes', async (req, res) => {
+apiRouter.post('/avaliacoes', verificarToken, async (req, res) => {
     try {
         const novaAvaliacao = await Avaliacao.create(req.body);
         res.status(201).json({ status: 'sucesso', data: novaAvaliacao });
@@ -221,7 +396,7 @@ apiRouter.post('/avaliacoes', async (req, res) => {
     }
 });
 
-apiRouter.put('/avaliacoes/:id', async (req, res) => {
+apiRouter.put('/avaliacoes/:id', verificarToken, async (req, res) => {
     try {
         const avaliacao = await Avaliacao.findByIdAndUpdate(
             req.params.id,
@@ -241,7 +416,7 @@ apiRouter.put('/avaliacoes/:id', async (req, res) => {
     }
 });
 
-apiRouter.delete('/avaliacoes/:id', async (req, res) => {
+apiRouter.delete('/avaliacoes/:id', verificarToken, async (req, res) => {
     try {
         const avaliacao = await Avaliacao.findByIdAndDelete(req.params.id);
         
@@ -277,7 +452,7 @@ apiRouter.get('/hcurriculares/:id', async (req, res) => {
     }
 });
 
-apiRouter.post('/hcurriculares', async (req, res) => {
+apiRouter.post('/hcurriculares', verificarToken, async (req, res) => {
     try {
         const novoHCurricular = await HCurricular.create(req.body);
         res.status(201).json({ status: 'sucesso', data: novoHCurricular });
@@ -286,7 +461,7 @@ apiRouter.post('/hcurriculares', async (req, res) => {
     }
 });
 
-apiRouter.put('/hcurriculares/:id', async (req, res) => {
+apiRouter.put('/hcurriculares/:id', verificarToken, async (req, res) => {
     try {
         const hcurricular = await HCurricular.findByIdAndUpdate(
             req.params.id,
@@ -304,7 +479,7 @@ apiRouter.put('/hcurriculares/:id', async (req, res) => {
     }
 });
 
-apiRouter.delete('/hcurriculares/:id', async (req, res) => {
+apiRouter.delete('/hcurriculares/:id', verificarToken, async (req, res) => {
     try {
         const hcurricular = await HCurricular.findByIdAndDelete(req.params.id);
         
@@ -340,7 +515,7 @@ apiRouter.get('/hprofissionais/:id', async (req, res) => {
     }
 });
 
-apiRouter.post('/hprofissionais', async (req, res) => {
+apiRouter.post('/hprofissionais', verificarToken, async (req, res) => {
     try {
         const novoHProfissional = await HProfissional.create(req.body);
         res.status(201).json({ status: 'sucesso', data: novoHProfissional });
@@ -349,7 +524,7 @@ apiRouter.post('/hprofissionais', async (req, res) => {
     }
 });
 
-apiRouter.put('/hprofissionais/:id', async (req, res) => {
+apiRouter.put('/hprofissionais/:id', verificarToken, async (req, res) => {
     try {
         const hprofissional = await HProfissional.findByIdAndUpdate(
             req.params.id,
@@ -367,7 +542,7 @@ apiRouter.put('/hprofissionais/:id', async (req, res) => {
     }
 });
 
-apiRouter.delete('/hprofissionais/:id', async (req, res) => {
+apiRouter.delete('/hprofissionais/:id', verificarToken, async (req, res) => {
     try {
         const hprofissional = await HProfissional.findByIdAndDelete(req.params.id);
         
@@ -382,8 +557,16 @@ apiRouter.delete('/hprofissionais/:id', async (req, res) => {
 });
 
 // Rota para editar perfil do usuário
-apiRouter.put('/auth/perfil/:id', async (req, res) => {
+apiRouter.put('/auth/perfil/:id', verificarToken, async (req, res) => {
     console.log(`✏️ Requisição PUT para editar perfil: ${req.params.id}`);
+    if (!validarObjectId(req.params.id)) {
+      console.log(`❌ ID inválido: ${req.params.id}`);
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'ID de usuário inválido' 
+      });
+    }
+    
     try {
         const { senha, ...camposAtualizacao } = req.body;
         
@@ -427,7 +610,7 @@ apiRouter.put('/auth/perfil/:id', async (req, res) => {
 });
 
 // Rota para logout (apenas para logs)
-apiRouter.post('/auth/logout', async (req, res) => {
+apiRouter.post('/auth/logout', verificarToken, async (req, res) => {
     console.log(`🚪 Requisição de logout recebida`);
     try {
         // Em uma implementação real, aqui poderíamos invalidar tokens JWT
@@ -492,19 +675,67 @@ apiRouter.post('/auth/login', async (req, res) => {
         const usuario = await Usuario.findOne({ email }).populate('localizacao');
         
         if (!usuario) {
+            // Se não encontrar no modelo Usuario, buscar no Profissional
+            const profissional = await Profissional.findOne({ email }).populate('localizacao');
+            if (!profissional) {
+                return res.status(401).json({ 
+                    status: 'erro', 
+                    message: 'Credenciais inválidas' 
+                });
+            }
+
+            // Verificar senha com bcrypt
+            const senhaValida = await bcrypt.compare(senha, profissional.senha);
+            if (!senhaValida) {
+                return res.status(401).json({ 
+                    status: 'erro', 
+                    message: 'Credenciais inválidas' 
+                });
+            }
+
+            // Gerar token JWT
+            const token = jwt.sign(
+                { 
+                    _id: profissional._id, 
+                    email: profissional.email,
+                    tipo: 'profissional'
+                }, 
+                process.env.JWT_SECRET || '7282',
+                { expiresIn: '7d' }
+            );
+
+            // Remover senha da resposta
+            const profissionalResposta = profissional.toObject();
+            delete profissionalResposta.senha;
+
+            res.status(200).json({ 
+                status: 'sucesso', 
+                data: profissionalResposta,
+                token,
+                message: 'Login realizado com sucesso'
+            });
+            return;
+        }
+
+        // Verificar senha com bcrypt
+        const senhaValida = await bcrypt.compare(senha, usuario.senha);
+        if (!senhaValida) {
             return res.status(401).json({ 
                 status: 'erro', 
                 message: 'Credenciais inválidas' 
             });
         }
 
-        // Verificar senha (em produção, usar hash)
-        if (usuario.senha !== senha) {
-            return res.status(401).json({ 
-                status: 'erro', 
-                message: 'Credenciais inválidas' 
-            });
-        }
+        // Gerar token JWT
+        const token = jwt.sign(
+            { 
+                _id: usuario._id, 
+                email: usuario.email,
+                tipo: 'usuario'
+            }, 
+            process.env.JWT_SECRET || '7282',
+            { expiresIn: '7d' }
+        );
 
         // Remover senha da resposta
         const usuarioResposta = usuario.toObject();
@@ -513,6 +744,7 @@ apiRouter.post('/auth/login', async (req, res) => {
         res.status(200).json({ 
             status: 'sucesso', 
             data: usuarioResposta,
+            token,
             message: 'Login realizado com sucesso'
         });
     } catch (error) {
@@ -524,7 +756,7 @@ apiRouter.post('/auth/login', async (req, res) => {
 });
 
 // Rota para buscar perfil do usuário logado
-apiRouter.get('/auth/perfil/:id', async (req, res) => {
+apiRouter.get('/auth/perfil/:id', verificarToken, async (req, res) => {
     console.log(`🔍 Requisição GET para /auth/perfil/${req.params.id}`);
     try {
         console.log(`📋 Buscando usuário com ID: ${req.params.id}`);
@@ -555,4 +787,3 @@ apiRouter.get('/auth/perfil/:id', async (req, res) => {
         });
     }
 });
-
