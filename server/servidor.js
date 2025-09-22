@@ -34,7 +34,7 @@ mongoose.connect(mongoURI)
     .then(() => console.log('✅ Conexão com o MongoDB estabelecida!'))
     .catch(err => console.error('❌ Erro ao conectar com o MongoDB:', err));
 
-// Middleware para verificar JWT
+// Middleware para verificar JWT (Melhorado)
 const verificarToken = (req, res, next) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
   
@@ -50,9 +50,10 @@ const verificarToken = (req, res, next) => {
     req.usuario = decoded;
     next();
   } catch (error) {
-    return res.status(400).json({ 
+    console.error('❌ Erro na verificação do token:', error.message);
+    return res.status(401).json({ 
       status: 'erro', 
-      message: 'Token inválido.' 
+      message: 'Token inválido ou expirado.' 
     });
   }
 };
@@ -69,8 +70,20 @@ const validarObjectId = (id) => {
   return mongoose.Types.ObjectId.isValid(id) && new mongoose.Types.ObjectId(id).toString() === id;
 };
 
-// Rotas para Localização
+// Função para gerar token JWT
+const gerarToken = (dadosUsuario) => {
+  return jwt.sign(
+    { 
+      _id: dadosUsuario._id, 
+      email: dadosUsuario.email,
+      tipo: dadosUsuario.tipo || 'usuario'
+    }, 
+    process.env.JWT_SECRET || '7282',
+    { expiresIn: '7d' }
+  );
+};
 
+// Rotas de Autenticação
 apiRouter.post('/auth/validar-email', async (req, res) => {
   try {
     const { email } = req.body;
@@ -82,7 +95,6 @@ apiRouter.post('/auth/validar-email', async (req, res) => {
       });
     }
 
-    // Validar formato do email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ 
@@ -91,7 +103,6 @@ apiRouter.post('/auth/validar-email', async (req, res) => {
       });
     }
 
-    // Verificar se email já existe em Usuario ou Profissional
     const usuarioExistente = await Usuario.findOne({ email });
     const profissionalExistente = await Profissional.findOne({ email });
 
@@ -116,52 +127,92 @@ apiRouter.post('/auth/validar-email', async (req, res) => {
   }
 });
 
-
-apiRouter.get('/localizacoes', async (req, res) => {
-    try {
-        const localizacoes = await Localizacao.find();
-        res.status(200).json({ status: 'sucesso', data: localizacoes });
-    } catch (error) {
-        res.status(500).json({ status: 'erro', message: error.message });
+apiRouter.post('/auth/login', async (req, res) => {
+  try {
+    const { email, senha } = req.body;
+    
+    if (!email || !senha) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'Email e senha são obrigatórios' 
+      });
     }
+
+    // Buscar usuário por email
+    const usuario = await Usuario.findOne({ email }).populate('localizacao');
+    
+    if (!usuario) {
+      // Se não encontrar no modelo Usuario, buscar no Profissional
+      const profissional = await Profissional.findOne({ email }).populate('localizacao');
+      if (!profissional) {
+        return res.status(401).json({ 
+          status: 'erro', 
+          message: 'Credenciais inválidas' 
+        });
+      }
+
+      const senhaValida = await bcrypt.compare(senha, profissional.senha);
+      if (!senhaValida) {
+        return res.status(401).json({ 
+          status: 'erro', 
+          message: 'Credenciais inválidas' 
+        });
+      }
+
+      const token = gerarToken({
+        _id: profissional._id,
+        email: profissional.email,
+        tipo: 'profissional'
+      });
+
+      const profissionalResposta = profissional.toObject();
+      delete profissionalResposta.senha;
+
+      res.status(200).json({ 
+        status: 'sucesso', 
+        data: profissionalResposta,
+        token,
+        message: 'Login realizado com sucesso'
+      });
+      return;
+    }
+
+    const senhaValida = await bcrypt.compare(senha, usuario.senha);
+    if (!senhaValida) {
+      return res.status(401).json({ 
+        status: 'erro', 
+        message: 'Credenciais inválidas' 
+      });
+    }
+
+    const token = gerarToken({
+      _id: usuario._id,
+      email: usuario.email,
+      tipo: 'usuario'
+    });
+
+    const usuarioResposta = usuario.toObject();
+    delete usuarioResposta.senha;
+
+    res.status(200).json({ 
+      status: 'sucesso', 
+      data: usuarioResposta,
+      token,
+      message: 'Login realizado com sucesso'
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
 });
 
-apiRouter.post('/localizacoes', async (req, res) => {
-    try {
-        const novaLocalizacao = await Localizacao.create(req.body);
-        res.status(201).json({ status: 'sucesso', data: novaLocalizacao });
-    } catch (error) {
-        res.status(400).json({ status: 'erro', message: error.message });
-    }
-});
-
-// Rotas para Profissionais
-apiRouter.get('/profissionais', async (req, res) => {
-    try {
-        const profissionais = await Profissional.find().populate('localizacao');
-        res.status(200).json({ status: 'sucesso', data: profissionais });
-    } catch (error) {
-        res.status(500).json({ status: 'erro', message: error.message });
-    }
-});
-
-apiRouter.get('/profissionais/:id', async (req, res) => {
-    try {
-        const profissional = await Profissional.findById(req.params.id).populate('localizacao');
-        if (!profissional) {
-            return res.status(404).json({ status: 'erro', message: 'Profissional não encontrado' });
-        }
-        res.status(200).json({ status: 'sucesso', data: profissional });
-    } catch (error) {
-        res.status(500).json({ status: 'erro', message: error.message });
-    }
-});
-
-apiRouter.post('/profissionais', async (req, res) => {
+// Rotas para Usuários (COM TOKEN NO REGISTRO)
+apiRouter.post('/usuarios', async (req, res) => {
   try {
     const { email, senha, ...outrosDados } = req.body;
 
-    // Validar formato do email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ 
@@ -170,7 +221,6 @@ apiRouter.post('/profissionais', async (req, res) => {
       });
     }
 
-    // Validar comprimento da senha
     if (senha.length < 8) {
       return res.status(400).json({ 
         status: 'erro', 
@@ -178,7 +228,6 @@ apiRouter.post('/profissionais', async (req, res) => {
       });
     }
 
-    // Verificar se email já existe
     const usuarioExistente = await Usuario.findOne({ email });
     const profissionalExistente = await Profissional.findOne({ email });
 
@@ -189,7 +238,69 @@ apiRouter.post('/profissionais', async (req, res) => {
       });
     }
 
-    // Hash da senha
+    const salt = await bcrypt.genSalt(10);
+    const senhaHash = await bcrypt.hash(senha, salt);
+
+    const novoUsuario = await Usuario.create({
+      ...outrosDados,
+      email,
+      senha: senhaHash
+    });
+    
+    // Gerar token JWT após registro
+    const token = gerarToken({
+      _id: novoUsuario._id,
+      email: novoUsuario.email,
+      tipo: 'usuario'
+    });
+
+    const usuarioResposta = novoUsuario.toObject();
+    delete usuarioResposta.senha;
+    
+    res.status(201).json({ 
+      status: 'sucesso', 
+      data: usuarioResposta,
+      token, // ✅ Token incluído na resposta
+      message: 'Usuário registrado com sucesso'
+    });
+  } catch (error) {
+    res.status(400).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
+// Rotas para Profissionais (COM TOKEN NO REGISTRO)
+apiRouter.post('/profissionais', async (req, res) => {
+  try {
+    const { email, senha, ...outrosDados } = req.body;
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'Formato de email inválido' 
+      });
+    }
+
+    if (senha.length < 8) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'A senha deve ter pelo menos 8 caracteres' 
+      });
+    }
+
+    const usuarioExistente = await Usuario.findOne({ email });
+    const profissionalExistente = await Profissional.findOne({ email });
+
+    if (usuarioExistente || profissionalExistente) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'Email já está em uso' 
+      });
+    }
+
     const salt = await bcrypt.genSalt(10);
     const senhaHash = await bcrypt.hash(senha, salt);
 
@@ -199,13 +310,21 @@ apiRouter.post('/profissionais', async (req, res) => {
       senha: senhaHash
     });
     
-    // Remover senha da resposta
+    // Gerar token JWT após registro
+    const token = gerarToken({
+      _id: novoProfissional._id,
+      email: novoProfissional.email,
+      tipo: 'profissional'
+    });
+
     const profissionalResposta = novoProfissional.toObject();
     delete profissionalResposta.senha;
     
     res.status(201).json({ 
       status: 'sucesso', 
-      data: profissionalResposta 
+      data: profissionalResposta,
+      token, // ✅ Token incluído na resposta
+      message: 'Profissional registrado com sucesso'
     });
   } catch (error) {
     res.status(400).json({ 
@@ -214,6 +333,7 @@ apiRouter.post('/profissionais', async (req, res) => {
     });
   }
 });
+
 
 
 apiRouter.put('/profissionais/:id', verificarToken, async (req, res) => {
@@ -359,6 +479,28 @@ apiRouter.delete('/usuarios/:id', verificarToken, async (req, res) => {
         res.status(500).json({ status: 'erro', message: error.message });
     }
 });
+
+apiRouter.get('/profissionais', async (req, res) => {
+    try {
+        const profissionais = await Profissional.find().populate('localizacao');
+        res.status(200).json({ status: 'sucesso', data: profissionais });
+    } catch (error) {
+        res.status(500).json({ status: 'erro', message: error.message });
+    }
+});
+
+apiRouter.get('/profissionais/:id', async (req, res) => {
+    try {
+        const profissional = await Profissional.findById(req.params.id).populate('localizacao');
+        if (!profissional) {
+            return res.status(404).json({ status: 'erro', message: 'Profissional não encontrado' });
+        }
+        res.status(200).json({ status: 'sucesso', data: profissional });
+    } catch (error) {
+        res.status(500).json({ status: 'erro', message: error.message });
+    }
+});
+
 
 // Rotas para Avaliações
 apiRouter.get('/avaliacoes', async (req, res) => {
@@ -644,10 +786,6 @@ app.use((req, res) => {
   res.status(404).send('Página não encontrada');
 });
 
-const PORT = process.env.PORT || 3000;
-const server = app.listen(PORT, () => {
-    console.log(`🚀 Servidor rodando na porta http://localhost:${PORT}`);
-});
 
 // Configuração para encerramento com Ctrl+C
 process.on('SIGINT', () => {
@@ -771,7 +909,6 @@ apiRouter.get('/auth/perfil/:id', verificarToken, async (req, res) => {
         }
 
         console.log(`✅ Usuário encontrado: ${usuario.nome}`);
-        // Remover senha da resposta
         const usuarioResposta = usuario.toObject();
         delete usuarioResposta.senha;
 
@@ -786,4 +923,101 @@ apiRouter.get('/auth/perfil/:id', verificarToken, async (req, res) => {
             message: error.message 
         });
     }
+});
+
+// Rota para editar perfil do usuário
+apiRouter.put('/auth/perfil/:id', verificarToken, async (req, res) => {
+    console.log(`✏️ Requisição PUT para editar perfil: ${req.params.id}`);
+    if (!validarObjectId(req.params.id)) {
+      console.log(`❌ ID inválido: ${req.params.id}`);
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'ID de usuário inválido' 
+      });
+    }
+    
+    try {
+        const { senha, ...camposAtualizacao } = req.body;
+        
+        delete camposAtualizacao._id;
+        
+        console.log(`📝 Campos para atualização:`, camposAtualizacao);
+        
+        const usuarioAtualizado = await Usuario.findByIdAndUpdate(
+            req.params.id,
+            camposAtualizacao,
+            { new: true, runValidators: true }
+        ).populate('localizacao');
+        
+        if (!usuarioAtualizado) {
+            console.log(`❌ Usuário não encontrado para edição: ${req.params.id}`);
+            return res.status(404).json({ 
+                status: 'erro', 
+                message: 'Usuário não encontrado' 
+            });
+        }
+
+        console.log(`✅ Perfil atualizado: ${usuarioAtualizado.nome}`);
+        
+        const usuarioResposta = usuarioAtualizado.toObject();
+        delete usuarioResposta.senha;
+
+        res.status(200).json({ 
+            status: 'sucesso', 
+            data: usuarioResposta,
+            message: 'Perfil atualizado com sucesso'
+        });
+    } catch (error) {
+        console.error(`💥 Erro ao editar perfil:`, error);
+        res.status(500).json({ 
+            status: 'erro', 
+            message: error.message 
+        });
+    }
+});
+
+// Rota para logout
+apiRouter.post('/auth/logout', verificarToken, async (req, res) => {
+    console.log(`🚪 Requisição de logout recebida`);
+    try {
+        const { usuarioId } = req.body;
+        
+        if (usuarioId) {
+            console.log(`👋 Usuário ${usuarioId} realizou logout`);
+        }
+        
+        res.status(200).json({ 
+            status: 'sucesso', 
+            message: 'Logout realizado com sucesso' 
+        });
+    } catch (error) {
+        console.error(`💥 Erro durante logout:`, error);
+        res.status(500).json({ 
+            status: 'erro', 
+            message: error.message 
+        });
+    }
+});
+
+// Montar o router na aplicação
+app.use('/api', apiRouter);
+
+// Rota para 404
+app.use((req, res) => {
+  res.status(404).send('Página não encontrada');
+});
+
+const PORT = process.env.PORT || 3000;
+const server = app.listen(PORT, () => {
+    console.log(`🚀 Servidor rodando na porta http://localhost:${PORT}`);
+});
+
+process.on('SIGINT', () => {
+    console.log('\n🔴 Servidor encerrado pelo usuário (Ctrl+C)');
+    mongoose.connection.close(() => {
+        console.log('✅ Conexão com MongoDB fechada');
+        server.close(() => {
+            process.exit(0);
+        });
+    });
 });
