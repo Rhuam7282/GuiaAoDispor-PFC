@@ -1,66 +1,42 @@
 import mongoose from 'mongoose';
 
+const contatoSchema = new mongoose.Schema({
+  tipo: {
+    type: String,
+    required: true,
+    enum: ['Email', 'Telefone', 'Facebook', 'LinkedIn', 'Outro']
+  },
+  valor: {
+    type: String,
+    required: true
+  }
+});
+
 const ProfissionalSchema = new mongoose.Schema({
   nome: {
     type: String,
-    required: [true, 'Nome é obrigatório'],
-    trim: true
+    required: true
   },
   desc: {
     type: String,
-    required: [true, 'Descrição é obrigatória']
+    required: true
   },
-  inst: {
-    type: String,
-    default: ''
-  },
-  face: {
-    type: String,
-    default: ''
-  },
-  email: {
-    type: String,
-    required: [true, 'Email é obrigatório'],
-    unique: true,
-    lowercase: true,
-    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Email inválido']
-  },
-  num: {
-    type: String,
-    default: ''
-  },
+  inst: String,
+  face: String,
+  email: String,
+  num: String,
   senha: {
     type: String,
-    required: [true, 'Senha é obrigatória'],
-    minlength: [6, 'Senha deve ter pelo menos 6 caracteres']
+    required: true
   },
-  nota: {
-    type: Number,
-    default: 0,
-    min: [0, 'Nota não pode ser menor que 0'],
-    max: [5, 'Nota não pode ser maior que 5']
-  },
+  nota: Number,
   localizacao: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Localizacao'
   },
-  foto: {
-    type: String,
-    default: ''
-  },
-  linkedin: {
-    type: String,
-    default: ''
-  },
-  dataCriacao: {
-    type: Date,
-    default: Date.now
-  }
+  foto: String,
+  linkedin: String,
+  contatos: [contatoSchema]
 });
-
-// Índices para melhor performance
-ProfissionalSchema.index({ email: 1 });
-ProfissionalSchema.index({ localizacao: 1 });
-ProfissionalSchema.index({ nota: -1 });
 
 export default mongoose.model('Profissional', ProfissionalSchema);

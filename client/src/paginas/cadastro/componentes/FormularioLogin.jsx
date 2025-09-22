@@ -11,7 +11,6 @@ const FormularioLogin = ({
     <div className="cartao cartaoSecundario margemGrande paddingMedio bordaArredondada larguraCompleta">
       <div className="textoCentro margemInferiorMedia">
         <h3 className="textoMarromEscuro">Já tem uma conta?</h3>
-        <p className="textoPequeno textoMarromOfuscado">Faça login abaixo</p>
       </div>
       
       <form onSubmit={aoFazerLogin} className="formulario-login">

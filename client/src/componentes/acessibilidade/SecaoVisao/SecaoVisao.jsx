@@ -47,18 +47,6 @@ const SecaoVisao = ({ configuracoes, atualizarConfiguracao }) => {
           </button>
         </div>
       </div>
-
-      <div className="secao">
-        <h4 className="tituloSecao">
-          <Eye size={16} /> Guia de Leitura
-        </h4>
-        <div className="botoesControle">
-          <button onClick={() => atualizarConfiguracao('guiaLeitura', (configuracoes.guiaLeitura + 1) % 3)} 
-                  aria-label={`Alternar guia de leitura. Estado atual: ${obterTextoGuiaLeitura()}`}>
-            {obterTextoGuiaLeitura()}
-          </button>
-        </div>
-      </div>
     </>
   );
 };

@@ -18,7 +18,7 @@
   "license": "ISC",
   "dependencies": {
     "@react-oauth/google": "^0.12.2",
-    "bcrypt": "^6.0.0",
+    "bcryptjs": "^2.4.3",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "express": "^4.21.2",

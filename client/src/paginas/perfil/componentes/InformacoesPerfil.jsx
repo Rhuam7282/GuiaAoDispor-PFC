@@ -3,7 +3,7 @@ import { Star, Facebook, Instagram, Linkedin, Save, X, Edit, Camera, Upload } fr
 import { useAuth } from '@contextos/autenticacao.jsx';
 import { servicoAuth } from '@servicos/api.js';
 
-const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao, setModoEdicao, tipoUsuario }) => {
+const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao, setModoEdicao }) => {
   const { atualizarUsuario } = useAuth();
   const [dadosEditaveis, setDadosEditaveis] = useState({
     nome: '',
@@ -20,14 +20,15 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
   const [previewFoto, setPreviewFoto] = useState('');
   const inputFileRef = useRef(null);
 
+  // Preencher dados editáveis quando os dados do perfil mudarem
   useEffect(() => {
     if (dadosPerfil) {
       setDadosEditaveis({
         nome: dadosPerfil.nome || '',
         descricao: dadosPerfil.descricao || '',
         email: dadosPerfil.email || '',
-        facebook: dadosPerfil.facebook || '',
-        instagram: dadosPerfil.instagram || '',
+        facebook: dadosPerfil.facebook || dadosPerfil.face || '',
+        instagram: dadosPerfil.instagram || dadosPerfil.inst || '',
         linkedin: dadosPerfil.linkedin || '',
         foto: dadosPerfil.foto || ''
       });
@@ -47,11 +48,13 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
     const arquivo = e.target.files[0];
     if (!arquivo) return;
 
+    // Verificar se é uma imagem
     if (!arquivo.type.startsWith('image/')) {
       setMensagem('Por favor, selecione um arquivo de imagem válido.');
       return;
     }
 
+    // Verificar tamanho do arquivo (máximo 5MB)
     if (arquivo.size > 5 * 1024 * 1024) {
       setMensagem('A imagem deve ter no máximo 5MB.');
       return;
@@ -59,12 +62,13 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
 
     setCarregandoFoto(true);
 
+    // Criar preview da imagem
     const reader = new FileReader();
     reader.onload = (e) => {
       setPreviewFoto(e.target.result);
       setDadosEditaveis(prev => ({
         ...prev,
-        foto: e.target.result
+        foto: e.target.result // Usar base64 para a imagem
       }));
       setCarregandoFoto(false);
     };
@@ -76,10 +80,9 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
     setMensagem('');
     
     try {
-      // Usar os nomes de campos que a API espera
       const dadosAtualizacao = {
         nome: dadosEditaveis.nome,
-        desc: dadosEditaveis.descricao,
+        descricao: dadosEditaveis.descricao,
         email: dadosEditaveis.email,
         face: dadosEditaveis.facebook,
         inst: dadosEditaveis.instagram,
@@ -94,16 +97,10 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
         }
       });
 
-      let resposta;
-      
-      if (tipoUsuario === 'profissional') {
-        resposta = await servicoAuth.editarPerfilProfissional(id, dadosAtualizacao);
-      } else {
-        resposta = await servicoAuth.editarPerfilUsuario(id, dadosAtualizacao);
-      }
+      const resposta = await servicoAuth.editarPerfil(id, dadosAtualizacao);
       
       if (resposta.status === 'sucesso') {
-        // Atualizar contexto de autenticação com os novos dados
+        // Atualizar contexto de autenticação
         atualizarUsuario({
           nome: dadosEditaveis.nome,
           email: dadosEditaveis.email,
@@ -112,30 +109,29 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
           linkedin: dadosEditaveis.linkedin,
           desc: dadosEditaveis.descricao,
           foto: dadosEditaveis.foto,
-          picture: dadosEditaveis.foto
+          picture: dadosEditaveis.foto // Para compatibilidade com Google OAuth
         });
         
         setMensagem('Perfil atualizado com sucesso!');
         setTimeout(() => setMensagem(''), 3000);
         setModoEdicao(false);
-      } else {
-        setMensagem(resposta.mensagem || 'Erro ao atualizar perfil');
       }
     } catch (erro) {
       console.error('Erro ao editar perfil:', erro);
-      setMensagem(erro.response?.data?.mensagem || 'Erro ao atualizar perfil. Tente novamente.');
+      setMensagem('Erro ao atualizar perfil. Tente novamente.');
     } finally {
       setCarregando(false);
     }
   };
 
   const handleCancelarEdicao = () => {
+    // Restaurar dados originais
     setDadosEditaveis({
       nome: dadosPerfil.nome || '',
       descricao: dadosPerfil.descricao || '',
       email: dadosPerfil.email || '',
-      facebook: dadosPerfil.facebook || '',
-      instagram: dadosPerfil.instagram || '',
+      facebook: dadosPerfil.facebook || dadosPerfil.face || '',
+      instagram: dadosPerfil.instagram || dadosPerfil.inst || '',
       linkedin: dadosPerfil.linkedin || '',
       foto: dadosPerfil.foto || ''
     });
@@ -328,14 +324,14 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
             </div>
           )}
         </div>
+        
+        
       </div>
       
       <div className="cartaoDestaque fundoMarromDestaqueTransparente textoEsquerda flexWrap">
-        <h2 className="tituloPerfil">{dadosPerfil.nome}</h2>
-        <p className="descricaoPerfil">{dadosPerfil.descricao}</p>
-        
-        {tipoUsuario === 'profissional' && (
-          <div className="avaliacaoContainer">
+        <p>{dadosPerfil.descricao}</p>
+        <div className="listaHorizontal ">
+          <div className="gapMedio">
             <div className="flexCentro gapPequeno">
               {[...Array(5)].map((_, i) => (
                 <Star
@@ -349,43 +345,42 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
                 />
               ))}
               <span className="textoMarromEscuro">
-                {dadosPerfil.avaliacao?.toFixed(1) || '0.0'}
+                {dadosPerfil.avaliacao !== undefined && dadosPerfil.avaliacao !== null ? dadosPerfil.avaliacao.toFixed(1) : '0.0'}
               </span>
             </div>
           </div>
-        )}
+        </div>
       </div>
       
       <div>
         <h3>Contatos</h3>
-        <div className="listaContatos">
-          {dadosPerfil.email && (
-            <div className="itemContato">
-              <span className="iconeContato">📧</span>
-              <span>{dadosPerfil.email}</span>
+        <div className="listaIcones vertical">
+          {dadosPerfil.facebook || dadosPerfil.face ? (
+            <div className="listaIcones">
+              <Facebook size={18} />
+              <span>{dadosPerfil.facebook || dadosPerfil.face}</span>
             </div>
-          )}
+          ) : null}
           
-          {dadosPerfil.facebook && (
-            <div className="itemContato">
-              <Facebook size={18} className="iconeContato" />
-              <span>{dadosPerfil.facebook}</span>
+          {dadosPerfil.instagram || dadosPerfil.inst ? (
+            <div className="listaIcones">
+              <Instagram size={18} />
+              <span>{dadosPerfil.instagram || dadosPerfil.inst}</span>
             </div>
-          )}
+          ) : null}
           
-          {dadosPerfil.instagram && (
-            <div className="itemContato">
-              <Instagram size={18} className="iconeContato" />
-              <span>{dadosPerfil.instagram}</span>
-            </div>
-          )}
-          
-          {dadosPerfil.linkedin && (
-            <div className="itemContato">
-              <Linkedin size={18} className="iconeContato" />
+          {dadosPerfil.linkedin ? (
+            <div className="listaIcones">
+              <Linkedin size={18} />
               <span>{dadosPerfil.linkedin}</span>
             </div>
-          )}
+          ) : null}
+          
+          {dadosPerfil.email ? (
+            <div className="listaIcones">
+              <span>📧 {dadosPerfil.email}</span>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

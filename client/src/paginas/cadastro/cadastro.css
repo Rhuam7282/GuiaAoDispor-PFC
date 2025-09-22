@@ -292,3 +292,172 @@
     padding: 20px;
   }
 }
+.container-imagem-quadrada {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.imagemPerfil {
+  width: 100%;
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.controles-enquadramento {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: var(--cor-fundo-principal);
+  border-radius: 8px;
+  border: 1px solid var(--cor-destaque-primaria);
+}
+
+.grupo-controles {
+  margin-bottom: 15px;
+}
+
+.grupo-controles:last-child {
+  margin-bottom: 0;
+}
+
+.grupo-controles label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--cor-texto-principal);
+  font-size: 14px;
+}
+
+.botoes-controle {
+  display: flex;
+  gap: 10px;
+}
+
+.botao-controle {
+  padding: 8px 15px;
+  background-color: var(--cor-fundo-principal);
+  border: 1px solid var(--cor-destaque-principal);
+  color: var(--cor-texto-principal);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.botao-controle.ativo {
+  background-color: var(--cor-botao-principal);
+  color: white;
+  border-color: var(--cor-botao-principal);
+}
+
+.botao-controle:hover {
+  background-color: var(--cor-destaque-primaria);
+}
+
+.grade-posicoes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  max-width: 150px;
+}
+
+.botao-posicao {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--cor-fundo-principal);
+  border: 1px solid var(--cor-destaque-principal);
+  color: var(--cor-texto-principal);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.botao-posicao.ativo {
+  background-color: var(--cor-botao-principal);
+  color: white;
+  border-color: var(--cor-botao-principal);
+}
+
+.botao-posicao:hover {
+  background-color: var(--cor-destaque-primaria);
+}
+
+/* Ajustes para manter a área de upload quadrada */
+.area-upload-imagem {
+  width: 100%;
+  aspect-ratio: 1/1;
+  min-width: 200px;
+  min-height: 200px;
+  max-width: 300px;
+  max-height: 300px;
+  border-radius: 50%;
+  border: 3px dashed var(--cor-texto-principal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--cor-fundo-principal);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.placeholder-upload {
+  text-align: center;
+  color: var(--cor-texto-principal);
+  font-size: 14px;
+  padding: 20px;
+  opacity: 0.7;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .area-upload-imagem {
+    max-width: 250px;
+    max-height: 250px;
+  }
+  
+  .grade-posicoes {
+    max-width: 130px;
+  }
+  
+  .botao-posicao {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .area-upload-imagem {
+    max-width: 200px;
+    max-height: 200px;
+  }
+  
+  .controles-enquadramento {
+    padding: 10px;
+  }
+  
+  .grade-posicoes {
+    max-width: 120px;
+  }
+  
+  .botao-posicao {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+  }
+}

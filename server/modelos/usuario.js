@@ -1,55 +1,39 @@
 import mongoose from 'mongoose';
 
+const contatoSchema = new mongoose.Schema({
+  tipo: {
+    type: String,
+    required: true,
+    enum: ['Email', 'Telefone', 'Facebook', 'LinkedIn', 'Outro']
+  },
+  valor: {
+    type: String,
+    required: true
+  }
+});
+
 const UsuarioSchema = new mongoose.Schema({
   nome: {
     type: String,
-    required: [true, 'Nome é obrigatório'],
-    trim: true
+    required: true
   },
-  desc: {
-    type: String,
-    default: ''
-  },
-  inst: {
-    type: String,
-    default: ''
-  },
-  face: {
-    type: String,
-    default: ''
-  },
+  desc: String,
+  inst: String,
   email: {
     type: String,
-    required: [true, 'Email é obrigatório'],
-    unique: true,
-    lowercase: true,
-    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Email inválido']
+    required: true
   },
-  num: {
-    type: String,
-    default: ''
-  },
+  num: String,
   senha: {
     type: String,
-    required: [true, 'Senha é obrigatória'],
-    minlength: [6, 'Senha deve ter pelo menos 6 caracteres']
+    required: true
   },
   localizacao: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Localizacao'
   },
-  foto: {
-    type: String,
-    default: ''
-  },
-  dataCriacao: {
-    type: Date,
-    default: Date.now
-  }
+  foto: String,
+  contatos: [contatoSchema]
 });
-
-// Índices para melhor performance
-UsuarioSchema.index({ email: 1 });
-UsuarioSchema.index({ localizacao: 1 });
 
 export default mongoose.model('Usuario', UsuarioSchema);

@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+
 const AuthContext = createContext();
+
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -10,16 +12,23 @@ export const useAuth = () => {
   return context;
 };
 
+
 export const ProvedorAutenticacao = ({ children }) => {
+  
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+  
+  
   const [loading, setLoading] = useState(true);
 
+  
   const isAuthenticated = () => {
-    const storedAuth = localStorage.getItem('isAuthenticated');
-    return storedAuth === 'true' && user !== null;
+    return user !== null && token !== null;
   };
 
-  const login = (userData) => {
+  
+  const login = (userData, authToken) => {
+    // Normalizar dados do usuário para garantir consistência
     const usuarioNormalizado = {
       _id: userData._id,
       nome: userData.nome,
@@ -30,54 +39,71 @@ export const ProvedorAutenticacao = ({ children }) => {
       inst: userData.inst,
       face: userData.face,
       num: userData.num,
+      // Campos para compatibilidade com Google OAuth
       name: userData.nome,
       picture: userData.foto
     };
     
     setUser(usuarioNormalizado);
+    setToken(authToken);
     
     localStorage.setItem('user', JSON.stringify(usuarioNormalizado));
+    localStorage.setItem('token', authToken);
     localStorage.setItem('isAuthenticated', 'true');
     localStorage.setItem('loginTimestamp', Date.now().toString());
   };
 
+  
   const logout = () => {
     setUser(null);
+    setToken(null);
     
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('loginTimestamp');
   };
 
+  
   const getUserFromStorage = () => {
     try {
       const storedUser = localStorage.getItem('user');
+      const storedToken = localStorage.getItem('token');
       const isAuth = localStorage.getItem('isAuthenticated');
       const loginTimestamp = localStorage.getItem('loginTimestamp');
       
-      if (storedUser && isAuth === 'true') {
+      if (storedUser && storedToken && isAuth === 'true') {
+        // Verificar se o login não expirou (opcional - 7 dias)
         const agora = Date.now();
         const tempoLogin = parseInt(loginTimestamp) || 0;
-        const seteDiasEmMs = 7 * 24 * 60 * 60 * 1000;
+        const seteDialasEmMs = 7 * 24 * 60 * 60 * 1000;
         
-        if (agora - tempoLogin > seteDiasEmMs) {
+        if (agora - tempoLogin > seteDialasEmMs) {
+          // Login expirado, limpar dados
           localStorage.removeItem('user');
+          localStorage.removeItem('token');
           localStorage.removeItem('isAuthenticated');
           localStorage.removeItem('loginTimestamp');
-          return null;
+          return { user: null, token: null };
         }
         
-        return JSON.parse(storedUser);
+        return { 
+          user: JSON.parse(storedUser), 
+          token: storedToken 
+        };
       }
     } catch (error) {
       console.error('Erro ao recuperar dados do usuário:', error);
+      // Limpar dados corrompidos
       localStorage.removeItem('user');
+      localStorage.removeItem('token');
       localStorage.removeItem('isAuthenticated');
       localStorage.removeItem('loginTimestamp');
     }
-    return null;
+    return { user: null, token: null };
   };
 
+  
   const atualizarUsuario = (dadosAtualizados) => {
     if (user) {
       const usuarioAtualizado = { ...user, ...dadosAtualizados };
@@ -86,16 +112,20 @@ export const ProvedorAutenticacao = ({ children }) => {
     }
   };
 
+  
   useEffect(() => {
-    const storedUser = getUserFromStorage();
-    if (storedUser) {
+    const { user: storedUser, token: storedToken } = getUserFromStorage();
+    if (storedUser && storedToken) {
       setUser(storedUser);
+      setToken(storedToken);
     }
     setLoading(false);
   }, []);
 
+  
   const value = {
     user,
+    token,
     loading,
     isAuthenticated,
     login,
