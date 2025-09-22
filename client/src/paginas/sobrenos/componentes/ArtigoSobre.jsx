@@ -1,19 +1,21 @@
 import React from 'react';
 import logo from '@recursos/icones/logo.png';
 
-const ArtigoSobre = ({ texto, posicaoImagem = 'esquerda' }) => {
+const ArtigoSobre = ({ título, texto, posicaoImagem = 'esquerda' }) => {
   return (
     <article className="about-text">
       {posicaoImagem === 'esquerda' && (
         <img src={logo} alt="Logo do Guia ao Dispor - Plataforma de conexão para cuidados especiais"/>
       )}
-      <p>{texto}</p>
+      <div className="text-content">
+        {título && <h2>{título}</h2>}
+        <p>{texto}</p>
+      </div>
       {posicaoImagem === 'direita' && (
-        <img src={logo} alt="Logo" />
+        <img src={logo} alt="Logo do Guia ao Dispor - Plataforma de conexão para cuidados especiais" />
       )}
     </article>
   );
 };
 
 export default ArtigoSobre;
-
