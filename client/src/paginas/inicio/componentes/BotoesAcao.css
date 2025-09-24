@@ -1,0 +1,23 @@
+.containerBotoesAcao {
+  display: flex;
+  gap: var(--espacamentoMedio);
+  margin-top: var(--espacamentoGrande);
+  justify-content: center;
+}
+
+.botaoSecundario {
+  background-color: var(--corAzulClaro);
+  color: var(--corBranco);
+  padding: var(--espacamentoPequeno) var(--espacamentoMedio);
+  border: none;
+  border-radius: var(--raioBorda);
+  cursor: pointer;
+  font-size: var(--tamanhoFonteTextoMedio);
+  transition: background-color 0.3s ease;
+}
+
+.botaoSecundario:hover {
+  background-color: var(--corAzulDestaque);
+}
+
+

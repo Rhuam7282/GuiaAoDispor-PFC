@@ -1,8 +1,9 @@
 import React from 'react';
 import Corpo from "@componentes/Layout/Corpo";
 import HeroPrincipal from './componentes/HeroPrincipal';
-import BotaoAcao from './componentes/BotaoAcao';
+import BotoesAcao from './componentes/BotoesAcao'; // Importando o novo componente
 import SecaoSobre from './componentes/SecaoSobre';
+import CarrosselAcessibilidade from './componentes/CarrosselAcessibilidade';
 import './inicio.css';
 
 import { useAuth } from "../../contextos/autenticacao";
@@ -18,7 +19,8 @@ const Inicio = () => {
       <main className="paginaInicial">
         <div className="container conteudoPrincipalInicio">
           <HeroPrincipal />
-          <BotaoAcao />
+          <CarrosselAcessibilidade />
+          <BotoesAcao /> {/* Usando o novo componente BotoesAcao */}
           <SecaoSobre />
           <h2>Porque?</h2>
           <p>
@@ -39,4 +41,3 @@ const Inicio = () => {
 };
 
 export default Inicio;
-
