@@ -1,26 +1,26 @@
 import React from 'react';
 import Corpo from "@componentes/Layout/Corpo";
 import HeroPrincipal from './componentes/HeroPrincipal';
-import BotoesAcao from './componentes/BotoesAcao'; // Importando o novo componente
+// import BotoesAcao from './componentes/BotoesAcao'; // Importando o novo componente
 import SecaoSobre from './componentes/SecaoSobre';
 import CarrosselAcessibilidade from './componentes/CarrosselAcessibilidade';
 import './inicio.css';
 
-import { useAuth } from "../../contextos/autenticacao";
+// import { useAuth } from "../../contextos/autenticacao";
 
 const Inicio = () => {
-  const { isAuthenticated } = useAuth();
+  // const { isAuthenticated } = useAuth();
 
-  const handleButtonClick = () => {
-    // Lógica do botão aqui
-  };
+  // const handleButtonClick = () => {
+  //   // Lógica do botão aqui
+  // };
   return (
     <Corpo>
       <main className="paginaInicial">
         <div className="container conteudoPrincipalInicio">
           <HeroPrincipal />
           <CarrosselAcessibilidade />
-          <BotoesAcao /> {/* Usando o novo componente BotoesAcao */}
+          {/* <BotoesAcao /> Usando o novo componente BotoesAcao */}
           <SecaoSobre />
           <h2>Porque?</h2>
           <p>
