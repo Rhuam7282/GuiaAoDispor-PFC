@@ -1,6 +1,6 @@
 import React from 'react';
-import Lucas from '@recursos/imagens/Lucas.png';
-import Rhuam from '@recursos/imagens/Rhuam.png';
+import Lucas from '@Recursos/Imagens/lucas.png';
+import Rhuam from '@Recursos/Imagens/rhuam.png';
 
 
 const Alunos = () => {

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import { useAuth } from '../../contextos/autenticacao';
+import { useAuth } from '@Contextos/Autenticacao.jsx';
 import { useNavigate } from 'react-router-dom';
 
 

@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import './interrogacao.css';
+import './Interrogacao.css';
 
 
 const Interrogacao = ({ children }) => {

@@ -1,14 +1,12 @@
-// src/App.jsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ProvedorAutenticacao } from './contextos/autenticacao.jsx';
-import SobreNos from "./paginas/sobrenos/sobreNos.jsx";
-import Perfil from "./paginas/perfil/perfil.jsx";
-import Mensagem from "./paginas/mensagem/mensagem.jsx";
-import Qualificados from "./paginas/qualificados/qualificados.jsx";
-import Cadastro from "./paginas/cadastro/cadastro.jsx";
-import Inicio from "./paginas/inicio/inicio.jsx";
-// import PainelControle from "@componentes/acessibilidade/PainelControle";
-
+import { ProvedorAutenticacao } from './Contextos/Autenticacao.jsx';
+import SobreNos from './Paginas/SobreNos/SobreNos.jsx';
+import Perfil from './Paginas/Perfil/Perfil.jsx';
+import Mensagem from './Paginas/Mensagem/Mensagem.jsx';
+import Qualificados from './Paginas/Qualificados/Qualificados.jsx';
+import Cadastro from './Paginas/Cadastro/Cadastro.jsx';
+import Inicio from './Paginas/Inicio/Inicio.jsx';
+import Layout from './Componentes/Layout/Corpo.jsx';
 
 function App() {
   return (
@@ -18,14 +16,16 @@ function App() {
           v7_startTransition: true,
           v7_relativeSplatPath: true
         }}>
-        {/* <PainelControle /> */}
         <Routes>
-          <Route path="/" element={<Inicio />} />
-          <Route path="/qualificados" element={<Qualificados />} />
-          <Route path="/perfil" element={<Perfil />} />
-          <Route path="/sobreNos" element={<SobreNos />} />
-          <Route path="/cadastro" element={<Cadastro />} />
-          <Route path="/perfil/:id" element={<Perfil />} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Inicio />} />
+            <Route path="qualificados" element={<Qualificados />} />
+            <Route path="perfil" element={<Perfil />} />
+            <Route path="sobre-nos" element={<SobreNos />} />
+            <Route path="cadastro" element={<Cadastro />} />
+            <Route path="perfil/:id" element={<Perfil />} />
+            <Route path="mensagem" element={<Mensagem />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </ProvedorAutenticacao>
@@ -33,3 +33,4 @@ function App() {
 }
 
 export default App;
+

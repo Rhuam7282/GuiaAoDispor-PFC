@@ -1,20 +1,18 @@
-// src/componentes/layout/Corpo.jsx
 import Menu from './Menu/Menu.jsx';
+import { Outlet, useLocation } from 'react-router-dom';
 import './Corpo.css';
-import { useLocation } from 'react-router-dom';
 
-const Corpo = ({ children }) => {
+const Corpo = () => {
   const localizacao = useLocation();
-  const paginaInicial = localizacao.pathname === '/';
-  
-  return (
-    <div className={`containerLayout gridContainer ${paginaInicial ? 'gridUmaColuna' : 'gridDuasColunas'}`}>
-      {!paginaInicial && <Menu className="menu" />}
-      <main className={`conteudoPrincipal transicaoSuave ${paginaInicial ? 'larguraViewport' : ''}`}>
-        {children}
+    return (
+    <div className="containerLayout gridContainer gridDuasColunas">
+      <Menu className="menu" />
+      <main className="conteudoPrincipal transicaoSuave">
+        <Outlet />
       </main>
     </div>
   );
 };
 
 export default Corpo;
+

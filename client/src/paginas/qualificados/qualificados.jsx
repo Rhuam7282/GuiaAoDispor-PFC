@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import Corpo from "../../componentes/Layout/Corpo";
-import Filtro from "./componentes/Filtro";
-import ListaProfissionais from "./componentes/ListaProfissionais";
-import "./qualificados.css";
+import Corpo from "@Componentes/Layout/Corpo.jsx";
+import Filtro from "./Componentes/Filtro.jsx";
+import ListaProfissionais from "./Componentes/ListaProfissionais.jsx";
+import "./Qualificados.css";
 
-import mariaSilva from '../../recursos/imagens/mulher.png';
-import joaoOliveira from '../../recursos/imagens/homem1.avif';
-import anaSantos from '../../recursos/imagens/mulher 3.webp';
-import lucianaFerreira from '../../recursos/imagens/mulher2.jpg';
-import carlosMendes from '../../recursos/imagens/homem2.jpg';
+
+import mariaSilva from '@Recursos/Imagens/mulher.png';
+import joaoOliveira from '@Recursos/Imagens/homem1.avif';
+import anaSantos from '@Recursos/Imagens/mulher 3.webp';
+import lucianaFerreira from '@Recursos/Imagens/mulher2.jpg';
+import carlosMendes from '@Recursos/Imagens/homem2.jpg';
 
 function Qualificados() {
   const [filtroSelecionado, setFiltroSelecionado] = useState("localizacao");

@@ -1,10 +1,10 @@
 import React from 'react';
-import Corpo from "@componentes/Layout/Corpo";
-import HeroPrincipal from './componentes/HeroPrincipal';
-// import BotoesAcao from './componentes/BotoesAcao'; // Importando o novo componente
-import SecaoSobre from './componentes/SecaoSobre';
-import CarrosselAcessibilidade from './componentes/CarrosselAcessibilidade';
-import './inicio.css';
+import HeroPrincipal from './Componentes/HeroPrincipal.jsx';
+// import BotoesAcao from './Componentes/BotoesAcao.jsx'; // Importando o novo componente
+import SecaoSobre from './Componentes/SecaoSobre.jsx';
+import CarrosselAcessibilidade from './Componentes/CarrosselAcessibilidade.jsx';
+import './Inicio.css';
+
 
 // import { useAuth } from "../../contextos/autenticacao";
 
@@ -15,9 +15,7 @@ const Inicio = () => {
   //   // Lógica do botão aqui
   // };
   return (
-    <Corpo>
-      <main className="paginaInicial">
-        <div className="container conteudoPrincipalInicio">
+    <div className="container conteudoPrincipalInicio">
           <HeroPrincipal />
           <CarrosselAcessibilidade />
           {/* <BotoesAcao /> Usando o novo componente BotoesAcao */}
@@ -35,9 +33,8 @@ const Inicio = () => {
             Nascida de um projeto escolar, a Guia ao Dispor foi feita com pesquisa e auxilio de professores qualificados, pensando em criar uma ferramenta que ajude o mundo a ser mais acessível
           </p>
         </div>
-      </main>
-    </Corpo>
   );
 };
 
 export default Inicio;
+
