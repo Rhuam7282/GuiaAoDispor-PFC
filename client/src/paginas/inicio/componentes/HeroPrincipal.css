@@ -1,0 +1,201 @@
+.heroPrincipal {
+  padding: var(--espacamentoExtraGrande) 0;
+  text-align: center;
+  background: linear-gradient(135deg, var(--corNeutraClara) 0%, var(--corAzulDestaqueTransparente) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.heroPrincipal::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, var(--corAzulDestaqueTransparente) 0%, transparent 70%);
+  animation: rotacaoSuave 20s linear infinite;
+  z-index: 1;
+}
+
+@keyframes rotacaoSuave {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.containerTitulo {
+  position: relative;
+  z-index: 2;
+  margin-bottom: var(--espacamentoGrande);
+}
+
+.tituloDestaque {
+  margin: 0;
+  margin-bottom: var(--espacamentoPequeno);
+}
+
+.tituloGradiente {
+  background: linear-gradient(135deg, var(--corAzulDestaque), var(--corMarromDestaque));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: var(--tamanhoFonteTitulo);
+  font-weight: 900;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  animation: brilhoSutil 3s ease-in-out infinite alternate;
+}
+
+@keyframes brilhoSutil {
+  0% { filter: brightness(1); }
+  100% { filter: brightness(1.1); }
+}
+
+.subtituloContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.subtitulo {
+  color: var(--corMarromEscuro);
+  font-size: var(--tamanhoFonteTextoMedio);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  padding: var(--espacamentoPequeno) var(--espacamentoMedio);
+  background: var(--corMarromDestaqueTransparente);
+  border-radius: var(--bordaArredondada);
+  border: 2px solid var(--corMarromDestaque);
+}
+
+.sloganContainer {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.slogan {
+  font-size: var(--tamanhoFonteTextoMedio);
+  color: var(--corMarromEscuro);
+  line-height: 1.8;
+  margin-bottom: var(--espacamentoExtraGrande);
+  font-weight: 400;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.sloganDestaque {
+  color: var(--corAzulEscuro);
+  font-weight: 700;
+  position: relative;
+}
+
+.sloganDestaque::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--corAzulDestaque), var(--corMarromDestaque));
+  border-radius: 1px;
+}
+
+.sloganFinal {
+  color: var(--corMarromDestaque);
+  font-weight: 600;
+  font-style: italic;
+}
+
+.indicadoresValores {
+  display: flex;
+  justify-content: center;
+  gap: var(--espacamentoExtraGrande);
+  margin-top: var(--espacamentoGrande);
+  flex-wrap: wrap;
+}
+
+.indicadorValor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--espacamentoMedio);
+  background: var(--corNeutraClara);
+  border-radius: var(--bordaArredondada);
+  box-shadow: var(--sombra) var(--corNeutraEscura);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  min-width: 120px;
+}
+
+.indicadorValor:hover {
+  transform: translateY(-5px);
+  border-color: var(--corAzulDestaque);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.numeroDestaque {
+  font-size: var(--tamanhoFonteSubtitulo);
+  font-weight: 900;
+  color: var(--corAzulEscuro);
+  margin-bottom: var(--espacamentoPequeno);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.textoIndicador {
+  font-size: var(--tamanhoFonteTextoMenor);
+  color: var(--corMarromEscuro);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+  .heroPrincipal {
+    padding: var(--espacamentoGrande) var(--espacamentoMedio);
+  }
+  
+  .tituloGradiente {
+    font-size: 36px;
+  }
+  
+  .slogan {
+    font-size: var(--tamanhoFonteTextoMenor);
+  }
+  
+  .indicadoresValores {
+    gap: var(--espacamentoMedio);
+  }
+  
+  .indicadorValor {
+    min-width: 100px;
+    padding: var(--espacamentoPequeno);
+  }
+  
+  .numeroDestaque {
+    font-size: var(--tamanhoFonteTexto);
+  }
+}
+
+@media (max-width: 480px) {
+  .tituloGradiente {
+    font-size: 28px;
+  }
+  
+  .subtitulo {
+    font-size: var(--tamanhoFonteTextoMenor);
+    padding: var(--espacamentoPequeno);
+  }
+  
+  .indicadoresValores {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--espacamentoPequeno);
+  }
+  
+  .indicadorValor {
+    width: 100%;
+    max-width: 200px;
+  }
+}
