@@ -1,6 +1,6 @@
 import React from 'react';
 import ArtigoSobre from './ArtigoSobre';
-import Orientadoras from './orientadoras';
+import Orientadoras from './Orientadoras.jsx';
 import Alunos from './Alunos';
 
 const SecaoSobre = () => {

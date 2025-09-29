@@ -1,4 +1,3 @@
-// src/App.jsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ProvedorAutenticacao } from './contextos/autenticacao.jsx';
 import SobreNos from "./paginas/sobrenos/sobreNos.jsx";
@@ -19,12 +18,15 @@ function App() {
         }}>
         <PainelControle />
         <Routes>
-          <Route path="/" element={<Inicio />} />
-          <Route path="/qualificados" element={<Qualificados />} />
-          <Route path="/perfil" element={<Perfil />} />
-          <Route path="/sobreNos" element={<SobreNos />} />
-          <Route path="/cadastro" element={<Cadastro />} />
-          <Route path="/perfil/:id" element={<Perfil />} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Inicio />} />
+            <Route path="qualificados" element={<Qualificados />} />
+            <Route path="perfil" element={<Perfil />} />
+            <Route path="sobre-nos" element={<SobreNos />} />
+            <Route path="cadastro" element={<Cadastro />} />
+            <Route path="perfil/:id" element={<Perfil />} />
+            <Route path="mensagem" element={<Mensagem />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </ProvedorAutenticacao>
@@ -32,3 +34,4 @@ function App() {
 }
 
 export default App;
+

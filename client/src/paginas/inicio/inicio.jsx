@@ -1,5 +1,4 @@
 import React from 'react';
-import Corpo from "@componentes/Layout/Corpo";
 import HeroPrincipal from './componentes/HeroPrincipal';
 import BotoesAcao from './componentes/BotoesAcao';
 import SecaoSobre from './componentes/SecaoSobre';
@@ -8,9 +7,7 @@ import './inicio.css';
 
 const Inicio = () => {
   return (
-    <Corpo>
-      <main className="paginaInicial">
-        <div className="container conteudoPrincipalInicio">
+    <div className="container conteudoPrincipalInicio">
           <HeroPrincipal />
           <CarrosselAcessibilidade />
           <BotoesAcao />
@@ -30,9 +27,8 @@ const Inicio = () => {
             <p>Verificação de consultas</p>
           </article>
         </div>
-      </main>
-    </Corpo>
   );
 };
 
 export default Inicio;
+

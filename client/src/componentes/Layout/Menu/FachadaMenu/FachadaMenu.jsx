@@ -1,7 +1,7 @@
 // src/componentes/layout/Menu/FachadaMenu/FachadaMenu.jsx
 import React from 'react';
-import { useAuth } from '../../../../contextos/autenticacao';
-import logo from '@recursos/icones/logo.png';
+import { useAuth } from '@Contextos/Autenticacao.jsx';
+import logo from '@Recursos/Icones/logo.png';
 import './FachadaMenu.css';
 
 const FachadaMenu = () => {

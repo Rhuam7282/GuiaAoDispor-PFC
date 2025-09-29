@@ -54,21 +54,21 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
-      '@componentes': path.resolve(__dirname, 'src/componentes'),
-      '@servicos': path.resolve(__dirname, 'src/servicos'),
-      '@config': path.resolve(__dirname, 'config'),
-      '@paginas': path.resolve(__dirname, 'src/paginas'),
-      '@recursos': path.resolve(__dirname, 'src/recursos'),
-      '@ganchos': path.resolve(__dirname, 'src/ganchos'),
-      '@contextos': path.resolve(__dirname, 'src/contextos'),
-      '@autenticacao': path.resolve(__dirname, 'src/componentes/autenticacao'),
-      '@formularios': path.resolve(__dirname, 'src/componentes/formularios'),
-      '@layout': path.resolve(__dirname, 'src/componentes/layout'),
-      '@perfil': path.resolve(__dirname, 'src/componentes/perfil'),
-      '@comum': path.resolve(__dirname, 'src/componentes/comum'),
-      '@acessibilidade': path.resolve(__dirname, 'src/componentes/acessibilidade'),
-      '@estilos': path.resolve(__dirname, 'src/estilos'),
-      '@utils': path.resolve(__dirname, 'src/utils')
+      '@Componentes': path.resolve(__dirname, 'src/Componentes'),
+      '@Servicos': path.resolve(__dirname, 'src/Servicos'),
+      '@config': path.resolve(__dirname, 'src/config'),
+      '@Paginas': path.resolve(__dirname, 'src/Paginas'),
+      '@Recursos': path.resolve(__dirname, 'src/Recursos'),
+      '@Ganchos': path.resolve(__dirname, 'src/Componentes/Acessibilidade/Ganchos'),
+      '@Contextos': path.resolve(__dirname, 'src/Contextos'),
+      '@Autenticacao': path.resolve(__dirname, 'src/Componentes/Autenticacao'),
+      '@Formularios': path.resolve(__dirname, 'src/Componentes/Formularios'),
+      '@Layout': path.resolve(__dirname, 'src/Componentes/Layout'),
+      '@Perfil': path.resolve(__dirname, 'src/Componentes/Perfil'),
+      '@Comum': path.resolve(__dirname, 'src/Componentes/Comum'),
+      '@Acessibilidade': path.resolve(__dirname, 'src/Componentes/Acessibilidade'),
+      '@Estilos': path.resolve(__dirname, 'src/Estilos'),
+      '@Utils': path.resolve(__dirname, 'src/Utils')
     }
   },
   optimizeDeps: {

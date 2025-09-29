@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Corpo from "@componentes/Layout/Corpo";
-import InformacoesPerfil from "./componentes/InformacoesPerfil";
-import HistoricoAcademicoPerfil from "./componentes/HistoricoAcademicoPerfil";
-import HistoricoProfissionalPerfil from "./componentes/HistoricoProfissionalPerfil";
-import { servicoProfissional, servicoHCurricular, servicoHProfissional, servicoAuth } from "@servicos/api";
-import { useAuth } from "@/contextos/autenticacao";
-import "./perfil.css";
+import Corpo from "@Componentes/Layout/Corpo.jsx";
+import InformacoesPerfil from "./Componentes/InformacoesPerfil.jsx";
+import HistoricoAcademicoPerfil from "./Componentes/HistoricoAcademicoPerfil.jsx";
+import HistoricoProfissionalPerfil from "./Componentes/HistoricoProfissionalPerfil.jsx";
+import { servicoProfissional, servicoHCurricular, servicoHProfissional, servicoAuth } from "@Servicos/api.js";
+import { useAuth } from "@Contextos/Autenticacao.jsx";
 
 import {
   Mail,
@@ -16,10 +15,10 @@ import {
   LogOut,
 } from "lucide-react";
 
-import mariaSilva from "@recursos/imagens/mulher.png";
-import micheleto from "@recursos/imagens/hospital.jpg";
-import butantan from "@recursos/imagens/butantan.webp";
-import portugues from "@recursos/imagens/portugues.jpg";
+import mariaSilva from "@Recursos/Imagens/mulher.png";
+import micheleto from "@Recursos/Imagens/hospital.jpg";
+import butantan from "@Recursos/Imagens/butantan.webp";
+import portugues from "@Recursos/Imagens/portugues.jpg";
 
 const Perfil = () => {
   const { id } = useParams();
@@ -96,7 +95,7 @@ const Perfil = () => {
           if (resposta && resposta.data) {
             const perfilFormatado = formatarDadosPerfil(resposta.data);
             setDadosPerfil(perfilFormatado);
-            console.log('✅ Perfil carregado do servidor com sucesso');
+            console.log("✅ Perfil carregado do servidor com sucesso");
           }
           
           // Para usuários comuns (não profissionais), não carregar históricos
@@ -104,7 +103,7 @@ const Perfil = () => {
           setHistoricoProfissional([]);
           
         } catch (erro) {
-          console.error('❌ Erro ao buscar perfil:', erro);
+          console.error("❌ Erro ao buscar perfil:", erro);
           const perfilFormatado = formatarDadosPerfil(user);
           setDadosPerfil(perfilFormatado);
           setErro(`Usando dados locais. Erro: ${erro.message}`);
@@ -155,8 +154,8 @@ const Perfil = () => {
             setHistoricoProfissional(profissionalFormatado);
 
           } catch (error) {
-            console.error('Erro ao carregar dados do perfil:', error);
-            setErro('Erro ao carregar dados do perfil. Tente novamente.');
+            console.error("Erro ao carregar dados do perfil:", error);
+            setErro("Erro ao carregar dados do perfil. Tente novamente.");
             
             // Usar dados estáticos como fallback
             setDadosPerfil(dadosEstaticos);
@@ -304,3 +303,4 @@ const Perfil = () => {
 };
 
 export default Perfil;
+

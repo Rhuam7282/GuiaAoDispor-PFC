@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import Corpo from "@componentes/Layout/Corpo";
-import ListaContatos from './componentes/ListaContatos';
-import DetalheMensagem from './componentes/DetalheMensagem';
-import './mensagem.css';
+import Corpo from "@Componentes/Layout/Corpo.jsx";
+import ListaContatos from './Componentes/ListaContatos.jsx';
+import DetalheMensagem from './Componentes/DetalheMensagem.jsx';
+import './Mensagem.css';
+
 
 const Mensagens = () => {
   const [mensagem, setMensagem] = useState('');
