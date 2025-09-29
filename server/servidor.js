@@ -64,7 +64,11 @@ app.get('/', (req, res) => {
 });
 
 // Rotas da API
+import profissionaisRoutes from './api/profissionais.js';
+
 const apiRouter = express.Router();
+
+apiRouter.use("/profissionais", profissionaisRoutes);
 
 const validarObjectId = (id) => {
   return mongoose.Types.ObjectId.isValid(id) && new mongoose.Types.ObjectId(id).toString() === id;
@@ -480,14 +484,7 @@ apiRouter.delete('/usuarios/:id', verificarToken, async (req, res) => {
     }
 });
 
-apiRouter.get('/profissionais', async (req, res) => {
-    try {
-        const profissionais = await Profissional.find().populate('localizacao');
-        res.status(200).json({ status: 'sucesso', data: profissionais });
-    } catch (error) {
-        res.status(500).json({ status: 'erro', message: error.message });
-    }
-});
+
 
 apiRouter.get('/profissionais/:id', async (req, res) => {
     try {
@@ -636,14 +633,6 @@ apiRouter.delete('/hcurriculares/:id', verificarToken, async (req, res) => {
 });
 
 // Rotas para HProfissional
-apiRouter.get('/hprofissionais', async (req, res) => {
-    try {
-        const hprofissionais = await HProfissional.find().populate('profissional');
-        res.status(200).json({ status: 'sucesso', data: hprofissionais });
-    } catch (error) {
-        res.status(500).json({ status: 'erro', message: error.message });
-    }
-});
 
 apiRouter.get('/hprofissionais/:id', async (req, res) => {
     try {

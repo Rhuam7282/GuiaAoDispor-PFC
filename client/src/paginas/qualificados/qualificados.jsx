@@ -1,17 +1,34 @@
-import React, { useState } from "react";
-import Corpo from "../../componentes/Layout/Corpo";
-import Filtro from "./componentes/Filtro";
-import ListaProfissionais from "./componentes/ListaProfissionais";
-import "./qualificados.css";
-
-import mariaSilva from '../../recursos/imagens/mulher.png';
-import joaoOliveira from '../../recursos/imagens/homem1.avif';
-import anaSantos from '../../recursos/imagens/mulher 3.webp';
-import lucianaFerreira from '../../recursos/imagens/mulher2.jpg';
-import carlosMendes from '../../recursos/imagens/homem2.jpg';
+import React, { useState, useEffect } from "react";
+import Corpo from "@componentes/layout/Corpo.jsx";
+import Filtro from "./Componentes/Filtro.jsx";
+import ListaProfissionais from "./componentes/ListaProfissionais.jsx";
+import "./Qualificados.css";
 
 function Qualificados() {
   const [filtroSelecionado, setFiltroSelecionado] = useState("localizacao");
+  const [profissionais, setProfissionais] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProfissionais = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/profissionais`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setProfissionais(data);
+      } catch (error) {
+        console.error("Erro ao buscar profissionais:", error);
+        setError("Não foi possível carregar os profissionais.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfissionais();
+  }, []);
 
   const opcoesFiltro = [
     { value: "localizacao", label: "Localização" },
@@ -20,43 +37,18 @@ function Qualificados() {
     { value: "avaliacao", label: "Bem avaliados" },
   ];
 
-  const perfisProfissionais = [
-    {
-      imagem: mariaSilva,
-      nome: "Maria Silva",
-      localizacao: "São Paulo, SP",
-      experiencia: "10 anos de experiência em enfermagem geriátrica",
-    },
-    {
-      imagem: joaoOliveira,
-      nome: "João Oliveira",
-      localizacao: "Rio de Janeiro, RJ",
-      experiencia: "Especialista em LIBRAS com 8 anos de mercado",
-    },
-    {
-      imagem: anaSantos,
-      nome: "Ana Santos",
-      localizacao: "Belo Horizonte, MG",
-      experiencia: "Fisioterapeuta especializada em reabilitação neurológica",
-    },
-    {
-      imagem: carlosMendes,
-      nome: "Carlos Mendes",
-      localizacao: "Porto Alegre, RS",
-      experiencia: "Psicólogo com foco em terceira idade - 12 anos",
-    },
-    {
-      imagem: lucianaFerreira,
-      nome: "Luciana Ferreira",
-      localizacao: "Salvador, BA",
-      experiencia: "Terapeuta ocupacional com experiência domiciliar",
-    },
-  ];
-
   const aoClicarPerfil = (perfil) => {
     console.log(`Perfil selecionado: ${perfil.nome}`);
     alert(`Você clicou no perfil de ${perfil.nome}`);
   };
+
+  if (loading) {
+    return <Corpo><div className="container"><p>Carregando profissionais...</p></div></Corpo>;
+  }
+
+  if (error) {
+    return <Corpo><div className="container"><p style={{ color: 'red' }}>{error}</p></div></Corpo>;
+  }
 
   return (
     <Corpo>
@@ -71,7 +63,7 @@ function Qualificados() {
         />
         
         <ListaProfissionais
-          profissionais={perfisProfissionais}
+          profissionais={profissionais}
           aoClicarPerfil={aoClicarPerfil}
         />
       </div>
@@ -80,4 +72,3 @@ function Qualificados() {
 }
 
 export default Qualificados;
-

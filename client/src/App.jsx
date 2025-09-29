@@ -7,8 +7,7 @@ import Mensagem from "./paginas/mensagem/mensagem.jsx";
 import Qualificados from "./paginas/qualificados/qualificados.jsx";
 import Cadastro from "./paginas/cadastro/cadastro.jsx";
 import Inicio from "./paginas/inicio/inicio.jsx";
-// import PainelControle from "@componentes/acessibilidade/PainelControle";
-
+import PainelControle from "@componentes/acessibilidade/PainelControle";
 
 function App() {
   return (
@@ -18,7 +17,7 @@ function App() {
           v7_startTransition: true,
           v7_relativeSplatPath: true
         }}>
-        {/* <PainelControle /> */}
+        <PainelControle />
         <Routes>
           <Route path="/" element={<Inicio />} />
           <Route path="/qualificados" element={<Qualificados />} />

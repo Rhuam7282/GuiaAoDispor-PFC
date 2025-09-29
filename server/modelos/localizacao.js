@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+
+
 const LocalizacaoSchema = new mongoose.Schema({
   nome: {
     type: String,

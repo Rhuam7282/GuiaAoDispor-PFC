@@ -1,39 +1,34 @@
 import React from 'react';
 import Corpo from "@componentes/Layout/Corpo";
 import HeroPrincipal from './componentes/HeroPrincipal';
-// import BotoesAcao from './componentes/BotoesAcao'; // Importando o novo componente
+import BotoesAcao from './componentes/BotoesAcao';
 import SecaoSobre from './componentes/SecaoSobre';
 import CarrosselAcessibilidade from './componentes/CarrosselAcessibilidade';
 import './inicio.css';
 
-// import { useAuth } from "../../contextos/autenticacao";
-
 const Inicio = () => {
-  // const { isAuthenticated } = useAuth();
-
-  // const handleButtonClick = () => {
-  //   // Lógica do botão aqui
-  // };
   return (
     <Corpo>
       <main className="paginaInicial">
         <div className="container conteudoPrincipalInicio">
           <HeroPrincipal />
           <CarrosselAcessibilidade />
-          {/* <BotoesAcao /> Usando o novo componente BotoesAcao */}
+          <BotoesAcao />
           <SecaoSobre />
-          <h2>Porque?</h2>
-          <p>
-            A Guia ao Dispor foi inteiramente pensada para o público com necessidades específicas, buscando facilitar o acesso a serviços da área.
-          </p>
-          <h2>Como?</h2>
-          <p>
-            Por meio de de uma plataforma que, além de acessível e baseada em estudos, reúne a comunidade de qualificados em cuidados especiais e acessibilidade.
-          </p>
-          <h2>Sobre</h2>
-          <p>
-            Nascida de um projeto escolar, a Guia ao Dispor foi feita com pesquisa e auxilio de professores qualificados, pensando em criar uma ferramenta que ajude o mundo a ser mais acessível
-          </p>
+          <h2>Venha conhecer um pouco da nossa comunidade</h2>
+          <aside>
+            Comentários
+            <p>
+              <strong>
+                Gostaria de sugerir mais alguma ferramenta ou melhorias? Contacte-nos. [Link do Contato]
+              </strong>
+            </p>
+          </aside>
+          <article>
+            <h2>Por que escolher um Guia ao Dispor?</h2>
+            <p>Ferramentas de segurança</p>
+            <p>Verificação de consultas</p>
+          </article>
         </div>
       </main>
     </Corpo>

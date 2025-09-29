@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../contextos/autenticacao';
-import BotaoAcao from './BotoesAcao';
 import './BotoesAcao.css';
 
 const BotoesAcao = () => {
@@ -9,18 +8,28 @@ const BotoesAcao = () => {
   const { isAuthenticated } = useAuth();
 
   const handleEntrarAnonimo = () => {
-    // Lógica para entrada anônima, talvez redirecionar para uma página específica ou definir um estado de usuário anônimo
-    navigate('/qualificados'); // Exemplo: redireciona para a página de qualificados
+    // Lógica para entrada anônima - acesso direto sem login
+    navigate('/qualificados'); // Redireciona para a página principal
   };
+
+  const handleFazerLogin = () => {
+    // Redireciona para a página de login
+    navigate('/cadastro');
+  };
+
+  // Se o usuário estiver autenticado, não mostra os botões
+  if (isAuthenticated()) {
+    return null;
+  }
 
   return (
     <div className="containerBotoesAcao">
-      <BotaoAcao />
-      {!isAuthenticated() && (
-        <button onClick={handleEntrarAnonimo} className="botaoSecundario">
-          Entrar Anonimamente
-        </button>
-      )}
+      <button onClick={handleEntrarAnonimo} className="botaoSecundario">
+        Acessar Diretamente
+      </button>
+      <button onClick={handleFazerLogin} className="botaoPrimario">
+        Fazer Login
+      </button>
     </div>
   );
 };

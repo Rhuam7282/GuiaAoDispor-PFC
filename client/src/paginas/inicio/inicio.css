@@ -7,13 +7,27 @@
   background-size: contain;
   background-repeat: no-repeat;
   background-position: left;
+  background-attachment: fixed; /* Adicione esta linha */
   position: relative;
   overflow: auto;
 }
 
-/* Aplicando sombra aos cartões de destaque */
-.cartaoDestaque.variacao1 {
-  box-shadow: var(--sombra) var(--corNeutraEscura);
+/* Adicione um pseudo-elemento para garantir que o conteúdo não sobreponha a imagem */
+.paginaInicial::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to right, 
+    transparent 0%, 
+    transparent 30%, 
+    var(--corAzulDestaque) 70%
+  );
+  z-index: 1;
+  pointer-events: none; /* Permite interação com elementos abaixo */
 }
 
 .conteudoPrincipalInicio {
@@ -24,6 +38,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative; /* Garante que fique acima do pseudo-elemento */
+}
+
+/* Aplicando sombra aos cartões de destaque */
+.cartaoDestaque.variacao1 {
+  box-shadow: var(--sombra) var(--corNeutraEscura);
 }
 
 .slogan {
@@ -39,6 +59,7 @@
   padding: var(--espacamentoExtraGrande);
   margin-top: var(--espacamentoGrande);
   margin-left: auto;
+  border-radius: var(--raioBorda);
 }
 
 .textoExplicativo h2 {
@@ -55,11 +76,26 @@
 
 /* Responsividade */
 @media (max-width: 900px) {
+  .paginaInicial {
+    background-size: 40% auto; /* Reduz o tamanho da imagem em telas menores */
+    background-position: left top;
+  }
+  
+  .paginaInicial::before {
+    background: linear-gradient(
+      to bottom, 
+      transparent 0%, 
+      transparent 20%, 
+      var(--corAzulDestaque) 50%
+    );
+  }
+  
   .conteudoPrincipalInicio {
     padding: var(--espacamentoExtraGrande) var(--espacamentoMedio) var(--espacamentoMedio);
     align-items: center;
     text-align: center;
     width: 100%;
+    margin-left: 0;
   }
   
   .slogan {
@@ -73,6 +109,10 @@
 }
 
 @media (max-width: 600px) {
+  .paginaInicial {
+    background-size: 50% auto;
+  }
+  
   .slogan {
     font-size: var(--tamanhoFonteTextoMenor);
   }
