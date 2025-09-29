@@ -1,10 +1,10 @@
 // src/componentes/layout/Menu/ListaMenu/ListaMenu.jsx
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@Contextos/Autenticacao.jsx';
+import { useAuth } from '../../../../contextos/autenticacao';
 import { Home, User, MessageSquare, Mail, GalleryHorizontal, LogOut } from 'lucide-react';
-import Interrogacao from '@Componentes/Acessibilidade/Interrogacao/Interrogacao.jsx';
-import ItemMenu from '../ItemMenu/ItemMenu.jsx';
+import Interrogacao from '@Componentes/acessibilidade/interrogacao/interrogacao.jsx';
+import ItemMenu from '../ItemMenu/ItemMenu';
 import './ListaMenu.css';
 
 const ListaMenu = () => {
@@ -16,7 +16,7 @@ const ListaMenu = () => {
     { Icone: Home, texto: 'Início', rota: '/' },
     { Icone: GalleryHorizontal, texto: 'Qualificados', rota: '/qualificados' },
     { Icone: User, texto: 'Perfil', rota: '/perfil' },
-    { Icone: Mail, texto: 'Sobre Nós', rota: '/sobre-nos' }
+    { Icone: Mail, texto: 'Sobre Nós', rota: '/sobreNos' }
   ];
 
   const handleItemClick = (item) => {
@@ -57,4 +57,3 @@ const ListaMenu = () => {
 };
 
 export default ListaMenu;
-

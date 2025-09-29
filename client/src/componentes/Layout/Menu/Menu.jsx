@@ -1,6 +1,6 @@
 // src/componentes/layout/Menu/Menu.jsx
 import React from 'react';
-import { useAuth } from '@Contextos/Autenticacao.jsx';
+import { useAuth } from '../../../contextos/autenticacao';
 import FachadaMenu from './FachadaMenu/FachadaMenu';
 import ListaMenu from './ListaMenu/ListaMenu';
 import RodapeMenu from './RodapeMenu/RodapeMenu';
