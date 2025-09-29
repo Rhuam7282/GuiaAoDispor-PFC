@@ -1,8 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-
 const AuthContext = createContext();
-
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -12,20 +10,16 @@ export const useAuth = () => {
   return context;
 };
 
-
 export const ProvedorAutenticacao = ({ children }) => {
   
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   
-  
   const [loading, setLoading] = useState(true);
-
   
   const isAuthenticated = () => {
     return user !== null && token !== null;
   };
-
   
   const login = (userData, authToken) => {
     // Normalizar dados do usuário para garantir consistência
@@ -53,7 +47,6 @@ export const ProvedorAutenticacao = ({ children }) => {
     localStorage.setItem('loginTimestamp', Date.now().toString());
   };
 
-  
   const logout = () => {
     setUser(null);
     setToken(null);
@@ -63,7 +56,6 @@ export const ProvedorAutenticacao = ({ children }) => {
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('loginTimestamp');
   };
-
   
   const getUserFromStorage = () => {
     try {
@@ -103,7 +95,6 @@ export const ProvedorAutenticacao = ({ children }) => {
     return { user: null, token: null };
   };
 
-  
   const atualizarUsuario = (dadosAtualizados) => {
     if (user) {
       const usuarioAtualizado = { ...user, ...dadosAtualizados };
@@ -111,7 +102,6 @@ export const ProvedorAutenticacao = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(usuarioAtualizado));
     }
   };
-
   
   useEffect(() => {
     const { user: storedUser, token: storedToken } = getUserFromStorage();

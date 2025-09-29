@@ -6,7 +6,7 @@ import Mensagem from "./paginas/mensagem/mensagem.jsx";
 import Qualificados from "./paginas/qualificados/qualificados.jsx";
 import Cadastro from "./paginas/cadastro/cadastro.jsx";
 import Inicio from "./paginas/inicio/inicio.jsx";
-import PainelControle from "@componentes/acessibilidade/PainelControle";
+import PainelControle from "./componentes/acessibilidade/PainelControle.jsx";
 
 function App() {
   return (
@@ -18,15 +18,13 @@ function App() {
         }}>
         <PainelControle />
         <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Inicio />} />
-            <Route path="qualificados" element={<Qualificados />} />
-            <Route path="perfil" element={<Perfil />} />
-            <Route path="sobre-nos" element={<SobreNos />} />
-            <Route path="cadastro" element={<Cadastro />} />
-            <Route path="perfil/:id" element={<Perfil />} />
-            <Route path="mensagem" element={<Mensagem />} />
-          </Route>
+          <Route path="/" element={<Inicio />} />
+          <Route path="qualificados" element={<Qualificados />} />
+          <Route path="perfil" element={<Perfil />} />
+          <Route path="sobre-nos" element={<SobreNos />} />
+          <Route path="cadastro" element={<Cadastro />} />
+          <Route path="perfil/:id" element={<Perfil />} />
+          <Route path="mensagem" element={<Mensagem />} />
         </Routes>
       </BrowserRouter>
     </ProvedorAutenticacao>

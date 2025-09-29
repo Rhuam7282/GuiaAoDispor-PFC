@@ -119,26 +119,19 @@ const PainelControle = () => {
       <button
         className="botaoAlternarAcessibilidade"
         onClick={alternarPainel}
-        aria-label="Abrir controles de acessibilidade (Alt + A)"
-        title="Controles de Acessibilidade (Alt + A)"
+        aria-label={estaAberto ? "Fechar controles de acessibilidade" : "Abrir controles de acessibilidade (Alt + A)"}
+        title={estaAberto ? "Fechar Controles" : "Controles de Acessibilidade (Alt + A)"}
       >
-        <PersonStanding size={24} />
+        {estaAberto ? <X size={24} /> : <PersonStanding size={24} />}
       </button>
 
       {estaAberto && (
         <div className="painelAcessibilidade" role="dialog" aria-label="Painel de controles de acessibilidade">
           <div className="cabecalhoAcessibilidade">
             <div className="tituloHeader">
-              <PersonStanding size={20} />
+              <PersonStanding size={16} />
               <h3>Acessibilidade</h3>
             </div>
-            <button
-              className="botaoFechar"
-              onClick={alternarPainel}
-              aria-label="Fechar controles"
-            >
-              <X size={18} />
-            </button>
           </div>
 
           <div className="conteudo-painel">

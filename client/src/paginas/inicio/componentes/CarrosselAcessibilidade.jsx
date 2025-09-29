@@ -15,18 +15,18 @@ const CarrosselAcessibilidade = () => {
       titulo: 'Deficiência Auditiva',
       descricao: 'LIBRAS.'
     },
-    {
-      titulo: 'Estresse Visual',
-      descricao: 'Mudança de espaçamento entre linhas, colunas e letras. Além de confirmação de clique e cores pastéis.'
-    },
-    {
-      titulo: 'Deficiência Motora',
-      descricao: 'Atalhos de navegação e cursor grande.'
-    },
-    {
-      titulo: 'Dificuldade de Foco',
-      descricao: 'Modo de ícones, máscara de leitura, pausar animações, guia de leitura.'
-    },
+    // {
+    //   titulo: 'Estresse Visual',
+    //   descricao: 'Mudança de espaçamento entre linhas, colunas e letras. Além de confirmação de clique e cores pastéis.'
+    // },
+    // {
+    //   titulo: 'Deficiência Motora',
+    //   descricao: 'Atalhos de navegação e cursor grande.'
+    // },
+    // {
+    //   titulo: 'Dificuldade de Foco',
+    //   descricao: 'Modo de ícones, máscara de leitura, pausar animações, guia de leitura.'
+    // },
   ];
 
   return (
