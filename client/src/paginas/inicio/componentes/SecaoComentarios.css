@@ -59,7 +59,7 @@
 .avatarUsuario {
   width: 50px;
   height: 50px;
-  border-radius: 50%;
+  border-radius: 100%;
   background: linear-gradient(135deg, var(--corAzulDestaque), var(--corMarromEscuro));
   display: flex;
   align-items: center;
@@ -114,7 +114,7 @@
   color: var(--corBranco);
   padding: var(--espacamentoExtraGrande);
   border-radius: 16px;
-  max-width: 600px;
+  width: 100%;
   margin: 0 auto;
 }
 

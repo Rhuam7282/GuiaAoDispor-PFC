@@ -21,7 +21,7 @@ function App() {
           <Route path="/" element={<Inicio />} />
           <Route path="qualificados" element={<Qualificados />} />
           <Route path="perfil" element={<Perfil />} />
-          <Route path="sobre-nos" element={<SobreNos />} />
+          <Route path="sobreNos" element={<SobreNos />} />
           <Route path="cadastro" element={<Cadastro />} />
           <Route path="perfil/:id" element={<Perfil />} />
           <Route path="mensagem" element={<Mensagem />} />

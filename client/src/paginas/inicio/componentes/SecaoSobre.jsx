@@ -2,39 +2,11 @@ import React from 'react';
 import './SecaoSobre.css';
 
 const SecaoSobre = () => {
-  const marcos = [
-    {
-      ano: '2024',
-      titulo: 'Início do Projeto',
-      descricao: 'Nascimento da ideia durante o Projeto Integrador II no IFPR'
-    },
-    {
-      ano: '2024',
-      titulo: 'Validação Acadêmica',
-      descricao: 'Aprovação e apoio de professoras especialistas em inclusão'
-    },
-    {
-      ano: '2024',
-      titulo: 'Desenvolvimento',
-      descricao: 'Criação da plataforma web com foco em acessibilidade total'
-    },
-    {
-      ano: '2025',
-      titulo: 'Lançamento',
-      descricao: 'Disponibilização da plataforma para a comunidade'
-    }
-  ];
-
   const diferenciais = [
     {
       icone: '🎯',
       titulo: 'Abordagem Inclusiva',
       descricao: 'Utilizamos terminologia respeitosa como "pessoas com particularidades" para abranger um público mais amplo que a definição legal de PCD.'
-    },
-    {
-      icone: '🏫',
-      titulo: 'Base Acadêmica Sólida',
-      descricao: 'Projeto desenvolvido no IFPR com validação de especialistas em inclusão e acessibilidade.'
     },
     {
       icone: '🌐',
@@ -86,21 +58,6 @@ const SecaoSobre = () => {
                 <span className="termoDestaque"> necessidades específicas</span> para abranger um público mais amplo 
                 que a definição legal de Pessoa com Deficiência (PCD).
               </p>
-            </div>
-          </div>
-
-          <div className="timelineProjeto">
-            <h3>Linha do Tempo</h3>
-            <div className="containerTimeline">
-              {marcos.map((marco, index) => (
-                <div key={index} className="itemTimeline">
-                  <div className="anoTimeline">{marco.ano}</div>
-                  <div className="conteudoTimeline">
-                    <h4>{marco.titulo}</h4>
-                    <p>{marco.descricao}</p>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         </div>

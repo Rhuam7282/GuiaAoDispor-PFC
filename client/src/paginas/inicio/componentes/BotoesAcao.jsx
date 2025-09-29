@@ -32,13 +32,11 @@ const BotoesAcao = () => {
           <button 
             onClick={handleEntrarAnonimo} 
             className="botaoAcesso botaoSecundario"
-            onMouseEnter={() => setHoveredButton('anonimo')}
-            onMouseLeave={() => setHoveredButton(null)}
           >
             <div className="conteudoBotao">
-              <span className="iconeBotao">🚀</span>
+              <span className="iconeBotao">🚀 </span>
               <div className="textoBotao">
-                <span className="tituloBotao">Acessar Diretamente</span>
+                <span className="tituloBotao">Acessar Diretamente </span>
                 <span className="descricaoBotao">Explore sem compromisso</span>
               </div>
             </div>
@@ -52,13 +50,11 @@ const BotoesAcao = () => {
           <button 
             onClick={handleFazerLogin} 
             className="botaoAcesso botaoPrimario"
-            onMouseEnter={() => setHoveredButton('login')}
-            onMouseLeave={() => setHoveredButton(null)}
           >
             <div className="conteudoBotao">
-              <span className="iconeBotao">🔐</span>
+              <span className="iconeBotao">🔐 </span>
               <div className="textoBotao">
-                <span className="tituloBotao">Fazer Login</span>
+                <span className="tituloBotao">Fazer Login </span>
                 <span className="descricaoBotao">Acesso completo</span>
               </div>
             </div>
@@ -68,21 +64,6 @@ const BotoesAcao = () => {
               </div>
             )}
           </button>
-        </div>
-
-        <div className="beneficiosAcesso">
-          <div className="beneficioItem">
-            <span className="iconeBeneficio">✅</span>
-            <span className="textoBeneficio">100% Gratuito</span>
-          </div>
-          <div className="beneficioItem">
-            <span className="iconeBeneficio">🛡️</span>
-            <span className="textoBeneficio">Seguro e Confiável</span>
-          </div>
-          <div className="beneficioItem">
-            <span className="iconeBeneficio">⚡</span>
-            <span className="textoBeneficio">Acesso Imediato</span>
-          </div>
         </div>
       </div>
     </div>
