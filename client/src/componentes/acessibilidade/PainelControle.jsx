@@ -6,7 +6,6 @@ import { useGuiasLeitura } from './ganchos/useGuiasLeitura';
 // import VLibrasWidgetHibrido from './VLibrasWidget/VLibrasWidgetHibrido';
 import SecaoTexto from './SecaoTexto/SecaoTexto';
 import SecaoVisao from './SecaoVisao/SecaoVisao';
-import SecaoDaltonismo from './SecaoDaltonismo/SecaoDaltonismo';
 import SecaoConteudo from './SecaoConteudo/SecaoConteudo';
 import SecaoAnimacoesCursor from './SecaoAnimacoesCursor/SecaoAnimacoesCursor';
 import MaskLeitura from './mascaraLeitura/mascaraLeitura';
@@ -134,6 +133,7 @@ const PainelControle = () => {
             </div>
           </div>
 
+
           <div className="conteudo-painel">
             {/* <VLibrasWidgetHibrido /> */}
 
@@ -148,14 +148,6 @@ const PainelControle = () => {
             <div className="grupo-opcoes">
               <h4 className="titulo-grupo">Visão</h4>
               <SecaoVisao
-                configuracoes={configuracoes}
-                atualizarConfiguracao={atualizarConfiguracao}
-              />
-            </div>
-
-            <div className="grupo-opcoes">
-              <h4 className="titulo-grupo">Daltonismo</h4>
-              <SecaoDaltonismo
                 configuracoes={configuracoes}
                 atualizarConfiguracao={atualizarConfiguracao}
               />
