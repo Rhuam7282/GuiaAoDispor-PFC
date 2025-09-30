@@ -1,110 +1,68 @@
-/* Estilos específicos da página inicial */
-.paginaInicial {
-  width: 100%;
-  min-height: 100vh;
-  background-color: var(--corAzulDestaque);
-  background-image: url('@recursos/icones/logo.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: left;
-  background-attachment: fixed; /* Adicione esta linha */
-  position: relative;
-  overflow: auto;
-}
 
-/* Adicione um pseudo-elemento para garantir que o conteúdo não sobreponha a imagem */
-.paginaInicial::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    to right, 
-    transparent 0%, 
-    transparent 30%, 
-    var(--corAzulDestaque) 70%
-  );
-  z-index: 1;
-  pointer-events: none; /* Permite interação com elementos abaixo */
-}
 
-.conteudoPrincipalInicio {
-  z-index: 2;
-  width: 70%;
-  margin-left: auto;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative; /* Garante que fique acima do pseudo-elemento */
-}
-
-/* Aplicando sombra aos cartões de destaque */
-.cartaoDestaque.variacao1 {
-  box-shadow: var(--sombra) var(--corNeutraEscura);
-}
-
-.slogan {
-  font-size: var(--tamanhoFonteTextoMedio);
-  color: var(--corMarromEscuro);
-  line-height: 1.6;
-  margin-bottom: var(--espacamentoGrande);
-  max-width: 600px;
-}
-
-.textoExplicativo {
-  position: relative;
+.secaoVantagens {
   padding: var(--espacamentoExtraGrande);
-  margin-top: var(--espacamentoGrande);
-  margin-left: auto;
-  border-radius: var(--raioBorda);
+  background: linear-gradient(135deg, var(--corBranco) 0%, #f8f9fa 100%);
+  border-radius: 16px;
+  margin: var(--espacamentoGrande) 0;
+  text-align: center;
 }
 
-.textoExplicativo h2 {
+.secaoVantagens h2 {
   color: var(--corMarromEscuro);
+  font-size: var(--tamanhoFonteTitulo);
+  margin-bottom: var(--espacamentoExtraGrande);
+  font-weight: 700;
+}
+
+.containerVantagens {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--espacamentoGrande);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.vantagemItem {
+  background: var(--corBranco);
+  padding: var(--espacamentoExtraGrande);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.vantagemItem:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+}
+
+.vantagemItem h3 {
+  color: var(--corAzulDestaque);
+  font-size: var(--tamanhoFonteSubtitulo);
   margin-bottom: var(--espacamentoMedio);
+  font-weight: 600;
 }
 
-.textoExplicativo p {
-  color: var(--corMarromEscuro);
+.vantagemItem p {
+  color: var(--corTextoEscuro);
+  font-size: var(--tamanhoFonteTextoMedio);
   line-height: 1.6;
-  margin-bottom: var(--espacamentoMedio);
-  text-align: justify;
+  margin: 0;
 }
 
-/* Responsividade */
-@media (max-width: 900px) {
-  .paginaInicial {
-    background-size: 40% auto; /* Reduz o tamanho da imagem em telas menores */
-    background-position: left top;
+@media (max-width: 768px) {
+  .containerVantagens {
+    grid-template-columns: 1fr;
   }
   
-  .paginaInicial::before {
-    background: linear-gradient(
-      to bottom, 
-      transparent 0%, 
-      transparent 20%, 
-      var(--corAzulDestaque) 50%
-    );
+  .secaoVantagens {
+    padding: var(--espacamentoGrande) var(--espacamentoMedio);
   }
   
-  .conteudoPrincipalInicio {
-    padding: var(--espacamentoExtraGrande) var(--espacamentoMedio) var(--espacamentoMedio);
-    align-items: center;
-    text-align: center;
-    width: 100%;
-    margin-left: 0;
-  }
-  
-  .slogan {
-    font-size: var(--tamanhoFonteTextoMenor);
-  }
-  
-  .textoExplicativo {
-    margin: var(--espacamentoMedio);
-    padding: var(--espacamentoMedio);
+  .vantagemItem {
+    padding: var(--espacamentoGrande);
   }
 }
 
