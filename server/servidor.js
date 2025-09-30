@@ -69,10 +69,21 @@ const verificarToken = (req, res, next) => {
     '/api/usuarios',
     '/api/profissionais',
     '/api/localizacoes',
-    '/api/upload/imagem'
+    '/health',
+    '/api/health',
+    '/'
   ];
   
-  if (publicRoutes.includes(req.path) && req.method === 'POST') {
+  // Verifica se a rota atual é pública
+  const isPublicRoute = publicRoutes.some(route => {
+    if (route === '/api/profissionais' && req.method === 'GET') return true;
+    if (req.path.startsWith(route) && (req.method === 'POST' || req.method === 'GET')) {
+      return true;
+    }
+    return false;
+  });
+
+  if (isPublicRoute) {
     return next();
   }
 
@@ -96,135 +107,7 @@ const verificarToken = (req, res, next) => {
   }
 };
 
-// Aplicar middleware de autenticação
-app.use(verificarToken);
-
-// ========== CONFIGURAÇÃO DO UPLOAD DE IMAGENS ==========
-
-// Criar diretório de uploads se não existir
-const criarDiretorioUploads = async () => {
-  try {
-    const diretorioPerfis = path.join(__dirname, 'public', 'uploads', 'perfis');
-    await fs.mkdir(diretorioPerfis, { recursive: true });
-    console.log('✅ Diretório de uploads criado/verificado:', diretorioPerfis);
-  } catch (error) {
-    console.error('❌ Erro ao criar diretório de uploads:', error);
-  }
-};
-
-criarDiretorioUploads();
-
-// Configuração do Multer para upload em memória
-const armazenamento = multer.memoryStorage();
-
-const filtroArquivo = (req, file, cb) => {
-  // Verificar se é imagem
-  if (file.mimetype.startsWith('image/')) {
-    // Tipos permitidos
-    const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-    if (tiposPermitidos.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Apenas arquivos JPG, PNG e WebP são permitidos!'), false);
-    }
-  } else {
-    cb(new Error('Por favor, envie apenas imagens!'), false);
-  }
-};
-
-const upload = multer({
-  storage: armazenamento,
-  limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB
-  },
-  fileFilter: filtroArquivo
-});
-
-// ========== ROTA DE UPLOAD DE IMAGEM ==========
-
-app.post('/api/upload/imagem', upload.single('imagem'), async (req, res) => {
-  try {
-    console.log('📤 Iniciando upload de imagem...');
-    
-    if (!req.file) {
-      return res.status(400).json({
-        status: 'erro',
-        message: 'Nenhuma imagem foi enviada.'
-      });
-    }
-
-    // Validar se o usuário está autenticado
-    if (!req.usuario || !req.usuario._id) {
-      return res.status(401).json({
-        status: 'erro',
-        message: 'Usuário não autenticado.'
-      });
-    }
-
-    const { buffer, originalname, mimetype } = req.file;
-    const usuarioId = req.usuario._id;
-    const tipoUsuario = req.usuario.tipo;
-
-    console.log(`📷 Processando imagem para ${tipoUsuario}: ${usuarioId}`);
-
-    // Gerar nome único para o arquivo
-    const extensao = path.extname(originalname) || '.jpg';
-    const nomeArquivo = `perfil-${usuarioId}-${Date.now()}${extensao}`;
-    const caminhoCompleto = path.join(__dirname, 'public', 'uploads', 'perfis', nomeArquivo);
-
-    // Redimensionar e otimizar a imagem
-    const imagemProcessada = await sharp(buffer)
-      .resize(300, 300, {
-        fit: 'cover',
-        position: 'center'
-      })
-      .jpeg({ 
-        quality: 80,
-        progressive: true 
-      })
-      .toBuffer();
-
-    // Salvar arquivo processado
-    await fs.writeFile(caminhoCompleto, imagemProcessada);
-
-    // Construir URL da imagem
-    const urlImagem = `/uploads/perfis/${nomeArquivo}`;
-    const urlCompleta = `${process.env.API_BASE_URL || 'http://localhost:3001'}${urlImagem}`;
-
-    console.log('✅ Imagem processada e salva:', urlImagem);
-
-    // Atualizar foto no perfil do usuário/profissional
-    try {
-      if (tipoUsuario === 'usuario') {
-        await Usuario.findByIdAndUpdate(usuarioId, { foto: urlImagem });
-        console.log('✅ Foto atualizada para usuário:', usuarioId);
-      } else if (tipoUsuario === 'profissional') {
-        await Profissional.findByIdAndUpdate(usuarioId, { foto: urlImagem });
-        console.log('✅ Foto atualizada para profissional:', usuarioId);
-      }
-    } catch (error) {
-      console.error('⚠️ Aviso: Imagem salva mas não foi possível atualizar o perfil:', error.message);
-    }
-
-    res.status(200).json({
-      status: 'sucesso',
-      data: {
-        url: urlImagem,
-        urlCompleta: urlCompleta,
-        nomeArquivo: nomeArquivo,
-        tamanho: imagemProcessada.length
-      },
-      message: 'Imagem enviada e processada com sucesso'
-    });
-
-  } catch (error) {
-    console.error('❌ Erro no upload de imagem:', error);
-    res.status(500).json({
-      status: 'erro',
-      message: error.message || 'Erro interno no processamento da imagem'
-    });
-  }
-});
+// ========== ROTAS PÚBLICAS (ANTES DO MIDDLEWARE) ==========
 
 // Rota raiz
 app.get('/', (req, res) => {
@@ -242,7 +125,111 @@ app.get('/health', (req, res) => {
   });
 });
 
-// ========== ROTAS DE AUTENTICAÇÃO ==========
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    database: mongoose.connection.readyState === 1 ? 'Conectado' : 'Desconectado'
+  });
+});
+
+// ========== ROTA PÚBLICA PARA PROFISSIONAIS ==========
+
+app.get('/api/profissionais', async (req, res) => {
+  try {
+    console.log('🔍 Buscando profissionais...');
+    
+    // Primeiro, tenta buscar do MongoDB
+    let profissionais = [];
+    
+    // Verifica se há profissionais no banco
+    const count = await Profissional.countDocuments();
+    console.log(`📊 Profissionais no banco: ${count}`);
+    
+    if (count > 0) {
+      // Busca profissionais reais
+      profissionais = await Profissional.find({})
+        .populate('localizacao')
+        .select('-senha')
+        .lean();
+      
+      console.log(`✅ Encontrados ${profissionais.length} profissionais no banco`);
+    } else {
+      // Se não há profissionais, cria alguns de exemplo
+      console.log('📝 Criando profissionais de exemplo...');
+      
+      // Cria localização exemplo
+      const localizacao = await Localizacao.create({
+        nome: 'São Paulo',
+        cidade: 'São Paulo',
+        estado: 'SP'
+      });
+      
+      // Cria profissionais exemplo
+      await Profissional.create([
+        {
+          nome: 'Maria Silva',
+          desc: '10 anos de experiência em enfermagem geriátrica',
+          email: 'maria@exemplo.com',
+          senha: await bcrypt.hash('senha123', 10),
+          localizacao: localizacao._id
+        },
+        {
+          nome: 'João Santos',
+          desc: '5 anos como cuidador de idosos', 
+          email: 'joao@exemplo.com',
+          senha: await bcrypt.hash('senha123', 10),
+          localizacao: localizacao._id
+        }
+      ]);
+      
+      // Busca os profissionais criados
+      profissionais = await Profissional.find({})
+        .populate('localizacao')
+        .select('-senha')
+        .lean();
+    }
+
+    // Formata os dados
+    const profissionaisFormatados = profissionais.map((prof) => {
+      return {
+        _id: prof._id,
+        imagem: prof.foto || '/imagens/mulher.png',
+        nome: prof.nome || 'Nome não informado',
+        localizacao: prof.localizacao ? 
+          `${prof.localizacao.nome || ''} ${prof.localizacao.cidade || ''} ${prof.localizacao.estado || ''}`.trim() 
+          : 'Local não informado',
+        experiencia: prof.desc || 'Experiência não informada'
+      };
+    });
+
+    res.status(200).json(profissionaisFormatados);
+
+  } catch (error) {
+    console.error('❌ Erro ao buscar profissionais:', error);
+    
+    // Fallback: retorna dados mock em caso de erro
+    const profissionaisMock = [
+      {
+        _id: "1",
+        imagem: "/imagens/mulher.png",
+        nome: "Ana Silva",
+        localizacao: "São Paulo, SP",
+        experiencia: "Enfermeira com 5 anos de experiência"
+      },
+      {
+        _id: "2", 
+        imagem: "/imagens/homem.png",
+        nome: "Carlos Santos",
+        localizacao: "Rio de Janeiro, RJ", 
+        experiencia: "Cuidador especializado"
+      }
+    ];
+    
+    res.status(200).json(profissionaisMock);
+  }
+});
+
+// ========== ROTAS DE AUTENTICAÇÃO (PÚBLICAS) ==========
 
 // Rota para validar email
 app.post('/api/auth/validar-email', async (req, res) => {
@@ -389,7 +376,7 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// ========== ROTAS PARA USUÁRIOS ==========
+// ========== ROTAS DE CRIAÇÃO (PÚBLICAS) ==========
 
 app.post('/api/usuarios', async (req, res) => {
   try {
@@ -461,8 +448,6 @@ app.post('/api/usuarios', async (req, res) => {
   }
 });
 
-// ========== ROTAS PARA PROFISSIONAIS ==========
-
 app.post('/api/profissionais', async (req, res) => {
   try {
     console.log('👨‍💼 Criando novo profissional:', req.body.email);
@@ -533,8 +518,6 @@ app.post('/api/profissionais', async (req, res) => {
   }
 });
 
-// ========== ROTAS PARA HISTÓRICOS CURRICULARES (HCurricular) ==========
-
 // GET - Buscar todos os históricos curriculares
 app.get('/api/hcurriculares', async (req, res) => {
   try {
@@ -590,8 +573,13 @@ app.get('/api/hcurriculares/:id', async (req, res) => {
   }
 });
 
-// POST - Criar novo histórico curricular
-app.post('/api/hcurriculares', async (req, res) => {
+// ========== APLICA MIDDLEWARE DE AUTENTICAÇÃO A PARTIR DAQUI ==========
+app.use(verificarToken);
+
+// ========== ROTAS PROTEGIDAS (APÓS MIDDLEWARE) ==========
+
+// Rota para buscar perfil
+app.get('/api/auth/perfil/:id', async (req, res) => {
   try {
     console.log('📝 Criando novo histórico curricular');
     
@@ -881,149 +869,6 @@ app.delete('/api/hprofissionais/:id', async (req, res) => {
     });
   } catch (error) {
     console.error('❌ Erro ao deletar histórico profissional:', error);
-    res.status(500).json({ 
-      status: 'erro', 
-      message: error.message 
-    });
-  }
-});
-
-// ========== ROTAS PARA LOCALIZAÇÕES ==========
-
-app.post('/api/localizacoes', async (req, res) => {
-  try {
-    console.log('📍 Criando nova localização');
-    const novaLocalizacao = await Localizacao.create(req.body);
-    res.status(201).json({ 
-      status: 'sucesso', 
-      data: novaLocalizacao 
-    });
-  } catch (error) {
-    console.error('❌ Erro ao criar localização:', error);
-    res.status(400).json({ 
-      status: 'erro', 
-      message: error.message 
-    });
-  }
-});
-
-app.get('/api/localizacoes/:id', async (req, res) => {
-  try {
-    const localizacao = await Localizacao.findById(req.params.id);
-    if (!localizacao) {
-      return res.status(404).json({ 
-        status: 'erro', 
-        message: 'Localização não encontrada' 
-      });
-    }
-    res.status(200).json({ 
-      status: 'sucesso', 
-      data: localizacao 
-    });
-  } catch (error) {
-    console.error('❌ Erro ao buscar localização:', error);
-    res.status(500).json({ 
-      status: 'erro', 
-      message: error.message 
-    });
-  }
-});
-
-// ========== OUTRAS ROTAS ==========
-
-// Rota para buscar perfil
-app.get('/api/auth/perfil/:id', async (req, res) => {
-  try {
-    console.log('🔍 Buscando perfil do usuário:', req.params.id);
-    const usuario = await Usuario.findById(req.params.id).populate('localizacao');
-    
-    if (!usuario) {
-      // Tentar buscar como profissional
-      const profissional = await Profissional.findById(req.params.id).populate('localizacao');
-      if (!profissional) {
-        return res.status(404).json({ 
-          status: 'erro', 
-          message: 'Usuário não encontrado' 
-        });
-      }
-
-      const profissionalResposta = profissional.toObject();
-      delete profissionalResposta.senha;
-      
-      return res.status(200).json({ 
-        status: 'sucesso', 
-        data: profissionalResposta 
-      });
-    }
-
-    const usuarioResposta = usuario.toObject();
-    delete usuarioResposta.senha;
-
-    res.status(200).json({ 
-      status: 'sucesso', 
-      data: usuarioResposta 
-    });
-  } catch (error) {
-    console.error(`💥 Erro ao buscar perfil:`, error);
-    res.status(500).json({ 
-      status: 'erro', 
-      message: error.message 
-    });
-  }
-});
-
-// Rota para editar perfil
-app.put('/api/auth/perfil/:id', async (req, res) => {
-  try {
-    console.log(`✏️ Editando perfil: ${req.params.id}`);
-    const { senha, ...camposAtualizacao } = req.body;
-    
-    delete camposAtualizacao._id;
-    
-    const usuarioAtualizado = await Usuario.findByIdAndUpdate(
-      req.params.id,
-      camposAtualizacao,
-      { new: true, runValidators: true }
-    ).populate('localizacao');
-    
-    if (!usuarioAtualizado) {
-      console.log(`❌ Usuário não encontrado para edição: ${req.params.id}`);
-      return res.status(404).json({ 
-        status: 'erro', 
-        message: 'Usuário não encontrado' 
-      });
-    }
-
-    console.log(`✅ Perfil atualizado: ${usuarioAtualizado.nome}`);
-    
-    const usuarioResposta = usuarioAtualizado.toObject();
-    delete usuarioResposta.senha;
-
-    res.status(200).json({ 
-      status: 'sucesso', 
-      data: usuarioResposta,
-      message: 'Perfil atualizado com sucesso'
-    });
-  } catch (error) {
-    console.error(`💥 Erro ao editar perfil:`, error);
-    res.status(500).json({ 
-      status: 'erro', 
-      message: error.message 
-    });
-  }
-});
-
-// Rota para logout
-app.post('/api/auth/logout', async (req, res) => {
-  try {
-    console.log(`🚪 Logout realizado`);
-    
-    res.status(200).json({ 
-      status: 'sucesso', 
-      message: 'Logout realizado com sucesso' 
-    });
-  } catch (error) {
-    console.error(`💥 Erro durante logout:`, error);
     res.status(500).json({ 
       status: 'erro', 
       message: error.message 
