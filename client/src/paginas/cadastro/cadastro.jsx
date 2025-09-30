@@ -8,7 +8,6 @@ import { servicoCadastro, servicoAuth } from '@Servicos/api.js';
 import { useAuth } from '@Contextos/Autenticacao.jsx';
 import './Cadastro.css';
 
-
 const Cadastro = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -141,6 +140,7 @@ const Cadastro = () => {
     setMensagemSucesso('');
 
     try {
+      console.log('📧 Validando email...');
       // Primeiro validar email único
       const respostaValidacao = await servicoCadastro.validarEmail(dadosFormulario.email);
       if (!respostaValidacao.valido) {
@@ -156,6 +156,11 @@ const Cadastro = () => {
         estado: dadosFormulario.estado
       };
 
+      // Filtrar contatos válidos (com tipo e valor)
+      const contatosValidos = dadosFormulario.contatos.filter(
+        contato => contato.tipo && contato.valor
+      );
+
       // Preparar dados do perfil com contatos mapeados
       const dadosPerfil = {
         nome: dadosFormulario.nome,
@@ -164,26 +169,31 @@ const Cadastro = () => {
         desc: dadosFormulario.descricao,
         inst: dadosFormulario.instituicao,
         foto: dadosFormulario.foto,
-        contatos: dadosFormulario.contatos
+        contatos: contatosValidos,
+        tipoPerfil: dadosFormulario.tipoPerfil
       };
 
       if (dadosFormulario.tipoPerfil === 'Profissional') {
         dadosPerfil.linkedin = dadosFormulario.linkedin;
       }
 
+      console.log('👤 Iniciando cadastro...');
       const respostaCadastro = await servicoCadastro.cadastrarUsuario(dadosPerfil, dadosLocalizacao);
 
+      console.log('🔐 Realizando login automático...');
       const respostaLogin = await servicoAuth.login(dadosFormulario.email, dadosFormulario.senha);
-      login(respostaLogin.data);
-      navigate("/perfil");
+      
+      if (respostaLogin.data && respostaLogin.token) {
+        login(respostaLogin.data, respostaLogin.token);
+        setMensagemSucesso('Cadastro realizado com sucesso! Redirecionando...');
+        setTimeout(() => navigate("/perfil"), 2000);
+      } else {
+        throw new Error('Erro no login automático após cadastro');
+      }
 
     } catch (erro) {
-      console.error('Erro no cadastro:', erro);
-      if (erro.response && erro.response.data && erro.response.data.message) {
-        setErros({ submit: erro.response.data.message });
-      } else {
-        setErros({ submit: erro.message });
-      }
+      console.error('❌ Erro no cadastro:', erro);
+      setErros({ submit: erro.message || 'Erro ao realizar cadastro' });
     } finally {
       setCarregando(false);
     }
@@ -201,15 +211,19 @@ const Cadastro = () => {
     setErros({});
 
     try {
+      console.log('🔐 Tentando login...');
       const resposta = await servicoAuth.login(dadosLogin.email, dadosLogin.senha);
       
-      login(resposta.data);
-      
-      navigate('/perfil');
+      if (resposta.data && resposta.token) {
+        login(resposta.data, resposta.token);
+        navigate('/perfil');
+      } else {
+        throw new Error('Resposta de login inválida');
+      }
       
     } catch (erro) {
-      console.error('Erro no login:', erro);
-      setErros({ login: erro.message });
+      console.error('❌ Erro no login:', erro);
+      setErros({ login: erro.message || 'Erro ao fazer login' });
     } finally {
       setCarregandoLogin(false);
     }
@@ -235,6 +249,7 @@ const Cadastro = () => {
       ...prev,
       contatos: prev.contatos.filter((_, i) => i !== indice)
     }));
+    
     // Remover também qualquer erro associado a este contato
     setErrosContatos(prev => {
       const novosErros = { ...prev };
@@ -244,7 +259,7 @@ const Cadastro = () => {
   };
 
   const validarContato = (tipo, valor) => {
-    if (!valor) return 'Campo obrigatório';
+    if (!valor.trim()) return 'Campo obrigatório';
     
     switch (tipo) {
       case 'Email': {
@@ -282,23 +297,22 @@ const Cadastro = () => {
         i === indice ? { ...contato, [campo]: valor } : contato
       );
       
-      // Validar o contato se ambos os campos estiverem preenchidos
-      if (campo === 'tipo' || campo === 'valor') {
-        const contatoAtualizado = novosContatos[indice];
-        if (contatoAtualizado.tipo && contatoAtualizado.valor) {
-          const erro = validarContato(contatoAtualizado.tipo, contatoAtualizado.valor);
-          setErrosContatos(prevErros => ({
-            ...prevErros,
-            [indice]: erro
-          }));
-        } else {
-          // Limpar erro se um dos campos estiver vazio
-          setErrosContatos(prevErros => {
-            const novosErros = { ...prevErros };
-            delete novosErros[indice];
-            return novosErros;
-          });
-        }
+      // Validar o contato apenas se ambos os campos estiverem preenchidos
+      const contatoAtualizado = novosContatos[indice];
+      
+      if (contatoAtualizado.tipo && contatoAtualizado.valor) {
+        const erro = validarContato(contatoAtualizado.tipo, contatoAtualizado.valor);
+        setErrosContatos(prevErros => ({
+          ...prevErros,
+          [indice]: erro
+        }));
+      } else {
+        // Limpar erro se um dos campos estiver vazio
+        setErrosContatos(prevErros => {
+          const novosErros = { ...prevErros };
+          delete novosErros[indice];
+          return novosErros;
+        });
       }
       
       return {
@@ -313,7 +327,8 @@ const Cadastro = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const novosErrosContatos = {};
 
-    if (!dadosFormulario.nome) novosErros.nome = 'Nome é obrigatório';
+    // Validações básicas
+    if (!dadosFormulario.nome.trim()) novosErros.nome = 'Nome é obrigatório';
     
     if (!dadosFormulario.email) {
       novosErros.email = 'Email é obrigatório';
@@ -336,21 +351,19 @@ const Cadastro = () => {
 
     // Validações específicas para perfil profissional
     if (dadosFormulario.tipoPerfil === 'Profissional') {
-      if (!dadosFormulario.descricao) novosErros.descricao = 'Descrição é obrigatória para perfil profissional';
-      if (!dadosFormulario.instituicao) novosErros.instituicao = 'Instituição é obrigatória para perfil profissional';
+      if (!dadosFormulario.descricao.trim()) novosErros.descricao = 'Descrição é obrigatória para perfil profissional';
+      if (!dadosFormulario.instituicao.trim()) novosErros.instituicao = 'Instituição é obrigatória para perfil profissional';
     }
 
-    // Validar todos os contatos
+    // Validar apenas contatos que têm ambos os campos preenchidos
     dadosFormulario.contatos.forEach((contato, index) => {
       if (contato.tipo && contato.valor) {
         const erro = validarContato(contato.tipo, contato.valor);
         if (erro) {
           novosErrosContatos[index] = erro;
         }
-      } else if (contato.tipo || contato.valor) {
-        // Se um dos campos estiver preenchido mas não o outro
-        novosErrosContatos[index] = 'Ambos os campos são obrigatórios';
       }
+      // Contatos incompletos (apenas um campo preenchido) não geram erro - são ignorados no submit
     });
 
     setErros(novosErros);
@@ -379,8 +392,7 @@ const Cadastro = () => {
         
         <FormularioCadastro 
           dadosFormulario={dadosFormulario}
-          erros={erros}
-          errosContatos={errosContatos}
+          erros={{...erros, errosContatos}}
           carregando={carregando}
           mensagemSucesso={mensagemSucesso}
           aoAlterarCampo={aoAlterarCampo}

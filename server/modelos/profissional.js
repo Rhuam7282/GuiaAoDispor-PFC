@@ -23,7 +23,11 @@ const ProfissionalSchema = new mongoose.Schema({
   },
   inst: String,
   face: String,
-  email: String,
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
   num: String,
   senha: {
     type: String,
@@ -36,7 +40,12 @@ const ProfissionalSchema = new mongoose.Schema({
   },
   foto: String,
   linkedin: String,
-  contatos: [contatoSchema]
+  contatos: [contatoSchema],
+  tipoPerfil: {
+    type: String,
+    enum: ['Pessoal', 'Profissional'],
+    default: 'Profissional'
+  }
 });
 
 export default mongoose.model('Profissional', ProfissionalSchema);

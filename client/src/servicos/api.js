@@ -14,6 +14,8 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
     headers: {
       "Content-Type": "application/json",
     },
+    mode: 'cors',
+    credentials: 'include'
   };
 
   // Adicionar token ao header se disponível
@@ -21,33 +23,29 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
     opcoes.headers.Authorization = `Bearer ${token}`;
   }
 
-  if (dados && (metodo === 'POST' || metodo === 'PUT')) {
+  if (dados && (metodo === 'POST' || metodo === 'PUT' || metodo === 'PATCH')) {
     opcoes.body = JSON.stringify(dados);
   }
 
   try {
-    console.log(`Fazendo requisição ${metodo} para: ${url}`);
+    console.log(`🌐 Fazendo requisição ${metodo} para: ${url}`);
+    
     const resposta = await fetch(url, opcoes);
     
-    const contentType = resposta.headers.get('content-type');
-    
-    const text = await resposta.text();
-    
-    if (!contentType || !contentType.includes('application/json')) {
-      console.error('Resposta não é JSON:', text.substring(0, 200));
-      
-      if (resposta.status === 500) {
-        throw new Error('Erro interno do servidor. Verifique os logs do backend.');
-      }
-      
-      throw new Error('Resposta da API não é JSON');
-    }
-
-    const dadosResposta = JSON.parse(text);
-
+    // Verificar se a resposta é OK antes de processar
     if (!resposta.ok) {
-      const mensagemErro =
-        dadosResposta.message || dadosResposta.mensagem || "Erro na requisição";
+      // Tentar extrair mensagem de erro da resposta
+      let mensagemErro = `Erro ${resposta.status}: ${resposta.statusText}`;
+      
+      try {
+        const contentType = resposta.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const dadosErro = await resposta.json();
+          mensagemErro = dadosErro.message || dadosErro.mensagem || mensagemErro;
+        }
+      } catch (e) {
+        // Ignorar erro de parsing
+      }
       
       // Se for erro de autenticação, fazer logout
       if (resposta.status === 401) {
@@ -59,11 +57,33 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
       
       throw new Error(mensagemErro);
     }
+    
+    const contentType = resposta.headers.get('content-type');
+    
+    // Se não há conteúdo, retornar sucesso
+    if (resposta.status === 204 || !contentType) {
+      return { status: 'sucesso' };
+    }
+    
+    const text = await resposta.text();
+    
+    if (!contentType.includes('application/json')) {
+      console.warn('⚠️ Resposta não é JSON:', text.substring(0, 200));
+      throw new Error('Resposta da API não é JSON');
+    }
 
+    const dadosResposta = JSON.parse(text);
     return dadosResposta;
+
   } catch (erro) {
-    console.error('Erro na requisição:', erro);
-    throw new Error(erro.message || "Erro de conexão com o servidor");
+    console.error('❌ Erro na requisição:', erro);
+    
+    // Melhorar mensagens de erro para o usuário
+    if (erro.name === 'TypeError' && erro.message.includes('fetch')) {
+      throw new Error('Erro de conexão. Verifique se o servidor está rodando.');
+    }
+    
+    throw erro;
   }
 };
 
@@ -233,14 +253,20 @@ export const servicoAuth = {
         senha
       });
       
-      // Salvar token no localStorage
-      if (resposta.token) {
+      // Verificar se a resposta tem a estrutura esperada
+      if (resposta && resposta.status === 'sucesso' && resposta.data && resposta.token) {
+        // Salvar token no localStorage
         localStorage.setItem('token', resposta.token);
+        localStorage.setItem('user', JSON.stringify(resposta.data));
+        localStorage.setItem('isAuthenticated', 'true');
+        
+        return resposta;
+      } else {
+        throw new Error('Resposta de login inválida do servidor');
       }
-      
-      return resposta;
     } catch (erro) {
-      throw new Error(`Erro no login: ${erro.message}`);
+      console.error('❌ Erro no login:', erro);
+      throw new Error(erro.message || `Erro no login: ${erro.message}`);
     }
   },
 
@@ -272,8 +298,19 @@ export const servicoAuth = {
         `${URL_BASE}/auth/logout`, 
         "POST"
       );
+      
+      // Limpar localStorage independente da resposta do servidor
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('isAuthenticated');
+      
       return resposta;
     } catch (erro) {
+      // Limpar localStorage mesmo em caso de erro
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('isAuthenticated');
+      
       throw new Error(`Erro ao fazer logout: ${erro.message}`);
     }
   }

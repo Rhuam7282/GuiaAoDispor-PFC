@@ -21,7 +21,8 @@ const UsuarioSchema = new mongoose.Schema({
   inst: String,
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   num: String,
   senha: {
@@ -33,7 +34,12 @@ const UsuarioSchema = new mongoose.Schema({
     ref: 'Localizacao'
   },
   foto: String,
-  contatos: [contatoSchema]
+  contatos: [contatoSchema],
+  tipoPerfil: {
+    type: String,
+    enum: ['Pessoal', 'Profissional'],
+    default: 'Pessoal'
+  }
 });
 
 export default mongoose.model('Usuario', UsuarioSchema);
