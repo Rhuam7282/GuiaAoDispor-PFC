@@ -6,6 +6,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import multer from 'multer';
+import sharp from 'sharp';
+import fs from 'fs/promises';
 
 // Configuração do dotenv
 const __filename = fileURLToPath(import.meta.url);
@@ -36,6 +39,9 @@ app.options('*', cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
+// Configuração para servir arquivos estáticos
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
+
 // Conexão com MongoDB
 const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/guiaaodispor';
 console.log('🔗 Tentando conectar ao MongoDB...');
@@ -62,7 +68,8 @@ const verificarToken = (req, res, next) => {
     '/api/auth/validar-email',
     '/api/usuarios',
     '/api/profissionais',
-    '/api/localizacoes'
+    '/api/localizacoes',
+    '/api/upload/imagem'
   ];
   
   if (publicRoutes.includes(req.path) && req.method === 'POST') {
@@ -91,6 +98,133 @@ const verificarToken = (req, res, next) => {
 
 // Aplicar middleware de autenticação
 app.use(verificarToken);
+
+// ========== CONFIGURAÇÃO DO UPLOAD DE IMAGENS ==========
+
+// Criar diretório de uploads se não existir
+const criarDiretorioUploads = async () => {
+  try {
+    const diretorioPerfis = path.join(__dirname, 'public', 'uploads', 'perfis');
+    await fs.mkdir(diretorioPerfis, { recursive: true });
+    console.log('✅ Diretório de uploads criado/verificado:', diretorioPerfis);
+  } catch (error) {
+    console.error('❌ Erro ao criar diretório de uploads:', error);
+  }
+};
+
+criarDiretorioUploads();
+
+// Configuração do Multer para upload em memória
+const armazenamento = multer.memoryStorage();
+
+const filtroArquivo = (req, file, cb) => {
+  // Verificar se é imagem
+  if (file.mimetype.startsWith('image/')) {
+    // Tipos permitidos
+    const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (tiposPermitidos.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Apenas arquivos JPG, PNG e WebP são permitidos!'), false);
+    }
+  } else {
+    cb(new Error('Por favor, envie apenas imagens!'), false);
+  }
+};
+
+const upload = multer({
+  storage: armazenamento,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB
+  },
+  fileFilter: filtroArquivo
+});
+
+// ========== ROTA DE UPLOAD DE IMAGEM ==========
+
+app.post('/api/upload/imagem', upload.single('imagem'), async (req, res) => {
+  try {
+    console.log('📤 Iniciando upload de imagem...');
+    
+    if (!req.file) {
+      return res.status(400).json({
+        status: 'erro',
+        message: 'Nenhuma imagem foi enviada.'
+      });
+    }
+
+    // Validar se o usuário está autenticado
+    if (!req.usuario || !req.usuario._id) {
+      return res.status(401).json({
+        status: 'erro',
+        message: 'Usuário não autenticado.'
+      });
+    }
+
+    const { buffer, originalname, mimetype } = req.file;
+    const usuarioId = req.usuario._id;
+    const tipoUsuario = req.usuario.tipo;
+
+    console.log(`📷 Processando imagem para ${tipoUsuario}: ${usuarioId}`);
+
+    // Gerar nome único para o arquivo
+    const extensao = path.extname(originalname) || '.jpg';
+    const nomeArquivo = `perfil-${usuarioId}-${Date.now()}${extensao}`;
+    const caminhoCompleto = path.join(__dirname, 'public', 'uploads', 'perfis', nomeArquivo);
+
+    // Redimensionar e otimizar a imagem
+    const imagemProcessada = await sharp(buffer)
+      .resize(300, 300, {
+        fit: 'cover',
+        position: 'center'
+      })
+      .jpeg({ 
+        quality: 80,
+        progressive: true 
+      })
+      .toBuffer();
+
+    // Salvar arquivo processado
+    await fs.writeFile(caminhoCompleto, imagemProcessada);
+
+    // Construir URL da imagem
+    const urlImagem = `/uploads/perfis/${nomeArquivo}`;
+    const urlCompleta = `${process.env.API_BASE_URL || 'http://localhost:3001'}${urlImagem}`;
+
+    console.log('✅ Imagem processada e salva:', urlImagem);
+
+    // Atualizar foto no perfil do usuário/profissional
+    try {
+      if (tipoUsuario === 'usuario') {
+        await Usuario.findByIdAndUpdate(usuarioId, { foto: urlImagem });
+        console.log('✅ Foto atualizada para usuário:', usuarioId);
+      } else if (tipoUsuario === 'profissional') {
+        await Profissional.findByIdAndUpdate(usuarioId, { foto: urlImagem });
+        console.log('✅ Foto atualizada para profissional:', usuarioId);
+      }
+    } catch (error) {
+      console.error('⚠️ Aviso: Imagem salva mas não foi possível atualizar o perfil:', error.message);
+    }
+
+    res.status(200).json({
+      status: 'sucesso',
+      data: {
+        url: urlImagem,
+        urlCompleta: urlCompleta,
+        nomeArquivo: nomeArquivo,
+        tamanho: imagemProcessada.length
+      },
+      message: 'Imagem enviada e processada com sucesso'
+    });
+
+  } catch (error) {
+    console.error('❌ Erro no upload de imagem:', error);
+    res.status(500).json({
+      status: 'erro',
+      message: error.message || 'Erro interno no processamento da imagem'
+    });
+  }
+});
 
 // Rota raiz
 app.get('/', (req, res) => {
@@ -399,6 +533,361 @@ app.post('/api/profissionais', async (req, res) => {
   }
 });
 
+// ========== ROTAS PARA HISTÓRICOS CURRICULARES (HCurricular) ==========
+
+// GET - Buscar todos os históricos curriculares
+app.get('/api/hcurriculares', async (req, res) => {
+  try {
+    console.log('📚 Buscando todos os históricos curriculares');
+    
+    const { profissional } = req.query;
+    let filtro = {};
+    
+    if (profissional) {
+      filtro.profissional = profissional;
+    }
+
+    const historicos = await HCurricular.find(filtro).populate('profissional');
+    
+    res.status(200).json({ 
+      status: 'sucesso', 
+      data: historicos,
+      total: historicos.length
+    });
+  } catch (error) {
+    console.error('❌ Erro ao buscar históricos curriculares:', error);
+    res.status(500).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
+// GET - Buscar histórico curricular por ID
+app.get('/api/hcurriculares/:id', async (req, res) => {
+  try {
+    console.log(`📚 Buscando histórico curricular: ${req.params.id}`);
+    
+    const historico = await HCurricular.findById(req.params.id).populate('profissional');
+    
+    if (!historico) {
+      return res.status(404).json({ 
+        status: 'erro', 
+        message: 'Histórico curricular não encontrado' 
+      });
+    }
+
+    res.status(200).json({ 
+      status: 'sucesso', 
+      data: historico 
+    });
+  } catch (error) {
+    console.error('❌ Erro ao buscar histórico curricular:', error);
+    res.status(500).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
+// POST - Criar novo histórico curricular
+app.post('/api/hcurriculares', async (req, res) => {
+  try {
+    console.log('📝 Criando novo histórico curricular');
+    
+    const { nome, desc, profissional } = req.body;
+
+    // Validações
+    if (!nome) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'Nome é obrigatório' 
+      });
+    }
+
+    if (!profissional) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'Profissional é obrigatório' 
+      });
+    }
+
+    // Verificar se profissional existe
+    const profissionalExiste = await Profissional.findById(profissional);
+    if (!profissionalExiste) {
+      return res.status(404).json({ 
+        status: 'erro', 
+        message: 'Profissional não encontrado' 
+      });
+    }
+
+    const novoHistorico = await HCurricular.create({
+      nome,
+      desc,
+      profissional
+    });
+
+    await novoHistorico.populate('profissional');
+
+    console.log(`✅ Histórico curricular criado: ${novoHistorico.nome}`);
+    
+    res.status(201).json({ 
+      status: 'sucesso', 
+      data: novoHistorico,
+      message: 'Histórico curricular criado com sucesso'
+    });
+  } catch (error) {
+    console.error('❌ Erro ao criar histórico curricular:', error);
+    res.status(400).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
+// PUT - Atualizar histórico curricular
+app.put('/api/hcurriculares/:id', async (req, res) => {
+  try {
+    console.log(`✏️ Atualizando histórico curricular: ${req.params.id}`);
+    
+    const { nome, desc } = req.body;
+
+    const historicoAtualizado = await HCurricular.findByIdAndUpdate(
+      req.params.id,
+      { nome, desc },
+      { new: true, runValidators: true }
+    ).populate('profissional');
+
+    if (!historicoAtualizado) {
+      return res.status(404).json({ 
+        status: 'erro', 
+        message: 'Histórico curricular não encontrado' 
+      });
+    }
+
+    console.log(`✅ Histórico curricular atualizado: ${historicoAtualizado.nome}`);
+    
+    res.status(200).json({ 
+      status: 'sucesso', 
+      data: historicoAtualizado,
+      message: 'Histórico curricular atualizado com sucesso'
+    });
+  } catch (error) {
+    console.error('❌ Erro ao atualizar histórico curricular:', error);
+    res.status(400).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
+// DELETE - Deletar histórico curricular
+app.delete('/api/hcurriculares/:id', async (req, res) => {
+  try {
+    console.log(`🗑️ Deletando histórico curricular: ${req.params.id}`);
+    
+    const historicoDeletado = await HCurricular.findByIdAndDelete(req.params.id);
+
+    if (!historicoDeletado) {
+      return res.status(404).json({ 
+        status: 'erro', 
+        message: 'Histórico curricular não encontrado' 
+      });
+    }
+
+    console.log(`✅ Histórico curricular deletado: ${historicoDeletado.nome}`);
+    
+    res.status(200).json({ 
+      status: 'sucesso', 
+      message: 'Histórico curricular deletado com sucesso'
+    });
+  } catch (error) {
+    console.error('❌ Erro ao deletar histórico curricular:', error);
+    res.status(500).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
+// ========== ROTAS PARA HISTÓRICOS PROFISSIONAIS (HProfissional) ==========
+
+// GET - Buscar todos os históricos profissionais
+app.get('/api/hprofissionais', async (req, res) => {
+  try {
+    console.log('💼 Buscando todos os históricos profissionais');
+    
+    const { profissional } = req.query;
+    let filtro = {};
+    
+    if (profissional) {
+      filtro.profissional = profissional;
+    }
+
+    const historicos = await HProfissional.find(filtro).populate('profissional');
+    
+    res.status(200).json({ 
+      status: 'sucesso', 
+      data: historicos,
+      total: historicos.length
+    });
+  } catch (error) {
+    console.error('❌ Erro ao buscar históricos profissionais:', error);
+    res.status(500).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
+// GET - Buscar histórico profissional por ID
+app.get('/api/hprofissionais/:id', async (req, res) => {
+  try {
+    console.log(`💼 Buscando histórico profissional: ${req.params.id}`);
+    
+    const historico = await HProfissional.findById(req.params.id).populate('profissional');
+    
+    if (!historico) {
+      return res.status(404).json({ 
+        status: 'erro', 
+        message: 'Histórico profissional não encontrado' 
+      });
+    }
+
+    res.status(200).json({ 
+      status: 'sucesso', 
+      data: historico 
+    });
+  } catch (error) {
+    console.error('❌ Erro ao buscar histórico profissional:', error);
+    res.status(500).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
+// POST - Criar novo histórico profissional
+app.post('/api/hprofissionais', async (req, res) => {
+  try {
+    console.log('📝 Criando novo histórico profissional');
+    
+    const { nome, desc, foto, profissional } = req.body;
+
+    // Validações
+    if (!nome) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'Nome é obrigatório' 
+      });
+    }
+
+    if (!profissional) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'Profissional é obrigatório' 
+      });
+    }
+
+    // Verificar se profissional existe
+    const profissionalExiste = await Profissional.findById(profissional);
+    if (!profissionalExiste) {
+      return res.status(404).json({ 
+        status: 'erro', 
+        message: 'Profissional não encontrado' 
+      });
+    }
+
+    const novoHistorico = await HProfissional.create({
+      nome,
+      desc,
+      foto,
+      profissional
+    });
+
+    await novoHistorico.populate('profissional');
+
+    console.log(`✅ Histórico profissional criado: ${novoHistorico.nome}`);
+    
+    res.status(201).json({ 
+      status: 'sucesso', 
+      data: novoHistorico,
+      message: 'Histórico profissional criado com sucesso'
+    });
+  } catch (error) {
+    console.error('❌ Erro ao criar histórico profissional:', error);
+    res.status(400).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
+// PUT - Atualizar histórico profissional
+app.put('/api/hprofissionais/:id', async (req, res) => {
+  try {
+    console.log(`✏️ Atualizando histórico profissional: ${req.params.id}`);
+    
+    const { nome, desc, foto } = req.body;
+
+    const historicoAtualizado = await HProfissional.findByIdAndUpdate(
+      req.params.id,
+      { nome, desc, foto },
+      { new: true, runValidators: true }
+    ).populate('profissional');
+
+    if (!historicoAtualizado) {
+      return res.status(404).json({ 
+        status: 'erro', 
+        message: 'Histórico profissional não encontrado' 
+      });
+    }
+
+    console.log(`✅ Histórico profissional atualizado: ${historicoAtualizado.nome}`);
+    
+    res.status(200).json({ 
+      status: 'sucesso', 
+      data: historicoAtualizado,
+      message: 'Histórico profissional atualizado com sucesso'
+    });
+  } catch (error) {
+    console.error('❌ Erro ao atualizar histórico profissional:', error);
+    res.status(400).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
+// DELETE - Deletar histórico profissional
+app.delete('/api/hprofissionais/:id', async (req, res) => {
+  try {
+    console.log(`🗑️ Deletando histórico profissional: ${req.params.id}`);
+    
+    const historicoDeletado = await HProfissional.findByIdAndDelete(req.params.id);
+
+    if (!historicoDeletado) {
+      return res.status(404).json({ 
+        status: 'erro', 
+        message: 'Histórico profissional não encontrado' 
+      });
+    }
+
+    console.log(`✅ Histórico profissional deletado: ${historicoDeletado.nome}`);
+    
+    res.status(200).json({ 
+      status: 'sucesso', 
+      message: 'Histórico profissional deletado com sucesso'
+    });
+  } catch (error) {
+    console.error('❌ Erro ao deletar histórico profissional:', error);
+    res.status(500).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
 // ========== ROTAS PARA LOCALIZAÇÕES ==========
 
 app.post('/api/localizacoes', async (req, res) => {
@@ -545,245 +1034,6 @@ app.post('/api/auth/logout', async (req, res) => {
 // Rota para 404 - deve ser a última
 app.use('*', (req, res) => {
   console.log(`❌ Rota não encontrada: ${req.method} ${req.originalUrl}`);
-  res.status(404).json({ 
-    status: 'erro',
-    message: 'Rota não encontrada' 
-  });
-});
-
-// Middleware de tratamento de erros
-app.use((error, req, res, next) => {
-  console.error('💥 Erro não tratado:', error);
-  res.status(500).json({
-    status: 'erro',
-    message: 'Erro interno do servidor'
-  });
-});
-
-/* Removido bloco duplicado de PORT/server e encerramento gracioso */
-// ========== ROTAS PROTEGIDAS (COM AUTENTICAÇÃO) ==========
-
-// Rota para buscar perfil do usuário logado (PROTEGIDA)
-apiRouter.get('/auth/perfil/:id', verificarToken, async (req, res) => {
-  try {
-    console.log('🔍 Buscando perfil do usuário:', req.params.id);
-    const usuario = await Usuario.findById(req.params.id).populate('localizacao');
-    
-    if (!usuario) {
-      // Tentar buscar como profissional
-      const profissional = await Profissional.findById(req.params.id).populate('localizacao');
-      if (!profissional) {
-        return res.status(404).json({ 
-          status: 'erro', 
-          message: 'Usuário não encontrado' 
-        });
-      }
-
-      const profissionalResposta = profissional.toObject();
-      delete profissionalResposta.senha;
-      
-      return res.status(200).json({ 
-        status: 'sucesso', 
-        data: profissionalResposta 
-      });
-    }
-
-    const usuarioResposta = usuario.toObject();
-    delete usuarioResposta.senha;
-
-    res.status(200).json({ 
-      status: 'sucesso', 
-      data: usuarioResposta 
-    });
-  } catch (error) {
-    console.error(`💥 Erro ao buscar perfil:`, error);
-    res.status(500).json({ 
-      status: 'erro', 
-      message: error.message 
-    });
-  }
-});
-
-// Rota para editar perfil (PROTEGIDA)
-apiRouter.put('/auth/perfil/:id', verificarToken, async (req, res) => {
-  try {
-    console.log(`✏️ Editando perfil: ${req.params.id}`);
-    const { senha, ...camposAtualizacao } = req.body;
-    
-    delete camposAtualizacao._id;
-    
-    const usuarioAtualizado = await Usuario.findByIdAndUpdate(
-      req.params.id,
-      camposAtualizacao,
-      { new: true, runValidators: true }
-    ).populate('localizacao');
-    
-    if (!usuarioAtualizado) {
-      console.log(`❌ Usuário não encontrado para edição: ${req.params.id}`);
-      return res.status(404).json({ 
-        status: 'erro', 
-        message: 'Usuário não encontrado' 
-      });
-    }
-
-    console.log(`✅ Perfil atualizado: ${usuarioAtualizado.nome}`);
-    
-    const usuarioResposta = usuarioAtualizado.toObject();
-    delete usuarioResposta.senha;
-
-    res.status(200).json({ 
-      status: 'sucesso', 
-      data: usuarioResposta,
-      message: 'Perfil atualizado com sucesso'
-    });
-  } catch (error) {
-    console.error(`💥 Erro ao editar perfil:`, error);
-    res.status(500).json({ 
-      status: 'erro', 
-      message: error.message 
-    });
-  }
-});
-
-// Rota para logout (PROTEGIDA)
-apiRouter.post('/auth/logout', verificarToken, async (req, res) => {
-  try {
-    console.log(`🚪 Logout realizado para usuário:`, req.usuario.email);
-    
-    res.status(200).json({ 
-      status: 'sucesso', 
-      message: 'Logout realizado com sucesso' 
-    });
-  } catch (error) {
-    console.error(`💥 Erro durante logout:`, error);
-    res.status(500).json({ 
-      status: 'erro', 
-      message: error.message 
-    });
-  }
-});
-
-// ========== OUTRAS ROTAS PROTEGIDAS ==========
-
-// Rotas GET para Usuários (PROTEGIDAS)
-apiRouter.get('/usuarios', verificarToken, async (req, res) => {
-  try {
-    const usuarios = await Usuario.find().populate('localizacao');
-    res.status(200).json({ status: 'sucesso', data: usuarios });
-  } catch (error) {
-    res.status(500).json({ status: 'erro', message: error.message });
-  }
-});
-
-apiRouter.get('/usuarios/:id', verificarToken, async (req, res) => {
-  try {
-    const usuario = await Usuario.findById(req.params.id).populate('localizacao');
-    if (!usuario) {
-      return res.status(404).json({ status: 'erro', message: 'Usuário não encontrado' });
-    }
-    res.status(200).json({ status: 'sucesso', data: usuario });
-  } catch (error) {
-    res.status(500).json({ status: 'erro', message: error.message });
-  }
-});
-
-// Rotas PUT e DELETE para Usuários (PROTEGIDAS)
-apiRouter.put('/usuarios/:id', verificarToken, async (req, res) => {
-  try {
-    const usuario = await Usuario.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    ).populate('localizacao');
-    
-    if (!usuario) {
-      return res.status(404).json({ status: 'erro', message: 'Usuário não encontrado' });
-    }
-    
-    res.status(200).json({ status: 'sucesso', data: usuario });
-  } catch (error) {
-    res.status(400).json({ status: 'erro', message: error.message });
-  }
-});
-
-apiRouter.delete('/usuarios/:id', verificarToken, async (req, res) => {
-  try {
-    const usuario = await Usuario.findByIdAndDelete(req.params.id);
-    
-    if (!usuario) {
-      return res.status(404).json({ status: 'erro', message: 'Usuário não encontrado' });
-    }
-    
-    res.status(200).json({ status: 'sucesso', message: 'Usuário deletado com sucesso' });
-  } catch (error) {
-    res.status(500).json({ status: 'erro', message: error.message });
-  }
-});
-
-// Rotas para Avaliações (PROTEGIDAS)
-apiRouter.get('/avaliacoes', verificarToken, async (req, res) => {
-  try {
-    const avaliacoes = await Avaliacao.find()
-      .populate('usuario')
-      .populate('profissional');
-    res.status(200).json({ status: 'sucesso', data: avaliacoes });
-  } catch (error) {
-    res.status(500).json({ status: 'erro', message: error.message });
-  }
-});
-
-apiRouter.post('/avaliacoes', verificarToken, async (req, res) => {
-  try {
-    const novaAvaliacao = await Avaliacao.create(req.body);
-    res.status(201).json({ status: 'sucesso', data: novaAvaliacao });
-  } catch (error) {
-    res.status(400).json({ status: 'erro', message: error.message });
-  }
-});
-
-// Rotas para HCurricular (PROTEGIDAS)
-apiRouter.get('/hcurriculares', verificarToken, async (req, res) => {
-  try {
-    const hcurriculares = await HCurricular.find().populate('profissional');
-    res.status(200).json({ status: 'sucesso', data: hcurriculares });
-  } catch (error) {
-    res.status(500).json({ status: 'erro', message: error.message });
-  }
-});
-
-apiRouter.post('/hcurriculares', verificarToken, async (req, res) => {
-  try {
-    const novoHCurricular = await HCurricular.create(req.body);
-    res.status(201).json({ status: 'sucesso', data: novoHCurricular });
-  } catch (error) {
-    res.status(400).json({ status: 'erro', message: error.message });
-  }
-});
-
-// Rotas para HProfissional (PROTEGIDAS)
-apiRouter.get('/hprofissionais', verificarToken, async (req, res) => {
-  try {
-    const hprofissionais = await HProfissional.find().populate('profissional');
-    res.status(200).json({ status: 'sucesso', data: hprofissionais });
-  } catch (error) {
-    res.status(500).json({ status: 'erro', message: error.message });
-  }
-});
-
-apiRouter.post('/hprofissionais', verificarToken, async (req, res) => {
-  try {
-    const novoHProfissional = await HProfissional.create(req.body);
-    res.status(201).json({ status: 'sucesso', data: novoHProfissional });
-  } catch (error) {
-    res.status(400).json({ status: 'erro', message: error.message });
-  }
-});
-
-// Montar o router na aplicação
-app.use('/api', apiRouter);
-
-// Rota para 404
-app.use('*', (req, res) => {
   res.status(404).json({ 
     status: 'erro',
     message: 'Rota não encontrada' 

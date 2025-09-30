@@ -4,7 +4,7 @@ import BotoesAcao from './componentes/BotoesAcao';
 import SecaoSobre from './componentes/SecaoSobre';
 import CarrosselAcessibilidade from './componentes/CarrosselAcessibilidade';
 import SecaoComentarios from './componentes/SecaoComentarios';
-import Corpo from '../../componentes/layout/Corpo';
+import Corpo from '@Componentes/layout/Corpo';
 import './inicio.css';
 
 const Inicio = () => {
