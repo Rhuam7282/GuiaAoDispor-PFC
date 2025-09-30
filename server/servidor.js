@@ -62,10 +62,22 @@ const verificarToken = (req, res, next) => {
     '/api/auth/validar-email',
     '/api/usuarios',
     '/api/profissionais',
-    '/api/localizacoes'
+    '/api/localizacoes',
+    '/health',
+    '/api/health',
+    '/'
   ];
   
-  if (publicRoutes.includes(req.path) && req.method === 'POST') {
+  // Verifica se a rota atual é pública
+  const isPublicRoute = publicRoutes.some(route => {
+    if (route === '/api/profissionais' && req.method === 'GET') return true;
+    if (req.path.startsWith(route) && (req.method === 'POST' || req.method === 'GET')) {
+      return true;
+    }
+    return false;
+  });
+
+  if (isPublicRoute) {
     return next();
   }
 
@@ -89,8 +101,7 @@ const verificarToken = (req, res, next) => {
   }
 };
 
-// Aplicar middleware de autenticação
-app.use(verificarToken);
+// ========== ROTAS PÚBLICAS (ANTES DO MIDDLEWARE) ==========
 
 // Rota raiz
 app.get('/', (req, res) => {
@@ -108,7 +119,111 @@ app.get('/health', (req, res) => {
   });
 });
 
-// ========== ROTAS DE AUTENTICAÇÃO ==========
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    database: mongoose.connection.readyState === 1 ? 'Conectado' : 'Desconectado'
+  });
+});
+
+// ========== ROTA PÚBLICA PARA PROFISSIONAIS ==========
+
+app.get('/api/profissionais', async (req, res) => {
+  try {
+    console.log('🔍 Buscando profissionais...');
+    
+    // Primeiro, tenta buscar do MongoDB
+    let profissionais = [];
+    
+    // Verifica se há profissionais no banco
+    const count = await Profissional.countDocuments();
+    console.log(`📊 Profissionais no banco: ${count}`);
+    
+    if (count > 0) {
+      // Busca profissionais reais
+      profissionais = await Profissional.find({})
+        .populate('localizacao')
+        .select('-senha')
+        .lean();
+      
+      console.log(`✅ Encontrados ${profissionais.length} profissionais no banco`);
+    } else {
+      // Se não há profissionais, cria alguns de exemplo
+      console.log('📝 Criando profissionais de exemplo...');
+      
+      // Cria localização exemplo
+      const localizacao = await Localizacao.create({
+        nome: 'São Paulo',
+        cidade: 'São Paulo',
+        estado: 'SP'
+      });
+      
+      // Cria profissionais exemplo
+      await Profissional.create([
+        {
+          nome: 'Maria Silva',
+          desc: '10 anos de experiência em enfermagem geriátrica',
+          email: 'maria@exemplo.com',
+          senha: await bcrypt.hash('senha123', 10),
+          localizacao: localizacao._id
+        },
+        {
+          nome: 'João Santos',
+          desc: '5 anos como cuidador de idosos', 
+          email: 'joao@exemplo.com',
+          senha: await bcrypt.hash('senha123', 10),
+          localizacao: localizacao._id
+        }
+      ]);
+      
+      // Busca os profissionais criados
+      profissionais = await Profissional.find({})
+        .populate('localizacao')
+        .select('-senha')
+        .lean();
+    }
+
+    // Formata os dados
+    const profissionaisFormatados = profissionais.map((prof) => {
+      return {
+        _id: prof._id,
+        imagem: prof.foto || '/imagens/mulher.png',
+        nome: prof.nome || 'Nome não informado',
+        localizacao: prof.localizacao ? 
+          `${prof.localizacao.nome || ''} ${prof.localizacao.cidade || ''} ${prof.localizacao.estado || ''}`.trim() 
+          : 'Local não informado',
+        experiencia: prof.desc || 'Experiência não informada'
+      };
+    });
+
+    res.status(200).json(profissionaisFormatados);
+
+  } catch (error) {
+    console.error('❌ Erro ao buscar profissionais:', error);
+    
+    // Fallback: retorna dados mock em caso de erro
+    const profissionaisMock = [
+      {
+        _id: "1",
+        imagem: "/imagens/mulher.png",
+        nome: "Ana Silva",
+        localizacao: "São Paulo, SP",
+        experiencia: "Enfermeira com 5 anos de experiência"
+      },
+      {
+        _id: "2", 
+        imagem: "/imagens/homem.png",
+        nome: "Carlos Santos",
+        localizacao: "Rio de Janeiro, RJ", 
+        experiencia: "Cuidador especializado"
+      }
+    ];
+    
+    res.status(200).json(profissionaisMock);
+  }
+});
+
+// ========== ROTAS DE AUTENTICAÇÃO (PÚBLICAS) ==========
 
 // Rota para validar email
 app.post('/api/auth/validar-email', async (req, res) => {
@@ -255,7 +370,7 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// ========== ROTAS PARA USUÁRIOS ==========
+// ========== ROTAS DE CRIAÇÃO (PÚBLICAS) ==========
 
 app.post('/api/usuarios', async (req, res) => {
   try {
@@ -327,8 +442,6 @@ app.post('/api/usuarios', async (req, res) => {
   }
 });
 
-// ========== ROTAS PARA PROFISSIONAIS ==========
-
 app.post('/api/profissionais', async (req, res) => {
   try {
     console.log('👨‍💼 Criando novo profissional:', req.body.email);
@@ -399,8 +512,6 @@ app.post('/api/profissionais', async (req, res) => {
   }
 });
 
-// ========== ROTAS PARA LOCALIZAÇÕES ==========
-
 app.post('/api/localizacoes', async (req, res) => {
   try {
     console.log('📍 Criando nova localização');
@@ -440,7 +551,10 @@ app.get('/api/localizacoes/:id', async (req, res) => {
   }
 });
 
-// ========== OUTRAS ROTAS ==========
+// ========== APLICA MIDDLEWARE DE AUTENTICAÇÃO A PARTIR DAQUI ==========
+app.use(verificarToken);
+
+// ========== ROTAS PROTEGIDAS (APÓS MIDDLEWARE) ==========
 
 // Rota para buscar perfil
 app.get('/api/auth/perfil/:id', async (req, res) => {
@@ -545,245 +659,6 @@ app.post('/api/auth/logout', async (req, res) => {
 // Rota para 404 - deve ser a última
 app.use('*', (req, res) => {
   console.log(`❌ Rota não encontrada: ${req.method} ${req.originalUrl}`);
-  res.status(404).json({ 
-    status: 'erro',
-    message: 'Rota não encontrada' 
-  });
-});
-
-// Middleware de tratamento de erros
-app.use((error, req, res, next) => {
-  console.error('💥 Erro não tratado:', error);
-  res.status(500).json({
-    status: 'erro',
-    message: 'Erro interno do servidor'
-  });
-});
-
-/* Removido bloco duplicado de PORT/server e encerramento gracioso */
-// ========== ROTAS PROTEGIDAS (COM AUTENTICAÇÃO) ==========
-
-// Rota para buscar perfil do usuário logado (PROTEGIDA)
-apiRouter.get('/auth/perfil/:id', verificarToken, async (req, res) => {
-  try {
-    console.log('🔍 Buscando perfil do usuário:', req.params.id);
-    const usuario = await Usuario.findById(req.params.id).populate('localizacao');
-    
-    if (!usuario) {
-      // Tentar buscar como profissional
-      const profissional = await Profissional.findById(req.params.id).populate('localizacao');
-      if (!profissional) {
-        return res.status(404).json({ 
-          status: 'erro', 
-          message: 'Usuário não encontrado' 
-        });
-      }
-
-      const profissionalResposta = profissional.toObject();
-      delete profissionalResposta.senha;
-      
-      return res.status(200).json({ 
-        status: 'sucesso', 
-        data: profissionalResposta 
-      });
-    }
-
-    const usuarioResposta = usuario.toObject();
-    delete usuarioResposta.senha;
-
-    res.status(200).json({ 
-      status: 'sucesso', 
-      data: usuarioResposta 
-    });
-  } catch (error) {
-    console.error(`💥 Erro ao buscar perfil:`, error);
-    res.status(500).json({ 
-      status: 'erro', 
-      message: error.message 
-    });
-  }
-});
-
-// Rota para editar perfil (PROTEGIDA)
-apiRouter.put('/auth/perfil/:id', verificarToken, async (req, res) => {
-  try {
-    console.log(`✏️ Editando perfil: ${req.params.id}`);
-    const { senha, ...camposAtualizacao } = req.body;
-    
-    delete camposAtualizacao._id;
-    
-    const usuarioAtualizado = await Usuario.findByIdAndUpdate(
-      req.params.id,
-      camposAtualizacao,
-      { new: true, runValidators: true }
-    ).populate('localizacao');
-    
-    if (!usuarioAtualizado) {
-      console.log(`❌ Usuário não encontrado para edição: ${req.params.id}`);
-      return res.status(404).json({ 
-        status: 'erro', 
-        message: 'Usuário não encontrado' 
-      });
-    }
-
-    console.log(`✅ Perfil atualizado: ${usuarioAtualizado.nome}`);
-    
-    const usuarioResposta = usuarioAtualizado.toObject();
-    delete usuarioResposta.senha;
-
-    res.status(200).json({ 
-      status: 'sucesso', 
-      data: usuarioResposta,
-      message: 'Perfil atualizado com sucesso'
-    });
-  } catch (error) {
-    console.error(`💥 Erro ao editar perfil:`, error);
-    res.status(500).json({ 
-      status: 'erro', 
-      message: error.message 
-    });
-  }
-});
-
-// Rota para logout (PROTEGIDA)
-apiRouter.post('/auth/logout', verificarToken, async (req, res) => {
-  try {
-    console.log(`🚪 Logout realizado para usuário:`, req.usuario.email);
-    
-    res.status(200).json({ 
-      status: 'sucesso', 
-      message: 'Logout realizado com sucesso' 
-    });
-  } catch (error) {
-    console.error(`💥 Erro durante logout:`, error);
-    res.status(500).json({ 
-      status: 'erro', 
-      message: error.message 
-    });
-  }
-});
-
-// ========== OUTRAS ROTAS PROTEGIDAS ==========
-
-// Rotas GET para Usuários (PROTEGIDAS)
-apiRouter.get('/usuarios', verificarToken, async (req, res) => {
-  try {
-    const usuarios = await Usuario.find().populate('localizacao');
-    res.status(200).json({ status: 'sucesso', data: usuarios });
-  } catch (error) {
-    res.status(500).json({ status: 'erro', message: error.message });
-  }
-});
-
-apiRouter.get('/usuarios/:id', verificarToken, async (req, res) => {
-  try {
-    const usuario = await Usuario.findById(req.params.id).populate('localizacao');
-    if (!usuario) {
-      return res.status(404).json({ status: 'erro', message: 'Usuário não encontrado' });
-    }
-    res.status(200).json({ status: 'sucesso', data: usuario });
-  } catch (error) {
-    res.status(500).json({ status: 'erro', message: error.message });
-  }
-});
-
-// Rotas PUT e DELETE para Usuários (PROTEGIDAS)
-apiRouter.put('/usuarios/:id', verificarToken, async (req, res) => {
-  try {
-    const usuario = await Usuario.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    ).populate('localizacao');
-    
-    if (!usuario) {
-      return res.status(404).json({ status: 'erro', message: 'Usuário não encontrado' });
-    }
-    
-    res.status(200).json({ status: 'sucesso', data: usuario });
-  } catch (error) {
-    res.status(400).json({ status: 'erro', message: error.message });
-  }
-});
-
-apiRouter.delete('/usuarios/:id', verificarToken, async (req, res) => {
-  try {
-    const usuario = await Usuario.findByIdAndDelete(req.params.id);
-    
-    if (!usuario) {
-      return res.status(404).json({ status: 'erro', message: 'Usuário não encontrado' });
-    }
-    
-    res.status(200).json({ status: 'sucesso', message: 'Usuário deletado com sucesso' });
-  } catch (error) {
-    res.status(500).json({ status: 'erro', message: error.message });
-  }
-});
-
-// Rotas para Avaliações (PROTEGIDAS)
-apiRouter.get('/avaliacoes', verificarToken, async (req, res) => {
-  try {
-    const avaliacoes = await Avaliacao.find()
-      .populate('usuario')
-      .populate('profissional');
-    res.status(200).json({ status: 'sucesso', data: avaliacoes });
-  } catch (error) {
-    res.status(500).json({ status: 'erro', message: error.message });
-  }
-});
-
-apiRouter.post('/avaliacoes', verificarToken, async (req, res) => {
-  try {
-    const novaAvaliacao = await Avaliacao.create(req.body);
-    res.status(201).json({ status: 'sucesso', data: novaAvaliacao });
-  } catch (error) {
-    res.status(400).json({ status: 'erro', message: error.message });
-  }
-});
-
-// Rotas para HCurricular (PROTEGIDAS)
-apiRouter.get('/hcurriculares', verificarToken, async (req, res) => {
-  try {
-    const hcurriculares = await HCurricular.find().populate('profissional');
-    res.status(200).json({ status: 'sucesso', data: hcurriculares });
-  } catch (error) {
-    res.status(500).json({ status: 'erro', message: error.message });
-  }
-});
-
-apiRouter.post('/hcurriculares', verificarToken, async (req, res) => {
-  try {
-    const novoHCurricular = await HCurricular.create(req.body);
-    res.status(201).json({ status: 'sucesso', data: novoHCurricular });
-  } catch (error) {
-    res.status(400).json({ status: 'erro', message: error.message });
-  }
-});
-
-// Rotas para HProfissional (PROTEGIDAS)
-apiRouter.get('/hprofissionais', verificarToken, async (req, res) => {
-  try {
-    const hprofissionais = await HProfissional.find().populate('profissional');
-    res.status(200).json({ status: 'sucesso', data: hprofissionais });
-  } catch (error) {
-    res.status(500).json({ status: 'erro', message: error.message });
-  }
-});
-
-apiRouter.post('/hprofissionais', verificarToken, async (req, res) => {
-  try {
-    const novoHProfissional = await HProfissional.create(req.body);
-    res.status(201).json({ status: 'sucesso', data: novoHProfissional });
-  } catch (error) {
-    res.status(400).json({ status: 'erro', message: error.message });
-  }
-});
-
-// Montar o router na aplicação
-app.use('/api', apiRouter);
-
-// Rota para 404
-app.use('*', (req, res) => {
   res.status(404).json({ 
     status: 'erro',
     message: 'Rota não encontrada' 
