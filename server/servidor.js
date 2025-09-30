@@ -578,12 +578,51 @@ app.use(verificarToken);
 
 // ========== ROTAS PROTEGIDAS (APÓS MIDDLEWARE) ==========
 
-// Rota para buscar perfil
+// Rota para buscar perfil - CORRIGIDA
 app.get('/api/auth/perfil/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(`👤 Buscando perfil para o ID: ${id}`);
+
+    // Tenta encontrar como Profissional primeiro
+    let perfil = await Profissional.findById(id).select('-senha').populate('localizacao');
+    let tipo = 'profissional';
+
+    // Se não for profissional, tenta encontrar como Usuário
+    if (!perfil) {
+      perfil = await Usuario.findById(id).select('-senha').populate('localizacao');
+      tipo = 'usuario';
+    }
+
+    if (!perfil) {
+      return res.status(404).json({
+        status: 'erro',
+        message: 'Usuário ou profissional não encontrado.'
+      });
+    }
+
+    console.log(`✅ Perfil encontrado: ${perfil.nome} (Tipo: ${tipo})`);
+
+    res.status(200).json({
+      status: 'sucesso',
+      data: perfil
+    });
+
+  } catch (error) {
+    console.error('❌ Erro ao buscar perfil:', error);
+    res.status(500).json({
+      status: 'erro',
+      message: 'Erro interno ao buscar perfil.'
+    });
+  }
+});
+
+// POST - Criar novo histórico curricular
+app.post('/api/hcurriculares', async (req, res) => {
   try {
     console.log('📝 Criando novo histórico curricular');
     
-    const { nome, desc, profissional } = req.body;
+    const { nome, desc, foto, profissional } = req.body;
 
     // Validações
     if (!nome) {
@@ -612,6 +651,7 @@ app.get('/api/auth/perfil/:id', async (req, res) => {
     const novoHistorico = await HCurricular.create({
       nome,
       desc,
+      foto,
       profissional
     });
 

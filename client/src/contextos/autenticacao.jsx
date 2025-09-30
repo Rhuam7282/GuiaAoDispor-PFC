@@ -129,14 +129,18 @@ export const ProvedorAutenticacao = ({ children }) => {
             setUsuario(usuarioArmazenado);
             setToken(tokenArmazenado);
             console.log('✅ Sessão válida - usuário autenticado:', usuarioArmazenado.nome);
+          } else {
+            throw new Error('Perfil não encontrado');
           }
         } catch (erro) {
-          console.log('🔒 Sessão inválida - redirecionando para login');
+          console.log('🔒 Sessão inválida - realizando logout silencioso');
+          // Limpa os dados de autenticação sem redirecionar
           localStorage.removeItem('usuario');
           localStorage.removeItem('token');
           localStorage.removeItem('autenticado');
           localStorage.removeItem('timestampLogin');
-          navigate('/');
+          setUsuario(null);
+          setToken(null);
         }
       } else {
         console.log('🔍 Nenhuma sessão ativa');

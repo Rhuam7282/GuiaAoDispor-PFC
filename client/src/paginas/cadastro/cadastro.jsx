@@ -13,7 +13,6 @@ const Cadastro = () => {
   const { login } = useAuth();
   
   const [dadosFormulario, setDadosFormulario] = useState({
-    // Campos básicos para ambos os perfis
     nome: '',
     email: '',
     senha: '',
@@ -34,24 +33,9 @@ const Cadastro = () => {
   const [carregando, setCarregando] = useState(false);
   const [mensagemSucesso, setMensagemSucesso] = useState('');
 
-  const [dadosLogin, setDadosLogin] = useState({
-    email: '',
-    senha: ''
-  });
-  const [carregandoLogin, setCarregandoLogin] = useState(false);
-
   const aoAlterarCampo = (evento) => {
     const { name, value } = evento.target;
     setDadosFormulario(prev => ({ ...prev, [name]: value }));
-    
-    if (erros[name]) {
-      setErros(prev => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const aoAlterarCampoLogin = (evento) => {
-    const { name, value } = evento.target;
-    setDadosLogin(prev => ({ ...prev, [name]: value }));
     
     if (erros[name]) {
       setErros(prev => ({ ...prev, [name]: '' }));
@@ -79,7 +63,6 @@ const Cadastro = () => {
 
     try {
       console.log('📧 Validando email...');
-      // Primeiro validar email único
       const respostaValidacao = await servicoCadastro.validarEmail(dadosFormulario.email);
       if (!respostaValidacao.valido) {
         setErros({ email: 'Este email já está em uso' });
@@ -94,12 +77,10 @@ const Cadastro = () => {
         estado: dadosFormulario.estado
       };
 
-      // Filtrar contatos válidos (com tipo e valor)
       const contatosValidos = dadosFormulario.contatos.filter(
         contato => contato.tipo && contato.valor
       );
 
-      // Preparar dados do perfil baseado no tipo
       const dadosPerfil = {
         nome: dadosFormulario.nome,
         email: dadosFormulario.email,
@@ -137,36 +118,6 @@ const Cadastro = () => {
       setErros({ submit: erro.message || 'Erro ao realizar cadastro' });
     } finally {
       setCarregando(false);
-    }
-  };
-
-  const aoFazerLogin = async (evento) => {
-    evento.preventDefault();
-    
-    if (!dadosLogin.email || !dadosLogin.senha) {
-      setErros({ login: 'Email e senha são obrigatórios' });
-      return;
-    }
-
-    setCarregandoLogin(true);
-    setErros({});
-
-    try {
-      console.log('🔐 Tentando login...');
-      const resposta = await servicoAuth.login(dadosLogin.email, dadosLogin.senha);
-      
-      if (resposta.data && resposta.token) {
-        login(resposta.data, resposta.token);
-        navigate('/perfil');
-      } else {
-        throw new Error('Resposta de login inválida');
-      }
-      
-    } catch (erro) {
-      console.error('❌ Erro no login:', erro);
-      setErros({ login: erro.message || 'Erro ao fazer login' });
-    } finally {
-      setCarregandoLogin(false);
     }
   };
 
@@ -264,7 +215,6 @@ const Cadastro = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const novosErrosContatos = {};
 
-    // Validações básicas para ambos os perfis
     if (!dadosFormulario.nome.trim()) novosErros.nome = 'Nome é obrigatório';
     
     if (!dadosFormulario.email) {
@@ -286,12 +236,10 @@ const Cadastro = () => {
     if (!dadosFormulario.cep) novosErros.cep = 'CEP é obrigatório';
     if (!dadosFormulario.cidade) novosErros.cidade = 'Cidade é obrigatória';
 
-    // Validações específicas para perfil profissional
     if (dadosFormulario.tipoPerfil === 'Profissional') {
       if (!dadosFormulario.desc.trim()) novosErros.desc = 'Descrição é obrigatória para perfil profissional';
     }
 
-    // Validar contatos
     dadosFormulario.contatos.forEach((contato, index) => {
       if (contato.tipo && contato.valor) {
         const erro = validarContato(contato.tipo, contato.valor);
@@ -312,13 +260,7 @@ const Cadastro = () => {
       <div className="container">
         <h1 className="titulo">Criar Conta</h1>
         <div className='listaHorizontal'>
-          <FormularioLogin 
-            dadosLogin={dadosLogin}
-            carregandoLogin={carregandoLogin}
-            erros={erros}
-            aoAlterarCampoLogin={aoAlterarCampoLogin}
-            aoFazerLogin={aoFazerLogin}
-          />
+          <FormularioLogin />
           <FormularioLoginGoogle 
             aoSucesso={aoSucessoLoginGoogle}
             aoErro={aoErroLoginGoogle}

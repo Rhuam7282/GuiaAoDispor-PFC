@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@Contextos/Autenticacao.jsx';
 import { servicoAuth } from '@Servicos/api.js';
-import Corpo from "@Componentes/Layout/Corpo.jsx";
 
 const FormularioLogin = () => {
   const navigate = useNavigate();
@@ -129,136 +128,134 @@ const FormularioLogin = () => {
   };
 
   return (
-    <Corpo>
-      <div className="container-login">
-        <div className="cartao-login">
-          <div className="cabecalho-login">
-            <h1 className="titulo-login">Entrar na sua conta</h1>
-            <p className="subtitulo-login">
-              Acesse sua conta para conectar com profissionais qualificados
-            </p>
+    <div className="container-login">
+      <div className="cartao-login">
+        <div className="cabecalho-login">
+          <h1 className="titulo-login">Entrar na sua conta</h1>
+          <p className="subtitulo-login">
+            Acesse sua conta para conectar com profissionais qualificados
+          </p>
+        </div>
+
+        <form onSubmit={aoFazerLogin} className="formulario-login">
+          {erros.geral && (
+            <div className="mensagem-erro-geral">
+              {erros.geral}
+            </div>
+          )}
+
+          <div className="grupo-formulario">
+            <label htmlFor="email" className="rotulo-campo">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={dadosLogin.email}
+              onChange={aoAlterarCampo}
+              className={`campo-input ${erros.email ? 'erro' : ''}`}
+              placeholder="seu@email.com"
+              disabled={carregando}
+            />
+            {erros.email && (
+              <span className="mensagem-erro-campo">{erros.email}</span>
+            )}
           </div>
 
-          <form onSubmit={aoFazerLogin} className="formulario-login">
-            {erros.geral && (
-              <div className="mensagem-erro-geral">
-                {erros.geral}
-              </div>
-            )}
-
-            <div className="grupo-formulario">
-              <label htmlFor="email" className="rotulo-campo">
-                Email
-              </label>
+          <div className="grupo-formulario">
+            <label htmlFor="senha" className="rotulo-campo">
+              Senha
+            </label>
+            <div className="container-senha">
               <input
-                type="email"
-                id="email"
-                name="email"
-                value={dadosLogin.email}
+                type={mostrarSenha ? "text" : "password"}
+                id="senha"
+                name="senha"
+                value={dadosLogin.senha}
                 onChange={aoAlterarCampo}
-                className={`campo-input ${erros.email ? 'erro' : ''}`}
-                placeholder="seu@email.com"
+                className={`campo-input ${erros.senha ? 'erro' : ''}`}
+                placeholder="Sua senha"
                 disabled={carregando}
               />
-              {erros.email && (
-                <span className="mensagem-erro-campo">{erros.email}</span>
-              )}
-            </div>
-
-            <div className="grupo-formulario">
-              <label htmlFor="senha" className="rotulo-campo">
-                Senha
-              </label>
-              <div className="container-senha">
-                <input
-                  type={mostrarSenha ? "text" : "password"}
-                  id="senha"
-                  name="senha"
-                  value={dadosLogin.senha}
-                  onChange={aoAlterarCampo}
-                  className={`campo-input ${erros.senha ? 'erro' : ''}`}
-                  placeholder="Sua senha"
-                  disabled={carregando}
-                />
-                <button
-                  type="button"
-                  className="botao-visibilidade"
-                  onClick={toggleMostrarSenha}
-                  disabled={carregando}
-                >
-                  {mostrarSenha ? '🙈' : '👁️'}
-                </button>
-              </div>
-              {erros.senha && (
-                <span className="mensagem-erro-campo">{erros.senha}</span>
-              )}
-            </div>
-
-            <div className="linha-opcoes">
-              <label className="opcao-lembrar">
-                <input
-                  type="checkbox"
-                  checked={lembrarMe}
-                  onChange={(e) => setLembrarMe(e.target.checked)}
-                  disabled={carregando}
-                />
-                <span className="texto-lembrar">Lembrar-me</span>
-              </label>
-              
               <button
                 type="button"
-                className="link-esqueci-senha"
-                onClick={lidarEsqueciSenha}
+                className="botao-visibilidade"
+                onClick={toggleMostrarSenha}
                 disabled={carregando}
               >
-                Esqueci minha senha
+                {mostrarSenha ? '🙈' : '👁️'}
               </button>
             </div>
+            {erros.senha && (
+              <span className="mensagem-erro-campo">{erros.senha}</span>
+            )}
+          </div>
 
+          <div className="linha-opcoes">
+            <label className="opcao-lembrar">
+              <input
+                type="checkbox"
+                checked={lembrarMe}
+                onChange={(e) => setLembrarMe(e.target.checked)}
+                disabled={carregando}
+              />
+              <span className="texto-lembrar">Lembrar-me</span>
+            </label>
+            
             <button
-              type="submit"
-              className="botao-login"
+              type="button"
+              className="link-esqueci-senha"
+              onClick={lidarEsqueciSenha}
               disabled={carregando}
             >
-              {carregando ? (
-                <>
-                  <div className="spinner-login"></div>
-                  Entrando...
-                </>
-              ) : (
-                'Entrar'
-              )}
+              Esqueci minha senha
             </button>
-
-            <div className="separador">
-              <span>ou</span>
-            </div>
-
-            <div className="links-alternativos">
-              <p className="texto-cadastro">
-                Não tem uma conta?{' '}
-                <Link to="/cadastro" className="link-cadastro">
-                  Cadastre-se
-                </Link>
-              </p>
-            </div>
-          </form>
-        </div>
-
-        <div className="info-adicional">
-          <div className="cartao-info">
-            <h3>Por que fazer login?</h3>
-            <ul className="lista-beneficios">
-              <li>📞 Acesse seus contatos salvos</li>
-              <li>⭐ Avalie profissionais</li>
-              <li>💬 Envie mensagens diretas</li>
-              <li>🔔 Receba notificações personalizadas</li>
-              <li>👥 Gerencie seu perfil</li>
-            </ul>
           </div>
+
+          <button
+            type="submit"
+            className="botao-login"
+            disabled={carregando}
+          >
+            {carregando ? (
+              <>
+                <div className="spinner-login"></div>
+                Entrando...
+              </>
+            ) : (
+              'Entrar'
+            )}
+          </button>
+
+          <div className="separador">
+            <span>ou</span>
+          </div>
+
+          <div className="links-alternativos">
+            <p className="texto-cadastro">
+              Não tem uma conta?{' '}
+              <Link to="/cadastro" className="link-cadastro">
+                Cadastre-se
+              </Link>
+            </p>
+          </div>
+        </form>
+      </div>
+
+      <div className="info-adicional">
+        <div className="cartao-info">
+          <h3>Por que fazer login?</h3>
+          <ul className="lista-beneficios">
+            <li>📞 Acesse seus contatos salvos</li>
+            <li>⭐ Avalie profissionais</li>
+            <li>💬 Envie mensagens diretas</li>
+            <li>🔔 Receba notificações personalizadas</li>
+            <li>👥 Gerencie seu perfil</li>
+          </ul>
         </div>
       </div>
-    </Corpo>
+    </div>
   );
 };
 

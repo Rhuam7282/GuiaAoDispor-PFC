@@ -1,6 +1,6 @@
 // client/src/App.jsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ProvedorAutenticacao } from './contextos/autenticacao.jsx';
+import { ProvedorAutenticacao } from './contextos/Autenticacao.jsx';
 import ProtectedRoute from './componentes/Autenticacao/ProtectedRoute.jsx';
 import AuthRedirect from './componentes/Autenticacao/AuthRedirect.jsx';
 import SobreNos from "./paginas/sobrenos/sobreNos.jsx";
@@ -13,12 +13,12 @@ import PainelControle from "./componentes/acessibilidade/PainelControle.jsx";
 
 function App() {
   return (
-    <ProvedorAutenticacao>
-      <BrowserRouter
-        future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true
-        }}>
+    <BrowserRouter
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true
+      }}>
+      <ProvedorAutenticacao>
         <PainelControle />
         <Routes>
           {/* Rotas públicas */}
@@ -63,8 +63,8 @@ function App() {
             </div>
           } />
         </Routes>
-      </BrowserRouter>
-    </ProvedorAutenticacao>
+      </ProvedorAutenticacao>
+    </BrowserRouter>
   );
 }
 
