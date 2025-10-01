@@ -277,7 +277,7 @@ app.post('/api/auth/validar-email', async (req, res) => {
   }
 });
 
-// Rota de Login
+// Rota de Login - CORRIGIDA
 app.post('/api/auth/login', async (req, res) => {
   try {
     console.log('🔐 Tentativa de login:', req.body.email);
@@ -290,85 +290,98 @@ app.post('/api/auth/login', async (req, res) => {
       });
     }
 
-    // Buscar usuário por email
-    const usuario = await Usuario.findOne({ email }).populate('localizacao');
-    
-    if (!usuario) {
-      // Se não encontrar no modelo Usuario, buscar no Profissional
-      const profissional = await Profissional.findOne({ email }).populate('localizacao');
-      if (!profissional) {
-        console.log('❌ Usuário não encontrado:', email);
-        return res.status(401).json({ 
-          status: 'erro', 
-          message: 'Credenciais inválidas' 
-        });
-      }
-
-      const senhaValida = await bcrypt.compare(senha, profissional.senha);
-      if (!senhaValida) {
-        console.log('❌ Senha inválida para profissional:', email);
-        return res.status(401).json({ 
-          status: 'erro', 
-          message: 'Credenciais inválidas' 
-        });
-      }
-
-      const token = jwt.sign(
-        { 
-          _id: profissional._id, 
-          email: profissional.email,
-          tipo: 'profissional'
-        }, 
-        process.env.JWT_SECRET || '7282',
-        { expiresIn: '7d' }
-      );
-
-      const profissionalResposta = profissional.toObject();
-      delete profissionalResposta.senha;
-
-      console.log('✅ Login profissional bem-sucedido:', profissional.email);
-      
-      res.status(200).json({ 
-        status: 'sucesso', 
-        data: profissionalResposta,
-        token,
-        message: 'Login realizado com sucesso'
-      });
-      return;
-    }
-
-    const senhaValida = await bcrypt.compare(senha, usuario.senha);
-    if (!senhaValida) {
-      console.log('❌ Senha inválida para usuário:', email);
-      return res.status(401).json({ 
-        status: 'erro', 
-        message: 'Credenciais inválidas' 
-      });
-    }
-
-    const token = jwt.sign(
-      { 
-        _id: usuario._id, 
-        email: usuario.email,
-        tipo: 'usuario'
-      }, 
-      process.env.JWT_SECRET || '7282',
-      { expiresIn: '7d' }
-    );
-
-    const usuarioResposta = usuario.toObject();
-    delete usuarioResposta.senha;
-
-    console.log('✅ Login usuário bem-sucedido:', usuario.email);
-    
-    res.status(200).json({ 
-      status: 'sucesso', 
-      data: usuarioResposta,
-      token,
-      message: 'Login realizado com sucesso'
+    // Buscar usuário por email - CORREÇÃO: usar await e tratar erros
+    const usuario = await Usuario.findOne({ email }).populate('localizacao').catch(err => {
+      console.error('❌ Erro ao buscar usuário:', err);
+      return null;
     });
+    
+    if (usuario) {
+      const senhaValida = await bcrypt.compare(senha, usuario.senha);
+      if (senhaValida) {
+        const token = jwt.sign(
+          { 
+            _id: usuario._id, 
+            email: usuario.email,
+            tipo: 'usuario'
+          }, 
+          process.env.JWT_SECRET || '7282',
+          { expiresIn: '7d' }
+        );
+
+        const usuarioResposta = usuario.toObject();
+        delete usuarioResposta.senha;
+
+        console.log('✅ Login usuário bem-sucedido:', usuario.email);
+        
+        return res.status(200).json({ 
+          status: 'sucesso', 
+          data: usuarioResposta,
+          token,
+          message: 'Login realizado com sucesso'
+        });
+      }
+    }
+
+    // Se não encontrou usuário ou senha inválida, buscar profissional
+    console.log('🔍 Buscando profissional...');
+    const profissional = await Profissional.findOne({ email }).populate('localizacao').catch(err => {
+      console.error('❌ Erro ao buscar profissional:', err);
+      return null;
+    });
+
+    if (profissional) {
+      const senhaValida = await bcrypt.compare(senha, profissional.senha);
+      if (senhaValida) {
+        const token = jwt.sign(
+          { 
+            _id: profissional._id, 
+            email: profissional.email,
+            tipo: 'profissional'
+          }, 
+          process.env.JWT_SECRET || '7282',
+          { expiresIn: '7d' }
+        );
+
+        const profissionalResposta = profissional.toObject();
+        delete profissionalResposta.senha;
+
+        console.log('✅ Login profissional bem-sucedido:', profissional.email);
+        
+        return res.status(200).json({ 
+          status: 'sucesso', 
+          data: profissionalResposta,
+          token,
+          message: 'Login realizado com sucesso'
+        });
+      }
+    }
+
+    console.log('❌ Credenciais inválidas para:', email);
+    return res.status(401).json({ 
+      status: 'erro', 
+      message: 'Credenciais inválidas' 
+    });
+
   } catch (error) {
     console.error('❌ Erro no login:', error);
+    res.status(500).json({ 
+      status: 'erro', 
+      message: 'Erro interno do servidor' 
+    });
+  }
+});
+
+// Rota de Logout
+app.post('/api/auth/logout', (req, res) => {
+  try {
+    console.log('🚪 Usuário fez logout');
+    res.status(200).json({ 
+      status: 'sucesso', 
+      message: 'Logout realizado com sucesso' 
+    });
+  } catch (error) {
+    console.error('❌ Erro no logout:', error);
     res.status(500).json({ 
       status: 'erro', 
       message: error.message 

@@ -1,4 +1,3 @@
-import React from 'react';
 import UploadImagem from './UploadImagem';
 
 const FormularioCadastro = ({

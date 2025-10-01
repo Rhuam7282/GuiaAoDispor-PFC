@@ -23,7 +23,7 @@ import portugues from "@Recursos/Imagens/portugues.jpg";
 const Perfil = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, estaAutenticado, logout } = useAuth();
   
   const [dadosPerfil, setDadosPerfil] = useState(null);
   const [historicoAcademico, setHistoricoAcademico] = useState([]);
@@ -88,7 +88,7 @@ const Perfil = () => {
       setErro(null);
 
       // Se não há ID na URL e o usuário está logado, carregar perfil do usuário logado
-      if (!id && isAuthenticated() && user) {
+      if (!id && estaAutenticado() && user) {
         try {
           const resposta = await servicoAuth.buscarPerfilLogado(user._id);
           
@@ -114,7 +114,7 @@ const Perfil = () => {
       }
         
         // Se não há ID e usuário não está logado, mostrar dados estáticos
-        if (!id && !isAuthenticated()) {
+        if (!id && !estaAutenticado()) {
           setDadosPerfil(dadosEstaticos);
           setHistoricoAcademico(dadosEstaticos.historicoAcademico);
           setHistoricoProfissional(dadosEstaticos.historicoProfissional);
@@ -168,7 +168,7 @@ const Perfil = () => {
       };
 
     carregarDadosPerfil();
-  }, [id, user, isAuthenticated]);
+  }, [id, user, estaAutenticado]);
 
   // Função para formatar dados do perfil de forma consistente
   const formatarDadosPerfil = (dadosUsuario) => {
@@ -195,7 +195,7 @@ const Perfil = () => {
 
   // Função para verificar se é o perfil do próprio usuário
   const isPerfilProprio = () => {
-    if (!isAuthenticated() || !user) return false;
+    if (!estaAutenticado() || !user) return false;
     if (id) return user._id === id;
     return true; // Se não há ID na URL, é sempre o perfil próprio
   };
@@ -243,7 +243,7 @@ const Perfil = () => {
         <div className="cabecalhoPerfil flexCentro">
           <h1 className="titulo">{dadosPerfil.nome}</h1>
           <div className="botoesCabecalho">
-            {isAuthenticated() && isPerfilProprio() && (
+            {estaAutenticado() && isPerfilProprio() && (
               <button 
                 className="botao botaoSecundario"
                 onClick={() => setModoEdicao(!modoEdicao)}
@@ -251,7 +251,7 @@ const Perfil = () => {
                 {modoEdicao ? 'Cancelar Edição' : 'Editar Perfil'}
               </button>
             )}
-            {isAuthenticated() && (
+            {estaAutenticado() && (
               <button 
                 onClick={handleLogout}
                 className="botao botaoSecundario flexCentro"
@@ -271,7 +271,7 @@ const Perfil = () => {
 
         <InformacoesPerfil 
           dadosPerfil={dadosPerfil}
-          isAuthenticated={isAuthenticated}
+          estaAutenticado={estaAutenticado}
           user={user}
           id={id || (user ? user._id : null)}
           modoEdicao={modoEdicao}

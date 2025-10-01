@@ -7,7 +7,7 @@ import RodapeMenu from './RodapeMenu/RodapeMenu';
 import './Menu.css';
 
 const Menu = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { estaAutenticado, logout } = useAuth();
 
   return (
     <menu>

@@ -10,7 +10,7 @@ import './ListaMenu.css';
 const ListaMenu = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, user, logout } = useAuth();
+  const { estaAutenticado, user, logout } = useAuth();
 
   const itensMenu = [
     { Icone: Home, texto: 'Início', rota: '/' },
@@ -21,7 +21,7 @@ const ListaMenu = () => {
 
   const handleItemClick = (item) => {
     if (item.texto === 'Perfil') {
-      if (isAuthenticated()) {
+      if (estaAutenticado()) {
         navigate('/perfil');
       } else {
         navigate('/cadastro');
@@ -47,7 +47,7 @@ const ListaMenu = () => {
           key={item.texto}
           item={item}
           ativo={item.rota === location.pathname}
-          usuarioLogado={isAuthenticated() && user}
+          usuarioLogado={estaAutenticado() && user}
           onClick={() => handleItemClick(item)}
         />
       ))}

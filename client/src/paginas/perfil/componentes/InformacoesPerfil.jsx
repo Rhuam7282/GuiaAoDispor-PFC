@@ -3,7 +3,7 @@ import { Star, Facebook, Instagram, Linkedin, Save, X, Edit, Camera, Upload } fr
 import { useAuth } from '@Contextos/Autenticacao.jsx';
 import { servicoAuth } from '@Servicos/api.js';
 
-const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao, setModoEdicao }) => {
+const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao, setModoEdicao }) => {
   const { atualizarUsuario } = useAuth();
   const [dadosEditaveis, setDadosEditaveis] = useState({
     nome: '',
@@ -317,7 +317,7 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
             src={dadosPerfil.foto || '/placeholder-avatar.jpg'}
             alt={`${dadosPerfil.nome} - ${dadosPerfil.descricao} em ${dadosPerfil.localizacao}`}
           />
-          {isAuthenticated && user && user._id === id && (
+          {estaAutenticado && user && user._id === id && (
             <div className="sobreposicaoFoto" onClick={() => setModoEdicao(true)}>
               <Camera size={24} />
               <span>Alterar foto</span>

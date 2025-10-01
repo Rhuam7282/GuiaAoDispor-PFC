@@ -5,7 +5,7 @@ import './BotoesAcao.css';
 
 const BotoesAcao = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { estaAutenticado } = useAuth();
   const [hoveredButton, setHoveredButton] = useState(null);
 
   const handleEntrarAnonimo = () => {
@@ -16,7 +16,7 @@ const BotoesAcao = () => {
     navigate('/cadastro');
   };
 
-  if (isAuthenticated()) {
+  if (estaAutenticado()) {
     return null;
   }
 
