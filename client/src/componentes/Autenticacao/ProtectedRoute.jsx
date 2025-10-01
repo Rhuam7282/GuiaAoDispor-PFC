@@ -16,6 +16,7 @@ const ProtectedRoute = ({ children, requerAutenticacao = true, redirecionarPara 
     );
   }
 
+  // Se a rota requer autenticação e usuário não está autenticado
   if (requerAutenticacao && !estaAutenticado()) {
     return (
       <Navigate 
@@ -26,7 +27,12 @@ const ProtectedRoute = ({ children, requerAutenticacao = true, redirecionarPara 
     );
   }
 
+  // Se a rota NÃO requer autenticação (como cadastro/login) e usuário ESTÁ autenticado
   if (!requerAutenticacao && estaAutenticado()) {
+    // Redirecionar autenticados que tentam acessar cadastro para o perfil
+    if (localizacao.pathname === '/cadastro') {
+      return <Navigate to="/perfil" replace />;
+    }
     return <Navigate to="/qualificados" replace />;
   }
 

@@ -113,7 +113,7 @@ const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao,
         });
         
         setMensagem('Perfil atualizado com sucesso!');
-        setTimeout(() => setMensagem(''), 3000);
+        setTimeout(() => setMensagem(''), 10000);
         setModoEdicao(false);
       }
     } catch (erro) {

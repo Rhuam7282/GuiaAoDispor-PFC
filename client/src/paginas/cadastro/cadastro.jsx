@@ -102,13 +102,13 @@ const Cadastro = () => {
         respostaCadastro = await servicoCadastro.cadastrarUsuario(dadosPerfil, dadosLocalizacao);
       }
 
-      console.log('🔐 Realizando login automático...');
-      const respostaLogin = await servicoAuth.login(dadosFormulario.email, dadosFormulario.senha);
+      console.log('✅ Cadastro realizado, fazendo login automático...');
       
-      if (respostaLogin.data && respostaLogin.token) {
-        login(respostaLogin.data, respostaLogin.token);
+      // CORREÇÃO: Usar os dados do cadastro para login imediato
+      if (respostaCadastro.data && respostaCadastro.token) {
+        login(respostaCadastro.data, respostaCadastro.token);
         setMensagemSucesso('Cadastro realizado com sucesso! Redirecionando...');
-        setTimeout(() => navigate("/perfil"), 2000);
+        // O redirecionamento será feito automaticamente pelo contexto de autenticação
       } else {
         throw new Error('Erro no login automático após cadastro');
       }
@@ -149,6 +149,35 @@ const Cadastro = () => {
     });
   };
 
+  const alterarContato = (indice, campo, valor) => {
+    setDadosFormulario(prev => {
+      const novosContatos = prev.contatos.map((contato, i) => 
+        i === indice ? { ...contato, [campo]: valor } : contato
+      );
+      
+      const contatoAtualizado = novosContatos[indice];
+      
+      if (contatoAtualizado.tipo && contatoAtualizado.valor) {
+        const erro = validarContato(contatoAtualizado.tipo, contatoAtualizado.valor);
+        setErrosContatos(prevErros => ({
+          ...prevErros,
+          [indice]: erro
+        }));
+      } else {
+        setErrosContatos(prevErros => {
+          const novosErros = { ...prevErros };
+          delete novosErros[indice];
+          return novosErros;
+        });
+      }
+      
+      return {
+        ...prev,
+        contatos: novosContatos
+      };
+    });
+  };
+
   const validarContato = (tipo, valor) => {
     if (!valor.trim()) return 'Campo obrigatório';
     
@@ -179,35 +208,6 @@ const Cadastro = () => {
     }
     
     return '';
-  };
-
-  const alterarContato = (indice, campo, valor) => {
-    setDadosFormulario(prev => {
-      const novosContatos = prev.contatos.map((contato, i) => 
-        i === indice ? { ...contato, [campo]: valor } : contato
-      );
-      
-      const contatoAtualizado = novosContatos[indice];
-      
-      if (contatoAtualizado.tipo && contatoAtualizado.valor) {
-        const erro = validarContato(contatoAtualizado.tipo, contatoAtualizado.valor);
-        setErrosContatos(prevErros => ({
-          ...prevErros,
-          [indice]: erro
-        }));
-      } else {
-        setErrosContatos(prevErros => {
-          const novosErros = { ...prevErros };
-          delete novosErros[indice];
-          return novosErros;
-        });
-      }
-      
-      return {
-        ...prev,
-        contatos: novosContatos
-      };
-    });
   };
 
   const validarFormulario = () => {

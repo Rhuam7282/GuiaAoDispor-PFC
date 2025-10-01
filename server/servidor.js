@@ -751,6 +751,147 @@ app.delete('/api/hcurriculares/:id', async (req, res) => {
   }
 });
 
+// ========== ROTAS PARA LOCALIZAÇÕES ==========
+
+// GET - Listar todas as localizações
+app.get('/api/localizacoes', async (req, res) => {
+  try {
+    console.log('📍 Buscando todas as localizações');
+    const localizacoes = await Localizacao.find();
+    res.status(200).json({
+      status: 'sucesso',
+      data: localizacoes,
+      total: localizacoes.length
+    });
+  } catch (error) {
+    console.error('❌ Erro ao buscar localizações:', error);
+    res.status(500).json({
+      status: 'erro',
+      message: error.message
+    });
+  }
+});
+
+// GET - Buscar localização por ID
+app.get('/api/localizacoes/:id', async (req, res) => {
+  try {
+    console.log(`📍 Buscando localização: ${req.params.id}`);
+    const localizacao = await Localizacao.findById(req.params.id);
+    if (!localizacao) {
+      return res.status(404).json({
+        status: 'erro',
+        message: 'Localização não encontrada'
+      });
+    }
+    res.status(200).json({
+      status: 'sucesso',
+      data: localizacao
+    });
+  } catch (error) {
+    console.error('❌ Erro ao buscar localização:', error);
+    res.status(500).json({
+      status: 'erro',
+      message: error.message
+    });
+  }
+});
+
+// POST - Criar nova localização
+app.post('/api/localizacoes', async (req, res) => {
+  try {
+    console.log('📍 Criando nova localização');
+    const { nome, cep, cidade, estado } = req.body;
+
+    if (!nome || !cidade || !estado) {
+      return res.status(400).json({
+        status: 'erro',
+        message: 'Nome, cidade e estado são obrigatórios'
+      });
+    }
+
+    const novaLocalizacao = await Localizacao.create({
+      nome,
+      cep,
+      cidade,
+      estado
+    });
+
+    console.log(`✅ Localização criada: ${novaLocalizacao.nome}`);
+    res.status(201).json({
+      status: 'sucesso',
+      data: novaLocalizacao,
+      message: 'Localização criada com sucesso'
+    });
+  } catch (error) {
+    console.error('❌ Erro ao criar localização:', error);
+    res.status(400).json({
+      status: 'erro',
+      message: error.message
+    });
+  }
+});
+
+// PUT - Atualizar localização
+app.put('/api/localizacoes/:id', async (req, res) => {
+  try {
+    console.log(`✏️ Atualizando localização: ${req.params.id}`);
+    const { nome, cep, cidade, estado } = req.body;
+
+    const localizacaoAtualizada = await Localizacao.findByIdAndUpdate(
+      req.params.id,
+      { nome, cep, cidade, estado },
+      { new: true, runValidators: true }
+    );
+
+    if (!localizacaoAtualizada) {
+      return res.status(404).json({
+        status: 'erro',
+        message: 'Localização não encontrada'
+      });
+    }
+
+    console.log(`✅ Localização atualizada: ${localizacaoAtualizada.nome}`);
+    res.status(200).json({
+      status: 'sucesso',
+      data: localizacaoAtualizada,
+      message: 'Localização atualizada com sucesso'
+    });
+  } catch (error) {
+    console.error('❌ Erro ao atualizar localização:', error);
+    res.status(400).json({
+      status: 'erro',
+      message: error.message
+    });
+  }
+});
+
+// DELETE - Deletar localização
+app.delete('/api/localizacoes/:id', async (req, res) => {
+  try {
+    console.log(`🗑️ Deletando localização: ${req.params.id}`);
+    const localizacaoDeletada = await Localizacao.findByIdAndDelete(req.params.id);
+
+    if (!localizacaoDeletada) {
+      return res.status(404).json({
+        status: 'erro',
+        message: 'Localização não encontrada'
+      });
+    }
+
+    console.log(`✅ Localização deletada: ${localizacaoDeletada.nome}`);
+    res.status(200).json({
+      status: 'sucesso',
+      message: 'Localização deletada com sucesso'
+    });
+  } catch (error) {
+    console.error('❌ Erro ao deletar localização:', error);
+    res.status(500).json({
+      status: 'erro',
+      message: error.message
+    });
+  }
+});
+
 // ========== ROTAS PARA HISTÓRICOS PROFISSIONAIS (HProfissional) ==========
 
 // GET - Buscar todos os históricos profissionais

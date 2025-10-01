@@ -9,16 +9,17 @@ const BotoesAcao = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
 
   const handleEntrarAnonimo = () => {
+    console.log('🚀 Acessando diretamente (anonimo)');
     navigate('/qualificados');
   };
 
   const handleFazerLogin = () => {
+    console.log('🔐 Redirecionando para cadastro/login');
     navigate('/cadastro');
   };
 
-  if (estaAutenticado()) {
-    return null;
-  }
+  // CORREÇÃO: Não esconder os botões mesmo se autenticado
+  // Apenas ajustar o comportamento se necessário
 
   return (
     <div className="secaoBotoesAcao">
@@ -32,6 +33,8 @@ const BotoesAcao = () => {
           <button 
             onClick={handleEntrarAnonimo} 
             className="botaoAcesso botaoSecundario"
+            onMouseEnter={() => setHoveredButton('anonimo')}
+            onMouseLeave={() => setHoveredButton(null)}
           >
             <div className="conteudoBotao">
               <span className="iconeBotao">🚀 </span>
@@ -50,6 +53,8 @@ const BotoesAcao = () => {
           <button 
             onClick={handleFazerLogin} 
             className="botaoAcesso botaoPrimario"
+            onMouseEnter={() => setHoveredButton('login')}
+            onMouseLeave={() => setHoveredButton(null)}
           >
             <div className="conteudoBotao">
               <span className="iconeBotao">🔐 </span>

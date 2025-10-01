@@ -49,6 +49,9 @@ export const ProvedorAutenticacao = ({ children }) => {
     localStorage.setItem('timestampLogin', Date.now().toString());
     
     console.log('✅ Login realizado:', usuarioNormalizado.nome);
+    
+    // Redirecionar para qualificados após login
+    navigate('/qualificados');
   };
 
   const logout = async () => {
@@ -68,6 +71,7 @@ export const ProvedorAutenticacao = ({ children }) => {
       localStorage.removeItem('lembrarMe');
       
       console.log('🚪 Logout realizado');
+      // Redirecionar para página inicial após logout
       navigate('/');
     }
   };
