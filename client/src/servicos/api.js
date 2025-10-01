@@ -1,8 +1,8 @@
-import { API_CONFIG } from '@config/apiConfig.js';
+// client/src/servicos/api.js
+import { API_CONFIG } from '../config/apiConfig.js';
 
 const URL_BASE = API_CONFIG.BASE_URL;
 
-// Função para obter o token do localStorage
 const obterToken = () => {
   return localStorage.getItem('token');
 };
@@ -18,7 +18,6 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
     credentials: 'include'
   };
 
-  // Adicionar token ao header se disponível
   if (token) {
     opcoes.headers.Authorization = `Bearer ${token}`;
   }
@@ -32,9 +31,7 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
     
     const resposta = await fetch(url, opcoes);
     
-    // Verificar se a resposta é OK antes de processar
     if (!resposta.ok) {
-      // Tentar extrair mensagem de erro da resposta
       let mensagemErro = `Erro ${resposta.status}: ${resposta.statusText}`;
       
       try {
@@ -44,10 +41,8 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
           mensagemErro = dadosErro.message || dadosErro.mensagem || mensagemErro;
         }
       } catch (e) {
-        // Ignorar erro de parsing
       }
       
-      // Se for erro de autenticação, fazer logout
       if (resposta.status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -60,7 +55,6 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
     
     const contentType = resposta.headers.get('content-type');
     
-    // Se não há conteúdo, retornar sucesso
     if (resposta.status === 204 || !contentType) {
       return { status: 'sucesso' };
     }
@@ -78,7 +72,6 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
   } catch (erro) {
     console.error('❌ Erro na requisição:', erro);
     
-    // Melhorar mensagens de erro para o usuário
     if (erro.name === 'TypeError' && erro.message.includes('fetch')) {
       throw new Error('Erro de conexão. Verifique se o servidor está rodando.');
     }
@@ -172,11 +165,9 @@ export const servicoCadastro = {
 
   cadastrarUsuario: async (dadosPerfil, dadosLocalizacao) => {
     try {
-      // Primeiro criar a localização
       const respostaLocalizacao = await servicoLocalizacao.criar(dadosLocalizacao);
       const localizacaoId = respostaLocalizacao.data._id;
       
-      // Depois criar o usuário com a referência à localização
       const dadosUsuario = {
         ...dadosPerfil,
         localizacao: localizacaoId
@@ -205,44 +196,7 @@ export const servicoCadastro = {
     } catch (erro) {
       throw new Error(`Erro no cadastro: ${erro.message}`);
     }
-  },
-
-  cadastrarProfissionalComHistoricos: async (
-    dadosProfissional,
-    dadosLocalizacao,
-    historicosCurriculares,
-    historicosProfissionais
-  ) => {
-    try {
-      const respostaLocalizacao = await servicoLocalizacao.criar(
-        dadosLocalizacao
-      );
-      const respostaProfissional = await servicoProfissional.criar({
-        ...dadosProfissional,
-        localizacao:
-          respostaLocalizacao.data._id || respostaLocalizacao.dados._id,
-      });
-      const idProfissional =
-        respostaProfissional.data._id || respostaProfissional.dados._id;
-      for (const hc of historicosCurriculares) {
-        await servicoHCurricular.criar({
-          ...hc,
-          profissional: idProfissional,
-        });
-      }
-
-      for (const hp of historicosProfissionais) {
-        await servicoHProfissional.criar({
-          ...hp,
-          profissional: idProfissional,
-        });
-      }
-
-      return respostaProfissional;
-    } catch (erro) {
-      throw new Error(`Erro no cadastro: ${erro.message}`);
-    }
-  },
+  }
 };
 
 export const servicoAuth = {
@@ -253,12 +207,11 @@ export const servicoAuth = {
         senha
       });
       
-      // Verificar se a resposta tem a estrutura esperada
       if (resposta && resposta.status === 'sucesso' && resposta.data && resposta.token) {
-        // Salvar token no localStorage
         localStorage.setItem('token', resposta.token);
         localStorage.setItem('user', JSON.stringify(resposta.data));
         localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('loginTimestamp', Date.now().toString());
         
         return resposta;
       } else {
@@ -266,7 +219,16 @@ export const servicoAuth = {
       }
     } catch (erro) {
       console.error('❌ Erro no login:', erro);
-      throw new Error(erro.message || `Erro no login: ${erro.message}`);
+      
+      if (erro.message.includes('401')) {
+        throw new Error('Credenciais inválidas');
+      } else if (erro.message.includes('404')) {
+        throw new Error('Email não encontrado');
+      } else if (erro.message.includes('Network Error') || erro.message.includes('Failed to fetch')) {
+        throw new Error('Erro de conexão. Verifique sua internet.');
+      } else {
+        throw new Error(erro.message || 'Erro ao fazer login');
+      }
     }
   },
 
@@ -299,14 +261,12 @@ export const servicoAuth = {
         "POST"
       );
       
-      // Limpar localStorage independente da resposta do servidor
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       localStorage.removeItem('isAuthenticated');
       
       return resposta;
     } catch (erro) {
-      // Limpar localStorage mesmo em caso de erro
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       localStorage.removeItem('isAuthenticated');

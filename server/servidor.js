@@ -6,6 +6,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import multer from 'multer';
+import sharp from 'sharp';
+import fs from 'fs/promises';
 
 // Configuração do dotenv
 const __filename = fileURLToPath(import.meta.url);
@@ -35,6 +38,9 @@ app.options('*', cors());
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
+// Configuração para servir arquivos estáticos
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
 // Conexão com MongoDB
 const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/guiaaodispor';
@@ -512,38 +518,54 @@ app.post('/api/profissionais', async (req, res) => {
   }
 });
 
-app.post('/api/localizacoes', async (req, res) => {
+// GET - Buscar todos os históricos curriculares
+app.get('/api/hcurriculares', async (req, res) => {
   try {
-    console.log('📍 Criando nova localização');
-    const novaLocalizacao = await Localizacao.create(req.body);
-    res.status(201).json({ 
+    console.log('📚 Buscando todos os históricos curriculares');
+    
+    const { profissional } = req.query;
+    let filtro = {};
+    
+    if (profissional) {
+      filtro.profissional = profissional;
+    }
+
+    const historicos = await HCurricular.find(filtro).populate('profissional');
+    
+    res.status(200).json({ 
       status: 'sucesso', 
-      data: novaLocalizacao 
+      data: historicos,
+      total: historicos.length
     });
   } catch (error) {
-    console.error('❌ Erro ao criar localização:', error);
-    res.status(400).json({ 
+    console.error('❌ Erro ao buscar históricos curriculares:', error);
+    res.status(500).json({ 
       status: 'erro', 
       message: error.message 
     });
   }
 });
 
-app.get('/api/localizacoes/:id', async (req, res) => {
+// GET - Buscar histórico curricular por ID
+app.get('/api/hcurriculares/:id', async (req, res) => {
   try {
-    const localizacao = await Localizacao.findById(req.params.id);
-    if (!localizacao) {
+    console.log(`📚 Buscando histórico curricular: ${req.params.id}`);
+    
+    const historico = await HCurricular.findById(req.params.id).populate('profissional');
+    
+    if (!historico) {
       return res.status(404).json({ 
         status: 'erro', 
-        message: 'Localização não encontrada' 
+        message: 'Histórico curricular não encontrado' 
       });
     }
+
     res.status(200).json({ 
       status: 'sucesso', 
-      data: localizacao 
+      data: historico 
     });
   } catch (error) {
-    console.error('❌ Erro ao buscar localização:', error);
+    console.error('❌ Erro ao buscar histórico curricular:', error);
     res.status(500).json({ 
       status: 'erro', 
       message: error.message 
@@ -556,81 +578,159 @@ app.use(verificarToken);
 
 // ========== ROTAS PROTEGIDAS (APÓS MIDDLEWARE) ==========
 
-// Rota para buscar perfil
+// Rota para buscar perfil - CORRIGIDA
 app.get('/api/auth/perfil/:id', async (req, res) => {
   try {
-    console.log('🔍 Buscando perfil do usuário:', req.params.id);
-    const usuario = await Usuario.findById(req.params.id).populate('localizacao');
-    
-    if (!usuario) {
-      // Tentar buscar como profissional
-      const profissional = await Profissional.findById(req.params.id).populate('localizacao');
-      if (!profissional) {
-        return res.status(404).json({ 
-          status: 'erro', 
-          message: 'Usuário não encontrado' 
-        });
-      }
+    const { id } = req.params;
+    console.log(`👤 Buscando perfil para o ID: ${id}`);
 
-      const profissionalResposta = profissional.toObject();
-      delete profissionalResposta.senha;
-      
-      return res.status(200).json({ 
-        status: 'sucesso', 
-        data: profissionalResposta 
+    // Tenta encontrar como Profissional primeiro
+    let perfil = await Profissional.findById(id).select('-senha').populate('localizacao');
+    let tipo = 'profissional';
+
+    // Se não for profissional, tenta encontrar como Usuário
+    if (!perfil) {
+      perfil = await Usuario.findById(id).select('-senha').populate('localizacao');
+      tipo = 'usuario';
+    }
+
+    if (!perfil) {
+      return res.status(404).json({
+        status: 'erro',
+        message: 'Usuário ou profissional não encontrado.'
       });
     }
 
-    const usuarioResposta = usuario.toObject();
-    delete usuarioResposta.senha;
+    console.log(`✅ Perfil encontrado: ${perfil.nome} (Tipo: ${tipo})`);
 
-    res.status(200).json({ 
-      status: 'sucesso', 
-      data: usuarioResposta 
+    res.status(200).json({
+      status: 'sucesso',
+      data: perfil
     });
+
   } catch (error) {
-    console.error(`💥 Erro ao buscar perfil:`, error);
-    res.status(500).json({ 
-      status: 'erro', 
-      message: error.message 
+    console.error('❌ Erro ao buscar perfil:', error);
+    res.status(500).json({
+      status: 'erro',
+      message: 'Erro interno ao buscar perfil.'
     });
   }
 });
 
-// Rota para editar perfil
-app.put('/api/auth/perfil/:id', async (req, res) => {
+// POST - Criar novo histórico curricular
+app.post('/api/hcurriculares', async (req, res) => {
   try {
-    console.log(`✏️ Editando perfil: ${req.params.id}`);
-    const { senha, ...camposAtualizacao } = req.body;
+    console.log('📝 Criando novo histórico curricular');
     
-    delete camposAtualizacao._id;
-    
-    const usuarioAtualizado = await Usuario.findByIdAndUpdate(
-      req.params.id,
-      camposAtualizacao,
-      { new: true, runValidators: true }
-    ).populate('localizacao');
-    
-    if (!usuarioAtualizado) {
-      console.log(`❌ Usuário não encontrado para edição: ${req.params.id}`);
+    const { nome, desc, foto, profissional } = req.body;
+
+    // Validações
+    if (!nome) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'Nome é obrigatório' 
+      });
+    }
+
+    if (!profissional) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'Profissional é obrigatório' 
+      });
+    }
+
+    // Verificar se profissional existe
+    const profissionalExiste = await Profissional.findById(profissional);
+    if (!profissionalExiste) {
       return res.status(404).json({ 
         status: 'erro', 
-        message: 'Usuário não encontrado' 
+        message: 'Profissional não encontrado' 
       });
     }
 
-    console.log(`✅ Perfil atualizado: ${usuarioAtualizado.nome}`);
-    
-    const usuarioResposta = usuarioAtualizado.toObject();
-    delete usuarioResposta.senha;
+    const novoHistorico = await HCurricular.create({
+      nome,
+      desc,
+      foto,
+      profissional
+    });
 
-    res.status(200).json({ 
+    await novoHistorico.populate('profissional');
+
+    console.log(`✅ Histórico curricular criado: ${novoHistorico.nome}`);
+    
+    res.status(201).json({ 
       status: 'sucesso', 
-      data: usuarioResposta,
-      message: 'Perfil atualizado com sucesso'
+      data: novoHistorico,
+      message: 'Histórico curricular criado com sucesso'
     });
   } catch (error) {
-    console.error(`💥 Erro ao editar perfil:`, error);
+    console.error('❌ Erro ao criar histórico curricular:', error);
+    res.status(400).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
+// PUT - Atualizar histórico curricular
+app.put('/api/hcurriculares/:id', async (req, res) => {
+  try {
+    console.log(`✏️ Atualizando histórico curricular: ${req.params.id}`);
+    
+    const { nome, desc } = req.body;
+
+    const historicoAtualizado = await HCurricular.findByIdAndUpdate(
+      req.params.id,
+      { nome, desc },
+      { new: true, runValidators: true }
+    ).populate('profissional');
+
+    if (!historicoAtualizado) {
+      return res.status(404).json({ 
+        status: 'erro', 
+        message: 'Histórico curricular não encontrado' 
+      });
+    }
+
+    console.log(`✅ Histórico curricular atualizado: ${historicoAtualizado.nome}`);
+    
+    res.status(200).json({ 
+      status: 'sucesso', 
+      data: historicoAtualizado,
+      message: 'Histórico curricular atualizado com sucesso'
+    });
+  } catch (error) {
+    console.error('❌ Erro ao atualizar histórico curricular:', error);
+    res.status(400).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
+// DELETE - Deletar histórico curricular
+app.delete('/api/hcurriculares/:id', async (req, res) => {
+  try {
+    console.log(`🗑️ Deletando histórico curricular: ${req.params.id}`);
+    
+    const historicoDeletado = await HCurricular.findByIdAndDelete(req.params.id);
+
+    if (!historicoDeletado) {
+      return res.status(404).json({ 
+        status: 'erro', 
+        message: 'Histórico curricular não encontrado' 
+      });
+    }
+
+    console.log(`✅ Histórico curricular deletado: ${historicoDeletado.nome}`);
+    
+    res.status(200).json({ 
+      status: 'sucesso', 
+      message: 'Histórico curricular deletado com sucesso'
+    });
+  } catch (error) {
+    console.error('❌ Erro ao deletar histórico curricular:', error);
     res.status(500).json({ 
       status: 'erro', 
       message: error.message 
@@ -638,17 +738,177 @@ app.put('/api/auth/perfil/:id', async (req, res) => {
   }
 });
 
-// Rota para logout
-app.post('/api/auth/logout', async (req, res) => {
+// ========== ROTAS PARA HISTÓRICOS PROFISSIONAIS (HProfissional) ==========
+
+// GET - Buscar todos os históricos profissionais
+app.get('/api/hprofissionais', async (req, res) => {
   try {
-    console.log(`🚪 Logout realizado`);
+    console.log('💼 Buscando todos os históricos profissionais');
+    
+    const { profissional } = req.query;
+    let filtro = {};
+    
+    if (profissional) {
+      filtro.profissional = profissional;
+    }
+
+    const historicos = await HProfissional.find(filtro).populate('profissional');
     
     res.status(200).json({ 
       status: 'sucesso', 
-      message: 'Logout realizado com sucesso' 
+      data: historicos,
+      total: historicos.length
     });
   } catch (error) {
-    console.error(`💥 Erro durante logout:`, error);
+    console.error('❌ Erro ao buscar históricos profissionais:', error);
+    res.status(500).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
+// GET - Buscar histórico profissional por ID
+app.get('/api/hprofissionais/:id', async (req, res) => {
+  try {
+    console.log(`💼 Buscando histórico profissional: ${req.params.id}`);
+    
+    const historico = await HProfissional.findById(req.params.id).populate('profissional');
+    
+    if (!historico) {
+      return res.status(404).json({ 
+        status: 'erro', 
+        message: 'Histórico profissional não encontrado' 
+      });
+    }
+
+    res.status(200).json({ 
+      status: 'sucesso', 
+      data: historico 
+    });
+  } catch (error) {
+    console.error('❌ Erro ao buscar histórico profissional:', error);
+    res.status(500).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
+// POST - Criar novo histórico profissional
+app.post('/api/hprofissionais', async (req, res) => {
+  try {
+    console.log('📝 Criando novo histórico profissional');
+    
+    const { nome, desc, foto, profissional } = req.body;
+
+    // Validações
+    if (!nome) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'Nome é obrigatório' 
+      });
+    }
+
+    if (!profissional) {
+      return res.status(400).json({ 
+        status: 'erro', 
+        message: 'Profissional é obrigatório' 
+      });
+    }
+
+    // Verificar se profissional existe
+    const profissionalExiste = await Profissional.findById(profissional);
+    if (!profissionalExiste) {
+      return res.status(404).json({ 
+        status: 'erro', 
+        message: 'Profissional não encontrado' 
+      });
+    }
+
+    const novoHistorico = await HProfissional.create({
+      nome,
+      desc,
+      foto,
+      profissional
+    });
+
+    await novoHistorico.populate('profissional');
+
+    console.log(`✅ Histórico profissional criado: ${novoHistorico.nome}`);
+    
+    res.status(201).json({ 
+      status: 'sucesso', 
+      data: novoHistorico,
+      message: 'Histórico profissional criado com sucesso'
+    });
+  } catch (error) {
+    console.error('❌ Erro ao criar histórico profissional:', error);
+    res.status(400).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
+// PUT - Atualizar histórico profissional
+app.put('/api/hprofissionais/:id', async (req, res) => {
+  try {
+    console.log(`✏️ Atualizando histórico profissional: ${req.params.id}`);
+    
+    const { nome, desc, foto } = req.body;
+
+    const historicoAtualizado = await HProfissional.findByIdAndUpdate(
+      req.params.id,
+      { nome, desc, foto },
+      { new: true, runValidators: true }
+    ).populate('profissional');
+
+    if (!historicoAtualizado) {
+      return res.status(404).json({ 
+        status: 'erro', 
+        message: 'Histórico profissional não encontrado' 
+      });
+    }
+
+    console.log(`✅ Histórico profissional atualizado: ${historicoAtualizado.nome}`);
+    
+    res.status(200).json({ 
+      status: 'sucesso', 
+      data: historicoAtualizado,
+      message: 'Histórico profissional atualizado com sucesso'
+    });
+  } catch (error) {
+    console.error('❌ Erro ao atualizar histórico profissional:', error);
+    res.status(400).json({ 
+      status: 'erro', 
+      message: error.message 
+    });
+  }
+});
+
+// DELETE - Deletar histórico profissional
+app.delete('/api/hprofissionais/:id', async (req, res) => {
+  try {
+    console.log(`🗑️ Deletando histórico profissional: ${req.params.id}`);
+    
+    const historicoDeletado = await HProfissional.findByIdAndDelete(req.params.id);
+
+    if (!historicoDeletado) {
+      return res.status(404).json({ 
+        status: 'erro', 
+        message: 'Histórico profissional não encontrado' 
+      });
+    }
+
+    console.log(`✅ Histórico profissional deletado: ${historicoDeletado.nome}`);
+    
+    res.status(200).json({ 
+      status: 'sucesso', 
+      message: 'Histórico profissional deletado com sucesso'
+    });
+  } catch (error) {
+    console.error('❌ Erro ao deletar histórico profissional:', error);
     res.status(500).json({ 
       status: 'erro', 
       message: error.message 

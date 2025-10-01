@@ -1,151 +1,83 @@
-import React, { useState } from 'react';
+class UploadImagem {
+  constructor() {
+    this.apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+  }
 
-const UploadImagem = ({ foto, aoSelecionarArquivo }) => {
-  const [objectFit, setObjectFit] = useState('cover');
-  const [objectPosition, setObjectPosition] = useState('center');
-
-  const handleObjectFitChange = (novoObjectFit) => {
-    setObjectFit(novoObjectFit);
-  };
-
-  const handleObjectPositionChange = (posicao) => {
-    setObjectPosition(posicao);
-  };
-
-  return (
-    <div className="secao-upload-imagem">
-      <div className="area-upload-imagem sombraPequena fundoMarromDestaqueTransparente">
-        <input
-          type="file"
-          id="foto"
-          className="input-arquivo"
-          accept="image/*"
-          onChange={aoSelecionarArquivo}
-        />
-        <label htmlFor="foto" className="rotulo-upload-imagem">
-          {foto ? (
-            <div className="container-imagem-quadrada">
-              <img 
-                src={foto} 
-                alt="Preview" 
-                className="imagemPerfil" 
-                style={{ 
-                  objectFit: objectFit,
-                  objectPosition: objectPosition
-                }} 
-              />
-            </div>
-          ) : (
-            <div className="placeholder-upload">
-              <span>Clique para adicionar uma foto</span>
-            </div>
-          )}
-        </label>
-      </div>
+  async fazerUpload(arquivo, token) {
+    try {
+      console.log('📤 Iniciando upload da imagem...');
       
-      {foto && (
-        <div className="controles-enquadramento">
-          <div className="grupo-controles">
-            <label>Tipo de Enquadramento:</label>
-            <div className="botoes-controle">
-              <button
-                type="button"
-                className={`botao-controle ${objectFit === 'cover' ? 'ativo' : ''}`}
-                onClick={() => handleObjectFitChange('cover')}
-              >
-                Cobrir
-              </button>
-              <button
-                type="button"
-                className={`botao-controle ${objectFit === 'contain' ? 'ativo' : ''}`}
-                onClick={() => handleObjectFitChange('contain')}
-              >
-                Conter
-              </button>
-            </div>
-          </div>
-          
-          <div className="grupo-controles">
-            <label>Posição da Imagem:</label>
-            <div className="grade-posicoes">
-              <button
-                type="button"
-                className={`botao-posicao ${objectPosition === 'top left' ? 'ativo' : ''}`}
-                onClick={() => handleObjectPositionChange('top left')}
-                title="Superior Esquerdo"
-              >
-                ↖
-              </button>
-              <button
-                type="button"
-                className={`botao-posicao ${objectPosition === 'top center' ? 'ativo' : ''}`}
-                onClick={() => handleObjectPositionChange('top center')}
-                title="Superior Centro"
-              >
-                ↑
-              </button>
-              <button
-                type="button"
-                className={`botao-posicao ${objectPosition === 'top right' ? 'ativo' : ''}`}
-                onClick={() => handleObjectPositionChange('top right')}
-                title="Superior Direito"
-              >
-                ↗
-              </button>
-              <button
-                type="button"
-                className={`botao-posicao ${objectPosition === 'center left' ? 'ativo' : ''}`}
-                onClick={() => handleObjectPositionChange('center left')}
-                title="Centro Esquerdo"
-              >
-                ←
-              </button>
-              <button
-                type="button"
-                className={`botao-posicao ${objectPosition === 'center' ? 'ativo' : ''}`}
-                onClick={() => handleObjectPositionChange('center')}
-                title="Centro"
-              >
-                ◎
-              </button>
-              <button
-                type="button"
-                className={`botao-posicao ${objectPosition === 'center right' ? 'ativo' : ''}`}
-                onClick={() => handleObjectPositionChange('center right')}
-                title="Centro Direito"
-              >
-                →
-              </button>
-              <button
-                type="button"
-                className={`botao-posicao ${objectPosition === 'bottom left' ? 'ativo' : ''}`}
-                onClick={() => handleObjectPositionChange('bottom left')}
-                title="Inferior Esquerdo"
-              >
-                ↙
-              </button>
-              <button
-                type="button"
-                className={`botao-posicao ${objectPosition === 'bottom center' ? 'ativo' : ''}`}
-                onClick={() => handleObjectPositionChange('bottom center')}
-                title="Inferior Centro"
-              >
-                ↓
-              </button>
-              <button
-                type="button"
-                className={`botao-posicao ${objectPosition === 'bottom right' ? 'ativo' : ''}`}
-                onClick={() => handleObjectPositionChange('bottom right')}
-                title="Inferior Direito"
-              >
-                ↘
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
+      if (!arquivo) {
+        throw new Error('Nenhum arquivo selecionado');
+      }
 
-export default UploadImagem;
+      // Validar tipo de arquivo
+      const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      if (!tiposPermitidos.includes(arquivo.type)) {
+        throw new Error('Tipo de arquivo não suportado. Use JPG, PNG ou WebP.');
+      }
+
+      // Validar tamanho (5MB)
+      if (arquivo.size > 5 * 1024 * 1024) {
+        throw new Error('Arquivo muito grande. Tamanho máximo: 5MB.');
+      }
+
+      const formData = new FormData();
+      formData.append('imagem', arquivo);
+
+      const resposta = await fetch(`${this.apiUrl}/upload/imagem`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      const dados = await resposta.json();
+
+      if (!resposta.ok) {
+        throw new Error(dados.message || 'Erro no upload da imagem');
+      }
+
+      console.log('✅ Upload realizado com sucesso:', dados.data.url);
+      return dados;
+
+    } catch (error) {
+      console.error('❌ Erro no upload:', error);
+      throw error;
+    }
+  }
+
+  // Método para converter imagem em base64 (útil para preview)
+  async lerArquivoComoDataURL(arquivo) {
+    return new Promise((resolve, reject) => {
+      const leitor = new FileReader();
+      leitor.onload = () => resolve(leitor.result);
+      leitor.onerror = reject;
+      leitor.readAsDataURL(arquivo);
+    });
+  }
+
+  // Método para validar imagem antes do upload
+  validarImagem(arquivo) {
+    const erros = [];
+
+    // Validar tipo
+    const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!tiposPermitidos.includes(arquivo.type)) {
+      erros.push('Tipo de arquivo não suportado. Use JPG, PNG ou WebP.');
+    }
+
+    // Validar tamanho
+    if (arquivo.size > 5 * 1024 * 1024) {
+      erros.push('Arquivo muito grande. Tamanho máximo: 5MB.');
+    }
+
+    return {
+      valido: erros.length === 0,
+      erros
+    };
+  }
+}
+
+export default new UploadImagem();
