@@ -4,6 +4,7 @@ import Corpo from "@Componentes/Layout/Corpo.jsx";
 import FormularioLoginGoogle from './componentes/FormularioLoginGoogle.jsx';
 import FormularioLogin from './componentes/FormularioLogin.jsx';
 import FormularioCadastro from './componentes/FormularioCadastro.jsx';
+import useBuscaCep from '../../../../server/buscaCEP.jsx';
 import { servicoCadastro, servicoAuth } from '@Servicos/api.js';
 import { useAuth } from '@Contextos/Autenticacao.jsx';
 import './Cadastro.css';
@@ -30,8 +31,13 @@ const Cadastro = () => {
   
   const [erros, setErros] = useState({});
   const [errosContatos, setErrosContatos] = useState({});
-  const [carregando, setCarregando] = useState(false);
   const [mensagemSucesso, setMensagemSucesso] = useState('');
+  
+  // <<< CORREÇÃO 1: Declarar o estado 'carregandoSubmit'
+  const [carregandoSubmit, setCarregandoSubmit] = useState(false);
+
+  // Usar o hook de busca de CEP
+  const { carregandoCep } = useBuscaCep(dadosFormulario.cep, setDadosFormulario, setErros);
 
   const aoAlterarCampo = (evento) => {
     const { name, value } = evento.target;
@@ -58,7 +64,7 @@ const Cadastro = () => {
       return;
     }
 
-    setCarregando(true);
+    setCarregandoSubmit(true); 
     setMensagemSucesso('');
 
     try {
@@ -66,7 +72,7 @@ const Cadastro = () => {
       const respostaValidacao = await servicoCadastro.validarEmail(dadosFormulario.email);
       if (!respostaValidacao.valido) {
         setErros({ email: 'Este email já está em uso' });
-        setCarregando(false);
+        setCarregandoSubmit(false); 
         return;
       }
 
@@ -117,7 +123,7 @@ const Cadastro = () => {
       console.error('❌ Erro no cadastro:', erro);
       setErros({ submit: erro.message || 'Erro ao realizar cadastro' });
     } finally {
-      setCarregando(false);
+      setCarregandoSubmit(false); 
     }
   };
 
@@ -262,15 +268,16 @@ const Cadastro = () => {
         <div className='listaHorizontal'>
           <FormularioLogin />
           <FormularioLoginGoogle 
-            aoSucesso={aoSucessoLoginGoogle}
-            aoErro={aoErroLoginGoogle}
+            aoSucesso={() => {}}
+            aoErro={() => {}}
           />
         </div>
         
         <FormularioCadastro 
           dadosFormulario={dadosFormulario}
           erros={{...erros, errosContatos}}
-          carregando={carregando}
+          // A lógica para combinar os carregamentos está correta
+          carregando={carregandoSubmit || carregandoCep} 
           mensagemSucesso={mensagemSucesso}
           aoAlterarCampo={aoAlterarCampo}
           aoSelecionarArquivo={aoSelecionarArquivo}

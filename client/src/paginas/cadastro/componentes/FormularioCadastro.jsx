@@ -14,6 +14,8 @@ const FormularioCadastro = ({
 }) => {
   const isPerfilProfissional = dadosFormulario.tipoPerfil === 'Profissional';
   const errosContatos = erros.errosContatos || {};
+  const enderecoPreenchidoPelaAPI = dadosFormulario.cidade && dadosFormulario.estado && !erros.cep;
+
 
   return (
     <form onSubmit={aoEnviarFormulario} className="formulario-cadastro">
@@ -90,7 +92,10 @@ const FormularioCadastro = ({
                   onChange={aoAlterarCampo}
                   className={erros.cep ? 'erro' : ''}
                   placeholder="00000-000"
+                  maxLength="9" // Garante que o usuário não digite mais que o necessário
                 />
+                {/* <<< 2. FEEDBACK DE CARREGAMENTO */}
+                {carregando && !mensagemSucesso && <span className="mensagem-info">Buscando CEP...</span>}
                 {erros.cep && <span className="mensagem-erro">{erros.cep}</span>}
               </div>
 
@@ -103,7 +108,10 @@ const FormularioCadastro = ({
                   value={dadosFormulario.cidade}
                   onChange={aoAlterarCampo}
                   className={erros.cidade ? 'erro' : ''}
-                  placeholder="Sua cidade"
+                  placeholder="Preenchimento automático"
+                  // <<< 3. CAMPO DESABILITADO DINAMICAMENTE
+                  disabled={carregando || enderecoPreenchidoPelaAPI}
+                  readOnly={enderecoPreenchidoPelaAPI} // Impede edição manual após preenchimento
                 />
                 {erros.cidade && <span className="mensagem-erro">{erros.cidade}</span>}
               </div>
@@ -117,6 +125,9 @@ const FormularioCadastro = ({
                   value={dadosFormulario.estado}
                   onChange={aoAlterarCampo}
                   placeholder="UF"
+                  // <<< 3. CAMPO DESABILITADO DINAMICAMENTE
+                  disabled={carregando || enderecoPreenchidoPelaAPI}
+                  readOnly={enderecoPreenchidoPelaAPI} // Impede edição manual após preenchimento
                 />
               </div>
             </div>
