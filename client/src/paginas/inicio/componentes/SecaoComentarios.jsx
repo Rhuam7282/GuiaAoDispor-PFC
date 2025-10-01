@@ -2,48 +2,43 @@ import React from 'react';
 import './SecaoComentarios.css';
 
 const SecaoComentarios = () => {
-  const comentarios = [
+  // Agora usando a estrutura do schema de Avaliacao
+  const avaliacoes = [
     {
       nome: 'Maria Silva',
-      comentario: 'TESTE DO COMENTÁRIO - Esta plataforma realmente mudou minha vida! Consegui encontrar um profissional especializado em LIBRAS que me ajudou muito.',
-      avaliacao: 5,
-      data: '15 de setembro de 2024'
+      desc: 'TESTE DO COMENTÁRIO - Esta plataforma realmente mudou minha vida! Consegui encontrar um profissional especializado em LIBRAS que me ajudou muito.',
+      nota: 5
     },
     {
       nome: 'João Santos',
-      comentario: 'TESTE DO COMENTÁRIO - Excelente iniciativa! Os recursos de acessibilidade são muito bem pensados e funcionam perfeitamente.',
-      avaliacao: 5,
-      data: '12 de setembro de 2024'
+      desc: 'TESTE DO COMENTÁRIO - Excelente iniciativa! Os recursos de acessibilidade são muito bem pensados e funcionam perfeitamente.',
+      nota: 5
     },
     {
       nome: 'Ana Costa',
-      comentario: 'TESTE DO COMENTÁRIO - Finalmente uma plataforma que pensa em pessoas como eu. O modo de alto contraste é perfeito para minha deficiência visual.',
-      avaliacao: 4,
-      data: '10 de setembro de 2024'
+      desc: 'TESTE DO COMENTÁRIO - Finalmente uma plataforma que pensa em pessoas como eu. O modo de alto contraste é perfeito para minha deficiência visual.',
+      nota: 4
     },
     {
       nome: 'Carlos Oliveira',
-      comentario: 'TESTE DO COMENTÁRIO - Interface muito intuitiva e fácil de usar. Recomendo para todos que precisam de serviços especializados.',
-      avaliacao: 5,
-      data: '8 de setembro de 2024'
+      desc: 'TESTE DO COMENTÁRIO - Interface muito intuitiva e fácil de usar. Recomendo para todos que precisam de serviços especializados.',
+      nota: 5
     },
     {
       nome: 'Lucia Ferreira',
-      comentario: 'TESTE DO COMENTÁRIO - Ótima experiência! Encontrei rapidamente um cuidador especializado para minha mãe idosa.',
-      avaliacao: 4,
-      data: '5 de setembro de 2024'
+      desc: 'TESTE DO COMENTÁRIO - Ótima experiência! Encontrei rapidamente um cuidador especializado para minha mãe idosa.',
+      nota: 4
     },
     {
       nome: 'Pedro Almeida',
-      comentario: 'TESTE DO COMENTÁRIO - Plataforma inclusiva de verdade! Os atalhos de teclado facilitam muito minha navegação.',
-      avaliacao: 5,
-      data: '3 de setembro de 2024'
+      desc: 'TESTE DO COMENTÁRIO - Plataforma inclusiva de verdade! Os atalhos de teclado facilitam muito minha navegação.',
+      nota: 5
     }
   ];
 
-  const renderEstrelas = (avaliacao) => {
+  const renderEstrelas = (nota) => {
     return Array.from({ length: 5 }, (_, index) => (
-      <span key={index} className={`estrela ${index < avaliacao ? 'preenchida' : ''}`}>
+      <span key={index} className={`estrela ${index < nota ? 'preenchida' : ''}`}>
         ★
       </span>
     ));
@@ -57,23 +52,22 @@ const SecaoComentarios = () => {
       </p>
       
       <div className="containerComentarios">
-        {comentarios.map((comentario, index) => (
+        {avaliacoes.map((avaliacao, index) => (
           <div key={index} className="cartaoComentario">
             <div className="cabecalhoComentario">
               <div className="infoUsuario">
                 <div className="avatarUsuario">
-                  {comentario.nome.charAt(0)}
+                  {avaliacao.nome.charAt(0)}
                 </div>
                 <div className="dadosUsuario">
-                  <h4 className="nomeUsuario">{comentario.nome}</h4>
-                  <span className="dataComentario">{comentario.data}</span>
+                  <h4 className="nomeUsuario">{avaliacao.nome}</h4>
                 </div>
               </div>
               <div className="avaliacaoEstrelas">
-                {renderEstrelas(comentario.avaliacao)}
+                {renderEstrelas(avaliacao.nota)}
               </div>
             </div>
-            <p className="textoComentario">{comentario.comentario}</p>
+            <p className="textoComentario">{avaliacao.desc}</p>
           </div>
         ))}
       </div>
