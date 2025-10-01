@@ -15,7 +15,7 @@ const UploadImagem = ({ foto, aoSelecionarArquivo }) => {
         style={{ display: 'none' }}
       />
       {foto && (
-        <div className="preview-imagem">
+        <div className="imagemPerfil">
           <img src={foto} alt="Preview" />
         </div>
       )}

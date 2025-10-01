@@ -8,68 +8,54 @@ const BotoesAcao = () => {
   const { estaAutenticado } = useAuth();
 
   const handleEntrarAnonimo = () => {
+    console.log('🚀 Acessando diretamente (anonimo)');
     navigate('/qualificados');
   };
 
-  // const handleFazerLogin = () => {
-  //   navigate('/login'); // Corrigido para /login em vez de /cadastro
-  // };
-
-  const handleCadastro = () => {
-    navigate('/cadastro'); // Adicionado cadastro separado
+  const handleFazerLogin = () => {
+    navigate('/cadastro');
   };
 
-  if (estaAutenticado()) {
-    return null;
-  }
+  // CORREÇÃO: Não esconder os botões mesmo se autenticado
+  // Apenas ajustar o comportamento se necessário
 
   return (
-    <div className="containerBotoesAcao">
-      <div className="textoMotivacional">
-        <h3>Pronto para começar?</h3>
-        <p>Escolha como deseja acessar nossa plataforma e descubra as possibilidades</p>
-      </div>
-      
-      <div className="grupoBotoes">
-        <button 
-          onClick={handleEntrarAnonimo} 
-          className="botaoAcesso botaoSecundario"
-        >
-          <div className="conteudoBotao">
-            <span className="iconeBotao">🚀</span>
-            <div className="textoBotao">
-              <span className="tituloBotao">Acessar Diretamente</span>
-              <span className="descricaoBotao">Explore sem compromisso</span>
+    <div className="secaoBotoesAcao">
+      <div className="containerBotoesAcao">
+        <div className="textoMotivacional">
+          <h3>Pronto para começar?</h3>
+          <p>Escolha como deseja acessar nossa plataforma e descubra as possibilidades</p>
+        </div>
+        
+        <div className="grupoBotoes">
+          <button 
+            onClick={handleEntrarAnonimo} 
+            className="botaoAcesso botaoSecundario"
+          >
+            <div className="conteudoBotao">
+              <span className="iconeBotao">🚀 </span>
+              <div className="textoBotao">
+                <span className="tituloBotao">Acessar Diretamente </span>
+                <span className="descricaoBotao">Explore sem compromisso</span>
+              </div>
             </div>
-          </div>
-        </button>
+            {hoveredButton === 'anonimo' && (
+              <div className="tooltipBotao">
+                Navegue pela plataforma e conheça nossos profissionais sem precisar criar uma conta
+              </div>
+            )}
+          </button>
 
-        {/* <button 
-          onClick={handleFazerLogin} 
-          className="botaoAcesso botaoPrimario"
-        >
-          <div className="conteudoBotao">
-            <span className="iconeBotao">🔐</span>
-            <div className="textoBotao">
-              <span className="tituloBotao">Fazer Login</span>
-              <span className="descricaoBotao">Acesso completo</span>
-            </div>
-          </div>
-        </button> */}
-
-        <button 
-          onClick={handleCadastro} 
-          className="botaoAcesso"
-          style={{
-            backgroundColor: 'var(--corVerde)',
-            color: 'var(--corBranco)'
-          }}
-        >
-          <div className="conteudoBotao">
-            <span className="iconeBotao">📝</span>
-            <div className="textoBotao">
-              <span className="tituloBotao">Cadastrar</span>
-              <span className="descricaoBotao">Crie sua conta</span>
+          <button 
+            onClick={handleFazerLogin} 
+            className="botaoAcesso botaoPrimario"
+          >
+            <div className="conteudoBotao">
+              <span className="iconeBotao">🔐 </span>
+              <div className="textoBotao">
+                <span className="tituloBotao">Fazer Login </span>
+                <span className="descricaoBotao">Acesso completo</span>
+              </div>
             </div>
           </div>
         </button>

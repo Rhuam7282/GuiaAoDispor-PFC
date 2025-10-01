@@ -79,15 +79,15 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
   }
 };
 
-// Serviços básicos usando os endpoints corretos
+// Serviços básicos usando os endpoints corretos do apiConfig
 export const servicoLocalizacao = {
   criar: (dadosLocalizacao) =>
-    fazerRequisicao(`${URL_BASE}/api/localizacoes`, "POST", dadosLocalizacao),
-  buscarPorId: (id) => fazerRequisicao(`${URL_BASE}/api/localizacoes/${id}`, "GET"),
-  listarTodas: () => fazerRequisicao(`${URL_BASE}/api/localizacoes`, "GET"),
+    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.LOCATIONS}`, "POST", dadosLocalizacao),
+  buscarPorId: (id) => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.LOCATIONS}/${id}`, "GET"),
+  listarTodas: () => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.LOCATIONS}`, "GET"),
   atualizar: (id, dadosLocalizacao) =>
-    fazerRequisicao(`${URL_BASE}/api/localizacoes/${id}`, "PUT", dadosLocalizacao),
-  deletar: (id) => fazerRequisicao(`${URL_BASE}/api/localizacoes/${id}`, "DELETE"),
+    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.LOCATIONS}/${id}`, "PUT", dadosLocalizacao),
+  deletar: (id) => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.LOCATIONS}/${id}`, "DELETE"),
 };
 
 export const servicoUsuario = {
@@ -102,17 +102,17 @@ export const servicoUsuario = {
 
 export const servicoProfissional = {
   criar: (dadosProfissional) =>
-    fazerRequisicao(`${URL_BASE}/api/profissionais`, "POST", dadosProfissional),
+    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.PROFESSIONALS}`, "POST", dadosProfissional),
   buscarPorId: (id) =>
-    fazerRequisicao(`${URL_BASE}/api/profissionais/${id}`, "GET"),
-  listarTodos: () => fazerRequisicao(`${URL_BASE}/api/profissionais`, "GET"),
+    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.PROFESSIONALS}/${id}`, "GET"),
+  listarTodos: () => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.PROFESSIONALS}`, "GET"),
   atualizar: (id, dadosProfissional) =>
     fazerRequisicao(
-      `${URL_BASE}/api/profissionais/${id}`,
+      `${URL_BASE}${API_CONFIG.ENDPOINTS.PROFESSIONALS}/${id}`,
       "PUT",
       dadosProfissional
     ),
-  deletar: (id) => fazerRequisicao(`${URL_BASE}/api/profissionais/${id}`, "DELETE"),
+  deletar: (id) => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.PROFESSIONALS}/${id}`, "DELETE"),
 };
 
 export const servicoAvaliacao = {
@@ -208,14 +208,17 @@ export const servicoCadastro = {
 export const servicoAuth = {
   login: async (email, senha) => {
     try {
-      // CORREÇÃO: Usar o endpoint de auth correto da configuração
+      console.log('🔐 Tentando login para:', email);
+      
       const resposta = await fazerRequisicao(
         `${URL_BASE}${API_CONFIG.ENDPOINTS.AUTH}/login`, 
         "POST", 
         { email, senha }
       );
 
-      // CORREÇÃO: Verificar a estrutura da resposta corretamente
+      console.log('📨 Resposta do login:', resposta);
+
+      // CORREÇÃO: Verificar a estrutura correta da resposta do servidor
       if (resposta && resposta.status === "sucesso") {
         // Armazenar token e dados do usuário
         localStorage.setItem("token", resposta.token);
@@ -223,10 +226,12 @@ export const servicoAuth = {
         localStorage.setItem("estaAutenticado", "true");
         localStorage.setItem("loginTimestamp", Date.now().toString());
 
+        console.log('✅ Login bem-sucedido, token armazenado');
         return resposta;
       } else {
         // Se a resposta não tem status sucesso, verificar se há mensagem de erro
         const mensagemErro = resposta?.message || "Credenciais inválidas";
+        console.error('❌ Erro na resposta do login:', mensagemErro);
         throw new Error(mensagemErro);
       }
     } catch (erro) {
@@ -254,7 +259,6 @@ export const servicoAuth = {
 
   buscarPerfilLogado: async (id) => {
     try {
-      // CORREÇÃO: Usar o endpoint de auth para perfil
       const resposta = await fazerRequisicao(
         `${URL_BASE}${API_CONFIG.ENDPOINTS.AUTH}/perfil/${id}`,
         "GET"
@@ -267,7 +271,6 @@ export const servicoAuth = {
 
   editarPerfil: async (id, dadosAtualizacao) => {
     try {
-      // CORREÇÃO: Usar o endpoint de auth para editar perfil
       const resposta = await fazerRequisicao(
         `${URL_BASE}${API_CONFIG.ENDPOINTS.AUTH}/perfil/${id}`,
         "PUT",
@@ -281,7 +284,6 @@ export const servicoAuth = {
 
   logout: async () => {
     try {
-      // CORREÇÃO: Usar o endpoint de auth correto da configuração
       const resposta = await fazerRequisicao(
         `${URL_BASE}${API_CONFIG.ENDPOINTS.AUTH}/logout`, 
         "POST"

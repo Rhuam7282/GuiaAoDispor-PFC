@@ -33,7 +33,14 @@ const ListaMenu = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+  };
+
+  // Verificar se o item está ativo, considerando cadastro como ativo para Perfil
+  const isItemAtivo = (item) => {
+    if (item.texto === 'Perfil') {
+      return location.pathname === '/perfil' || location.pathname === '/cadastro';
+    }
+    return item.rota === location.pathname;
   };
 
   return (
@@ -46,7 +53,7 @@ const ListaMenu = () => {
         <ItemMenu
           key={item.texto}
           item={item}
-          ativo={item.rota === location.pathname}
+          ativo={isItemAtivo(item)}
           usuarioLogado={estaAutenticado() && user}
           onClick={() => handleItemClick(item)}
         />

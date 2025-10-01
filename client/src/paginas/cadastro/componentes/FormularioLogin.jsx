@@ -88,10 +88,12 @@ const FormularioLogin = () => {
 
       const resposta = await servicoAuth.login(dadosLogin.email, dadosLogin.senha);
       
+      console.log('✅ Resposta do servidor:', resposta);
+      
       if (resposta.data && resposta.token) {
         console.log('✅ Login bem-sucedido:', resposta.data.nome);
         login(resposta.data, resposta.token);
-        navigate('/qualificados');
+        // O redirecionamento é feito automaticamente no contexto de autenticação
       } else {
         throw new Error('Resposta de login inválida');
       }
