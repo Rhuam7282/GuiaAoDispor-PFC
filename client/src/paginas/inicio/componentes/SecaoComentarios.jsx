@@ -72,7 +72,7 @@ const SecaoComentarios = () => {
         ))}
       </div>
       
-      <div className="chamadaContato">
+      {/* <div className="chamadaContato">
         <p>
           <strong>
             Gostaria de sugerir mais alguma ferramenta ou melhorias? Contacte-nos.
@@ -81,7 +81,7 @@ const SecaoComentarios = () => {
         <button className="botaoContato">
           Entre em Contato
         </button>
-      </div>
+      </div> */}
     </section>
   );
 };

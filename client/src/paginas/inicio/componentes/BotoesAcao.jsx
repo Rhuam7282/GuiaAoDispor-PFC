@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../contextos/Autenticacao';
 import './BotoesAcao.css';
@@ -6,7 +6,6 @@ import './BotoesAcao.css';
 const BotoesAcao = () => {
   const navigate = useNavigate();
   const { estaAutenticado } = useAuth();
-  const [hoveredButton, setHoveredButton] = useState(null);
 
   const handleEntrarAnonimo = () => {
     console.log('🚀 Acessando diretamente (anonimo)');
@@ -14,7 +13,6 @@ const BotoesAcao = () => {
   };
 
   const handleFazerLogin = () => {
-    console.log('🔐 Redirecionando para cadastro/login');
     navigate('/cadastro');
   };
 
@@ -33,8 +31,6 @@ const BotoesAcao = () => {
           <button 
             onClick={handleEntrarAnonimo} 
             className="botaoAcesso botaoSecundario"
-            onMouseEnter={() => setHoveredButton('anonimo')}
-            onMouseLeave={() => setHoveredButton(null)}
           >
             <div className="conteudoBotao">
               <span className="iconeBotao">🚀 </span>
@@ -53,8 +49,6 @@ const BotoesAcao = () => {
           <button 
             onClick={handleFazerLogin} 
             className="botaoAcesso botaoPrimario"
-            onMouseEnter={() => setHoveredButton('login')}
-            onMouseLeave={() => setHoveredButton(null)}
           >
             <div className="conteudoBotao">
               <span className="iconeBotao">🔐 </span>
@@ -63,13 +57,8 @@ const BotoesAcao = () => {
                 <span className="descricaoBotao">Acesso completo</span>
               </div>
             </div>
-            {hoveredButton === 'login' && (
-              <div className="tooltipBotao">
-                Crie sua conta ou faça login para acessar todos os recursos e conectar-se com profissionais
-              </div>
-            )}
-          </button>
-        </div>
+          </div>
+        </button>
       </div>
     </div>
   );

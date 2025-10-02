@@ -1,7 +1,3 @@
-body{
-  background-image: url('../../../recursos/icones/logo.png');
-}
-
 .containerTitulo {
   position: relative;
   z-index: 2;
@@ -11,6 +7,11 @@ body{
 .tituloDestaque {
   margin: 0;
   margin-bottom: var(--espacamentoPequeno);
+}
+
+.heroPrincipal{
+  padding: var(--espacamentoMedio);
+  margin: var(--espacamentoGrande) 0;
 }
 
 .subtituloContainer {
