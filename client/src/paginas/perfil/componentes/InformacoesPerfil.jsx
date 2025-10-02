@@ -3,7 +3,15 @@ import { Star, Facebook, Instagram, Linkedin, Save, X, Edit, Camera, Upload } fr
 import { useAuth } from '@Contextos/Autenticacao.jsx';
 import { servicoAuth } from '@Servicos/api.js';
 
-const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao, setModoEdicao }) => {
+const InformacoesPerfil = ({ 
+  dadosPerfil, 
+  estaAutenticado, 
+  user, 
+  id, 
+  modoEdicao, 
+  setModoEdicao,
+  onPerfilAtualizado 
+}) => {
   const { atualizarUsuario } = useAuth();
   const [dadosEditaveis, setDadosEditaveis] = useState({
     nome: '',
@@ -25,10 +33,10 @@ const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao,
     if (dadosPerfil) {
       setDadosEditaveis({
         nome: dadosPerfil.nome || '',
-        descricao: dadosPerfil.descricao || '',
+        descricao: dadosPerfil.descricao || dadosPerfil.desc || '',
         email: dadosPerfil.email || '',
-        facebook: dadosPerfil.facebook || dadosPerfil.face || '',
-        instagram: dadosPerfil.instagram || dadosPerfil.inst || '',
+        facebook: dadosPerfil.face || dadosPerfil.facebook || '',
+        instagram: dadosPerfil.inst || dadosPerfil.instagram || '',
         linkedin: dadosPerfil.linkedin || '',
         foto: dadosPerfil.foto || ''
       });
@@ -82,7 +90,7 @@ const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao,
     try {
       const dadosAtualizacao = {
         nome: dadosEditaveis.nome,
-        descricao: dadosEditaveis.descricao,
+        desc: dadosEditaveis.descricao,
         email: dadosEditaveis.email,
         face: dadosEditaveis.facebook,
         inst: dadosEditaveis.instagram,
@@ -97,28 +105,28 @@ const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao,
         }
       });
 
+      console.log('📤 Enviando dados de atualização:', dadosAtualizacao);
+      
       const resposta = await servicoAuth.editarPerfil(id, dadosAtualizacao);
       
       if (resposta.status === 'sucesso') {
         // Atualizar contexto de autenticação
-        atualizarUsuario({
-          nome: dadosEditaveis.nome,
-          email: dadosEditaveis.email,
-          face: dadosEditaveis.facebook,
-          inst: dadosEditaveis.instagram,
-          linkedin: dadosEditaveis.linkedin,
-          desc: dadosEditaveis.descricao,
-          foto: dadosEditaveis.foto,
-          picture: dadosEditaveis.foto // Para compatibilidade com Google OAuth
-        });
+        await atualizarUsuario(dadosAtualizacao);
+        
+        // Notificar componente pai sobre a atualização
+        if (onPerfilAtualizado) {
+          onPerfilAtualizado(dadosAtualizacao);
+        }
         
         setMensagem('Perfil atualizado com sucesso!');
-        setTimeout(() => setMensagem(''), 10000);
+        setTimeout(() => setMensagem(''), 5000);
         setModoEdicao(false);
+      } else {
+        throw new Error(resposta.message || 'Erro ao atualizar perfil');
       }
     } catch (erro) {
-      console.error('Erro ao editar perfil:', erro);
-      setMensagem('Erro ao atualizar perfil. Tente novamente.');
+      console.error('❌ Erro ao editar perfil:', erro);
+      setMensagem(erro.message || 'Erro ao atualizar perfil. Tente novamente.');
     } finally {
       setCarregando(false);
     }
@@ -128,10 +136,10 @@ const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao,
     // Restaurar dados originais
     setDadosEditaveis({
       nome: dadosPerfil.nome || '',
-      descricao: dadosPerfil.descricao || '',
+      descricao: dadosPerfil.descricao || dadosPerfil.desc || '',
       email: dadosPerfil.email || '',
-      facebook: dadosPerfil.facebook || dadosPerfil.face || '',
-      instagram: dadosPerfil.instagram || dadosPerfil.inst || '',
+      facebook: dadosPerfil.face || dadosPerfil.facebook || '',
+      instagram: dadosPerfil.inst || dadosPerfil.instagram || '',
       linkedin: dadosPerfil.linkedin || '',
       foto: dadosPerfil.foto || ''
     });
@@ -144,6 +152,9 @@ const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao,
     inputFileRef.current.click();
   };
 
+  // Verificar se é o perfil próprio para permitir edição
+  const isPerfilProprio = estaAutenticado && user && user._id === id;
+
   if (modoEdicao) {
     return (
       <div className="gridContainer gridTresColunas gapGrande margemInferiorGrande">
@@ -151,7 +162,7 @@ const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao,
           <div className="containerFotoEdicao">
             <img
               className="imagemPerfil imagemPerfilGrande"
-              src={previewFoto || '/placeholder-avatar.jpg'}
+              src={previewFoto || dadosPerfil.foto || '/placeholder-avatar.jpg'}
               alt={`Preview da foto de ${dadosEditaveis.nome}`}
             />
             <div className="sobreposicaoFoto" onClick={triggerFileInput}>
@@ -317,20 +328,23 @@ const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao,
             src={dadosPerfil.foto || '/placeholder-avatar.jpg'}
             alt={`${dadosPerfil.nome} - ${dadosPerfil.descricao} em ${dadosPerfil.localizacao}`}
           />
-          {estaAutenticado && user && user._id === id && (
+          {isPerfilProprio && (
             <div className="sobreposicaoFoto" onClick={() => setModoEdicao(true)}>
-              <Camera size={24} />
-              <span>Alterar foto</span>
+              <Edit size={20} />
+              <span>Editar perfil</span>
             </div>
           )}
         </div>
         
-        
+        <div className="margemSuperiorPequena">
+          <h2 className="textoCentralizado">{dadosPerfil.nome}</h2>
+          <p className="textoCentralizado textoMarromOfuscado">{dadosPerfil.localizacao}</p>
+        </div>
       </div>
       
       <div className="cartaoDestaque fundoMarromDestaqueTransparente textoEsquerda flexWrap">
         <p>{dadosPerfil.descricao}</p>
-        <div className="listaHorizontal ">
+        <div className="listaHorizontal">
           <div className="gapMedio">
             <div className="flexCentro gapPequeno">
               {[...Array(5)].map((_, i) => (
@@ -355,32 +369,36 @@ const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao,
       <div>
         <h3>Contatos</h3>
         <div className="listaIcones vertical">
-          {dadosPerfil.facebook || dadosPerfil.face ? (
+          {dadosPerfil.email && (
+            <div className="listaIcones">
+              <span>📧 {dadosPerfil.email}</span>
+            </div>
+          )}
+          
+          {dadosPerfil.face && (
             <div className="listaIcones">
               <Facebook size={18} />
-              <span>{dadosPerfil.facebook || dadosPerfil.face}</span>
+              <span>{dadosPerfil.face}</span>
             </div>
-          ) : null}
+          )}
           
-          {dadosPerfil.instagram || dadosPerfil.inst ? (
+          {dadosPerfil.inst && (
             <div className="listaIcones">
               <Instagram size={18} />
-              <span>{dadosPerfil.instagram || dadosPerfil.inst}</span>
+              <span>{dadosPerfil.inst}</span>
             </div>
-          ) : null}
+          )}
           
-          {dadosPerfil.linkedin ? (
+          {dadosPerfil.linkedin && (
             <div className="listaIcones">
               <Linkedin size={18} />
               <span>{dadosPerfil.linkedin}</span>
             </div>
-          ) : null}
+          )}
           
-          {dadosPerfil.email ? (
-            <div className="listaIcones">
-              <span>📧 {dadosPerfil.email}</span>
-            </div>
-          ) : null}
+          {(dadosPerfil.redesSociais && dadosPerfil.redesSociais.length === 0) && (
+            <p className="textoMarromOfuscado">Nenhum contato informado</p>
+          )}
         </div>
       </div>
     </div>
