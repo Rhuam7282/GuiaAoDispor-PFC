@@ -39,11 +39,11 @@ const BotoesAcao = () => {
                 <span className="descricaoBotao">Explore sem compromisso</span>
               </div>
             </div>
-            {hoveredButton === 'anonimo' && (
-              <div className="tooltipBotao">
+            {/* {hoveredButton === 'anonimo' && (
+              <div className = "tooltipBotao">
                 Navegue pela plataforma e conheça nossos profissionais sem precisar criar uma conta
               </div>
-            )}
+            )} */}
           </button>
 
           <button 
@@ -57,8 +57,8 @@ const BotoesAcao = () => {
                 <span className="descricaoBotao">Acesso completo</span>
               </div>
             </div>
-          </div>
-        </button>
+          </button>
+        </div>
       </div>
     </div>
   );
