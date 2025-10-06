@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Star, Facebook, Instagram, Linkedin, Save, X, Edit, Camera, Upload } from "lucide-react";
+import { Star, Facebook, Instagram, Linkedin, Save, X, Edit, Camera } from "lucide-react";
 import { useAuth } from '@Contextos/Autenticacao.jsx';
 import { servicoAuth } from '@Servicos/api.js';
 
-const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao, setModoEdicao }) => {
+const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao, setModoEdicao }) => {
   const { atualizarUsuario } = useAuth();
   const [dadosEditaveis, setDadosEditaveis] = useState({
     nome: '',
@@ -22,13 +22,14 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
 
   // Preencher dados editáveis quando os dados do perfil mudarem
   useEffect(() => {
+    console.log("🔄 Atualizando dados editáveis com:", dadosPerfil);
     if (dadosPerfil) {
       setDadosEditaveis({
         nome: dadosPerfil.nome || '',
         descricao: dadosPerfil.descricao || '',
         email: dadosPerfil.email || '',
-        facebook: dadosPerfil.facebook || dadosPerfil.face || '',
-        instagram: dadosPerfil.instagram || dadosPerfil.inst || '',
+        facebook: dadosPerfil.face || '',
+        instagram: dadosPerfil.inst || '',
         linkedin: dadosPerfil.linkedin || '',
         foto: dadosPerfil.foto || ''
       });
@@ -82,7 +83,7 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
     try {
       const dadosAtualizacao = {
         nome: dadosEditaveis.nome,
-        descricao: dadosEditaveis.descricao,
+        desc: dadosEditaveis.descricao,
         email: dadosEditaveis.email,
         face: dadosEditaveis.facebook,
         inst: dadosEditaveis.instagram,
@@ -97,6 +98,8 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
         }
       });
 
+      console.log('📤 Enviando dados de atualização:', dadosAtualizacao);
+      
       const resposta = await servicoAuth.editarPerfil(id, dadosAtualizacao);
       
       if (resposta.status === 'sucesso') {
@@ -109,16 +112,21 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
           linkedin: dadosEditaveis.linkedin,
           desc: dadosEditaveis.descricao,
           foto: dadosEditaveis.foto,
-          picture: dadosEditaveis.foto // Para compatibilidade com Google OAuth
+          picture: dadosEditaveis.foto
         });
         
         setMensagem('Perfil atualizado com sucesso!');
-        setTimeout(() => setMensagem(''), 3000);
+        setTimeout(() => setMensagem(''), 5000);
         setModoEdicao(false);
+        
+        // Recarregar a página para refletir as mudanças
+        window.location.reload();
+      } else {
+        throw new Error(resposta.message || 'Erro ao atualizar perfil');
       }
     } catch (erro) {
-      console.error('Erro ao editar perfil:', erro);
-      setMensagem('Erro ao atualizar perfil. Tente novamente.');
+      console.error('❌ Erro ao editar perfil:', erro);
+      setMensagem(erro.message || 'Erro ao atualizar perfil. Tente novamente.');
     } finally {
       setCarregando(false);
     }
@@ -130,8 +138,8 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
       nome: dadosPerfil.nome || '',
       descricao: dadosPerfil.descricao || '',
       email: dadosPerfil.email || '',
-      facebook: dadosPerfil.facebook || dadosPerfil.face || '',
-      instagram: dadosPerfil.instagram || dadosPerfil.inst || '',
+      facebook: dadosPerfil.face || '',
+      instagram: dadosPerfil.inst || '',
       linkedin: dadosPerfil.linkedin || '',
       foto: dadosPerfil.foto || ''
     });
@@ -144,17 +152,20 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
     inputFileRef.current.click();
   };
 
+  // Verificar se é o perfil próprio para permitir edição
+  const isPerfilProprio = estaAutenticado && user && user._id === id;
+
   if (modoEdicao) {
     return (
       <div className="gridContainer gridTresColunas gapGrande margemInferiorGrande">
         <div className="alinharCentro">
-          <div className="containerFotoEdicao">
+          <div className="containerFotoEdicao posicaoRelativa">
             <img
               className="imagemPerfil imagemPerfilGrande"
-              src={previewFoto || '/placeholder-avatar.jpg'}
+              src={previewFoto || dadosPerfil.foto || '/placeholder-avatar.jpg'}
               alt={`Preview da foto de ${dadosEditaveis.nome}`}
             />
-            <div className="sobreposicaoFoto" onClick={triggerFileInput}>
+            <div className="sobreposicaoFoto flexColuna alinharCentro justificarCentro" onClick={triggerFileInput}>
               <Camera size={24} />
               <span>Alterar foto</span>
             </div>
@@ -229,12 +240,12 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
           </div>
 
           {mensagem && (
-            <div className={`mensagem ${mensagem.includes('Erro') ? 'mensagemErro' : 'mensagemSucesso'}`}>
+            <div className={`mensagem ${mensagem.includes('Erro') ? 'mensagemErro' : 'mensagemSucesso'} margemSuperiorPequena`}>
               {mensagem}
             </div>
           )}
 
-          <div className="botoesAcao margemSuperiorMedia">
+          <div className="botoesAcao margemSuperiorMedia flexCentro gapPequeno">
             <button
               onClick={handleSalvarEdicao}
               disabled={carregando || carregandoFoto}
@@ -311,76 +322,81 @@ const InformacoesPerfil = ({ dadosPerfil, isAuthenticated, user, id, modoEdicao,
   return (
     <div className="gridContainer gridTresColunas gapGrande margemInferiorGrande">
       <div className="alinharCentro">
-        <div className="containerFoto">
+        <div className="containerFoto posicaoRelativa">
           <img
             className="imagemPerfil imagemPerfilGrande"
             src={dadosPerfil.foto || '/placeholder-avatar.jpg'}
             alt={`${dadosPerfil.nome} - ${dadosPerfil.descricao} em ${dadosPerfil.localizacao}`}
           />
-          {isAuthenticated && user && user._id === id && (
-            <div className="sobreposicaoFoto" onClick={() => setModoEdicao(true)}>
-              <Camera size={24} />
-              <span>Alterar foto</span>
+          {isPerfilProprio && (
+            <div className="sobreposicaoFoto flexColuna alinharCentro justificarCentro" onClick={() => setModoEdicao(true)}>
+              <Edit size={20} />
+              <span>Editar perfil</span>
             </div>
           )}
         </div>
         
-        
+        <div className="margemSuperiorPequena">
+          <h2 className="textoCentralizado">{dadosPerfil.nome}</h2>
+          <p className="textoCentralizado textoMarromOfuscado">{dadosPerfil.localizacao}</p>
+        </div>
       </div>
       
-      <div className="cartaoDestaque fundoMarromDestaqueTransparente textoEsquerda flexWrap">
-        <p>{dadosPerfil.descricao}</p>
-        <div className="listaHorizontal ">
-          <div className="gapMedio">
-            <div className="flexCentro gapPequeno">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  size={16}
-                  className={
-                    i < Math.floor(dadosPerfil.avaliacao)
-                      ? "textoAmarelo preenchido"
-                      : "textoMarromOfuscado"
-                  }
-                />
-              ))}
-              <span className="textoMarromEscuro">
-                {dadosPerfil.avaliacao !== undefined && dadosPerfil.avaliacao !== null ? dadosPerfil.avaliacao.toFixed(1) : '0.0'}
-              </span>
-            </div>
-          </div>
+      <div className="cartaoDestaque fundoMarromDestaqueTransparente textoEsquerda">
+        <h3>Sobre</h3>
+        <p className="margemInferiorPequena">{dadosPerfil.descricao}</p>
+        <div className="flexCentro gapPequeno">
+          {[...Array(5)].map((_, i) => (
+            <Star
+              key={i}
+              size={16}
+              className={
+                i < Math.floor(dadosPerfil.avaliacao || 0)
+                  ? "textoAmarelo preenchido"
+                  : "textoMarromOfuscado"
+              }
+            />
+          ))}
+          <span className="textoMarromEscuro">
+            {(dadosPerfil.avaliacao || 0).toFixed(1)}
+          </span>
         </div>
       </div>
       
       <div>
         <h3>Contatos</h3>
-        <div className="listaIcones vertical">
-          {dadosPerfil.facebook || dadosPerfil.face ? (
-            <div className="listaIcones">
+        <div className="listaIcones vertical gapPequeno">
+          {dadosPerfil.email && (
+            <div className="flexCentro gapPequeno">
+              <span>📧</span>
+              <span>{dadosPerfil.email}</span>
+            </div>
+          )}
+          
+          {dadosPerfil.face && (
+            <div className="flexCentro gapPequeno">
               <Facebook size={18} />
-              <span>{dadosPerfil.facebook || dadosPerfil.face}</span>
+              <span>{dadosPerfil.face}</span>
             </div>
-          ) : null}
+          )}
           
-          {dadosPerfil.instagram || dadosPerfil.inst ? (
-            <div className="listaIcones">
+          {dadosPerfil.inst && (
+            <div className="flexCentro gapPequeno">
               <Instagram size={18} />
-              <span>{dadosPerfil.instagram || dadosPerfil.inst}</span>
+              <span>{dadosPerfil.inst}</span>
             </div>
-          ) : null}
+          )}
           
-          {dadosPerfil.linkedin ? (
-            <div className="listaIcones">
+          {dadosPerfil.linkedin && (
+            <div className="flexCentro gapPequeno">
               <Linkedin size={18} />
               <span>{dadosPerfil.linkedin}</span>
             </div>
-          ) : null}
+          )}
           
-          {dadosPerfil.email ? (
-            <div className="listaIcones">
-              <span>📧 {dadosPerfil.email}</span>
-            </div>
-          ) : null}
+          {!dadosPerfil.email && !dadosPerfil.face && !dadosPerfil.inst && !dadosPerfil.linkedin && (
+            <p className="textoMarromOfuscado">Nenhum contato informado</p>
+          )}
         </div>
       </div>
     </div>

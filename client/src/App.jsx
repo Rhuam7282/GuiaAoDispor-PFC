@@ -7,7 +7,6 @@ import Qualificados from './Paginas/Qualificados/Qualificados.jsx';
 import Cadastro from './Paginas/Cadastro/Cadastro.jsx';
 import Inicio from './Paginas/Inicio/Inicio.jsx';
 import Layout from './Componentes/Layout/Corpo.jsx';
-
 function App() {
   return (
     <ProvedorAutenticacao>
@@ -16,6 +15,7 @@ function App() {
           v7_startTransition: true,
           v7_relativeSplatPath: true
         }}>
+
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Inicio />} />
