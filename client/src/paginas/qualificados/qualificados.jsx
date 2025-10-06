@@ -1,18 +1,69 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Corpo from "@Componentes/Layout/Corpo.jsx";
 import Filtro from "./Componentes/Filtro.jsx";
-import ListaProfissionais from "./Componentes/ListaProfissionais.jsx";
+import ListaProfissionais from "./componentes/ListaProfissionais.jsx";
 import "./Qualificados.css";
-
-
-import mariaSilva from '@Recursos/Imagens/mulher.png';
-import joaoOliveira from '@Recursos/Imagens/homem1.avif';
-import anaSantos from '@Recursos/Imagens/mulher 3.webp';
-import lucianaFerreira from '@Recursos/Imagens/mulher2.jpg';
-import carlosMendes from '@Recursos/Imagens/homem2.jpg';
 
 function Qualificados() {
   const [filtroSelecionado, setFiltroSelecionado] = useState("localizacao");
+  const [profissionais, setProfissionais] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Dados mock para fallback
+  const profissionaisMock = [
+    {
+      _id: "mock-1",
+      imagem: "/imagens/mulher.png",
+      nome: "Ana Silva",
+      localizacao: "São Paulo, SP",
+      experiencia: "Enfermeira com 5 anos de experiência"
+    },
+    {
+      _id: "mock-2", 
+      imagem: "/imagens/homem.png",
+      nome: "Carlos Santos",
+      localizacao: "Rio de Janeiro, RJ",
+      experiencia: "Cuidador especializado"
+    }
+  ];
+
+  const fetchProfissionais = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      console.log('🔄 Buscando profissionais da API...');
+      
+      const response = await fetch('/api/profissionais', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log('✅ Profissionais carregados:', data);
+      
+      setProfissionais(data);
+
+    } catch (error) {
+      console.error('❌ Erro ao carregar profissionais:', error);
+      setError(`Não foi possível conectar com o servidor: ${error.message}`);
+      // Usar dados mock em caso de erro
+      setProfissionais(profissionaisMock);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfissionais();
+  }, []);
 
   const opcoesFiltro = [
     { value: "localizacao", label: "Localização" },
@@ -21,64 +72,98 @@ function Qualificados() {
     { value: "avaliacao", label: "Bem avaliados" },
   ];
 
-  const perfisProfissionais = [
-    {
-      imagem: mariaSilva,
-      nome: "Maria Silva",
-      localizacao: "São Paulo, SP",
-      experiencia: "10 anos de experiência em enfermagem geriátrica",
-    },
-    {
-      imagem: joaoOliveira,
-      nome: "João Oliveira",
-      localizacao: "Rio de Janeiro, RJ",
-      experiencia: "Especialista em LIBRAS com 8 anos de mercado",
-    },
-    {
-      imagem: anaSantos,
-      nome: "Ana Santos",
-      localizacao: "Belo Horizonte, MG",
-      experiencia: "Fisioterapeuta especializada em reabilitação neurológica",
-    },
-    {
-      imagem: carlosMendes,
-      nome: "Carlos Mendes",
-      localizacao: "Porto Alegre, RS",
-      experiencia: "Psicólogo com foco em terceira idade - 12 anos",
-    },
-    {
-      imagem: lucianaFerreira,
-      nome: "Luciana Ferreira",
-      localizacao: "Salvador, BA",
-      experiencia: "Terapeuta ocupacional com experiência domiciliar",
-    },
-  ];
-
   const aoClicarPerfil = (perfil) => {
     console.log(`Perfil selecionado: ${perfil.nome}`);
-    alert(`Você clicou no perfil de ${perfil.nome}`);
+    if (perfil._id.includes('mock')) {
+      alert(`📋 Dados de exemplo: ${perfil.nome}\n\nO backend está offline no momento.`);
+    } else {
+      alert(`Perfil de ${perfil.nome}`);
+    }
+  };
+
+  const handleRetry = () => {
+    fetchProfissionais();
   };
 
   return (
     <Corpo>
       <div className="container">
-        <h2 className="titulo">Profissionais</h2>
-        
-        <Filtro
-          titulo="Filtros:"
-          opcoes={opcoesFiltro}
-          opcaoSelecionada={filtroSelecionado}
-          aoMudar={setFiltroSelecionado}
-        />
-        
-        <ListaProfissionais
-          profissionais={perfisProfissionais}
-          aoClicarPerfil={aoClicarPerfil}
-        />
+        {/* SEMPRE VISÍVEL - Título e Filtro */}
+        <div className="row">
+          <div className="col-12">
+            <h2 className="titulo" style={{ marginBottom: '1rem' }}>Profissionais Qualificados</h2>
+            
+            <div className="d-flex justify-content-between align-items-center mb-4">
+              <Filtro
+                titulo="Filtros:"
+                opcoes={opcoesFiltro}
+                opcaoSelecionada={filtroSelecionado}
+                aoMudar={setFiltroSelecionado}
+              />
+              
+              {profissionais.length > 0 && (
+                <small className="text-muted">
+                  {profissionais.length} profissional{profissionais.length !== 1 ? 'es' : ''} 
+                  {error && ' (dados de exemplo)'}
+                </small>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Área de Status */}
+        {error && (
+          <div className="row">
+            <div className="col-12">
+              <div className="alert alert-warning d-flex align-items-center" role="alert">
+                <div>
+                  <strong>⚠️ Aviso:</strong> {error}
+                </div>
+                <button 
+                  className="btn btn-sm btn-outline-warning ms-3"
+                  onClick={handleRetry}
+                  disabled={loading}
+                >
+                  {loading ? 'Tentando...' : 'Tentar Novamente'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {loading && (
+          <div className="row">
+            <div className="col-12 text-center py-3">
+              <div className="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+              <span>Carregando profissionais...</span>
+            </div>
+          </div>
+        )}
+
+        {/* SEMPRE VISÍVEL - Lista de Profissionais */}
+        <div className="row">
+          <div className="col-12">
+            <ListaProfissionais
+              profissionais={profissionais}
+              aoClicarPerfil={aoClicarPerfil}
+            />
+          </div>
+        </div>
+
+        {/* Mensagem quando não há profissionais */}
+        {profissionais.length === 0 && !loading && !error && (
+          <div className="row">
+            <div className="col-12 text-center py-5">
+              <div className="alert alert-info">
+                <h5>Nenhum profissional cadastrado</h5>
+                <p className="mb-0">Não há profissionais disponíveis no momento.</p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </Corpo>
   );
 }
 
 export default Qualificados;
-

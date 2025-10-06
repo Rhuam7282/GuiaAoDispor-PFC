@@ -1,8 +1,9 @@
+// client/src/contextos/Autenticacao.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
-
+import { useNavigate } from 'react-router-dom';
+import { servicoAuth } from '../servicos/api.js';
 
 const AuthContext = createContext();
-
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -12,130 +13,162 @@ export const useAuth = () => {
   return context;
 };
 
-
 export const ProvedorAutenticacao = ({ children }) => {
+  const navigate = useNavigate();
   
-  const [user, setUser] = useState(null);
+  const [usuario, setUsuario] = useState(null);
   const [token, setToken] = useState(null);
-  
-  
-  const [loading, setLoading] = useState(true);
+  const [carregando, setCarregando] = useState(true);
 
-  
-  const isAuthenticated = () => {
-    return user !== null && token !== null;
+  const estaAutenticado = () => {
+    return usuario !== null && token !== null;
   };
 
-  
-  const login = (userData, authToken) => {
-    // Normalizar dados do usuário para garantir consistência
+  const login = (dadosUsuario, tokenJWT) => {
     const usuarioNormalizado = {
-      _id: userData._id,
-      nome: userData.nome,
-      email: userData.email,
-      foto: userData.foto || null,
-      localizacao: userData.localizacao,
-      desc: userData.desc,
-      inst: userData.inst,
-      face: userData.face,
-      num: userData.num,
-      // Campos para compatibilidade com Google OAuth
-      name: userData.nome,
-      picture: userData.foto
+      _id: dadosUsuario._id,
+      nome: dadosUsuario.nome,
+      email: dadosUsuario.email,
+      foto: dadosUsuario.foto || null,
+      localizacao: dadosUsuario.localizacao,
+      desc: dadosUsuario.desc,
+      inst: dadosUsuario.inst,
+      face: dadosUsuario.face,
+      num: dadosUsuario.num,
+      tipoPerfil: dadosUsuario.tipoPerfil || 'Pessoal',
+      name: dadosUsuario.nome,
+      picture: dadosUsuario.foto
     };
     
-    setUser(usuarioNormalizado);
-    setToken(authToken);
+    setUsuario(usuarioNormalizado);
+    setToken(tokenJWT);
     
-    localStorage.setItem('user', JSON.stringify(usuarioNormalizado));
-    localStorage.setItem('token', authToken);
-    localStorage.setItem('isAuthenticated', 'true');
-    localStorage.setItem('loginTimestamp', Date.now().toString());
+    localStorage.setItem('usuario', JSON.stringify(usuarioNormalizado));
+    localStorage.setItem('token', tokenJWT);
+    localStorage.setItem('autenticado', 'true');
+    localStorage.setItem('timestampLogin', Date.now().toString());
+    
+    console.log('✅ Login realizado:', usuarioNormalizado.nome);
+    
+    // Redirecionar para qualificados após login
+    navigate('/qualificados');
   };
 
-  
-  const logout = () => {
-    setUser(null);
-    setToken(null);
-    
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('loginTimestamp');
-  };
-
-  
-  const getUserFromStorage = () => {
+  const logout = async () => {
     try {
-      const storedUser = localStorage.getItem('user');
-      const storedToken = localStorage.getItem('token');
-      const isAuth = localStorage.getItem('isAuthenticated');
-      const loginTimestamp = localStorage.getItem('loginTimestamp');
+      await servicoAuth.logout();
+    } catch (erro) {
+      console.warn('⚠️ Erro no logout da API:', erro.message);
+    } finally {
+      setUsuario(null);
+      setToken(null);
       
-      if (storedUser && storedToken && isAuth === 'true') {
-        // Verificar se o login não expirou (opcional - 7 dias)
-        const agora = Date.now();
-        const tempoLogin = parseInt(loginTimestamp) || 0;
-        const seteDialasEmMs = 7 * 24 * 60 * 60 * 1000;
-        
-        if (agora - tempoLogin > seteDialasEmMs) {
-          // Login expirado, limpar dados
-          localStorage.removeItem('user');
-          localStorage.removeItem('token');
-          localStorage.removeItem('isAuthenticated');
-          localStorage.removeItem('loginTimestamp');
-          return { user: null, token: null };
-        }
-        
-        return { 
-          user: JSON.parse(storedUser), 
-          token: storedToken 
+      localStorage.removeItem('usuario');
+      localStorage.removeItem('token');
+      localStorage.removeItem('autenticado');
+      localStorage.removeItem('timestampLogin');
+      localStorage.removeItem('emailLembrado');
+      localStorage.removeItem('lembrarMe');
+      
+      console.log('🚪 Logout realizado');
+      // Redirecionar para página inicial após logout
+      navigate('/');
+    }
+  };
+
+  const atualizarUsuario = async (dadosAtualizados) => {
+    if (!usuario) return;
+
+    try {
+      const resposta = await servicoAuth.editarPerfil(usuario._id, dadosAtualizados);
+      
+      if (resposta.data) {
+        const usuarioAtualizado = { ...usuario, ...resposta.data };
+        setUsuario(usuarioAtualizado);
+        localStorage.setItem('usuario', JSON.stringify(usuarioAtualizado));
+        console.log('✅ Usuário atualizado:', usuarioAtualizado.nome);
+        return usuarioAtualizado;
+      }
+    } catch (erro) {
+      console.error('❌ Erro ao atualizar usuário:', erro);
+      throw erro;
+    }
+  };
+
+  const obterDadosArmazenados = () => {
+    try {
+      const usuarioArmazenado = localStorage.getItem('usuario');
+      const tokenArmazenado = localStorage.getItem('token');
+      const autenticado = localStorage.getItem('autenticado') === 'true';
+
+      if (usuarioArmazenado && tokenArmazenado && autenticado) {
+        return {
+          usuario: JSON.parse(usuarioArmazenado),
+          token: tokenArmazenado,
+          autenticado: true
         };
       }
-    } catch (error) {
-      console.error('Erro ao recuperar dados do usuário:', error);
-      // Limpar dados corrompidos
-      localStorage.removeItem('user');
+    } catch (erro) {
+      console.error('❌ Erro ao obter dados armazenados:', erro);
+      localStorage.removeItem('usuario');
       localStorage.removeItem('token');
-      localStorage.removeItem('isAuthenticated');
-      localStorage.removeItem('loginTimestamp');
+      localStorage.removeItem('autenticado');
+      localStorage.removeItem('timestampLogin');
     }
-    return { user: null, token: null };
+    
+    return { usuario: null, token: null, autenticado: false };
   };
 
-  
-  const atualizarUsuario = (dadosAtualizados) => {
-    if (user) {
-      const usuarioAtualizado = { ...user, ...dadosAtualizados };
-      setUser(usuarioAtualizado);
-      localStorage.setItem('user', JSON.stringify(usuarioAtualizado));
-    }
-  };
-
-  
   useEffect(() => {
-    const { user: storedUser, token: storedToken } = getUserFromStorage();
-    if (storedUser && storedToken) {
-      setUser(storedUser);
-      setToken(storedToken);
-    }
-    setLoading(false);
-  }, []);
+    const inicializarAuth = async () => {
+      setCarregando(true);
+      
+      const { usuario: usuarioArmazenado, token: tokenArmazenado, autenticado } = obterDadosArmazenados();
+      
+      if (autenticado && usuarioArmazenado && tokenArmazenado) {
+        try {
+          const resposta = await servicoAuth.buscarPerfilLogado(usuarioArmazenado._id);
+          
+          if (resposta.data) {
+            setUsuario(usuarioArmazenado);
+            setToken(tokenArmazenado);
+            console.log('✅ Sessão válida - usuário autenticado:', usuarioArmazenado.nome);
+          } else {
+            throw new Error('Perfil não encontrado');
+          }
+        } catch (erro) {
+          console.log('🔒 Sessão inválida - realizando logout silencioso');
+          // Limpa os dados de autenticação sem redirecionar
+          localStorage.removeItem('usuario');
+          localStorage.removeItem('token');
+          localStorage.removeItem('autenticado');
+          localStorage.removeItem('timestampLogin');
+          setUsuario(null);
+          setToken(null);
+        }
+      } else {
+        console.log('🔍 Nenhuma sessão ativa');
+      }
+      
+      setCarregando(false);
+    };
 
-  
-  const value = {
-    user,
+    inicializarAuth();
+  }, [navigate]);
+
+  const valor = {
+    usuario,
     token,
-    loading,
-    isAuthenticated,
+    carregando,
+    estaAutenticado,
     login,
     logout,
-    getUserFromStorage,
-    atualizarUsuario
+    atualizarUsuario,
+    obterDadosArmazenados
   };
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={valor}>
       {children}
     </AuthContext.Provider>
   );

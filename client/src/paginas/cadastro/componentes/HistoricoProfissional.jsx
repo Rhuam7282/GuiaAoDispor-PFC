@@ -38,7 +38,7 @@ const HistoricoProfissional = ({
               accept="image/*"
               onChange={(e) => alterarFotoHistoricoProfissional(indice, e.target.files[0])}
             />
-            {hp.foto && <img src={hp.foto} alt="Preview" className="preview-imagem" />}
+            {hp.foto && <img src={hp.foto} alt="Preview" className="imagemPerfil" />}
           </div>
           <button type="button" onClick={() => removerHistoricoProfissional(indice)}>
             Remover

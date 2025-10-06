@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Corpo from "@Componentes/Layout/Corpo.jsx";
-import FormularioLoginGoogle from './Componentes/FormularioLoginGoogle.jsx';
-import FormularioLogin from './Componentes/FormularioLogin.jsx';
-import FormularioCadastro from './Componentes/FormularioCadastro.jsx';
+import FormularioLoginGoogle from './componentes/FormularioLoginGoogle.jsx';
+import FormularioLogin from './componentes/FormularioLogin.jsx';
+import FormularioCadastro from './componentes/FormularioCadastro.jsx';
+import useBuscaCep from '../../../../server/buscaCEP.jsx';
 import { servicoCadastro, servicoAuth } from '@Servicos/api.js';
 import { useAuth } from '@Contextos/Autenticacao.jsx';
 import './Cadastro.css';
-
 
 const Cadastro = () => {
   const navigate = useNavigate();
@@ -21,39 +21,27 @@ const Cadastro = () => {
     cep: '',
     cidade: '',
     estado: '',
-    descricao: '',
-    instituicao: '',
-    linkedin: '',
-    tipoPerfil: 'Pessoal',
+    desc: '',
+    inst: '',
+    num: '',
     foto: null,
-    historicosCurriculares: [],
-    historicosProfissionais: [],
+    tipoPerfil: 'Pessoal',
     contatos: []
   });
   
   const [erros, setErros] = useState({});
   const [errosContatos, setErrosContatos] = useState({});
-  const [carregando, setCarregando] = useState(false);
   const [mensagemSucesso, setMensagemSucesso] = useState('');
+  
+  // <<< CORREÇÃO 1: Declarar o estado 'carregandoSubmit'
+  const [carregandoSubmit, setCarregandoSubmit] = useState(false);
 
-  const [dadosLogin, setDadosLogin] = useState({
-    email: '',
-    senha: ''
-  });
-  const [carregandoLogin, setCarregandoLogin] = useState(false);
+  // Usar o hook de busca de CEP
+  const { carregandoCep } = useBuscaCep(dadosFormulario.cep, setDadosFormulario, setErros);
 
   const aoAlterarCampo = (evento) => {
     const { name, value } = evento.target;
     setDadosFormulario(prev => ({ ...prev, [name]: value }));
-    
-    if (erros[name]) {
-      setErros(prev => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const aoAlterarCampoLogin = (evento) => {
-    const { name, value } = evento.target;
-    setDadosLogin(prev => ({ ...prev, [name]: value }));
     
     if (erros[name]) {
       setErros(prev => ({ ...prev, [name]: '' }));
@@ -69,67 +57,6 @@ const Cadastro = () => {
     }
   };
 
-  const adicionarHistoricoCurricular = () => {
-    setDadosFormulario(prev => ({
-      ...prev,
-      historicosCurriculares: [...prev.historicosCurriculares, { nome: '', descricao: '' }]
-    }));
-  };
-
-  const removerHistoricoCurricular = (indice) => {
-    setDadosFormulario(prev => ({
-      ...prev,
-      historicosCurriculares: prev.historicosCurriculares.filter((_, i) => i !== indice)
-    }));
-  };
-
-  const alterarHistoricoCurricular = (indice, campo, valor) => {
-    setDadosFormulario(prev => ({
-      ...prev,
-      historicosCurriculares: prev.historicosCurriculares.map((hc, i) => 
-        i === indice ? { ...hc, [campo]: valor } : hc
-      )
-    }));
-  };
-
-  const adicionarHistoricoProfissional = () => {
-    setDadosFormulario(prev => ({
-      ...prev,
-      historicosProfissionais: [...prev.historicosProfissionais, { nome: '', descricao: '', foto: null }]
-    }));
-  };
-
-  const removerHistoricoProfissional = (indice) => {
-    setDadosFormulario(prev => ({
-      ...prev,
-      historicosProfissionais: prev.historicosProfissionais.filter((_, i) => i !== indice)
-    }));
-  };
-
-  const alterarHistoricoProfissional = (indice, campo, valor) => {
-    setDadosFormulario(prev => ({
-      ...prev,
-      historicosProfissionais: prev.historicosProfissionais.map((hp, i) => 
-        i === indice ? { ...hp, [campo]: valor } : hp
-      )
-    }));
-  };
-
-  const alterarFotoHistoricoProfissional = (indice, arquivo) => {
-    if (arquivo) {
-      const leitor = new FileReader();
-      leitor.onload = (e) => {
-        setDadosFormulario(prev => ({
-          ...prev,
-          historicosProfissionais: prev.historicosProfissionais.map((hp, i) => 
-            i === indice ? { ...hp, foto: e.target.result } : hp
-          )
-        }));
-      };
-      leitor.readAsDataURL(arquivo);
-    }
-  };
-
   const aoEnviarFormulario = async (evento) => {
     evento.preventDefault();
     
@@ -137,15 +64,15 @@ const Cadastro = () => {
       return;
     }
 
-    setCarregando(true);
+    setCarregandoSubmit(true); 
     setMensagemSucesso('');
 
     try {
-      // Primeiro validar email único
+      console.log('📧 Validando email...');
       const respostaValidacao = await servicoCadastro.validarEmail(dadosFormulario.email);
       if (!respostaValidacao.valido) {
         setErros({ email: 'Este email já está em uso' });
-        setCarregando(false);
+        setCarregandoSubmit(false); 
         return;
       }
 
@@ -156,62 +83,47 @@ const Cadastro = () => {
         estado: dadosFormulario.estado
       };
 
-      // Preparar dados do perfil com contatos mapeados
+      const contatosValidos = dadosFormulario.contatos.filter(
+        contato => contato.tipo && contato.valor
+      );
+
       const dadosPerfil = {
         nome: dadosFormulario.nome,
         email: dadosFormulario.email,
         senha: dadosFormulario.senha,
-        desc: dadosFormulario.descricao,
-        inst: dadosFormulario.instituicao,
+        desc: dadosFormulario.desc,
+        inst: dadosFormulario.inst,
+        num: dadosFormulario.num,
         foto: dadosFormulario.foto,
-        contatos: dadosFormulario.contatos
+        contatos: contatosValidos,
+        tipoPerfil: dadosFormulario.tipoPerfil
       };
 
+      console.log('👤 Iniciando cadastro como:', dadosFormulario.tipoPerfil);
+      
+      let respostaCadastro;
       if (dadosFormulario.tipoPerfil === 'Profissional') {
-        dadosPerfil.linkedin = dadosFormulario.linkedin;
-      }
-
-      const respostaCadastro = await servicoCadastro.cadastrarUsuario(dadosPerfil, dadosLocalizacao);
-
-      const respostaLogin = await servicoAuth.login(dadosFormulario.email, dadosFormulario.senha);
-      login(respostaLogin.data);
-      navigate("/perfil");
-
-    } catch (erro) {
-      console.error('Erro no cadastro:', erro);
-      if (erro.response && erro.response.data && erro.response.data.message) {
-        setErros({ submit: erro.response.data.message });
+        respostaCadastro = await servicoCadastro.cadastrarProfissional(dadosPerfil, dadosLocalizacao);
       } else {
-        setErros({ submit: erro.message });
+        respostaCadastro = await servicoCadastro.cadastrarUsuario(dadosPerfil, dadosLocalizacao);
       }
-    } finally {
-      setCarregando(false);
-    }
-  };
 
-  const aoFazerLogin = async (evento) => {
-    evento.preventDefault();
-    
-    if (!dadosLogin.email || !dadosLogin.senha) {
-      setErros({ login: 'Email e senha são obrigatórios' });
-      return;
-    }
+      console.log('✅ Cadastro realizado, fazendo login automático...');
+      
+      // CORREÇÃO: Usar os dados do cadastro para login imediato
+      if (respostaCadastro.data && respostaCadastro.token) {
+        login(respostaCadastro.data, respostaCadastro.token);
+        setMensagemSucesso('Cadastro realizado com sucesso! Redirecionando...');
+        // O redirecionamento será feito automaticamente pelo contexto de autenticação
+      } else {
+        throw new Error('Erro no login automático após cadastro');
+      }
 
-    setCarregandoLogin(true);
-    setErros({});
-
-    try {
-      const resposta = await servicoAuth.login(dadosLogin.email, dadosLogin.senha);
-      
-      login(resposta.data);
-      
-      navigate('/perfil');
-      
     } catch (erro) {
-      console.error('Erro no login:', erro);
-      setErros({ login: erro.message });
+      console.error('❌ Erro no cadastro:', erro);
+      setErros({ submit: erro.message || 'Erro ao realizar cadastro' });
     } finally {
-      setCarregandoLogin(false);
+      setCarregandoSubmit(false); 
     }
   };
 
@@ -235,7 +147,7 @@ const Cadastro = () => {
       ...prev,
       contatos: prev.contatos.filter((_, i) => i !== indice)
     }));
-    // Remover também qualquer erro associado a este contato
+    
     setErrosContatos(prev => {
       const novosErros = { ...prev };
       delete novosErros[indice];
@@ -243,8 +155,37 @@ const Cadastro = () => {
     });
   };
 
+  const alterarContato = (indice, campo, valor) => {
+    setDadosFormulario(prev => {
+      const novosContatos = prev.contatos.map((contato, i) => 
+        i === indice ? { ...contato, [campo]: valor } : contato
+      );
+      
+      const contatoAtualizado = novosContatos[indice];
+      
+      if (contatoAtualizado.tipo && contatoAtualizado.valor) {
+        const erro = validarContato(contatoAtualizado.tipo, contatoAtualizado.valor);
+        setErrosContatos(prevErros => ({
+          ...prevErros,
+          [indice]: erro
+        }));
+      } else {
+        setErrosContatos(prevErros => {
+          const novosErros = { ...prevErros };
+          delete novosErros[indice];
+          return novosErros;
+        });
+      }
+      
+      return {
+        ...prev,
+        contatos: novosContatos
+      };
+    });
+  };
+
   const validarContato = (tipo, valor) => {
-    if (!valor) return 'Campo obrigatório';
+    if (!valor.trim()) return 'Campo obrigatório';
     
     switch (tipo) {
       case 'Email': {
@@ -268,7 +209,6 @@ const Cadastro = () => {
         break;
       }
       default: {
-        // Para tipo "Outro", não há validação específica
         break;
       }
     }
@@ -276,44 +216,12 @@ const Cadastro = () => {
     return '';
   };
 
-  const alterarContato = (indice, campo, valor) => {
-    setDadosFormulario(prev => {
-      const novosContatos = prev.contatos.map((contato, i) => 
-        i === indice ? { ...contato, [campo]: valor } : contato
-      );
-      
-      // Validar o contato se ambos os campos estiverem preenchidos
-      if (campo === 'tipo' || campo === 'valor') {
-        const contatoAtualizado = novosContatos[indice];
-        if (contatoAtualizado.tipo && contatoAtualizado.valor) {
-          const erro = validarContato(contatoAtualizado.tipo, contatoAtualizado.valor);
-          setErrosContatos(prevErros => ({
-            ...prevErros,
-            [indice]: erro
-          }));
-        } else {
-          // Limpar erro se um dos campos estiver vazio
-          setErrosContatos(prevErros => {
-            const novosErros = { ...prevErros };
-            delete novosErros[indice];
-            return novosErros;
-          });
-        }
-      }
-      
-      return {
-        ...prev,
-        contatos: novosContatos
-      };
-    });
-  };
-
   const validarFormulario = () => {
     const novosErros = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const novosErrosContatos = {};
 
-    if (!dadosFormulario.nome) novosErros.nome = 'Nome é obrigatório';
+    if (!dadosFormulario.nome.trim()) novosErros.nome = 'Nome é obrigatório';
     
     if (!dadosFormulario.email) {
       novosErros.email = 'Email é obrigatório';
@@ -334,22 +242,16 @@ const Cadastro = () => {
     if (!dadosFormulario.cep) novosErros.cep = 'CEP é obrigatório';
     if (!dadosFormulario.cidade) novosErros.cidade = 'Cidade é obrigatória';
 
-    // Validações específicas para perfil profissional
     if (dadosFormulario.tipoPerfil === 'Profissional') {
-      if (!dadosFormulario.descricao) novosErros.descricao = 'Descrição é obrigatória para perfil profissional';
-      if (!dadosFormulario.instituicao) novosErros.instituicao = 'Instituição é obrigatória para perfil profissional';
+      if (!dadosFormulario.desc.trim()) novosErros.desc = 'Descrição é obrigatória para perfil profissional';
     }
 
-    // Validar todos os contatos
     dadosFormulario.contatos.forEach((contato, index) => {
       if (contato.tipo && contato.valor) {
         const erro = validarContato(contato.tipo, contato.valor);
         if (erro) {
           novosErrosContatos[index] = erro;
         }
-      } else if (contato.tipo || contato.valor) {
-        // Se um dos campos estiver preenchido mas não o outro
-        novosErrosContatos[index] = 'Ambos os campos são obrigatórios';
       }
     });
 
@@ -364,36 +266,23 @@ const Cadastro = () => {
       <div className="container">
         <h1 className="titulo">Criar Conta</h1>
         <div className='listaHorizontal'>
-          <FormularioLogin 
-            dadosLogin={dadosLogin}
-            carregandoLogin={carregandoLogin}
-            erros={erros}
-            aoAlterarCampoLogin={aoAlterarCampoLogin}
-            aoFazerLogin={aoFazerLogin}
-          />
+          <FormularioLogin />
           <FormularioLoginGoogle 
-            aoSucesso={aoSucessoLoginGoogle}
-            aoErro={aoErroLoginGoogle}
+            aoSucesso={() => {}}
+            aoErro={() => {}}
           />
         </div>
         
         <FormularioCadastro 
           dadosFormulario={dadosFormulario}
-          erros={erros}
-          errosContatos={errosContatos}
-          carregando={carregando}
+          erros={{...erros, errosContatos}}
+          // A lógica para combinar os carregamentos está correta
+          carregando={carregandoSubmit || carregandoCep} 
           mensagemSucesso={mensagemSucesso}
           aoAlterarCampo={aoAlterarCampo}
           aoSelecionarArquivo={aoSelecionarArquivo}
           aoEnviarFormulario={aoEnviarFormulario}
           setDadosFormulario={setDadosFormulario}
-          adicionarHistoricoCurricular={adicionarHistoricoCurricular}
-          removerHistoricoCurricular={removerHistoricoCurricular}
-          alterarHistoricoCurricular={alterarHistoricoCurricular}
-          adicionarHistoricoProfissional={adicionarHistoricoProfissional}
-          removerHistoricoProfissional={removerHistoricoProfissional}
-          alterarHistoricoProfissional={alterarHistoricoProfissional}
-          alterarFotoHistoricoProfissional={alterarFotoHistoricoProfissional}
           adicionarContato={adicionarContato}
           removerContato={removerContato}
           alterarContato={alterarContato}

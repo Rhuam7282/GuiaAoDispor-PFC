@@ -6,7 +6,6 @@ import { useGuiasLeitura } from './ganchos/useGuiasLeitura';
 // import VLibrasWidgetHibrido from './VLibrasWidget/VLibrasWidgetHibrido';
 import SecaoTexto from './SecaoTexto/SecaoTexto';
 import SecaoVisao from './SecaoVisao/SecaoVisao';
-import SecaoDaltonismo from './SecaoDaltonismo/SecaoDaltonismo';
 import SecaoConteudo from './SecaoConteudo/SecaoConteudo';
 import SecaoAnimacoesCursor from './SecaoAnimacoesCursor/SecaoAnimacoesCursor';
 import MaskLeitura from './mascaraLeitura/mascaraLeitura';
@@ -119,27 +118,21 @@ const PainelControle = () => {
       <button
         className="botaoAlternarAcessibilidade"
         onClick={alternarPainel}
-        aria-label="Abrir controles de acessibilidade (Alt + A)"
-        title="Controles de Acessibilidade (Alt + A)"
+        aria-label={estaAberto ? "Fechar controles de acessibilidade" : "Abrir controles de acessibilidade (Alt + A)"}
+        title={estaAberto ? "Fechar Controles" : "Controles de Acessibilidade (Alt + A)"}
       >
-        <PersonStanding size={24} />
+        {estaAberto ? <X size={24} /> : <PersonStanding size={24} />}
       </button>
 
       {estaAberto && (
         <div className="painelAcessibilidade" role="dialog" aria-label="Painel de controles de acessibilidade">
           <div className="cabecalhoAcessibilidade">
             <div className="tituloHeader">
-              <PersonStanding size={20} />
+              <PersonStanding size={16} />
               <h3>Acessibilidade</h3>
             </div>
-            <button
-              className="botaoFechar"
-              onClick={alternarPainel}
-              aria-label="Fechar controles"
-            >
-              <X size={18} />
-            </button>
           </div>
+
 
           <div className="conteudo-painel">
             {/* <VLibrasWidgetHibrido /> */}
@@ -155,14 +148,6 @@ const PainelControle = () => {
             <div className="grupo-opcoes">
               <h4 className="titulo-grupo">Visão</h4>
               <SecaoVisao
-                configuracoes={configuracoes}
-                atualizarConfiguracao={atualizarConfiguracao}
-              />
-            </div>
-
-            <div className="grupo-opcoes">
-              <h4 className="titulo-grupo">Daltonismo</h4>
-              <SecaoDaltonismo
                 configuracoes={configuracoes}
                 atualizarConfiguracao={atualizarConfiguracao}
               />

@@ -29,18 +29,30 @@
 }
 
 .botao-redefinir-tudo {
-  padding: 10px 20px;
-  background: var(--corVermelhoDestaque);
-  color: rgb(0, 0, 0);
+  width: 100%;
+  padding: 16px 20px;
+  background: var(--corMarromDestaque);
+  color: var(--corMarromEscuro);
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
-  transition: all 0.2s;
+  font-size: 16px;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 0px;
 }
 
 .botao-redefinir-tudo:hover {
-  background: var(--corVermelhoEscuro);
+  background: var(--corMarromEscuro);
+  color: var(--corNeutraClara);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .painelAcessibilidade {
@@ -96,8 +108,9 @@
 
 .botoesControle button {
   font-size: 16px !important; /* Aumentar fonte dos botões */
-  padding: 10px 15px !important; /* Aumentar padding */
+  padding: 10px; /* Aumentar padding */
   min-width: 90px !important; /* Largura mínima maior */
+  text-align: center;
 }
 
 .botaoAlternarAcessibilidade {
@@ -111,21 +124,23 @@
 .cabecalhoAcessibilidade {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: var(--espacamentoPequeno);
+  justify-content: flex-start;
+  padding: 12px var(--espacamentoPequeno);
   background: var(--corAzulDestaque);
   color: var(--corMarromEscuro);
+  border-bottom: 2px solid var(--corMarromDestaque);
 }
 
 .tituloHeader {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .tituloHeader h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: 16px; /* Título menor */
+  font-weight: bold;
 }
 
 .titulo-grupo {
@@ -158,12 +173,12 @@
 }
 
 .secao {
-  padding: 8px 0;
+  padding: 10px 0;
   border-bottom: 1px solid var(--corMarromDestaqueTransparente);
 }
 
 .secao-redefinir {
-  padding: 15px 0;
+  padding: 5px 0;
   text-align: center;
   border-top: 1px solid var(--corMarromDestaqueTransparente);
 }

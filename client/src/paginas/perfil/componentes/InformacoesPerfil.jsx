@@ -3,7 +3,15 @@ import { Star, Facebook, Instagram, Linkedin, Save, X, Edit, Camera } from "luci
 import { useAuth } from '@Contextos/Autenticacao.jsx';
 import { servicoAuth } from '@Servicos/api.js';
 
-const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao, setModoEdicao }) => {
+const InformacoesPerfil = ({ 
+  dadosPerfil, 
+  estaAutenticado, 
+  user, 
+  id, 
+  modoEdicao, 
+  setModoEdicao,
+  onPerfilAtualizado 
+}) => {
   const { atualizarUsuario } = useAuth();
   const [dadosEditaveis, setDadosEditaveis] = useState({
     nome: '',
@@ -26,10 +34,10 @@ const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao,
     if (dadosPerfil) {
       setDadosEditaveis({
         nome: dadosPerfil.nome || '',
-        descricao: dadosPerfil.descricao || '',
+        descricao: dadosPerfil.descricao || dadosPerfil.desc || '',
         email: dadosPerfil.email || '',
-        facebook: dadosPerfil.face || '',
-        instagram: dadosPerfil.inst || '',
+        facebook: dadosPerfil.face || dadosPerfil.facebook || '',
+        instagram: dadosPerfil.inst || dadosPerfil.instagram || '',
         linkedin: dadosPerfil.linkedin || '',
         foto: dadosPerfil.foto || ''
       });
@@ -104,23 +112,16 @@ const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao,
       
       if (resposta.status === 'sucesso') {
         // Atualizar contexto de autenticação
-        atualizarUsuario({
-          nome: dadosEditaveis.nome,
-          email: dadosEditaveis.email,
-          face: dadosEditaveis.facebook,
-          inst: dadosEditaveis.instagram,
-          linkedin: dadosEditaveis.linkedin,
-          desc: dadosEditaveis.descricao,
-          foto: dadosEditaveis.foto,
-          picture: dadosEditaveis.foto
-        });
+        await atualizarUsuario(dadosAtualizacao);
+        
+        // Notificar componente pai sobre a atualização
+        if (onPerfilAtualizado) {
+          onPerfilAtualizado(dadosAtualizacao);
+        }
         
         setMensagem('Perfil atualizado com sucesso!');
         setTimeout(() => setMensagem(''), 5000);
         setModoEdicao(false);
-        
-        // Recarregar a página para refletir as mudanças
-        window.location.reload();
       } else {
         throw new Error(resposta.message || 'Erro ao atualizar perfil');
       }
@@ -136,10 +137,10 @@ const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao,
     // Restaurar dados originais
     setDadosEditaveis({
       nome: dadosPerfil.nome || '',
-      descricao: dadosPerfil.descricao || '',
+      descricao: dadosPerfil.descricao || dadosPerfil.desc || '',
       email: dadosPerfil.email || '',
-      facebook: dadosPerfil.face || '',
-      instagram: dadosPerfil.inst || '',
+      facebook: dadosPerfil.face || dadosPerfil.facebook || '',
+      instagram: dadosPerfil.inst || dadosPerfil.instagram || '',
       linkedin: dadosPerfil.linkedin || '',
       foto: dadosPerfil.foto || ''
     });
@@ -329,7 +330,7 @@ const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao,
             alt={`${dadosPerfil.nome} - ${dadosPerfil.descricao} em ${dadosPerfil.localizacao}`}
           />
           {isPerfilProprio && (
-            <div className="sobreposicaoFoto flexColuna alinharCentro justificarCentro" onClick={() => setModoEdicao(true)}>
+            <div className="sobreposicaoFoto" onClick={() => setModoEdicao(true)}>
               <Edit size={20} />
               <span>Editar perfil</span>
             </div>
@@ -342,59 +343,61 @@ const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao,
         </div>
       </div>
       
-      <div className="cartaoDestaque fundoMarromDestaqueTransparente textoEsquerda">
-        <h3>Sobre</h3>
-        <p className="margemInferiorPequena">{dadosPerfil.descricao}</p>
-        <div className="flexCentro gapPequeno">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              size={16}
-              className={
-                i < Math.floor(dadosPerfil.avaliacao || 0)
-                  ? "textoAmarelo preenchido"
-                  : "textoMarromOfuscado"
-              }
-            />
-          ))}
-          <span className="textoMarromEscuro">
-            {(dadosPerfil.avaliacao || 0).toFixed(1)}
-          </span>
+      <div className="cartaoDestaque fundoMarromDestaqueTransparente textoEsquerda flexWrap">
+        <p>{dadosPerfil.descricao}</p>
+        <div className="listaHorizontal">
+          <div className="gapMedio">
+            <div className="flexCentro gapPequeno">
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  size={16}
+                  className={
+                    i < Math.floor(dadosPerfil.avaliacao)
+                      ? "textoAmarelo preenchido"
+                      : "textoMarromOfuscado"
+                  }
+                />
+              ))}
+              <span className="textoMarromEscuro">
+                {dadosPerfil.avaliacao !== undefined && dadosPerfil.avaliacao !== null ? dadosPerfil.avaliacao.toFixed(1) : '0.0'}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
       
       <div>
         <h3>Contatos</h3>
-        <div className="listaIcones vertical gapPequeno">
+        <div className="listaIcones vertical">
           {dadosPerfil.email && (
-            <div className="flexCentro gapPequeno">
-              <span>📧</span>
-              <span>{dadosPerfil.email}</span>
+            <div className="listaIcones">
+              <span>📧 {dadosPerfil.email}</span>
             </div>
           )}
           
           {dadosPerfil.face && (
-            <div className="flexCentro gapPequeno">
+            <div className="listaIcones">
               <Facebook size={18} />
               <span>{dadosPerfil.face}</span>
             </div>
           )}
           
           {dadosPerfil.inst && (
-            <div className="flexCentro gapPequeno">
+            <div className="listaIcones">
               <Instagram size={18} />
               <span>{dadosPerfil.inst}</span>
             </div>
           )}
           
           {dadosPerfil.linkedin && (
-            <div className="flexCentro gapPequeno">
+            <div className="listaIcones">
               <Linkedin size={18} />
               <span>{dadosPerfil.linkedin}</span>
             </div>
           )}
           
-          {!dadosPerfil.email && !dadosPerfil.face && !dadosPerfil.inst && !dadosPerfil.linkedin && (
+          {(dadosPerfil.redesSociais && dadosPerfil.redesSociais.length === 0) && (
             <p className="textoMarromOfuscado">Nenhum contato informado</p>
           )}
         </div>
