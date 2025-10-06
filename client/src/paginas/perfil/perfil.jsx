@@ -8,10 +8,6 @@ import { servicoProfissional, servicoHCurricular, servicoHProfissional, servicoA
 import { useAuth } from "@Contextos/Autenticacao.jsx";
 
 import {
-  Mail,
-  Facebook,
-  Instagram,
-  Linkedin,
   LogOut,
 } from "lucide-react";
 
@@ -23,7 +19,7 @@ import portugues from "@Recursos/Imagens/portugues.jpg";
 const Perfil = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, estaAutenticado, logout, atualizarUsuario } = useAuth();
+  const { user, estaAutenticado, logout } = useAuth();
   
   const [dadosPerfil, setDadosPerfil] = useState(null);
   const [historicoAcademico, setHistoricoAcademico] = useState([]);
@@ -39,12 +35,10 @@ const Perfil = () => {
     localizacao: "Assis Chateaibriand, PR",
     descricao: "Enfermeira especializada in geriatria com 10 anos de experiência.",
     avaliacao: 4.8,
-    redesSociais: [
-      { icone: Mail, usuario: "maria.silva@exemplo.com" },
-      { icone: Facebook, usuario: "/maria.silva" },
-      { icone: Instagram, usuario: "@maria_silva" },
-      { icone: Linkedin, usuario: "linkedin.com/in/maria-silva" },
-    ],
+    email: "",
+    face: "",
+    inst: "",
+    linkedin: "",
     historicoProfissional: [
       {
         nome: "Hospital Micheletto - Assis Chateaubriand",
@@ -85,6 +79,8 @@ const Perfil = () => {
   const formatarDadosPerfil = (dadosUsuario) => {
     if (!dadosUsuario) return dadosEstaticos;
 
+    console.log("📋 Formatando dados do perfil:", dadosUsuario);
+
     return {
       _id: dadosUsuario._id,
       nome: dadosUsuario.nome || "Nome não informado",
@@ -99,13 +95,7 @@ const Perfil = () => {
       face: dadosUsuario.face || dadosUsuario.facebook || "",
       inst: dadosUsuario.inst || dadosUsuario.instagram || "",
       linkedin: dadosUsuario.linkedin || "",
-      tipoPerfil: dadosUsuario.tipoPerfil || 'Pessoal',
-      redesSociais: [
-        { icone: Mail, usuario: dadosUsuario.email || "", tipo: "email" },
-        { icone: Facebook, usuario: dadosUsuario.face || dadosUsuario.facebook || "", tipo: "facebook" },
-        { icone: Instagram, usuario: dadosUsuario.inst || dadosUsuario.instagram || "", tipo: "instagram" },
-        { icone: Linkedin, usuario: dadosUsuario.linkedin || "", tipo: "linkedin" },
-      ].filter(rede => rede.usuario !== ""),
+      tipoPerfil: dadosUsuario.tipoPerfil || 'Pessoal'
     };
   };
 
@@ -121,11 +111,12 @@ const Perfil = () => {
         
         try {
           const resposta = await servicoAuth.buscarPerfilLogado(user._id);
+          console.log("📨 Resposta da API:", resposta);
           
-          if (resposta && resposta.data) {
+          if (resposta && resposta.status === 'sucesso' && resposta.data) {
             const perfilFormatado = formatarDadosPerfil(resposta.data);
             setDadosPerfil(perfilFormatado);
-            console.log("✅ Perfil do usuário carregado com sucesso");
+            console.log("✅ Perfil do usuário carregado com sucesso:", perfilFormatado);
             
             // Para usuários comuns, não carregar históricos
             if (resposta.data.tipoPerfil === 'Pessoal') {
@@ -134,9 +125,9 @@ const Perfil = () => {
             }
           } else {
             // Fallback para dados do contexto
+            console.log("⚠️ Usando fallback para dados do contexto");
             const perfilFormatado = formatarDadosPerfil(user);
             setDadosPerfil(perfilFormatado);
-            console.log("ℹ️ Usando dados do contexto de autenticação");
           }
         } catch (erroApi) {
           console.error("❌ Erro ao buscar perfil da API:", erroApi);
@@ -223,16 +214,7 @@ const Perfil = () => {
 
   // Função para verificar se é um perfil profissional
   const isPerfilProfissional = () => {
-    return id || (dadosPerfil?.tipoPerfil === 'Profissional');
-  };
-
-  // Função para atualizar dados locais após edição
-  const handlePerfilAtualizado = (dadosAtualizados) => {
-    const perfilAtualizado = formatarDadosPerfil({
-      ...dadosPerfil,
-      ...dadosAtualizados
-    });
-    setDadosPerfil(perfilAtualizado);
+    return id || (dadosPerfil?.tipoPerfil === 'Profissional') || (historicoAcademico.length > 0 || historicoProfissional.length > 0);
   };
 
   if (carregando) {
@@ -290,9 +272,9 @@ const Perfil = () => {
   return (
     <Corpo>
       <div className="container">
-        <div className="cabecalhoPerfil flexCentro">
+        <div className="cabecalhoPerfil flexCentro espaçoEntre">
           <h1 className="titulo">{dadosPerfil.nome}</h1>
-          <div className="botoesCabecalho">
+          <div className="botoesCabecalho flexCentro gapPequeno">
             {estaAutenticado() && isPerfilProprio() && (
               <button 
                 className="botao botaoSecundario"
@@ -304,7 +286,7 @@ const Perfil = () => {
             {estaAutenticado() && isPerfilProprio() && (
               <button 
                 onClick={handleLogout}
-                className="botao botaoSecundario flexCentro"
+                className="botao botaoSecundario flexCentro gapPequeno"
               >
                 <LogOut size={16} />
                 <span>Sair</span>
@@ -314,7 +296,7 @@ const Perfil = () => {
         </div>
         
         {erro && (
-          <div className="mensagemAviso">
+          <div className="mensagemAviso margemInferiorMedia">
             <p>⚠️ {erro}</p>
           </div>
         )}
@@ -326,7 +308,6 @@ const Perfil = () => {
           id={id || (user ? user._id : null)}
           modoEdicao={modoEdicao}
           setModoEdicao={setModoEdicao}
-          onPerfilAtualizado={handlePerfilAtualizado}
         />
 
         {/* Mostrar históricos apenas para perfis profissionais */}
