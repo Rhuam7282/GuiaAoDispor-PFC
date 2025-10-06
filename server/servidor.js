@@ -680,6 +680,7 @@ app.put('/api/auth/perfil/:id', async (req, res) => {
   }
 });
 
+
 // POST - Criar novo histórico curricular
 app.post('/api/hcurriculares', async (req, res) => {
   try {
