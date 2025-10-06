@@ -1,7 +1,7 @@
 // client/src/contextos/Autenticacao.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { servicoAuth } from '../servicos/api.js';
+import { servicoAuth } from '../Servicos/Api.js';
 
 const AuthContext = createContext();
 

@@ -1,5 +1,5 @@
 // client/src/servicos/api.js
-import { API_CONFIG } from "../config/apiConfig.js";
+import { API_CONFIG } from "../Config/ApiConfig.js";
 
 const URL_BASE = API_CONFIG.BASE_URL;
 

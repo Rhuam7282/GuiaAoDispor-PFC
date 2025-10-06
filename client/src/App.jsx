@@ -1,14 +1,14 @@
 // client/src/App.jsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ProvedorAutenticacao } from "./contextos/Autenticacao.jsx";
+import { ProvedorAutenticacao } from "./Contextos/Autenticacao.jsx";
 import ProtectedRoute from "./componentes/Autenticacao/ProtectedRoute.jsx";
 import AuthRedirect from "./componentes/Autenticacao/AuthRedirect.jsx";
-import SobreNos from "./paginas/sobrenos/sobreNos.jsx";
-import Perfil from "./paginas/perfil/perfil.jsx";
-import Mensagem from "./paginas/mensagem/mensagem.jsx";
-import Qualificados from "./paginas/qualificados/qualificados.jsx";
-import Cadastro from "./paginas/cadastro/cadastro.jsx";
-import Inicio from "./paginas/inicio/inicio.jsx";
+import SobreNos from "./paginas/sobrenos/SobreNos.jsx";
+import Perfil from "./paginas/perfil/Perfil.jsx";
+import Mensagem from "./paginas/mensagem/Mensagem.jsx";
+import Qualificados from "./paginas/qualificados/Qualificados.jsx";
+import Cadastro from "./paginas/cadastro/Cadastro.jsx";
+import Inicio from "./paginas/inicio/Inicio.jsx";
 import PainelControle from "./componentes/acessibilidade/PainelControle.jsx";
 import VlibrasWidget from "./componentes/acessibilidade/VLibras/VLibrasWidget.jsx";
 

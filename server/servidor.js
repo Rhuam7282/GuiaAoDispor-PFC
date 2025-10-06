@@ -17,12 +17,12 @@ const caminhoEnv = path.resolve(__dirname, '.env');
 dotenv.config({ path: caminhoEnv });
 
 // Importar todos os modelos
-import Localizacao from './modelos/localizacao.js';
-import Profissional from './modelos/profissional.js';
-import Usuario from './modelos/usuario.js';
-import Avaliacao from './modelos/avaliacao.js';
-import HCurricular from './modelos/hcurricular.js';
-import HProfissional from './modelos/hprofissional.js';
+import Localizacao from './Modelos/Localizacao.js';
+import Profissional from './Modelos/Profissional.js';
+import Usuario from './Modelos/Usuario.js';
+import Avaliacao from './Modelos/Avaliacao.js';
+import HCurricular from './Modelos/HistCurricular.js';
+import HProfissional from './Modelos/HistProfissional.js';
 
 const app = express();
 

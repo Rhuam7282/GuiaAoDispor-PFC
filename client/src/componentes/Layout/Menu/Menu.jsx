@@ -1,9 +1,9 @@
 // src/componentes/layout/Menu/Menu.jsx
 import React from 'react';
-import { useAuth } from '../../../contextos/Autenticacao';
-import FachadaMenu from './FachadaMenu/FachadaMenu';
-import ListaMenu from './ListaMenu/ListaMenu';
-import RodapeMenu from './RodapeMenu/RodapeMenu';
+import { useAuth } from '../../../Contextos/Autenticacao';
+import FachadaMenu from './Componentes/FachadaMenu';
+import ListaMenu from './Componentes/ListaMenu';
+import RodapeMenu from './Componentes/RodapeMenu';
 import './Menu.css';
 
 const Menu = () => {
