@@ -4,7 +4,7 @@ import Corpo from "@Componentes/Layout/Corpo.jsx";
 import FormularioLoginGoogle from './componentes/FormularioLoginGoogle.jsx';
 import FormularioLogin from './componentes/FormularioLogin.jsx';
 import FormularioCadastro from './componentes/FormularioCadastro.jsx';
-import useBuscaCep from '../../../../server/buscaCEP.jsx';
+import useBuscaCep from '../../../../server/api/buscaCEP.jsx';
 import { servicoCadastro, servicoAuth } from '@Servicos/api.js';
 import { useAuth } from '@Contextos/Autenticacao.jsx';
 import './Cadastro.css';

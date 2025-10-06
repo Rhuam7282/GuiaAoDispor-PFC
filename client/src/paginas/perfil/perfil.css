@@ -6,16 +6,82 @@
   margin-bottom: var(--espacamentoGrande);
 }
 
-/* Margem pequena para o cartão de descrição */
+/* Cartão de perfil com layout lateral */
 .cartaoDestaque.fundoMarromDestaqueTransparente {
   margin: var(--espacamentoPequeno);
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Distribui espaço entre os elementos */
-  min-height: 200px; /* Altura mínima para garantir espaço */
+  justify-content: space-between;
+  min-height: 150px; /* Reduzida a altura */
 }
 
-/* Faz as listas de ícones ficarem no final da div */
+/* NOVO: Cartão com layout lateral para históricos */
+.cartaoLateral {
+  display: flex;
+  align-items: center;
+  gap: var(--espacamentoMedio);
+  background-color: var(--corAzulDestaque);
+  border-radius: var(--bordaArredondada);
+  padding: var(--espacamentoPequeno);
+  width: 100%;
+  min-height: 80px; /* Altura reduzida */
+}
+
+.containerImagemLateral {
+  flex: 0 0 80px; /* Largura fixa para a imagem */
+  height: 80px;
+  border-radius: var(--bordaArredondada);
+  overflow: hidden;
+}
+
+.imagemLateral {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.conteudoLateral {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.conteudoLateral h3 {
+  margin: 0 0 4px 0;
+  font-size: var(--tamanhoFonteTextoBase);
+  line-height: 1.2;
+}
+
+.conteudoLateral p {
+  margin: 0;
+  font-size: var(--tamanhoFonteTextoMenor);
+  color: var(--corMarromEscuro);
+}
+
+/* Cartão acadêmico sem imagem */
+.cartaoAcademico {
+  background-color: var(--corAzulDestaque);
+  border-radius: var(--bordaArredondada);
+  padding: var(--espacamentoPequeno);
+  width: 100%;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cartaoAcademico h3 {
+  margin: 0 0 4px 0;
+  font-size: var(--tamanhoFonteTextoBase);
+}
+
+.cartaoAcademico p {
+  margin: 0;
+  font-size: var(--tamanhoFonteTextoMenor);
+  color: var(--corMarromEscuro);
+}
 
 /* Estilos para o cabeçalho do perfil */
 .cabecalhoPerfil {
@@ -31,19 +97,6 @@
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-}
-
-/* Ajustes responsivos */
-@media (max-width: 768px) {
-  .cabecalhoPerfil {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .botoesCabecalho {
-    width: 100%;
-    justify-content: flex-start;
-  }
 }
 
 .colunaFoto .imagemPerfil {
@@ -67,6 +120,7 @@
 
 .secaoHistorico {
   margin-bottom: var(--espacamentoGrande);
+  width: 100%;
 }
 
 .secaoHistorico h2 {
@@ -75,50 +129,31 @@
   color: var(--corMarromEscuro);
   padding-bottom: 5px;
   border-bottom: 1px solid var(--corBordaSubtle);
+  text-align: left;
 }
 
+/* HISTÓRICOS - LAYOUT COMPACTO */
 .listaAcademica,
 .listaProfissional {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--espacamentoMedio);
-}
-
-.itemAcademico,
-.itemProfissional {
-  background-color: var(--corAzulDestaque);
-  border-radius: var(--bordaArredondada);
-  padding: var(--espacamentoPequeno);
-}
-
-.itemProfissional {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: var(--espacamentoPequeno);
-}
-
-.imagemProfissional {
+  grid-template-columns: 1fr;
+  gap: var(--espacamentoPequeno); /* Gap reduzido */
   width: 100%;
-  height: auto;
-  border-radius: var(--bordaArredondada);
-  overflow: hidden;
 }
 
-.imagemProfissional img {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  display: block;
-  height: auto;
+/* SOBRE - NÃO CENTRALIZADO */
+.cartaoDestaque.fundoMarromDestaqueTransparente h3 {
+  text-align: left;
+  margin-bottom: var(--espacamentoPequeno);
 }
 
-.infoProfissional {
-  margin-top: 0;
+.cartaoDestaque.fundoMarromDestaqueTransparente p {
+  text-align: left;
+  margin-bottom: var(--espacamentoPequeno);
 }
 
 /* Estilos para estados de carregamento e erro */
-.carregando  {
+.carregando {
   text-align: center;
   padding: var(--espacamentoExtraGrande) var(--espacamentoMedio);
   color: var(--corMarromEscuro);
@@ -154,11 +189,6 @@
   display: inline-block;
 }
 
-.containerFotoEdicao {
-  position: relative;
-  display: inline-block;
-}
-
 .sobreposicaoFoto {
   position: absolute;
   top: 0;
@@ -175,11 +205,9 @@
   opacity: 0;
   transition: opacity 0.3s ease;
   cursor: pointer;
-  aspect-ratio: 1 / 1;
 }
 
-.containerFoto:hover .sobreposicaoFoto,
-.containerFotoEdicao .sobreposicaoFoto {
+.containerFoto:hover .sobreposicaoFoto {
   opacity: 1;
 }
 
@@ -193,6 +221,7 @@
   padding: 10px;
   border-radius: 5px;
   margin: 10px 0;
+  font-size: var(--tamanhoFonteTextoMenor);
 }
 
 .mensagemSucesso {
@@ -207,9 +236,20 @@
   border: 1px solid #f5c6cb;
 }
 
+/* Ajustes responsivos */
 @media (max-width: 768px) {
   .containerPrincipal {
     grid-template-columns: 1fr;
+  }
+  
+  .cabecalhoPerfil {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .botoesCabecalho {
+    width: 100%;
+    justify-content: flex-start;
   }
   
   .colunaFoto {
@@ -220,4 +260,212 @@
   .listaProfissional {
     grid-template-columns: 1fr;
   }
+  
+  .colunaContatos {
+    flex: 1 1 100%;
+  }
+
+  /* Ajuste para mobile nos cartões laterais */
+  .cartaoLateral {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--espacamentoPequeno);
+  }
+
+  .containerImagemLateral {
+    flex: 0 0 60px;
+    height: 60px;
+    width: 100%;
+  }
+}
+
+/* Novos estilos para componentes React */
+.flexContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.flexItem {
+  flex: 1;
+  width: 100%;
+}
+
+.flexColuna {
+  display: flex;
+  flex-direction: column;
+}
+
+.flexLinha {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flexCentro {
+  display: flex;
+  align-items: center;
+}
+
+.justificarCentro {
+  justify-content: center;
+}
+
+.alinharCentro {
+  align-items: center;
+}
+
+.alinharEsticar {
+  align-items: stretch;
+}
+
+.textoCentro {
+  text-align: center;
+}
+
+.textoEsquerda {
+  text-align: left;
+}
+
+.textoCentralizado {
+  text-align: center;
+}
+
+.gapPequeno {
+  gap: var(--espacamentoPequeno);
+}
+
+.gapMedio {
+  gap: var(--espacamentoMedio);
+}
+
+.gapGrande {
+  gap: var(--espacamentoGrande);
+}
+
+.margemInferiorPequena {
+  margin-bottom: var(--espacamentoPequeno);
+}
+
+.margemInferiorMedia {
+  margin-bottom: var(--espacamentoMedio);
+}
+
+.margemInferiorGrande {
+  margin-bottom: var(--espacamentoGrande);
+}
+
+.margemSuperiorPequena {
+  margin-top: var(--espacamentoPequeno);
+}
+
+.margemSuperiorMedia {
+  margin-top: var(--espacamentoMedio);
+}
+
+.paddingGrande {
+  padding: var(--espacamentoGrande);
+}
+
+/* Estilos para grid do React */
+.gridContainer {
+  display: grid;
+}
+
+.gridTresColunas {
+  grid-template-columns: 1fr 2fr 1fr;
+}
+
+.gridColunasAuto {
+  grid-template-columns: 1fr;
+  width: 100%;
+}
+
+/* Estilos para formulários e edição */
+.campoFormulario {
+  margin-bottom: var(--espacamentoPequeno);
+}
+
+.rotuloCampo {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: var(--corMarromEscuro);
+  text-align: left;
+}
+
+.inputFormulario {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--corBordaSubtle);
+  border-radius: var(--bordaArredondada);
+  font-size: var(--tamanhoFonteTextoBase);
+}
+
+.areaTexto {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.botoesAcao {
+  display: flex;
+  gap: var(--espacamentoPequeno);
+  margin-top: var(--espacamentoMedio);
+}
+
+/* Utilitários de texto */
+.textoPequeno {
+  font-size: var(--tamanhoFonteTextoMenor);
+}
+
+.textoMarromEscuro {
+  color: var(--corMarromEscuro);
+}
+
+.textoMarromOfuscado {
+  color: var(--corMarromClaro);
+}
+
+.textoAmarelo {
+  color: #ffc107;
+}
+
+/* Componentes específicos */
+.imagemPerfilGrande {
+  width: 235px;
+  height: 235px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.listaIcones.vertical {
+  display: flex;
+  flex-direction: column;
+}
+
+.listaIcones.vertical > div {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.posicaoRelativa {
+  position: relative;
+}
+
+.flexWrap {
+  flex-wrap: wrap;
+}
+
+/* Estilos específicos para os históricos */
+.bordaInferiorSubtle {
+  border-bottom: 1px solid var(--corBordaSubtle);
+  padding-bottom: 5px;
+  margin-bottom: var(--espacamentoPequeno);
+  text-align: left;
+  width: 100%;
+}
+
+.margemSuperiorZero {
+  margin-top: 0;
 }
