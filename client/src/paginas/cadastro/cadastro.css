@@ -391,12 +391,6 @@ input.erro, textarea.erro, select.erro {
   border-radius: 50%;
 }
 
-.imagemPerfil {
-  width: 100%;
-  height: 100%;
-  transition: all 0.3s ease;
-}
-
 .controles-enquadramento {
   margin-top: 15px;
   padding: 15px;
