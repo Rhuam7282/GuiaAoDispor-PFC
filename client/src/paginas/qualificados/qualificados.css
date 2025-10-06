@@ -55,11 +55,7 @@
     grid-template-columns: 1fr;
     gap: 15px;
   }
-  
-  .imagemPerfil {
-    width: 60px;
-    height: 60px;
-  }
+
   
   .profile-name {
     font-size: 16px;
