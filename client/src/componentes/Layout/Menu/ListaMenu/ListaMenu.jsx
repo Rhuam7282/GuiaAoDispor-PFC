@@ -10,7 +10,7 @@ import './ListaMenu.css';
 const ListaMenu = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { estaAutenticado, user, logout } = useAuth();
+  const { estaAutenticado, usuario, logout } = useAuth();
 
   const itensMenu = [
     { Icone: Home, texto: 'Início', rota: '/' },
@@ -21,9 +21,11 @@ const ListaMenu = () => {
 
   const handleItemClick = (item) => {
     if (item.texto === 'Perfil') {
-      if (estaAutenticado()) {
-        navigate('/perfil');
+      if (estaAutenticado() && usuario) {
+        // Usuário logado: redireciona para seu próprio perfil
+        navigate(`/perfil/${usuario._id}`);
       } else {
+        // Usuário não logado: redireciona para cadastro
         navigate('/cadastro');
       }
     } else {
@@ -38,7 +40,7 @@ const ListaMenu = () => {
   // Verificar se o item está ativo, considerando cadastro como ativo para Perfil
   const isItemAtivo = (item) => {
     if (item.texto === 'Perfil') {
-      return location.pathname === '/perfil' || location.pathname === '/cadastro';
+      return location.pathname === '/perfil' || location.pathname.startsWith('/perfil/') || location.pathname === '/cadastro';
     }
     return item.rota === location.pathname;
   };
@@ -54,11 +56,10 @@ const ListaMenu = () => {
           key={item.texto}
           item={item}
           ativo={isItemAtivo(item)}
-          usuarioLogado={estaAutenticado() && user}
+          usuarioLogado={estaAutenticado() && usuario}
           onClick={() => handleItemClick(item)}
         />
       ))}
-      
     </ul>
   );
 };

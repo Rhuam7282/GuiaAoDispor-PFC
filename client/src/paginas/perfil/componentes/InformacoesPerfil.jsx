@@ -3,7 +3,7 @@ import { Star, Facebook, Instagram, Linkedin, Save, X, Edit, Camera } from "luci
 import { useAuth } from '@Contextos/Autenticacao.jsx';
 import { servicoAuth } from '@Servicos/api.js';
 
-const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao, setModoEdicao }) => {
+const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, usuario, id, modoEdicao, setModoEdicao }) => {
   const { atualizarUsuario } = useAuth();
   const [dadosEditaveis, setDadosEditaveis] = useState({
     nome: '',
@@ -104,16 +104,7 @@ const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao,
       
       if (resposta.status === 'sucesso') {
         // Atualizar contexto de autenticação
-        atualizarUsuario({
-          nome: dadosEditaveis.nome,
-          email: dadosEditaveis.email,
-          face: dadosEditaveis.facebook,
-          inst: dadosEditaveis.instagram,
-          linkedin: dadosEditaveis.linkedin,
-          desc: dadosEditaveis.descricao,
-          foto: dadosEditaveis.foto,
-          picture: dadosEditaveis.foto
-        });
+        await atualizarUsuario(dadosAtualizacao);
         
         setMensagem('Perfil atualizado com sucesso!');
         setTimeout(() => setMensagem(''), 5000);
@@ -153,7 +144,7 @@ const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, user, id, modoEdicao,
   };
 
   // Verificar se é o perfil próprio para permitir edição
-  const isPerfilProprio = estaAutenticado && user && user._id === id;
+  const isPerfilProprio = estaAutenticado && usuario && usuario._id === id;
 
   if (modoEdicao) {
     return (
