@@ -630,6 +630,57 @@ app.get('/api/auth/perfil/:id', async (req, res) => {
   }
 });
 
+app.put('/api/auth/perfil/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const dadosAtualizacao = req.body;
+
+    console.log(`✏️ Atualizando perfil: ${id}`, dadosAtualizacao);
+
+    // Tenta encontrar e atualizar como Profissional primeiro
+    let perfilAtualizado = await Profissional.findByIdAndUpdate(
+      id,
+      dadosAtualizacao,
+      { new: true, runValidators: true }
+    ).select('-senha').populate('localizacao');
+
+    let tipo = 'profissional';
+
+    // Se não for profissional, tenta atualizar como Usuário
+    if (!perfilAtualizado) {
+      perfilAtualizado = await Usuario.findByIdAndUpdate(
+        id,
+        dadosAtualizacao,
+        { new: true, runValidators: true }
+      ).select('-senha').populate('localizacao');
+      tipo = 'usuario';
+    }
+
+    if (!perfilAtualizado) {
+      return res.status(404).json({
+        status: 'erro',
+        message: 'Usuário ou profissional não encontrado.'
+      });
+    }
+
+    console.log(`✅ Perfil atualizado: ${perfilAtualizado.nome} (Tipo: ${tipo})`);
+
+    res.status(200).json({
+      status: 'sucesso',
+      data: perfilAtualizado,
+      message: 'Perfil atualizado com sucesso'
+    });
+
+  } catch (error) {
+    console.error('❌ Erro ao atualizar perfil:', error);
+    res.status(500).json({
+      status: 'erro',
+      message: 'Erro interno ao atualizar perfil.'
+    });
+  }
+});
+
+
 // POST - Criar novo histórico curricular
 app.post('/api/hcurriculares', async (req, res) => {
   try {

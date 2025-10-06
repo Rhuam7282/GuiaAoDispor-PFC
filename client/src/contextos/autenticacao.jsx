@@ -24,6 +24,11 @@ export const ProvedorAutenticacao = ({ children }) => {
     return usuario !== null && token !== null;
   };
 
+  // CORREÇÃO: Função para obter o usuário atual
+  const obterUsuario = () => {
+    return usuario;
+  };
+
   const login = (dadosUsuario, tokenJWT) => {
     const usuarioNormalizado = {
       _id: dadosUsuario._id,
@@ -161,6 +166,7 @@ export const ProvedorAutenticacao = ({ children }) => {
     token,
     carregando,
     estaAutenticado,
+    obterUsuario,
     login,
     logout,
     atualizarUsuario,
