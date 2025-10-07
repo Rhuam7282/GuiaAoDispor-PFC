@@ -1,6 +1,6 @@
 // client/src/App.jsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthContext } from "./Contextos/Autenticacao.jsx";
+import { AuthContext } from "./contextos/Autenticacao.jsx";
 import ProtectedRoute from "./componentes/Autenticacao/ProtectedRoute.jsx";
 import AuthRedirect from "./componentes/Autenticacao/AuthRedirect.jsx";
 import SobreNos from "./paginas/sobrenos/SobreNos.jsx";
