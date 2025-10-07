@@ -11,7 +11,7 @@ import {
   Mail as MailIcon,
 } from "lucide-react";
 import "./Rodape.css";
-import logo from "../../../recursos/icones/logo.png";
+import logo from "@Recursos/icones/logo.png";
 
 const Footer = () => {
   const navigate = useNavigate();
