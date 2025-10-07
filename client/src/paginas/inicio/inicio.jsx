@@ -4,7 +4,7 @@ import BotoesAcao from "./Componentes/BotoesAcao";
 import SecaoSobre from "./Componentes/SecaoSobre";
 import CarrosselAcessibilidade from "./Componentes/CarrosselAcessibilidade";
 import SecaoComentarios from "./Componentes/SecaoComentarios";
-import Corpo from "../../componentes/layout/Corpo";
+import Corpo from "@Componentes/layout/Corpo";
 import Rodape from "./Componentes/Rodape";
 import "./inicio.css";
 
