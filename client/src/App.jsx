@@ -1,6 +1,6 @@
 // client/src/App.jsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ProvedorAutenticacao } from "./Contextos/Autenticacao.jsx";
+import { AuthContext } from "./Contextos/Autenticacao.jsx";
 import ProtectedRoute from "./componentes/Autenticacao/ProtectedRoute.jsx";
 import AuthRedirect from "./componentes/Autenticacao/AuthRedirect.jsx";
 import SobreNos from "./paginas/sobrenos/SobreNos.jsx";
@@ -21,7 +21,7 @@ function App() {
           v7_relativeSplatPath: true,
         }}
       >
-        <ProvedorAutenticacao>
+        <AuthContext>
           <PainelControle />
           <Routes>
             {/* Rotas públicas */}
@@ -87,7 +87,7 @@ function App() {
               }
             />
           </Routes>
-        </ProvedorAutenticacao>
+        </AuthContext>
       </BrowserRouter>
       <VlibrasWidget />
     </div>
