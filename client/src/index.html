@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Guia ao Dispor - Conectando pessoas com necessidades específicas a profissionais qualificados em cuidados especiais, acessibilidade e inclusão.">
+    <meta name="keywords" content="cuidados especiais, acessibilidade, inclusão, profissionais de saúde, LIBRAS, terapeutas, enfermeiros, cuidadores, necessidades específicas">
+    <title>Guia ao Dispor - Plataforma de Conexão para Cuidados Especiais e Acessibilidade</title>
+    <link rel="canonical" href="https://www.guiaaodispor.com.br" />
+    <link rel="icon" href="@Recursos/icones/logo.png">
+    <script>
+      // Configurações de acessibilidade
+      (function() {
+        function getSetting(key, defaultValue) {
+          try {
+            const value = localStorage.getItem('acessibilidade_' + key);
+            return value !== null ? JSON.parse(value) : defaultValue;
+          } catch (e) {
+            return defaultValue;
+          }
+        }
+
+        const root = document.documentElement;
+        const fontSize = getSetting('fontSize', 100);
+        const letterSpacing = getSetting('letterSpacing', 0);
+        const lineHeight = getSetting('lineHeight', 1.5);
+        const highContrast = getSetting('modoAltoContraste', false);
+
+        root.style.setProperty('--accessibility-font-size', `${fontSize}%`);
+        root.style.setProperty('--accessibility-letter-spacing', `${letterSpacing}px`);
+        root.style.setProperty('--accessibility-line-height', lineHeight);
+
+        if (fontSize !== 100 || letterSpacing !== 0 || lineHeight !== 1.5) {
+          root.classList.add('acessibilidade-ativa');
+        }
+        
+        if (highContrast) {
+          root.classList.add('modo-alto-contraste');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./Main.jsx"></script>
+  </body>
+</html>
