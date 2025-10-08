@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   plugins: [react()],
-  root: path.resolve(__dirname, 'src'),
+  root: path.resolve(__dirname, "."),
   publicDir: path.resolve(__dirname, 'public'),
   server: {
     port: 5173,
@@ -40,7 +40,7 @@ export default defineConfig({
     outDir: path.resolve(__dirname, '../dist'),
     emptyOutDir: true,
     rollupOptions: {
-      input: path.resolve(__dirname, 'src', 'index.html'),
+      input: 'src/Index.html',
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
@@ -59,12 +59,11 @@ export default defineConfig({
       }
     }
   },
-  resolve: {
-    alias: {
+  resolve: {    alias: {
       '@': path.resolve(__dirname, 'src'),
       '@Componentes': path.resolve(__dirname, 'src/Componentes'),
       '@Servicos': path.resolve(__dirname, 'src/Servicos'),
-      '@config': path.resolve(__dirname, 'src/config'),
+      '@Config': path.resolve(__dirname, 'src/Config'),
       '@Paginas': path.resolve(__dirname, 'src/Paginas'),
       '@Recursos': path.resolve(__dirname, 'src/Recursos'),
       '@Ganchos': path.resolve(__dirname, 'src/Componentes/Acessibilidade/Ganchos'),
