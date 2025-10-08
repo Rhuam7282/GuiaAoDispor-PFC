@@ -1,5 +1,5 @@
 import React from 'react';
-import CampoMensagem from './CampoMensagem';
+import CampoMensagem from 'CampoMensagem';
 
 const DetalheMensagem = ({ 
   contatoSelecionado, 

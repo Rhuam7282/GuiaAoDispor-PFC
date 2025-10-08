@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Corpo from "@Componentes/Layout/Corpo.jsx";
-import ListaContatos from './Componentes/ListaContatos.jsx';
-import DetalheMensagem from './Componentes/DetalheMensagem.jsx';
-import './Mensagem.css';
+import Corpo from "../../Componentes/Layout/Corpo.jsx";
+import ListaContatos from 'Componentes/ListaContatos.jsx';
+import DetalheMensagem from 'Componentes/DetalheMensagem.jsx';
+import 'Mensagem.css';
 
 
 const Mensagens = () => {

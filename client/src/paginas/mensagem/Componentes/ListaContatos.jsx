@@ -1,5 +1,5 @@
 import React from 'react';
-import ItemContato from './ItemContato';
+import ItemContato from 'ItemContato';
 
 const ListaContatos = ({ contatos, contatoAtivo, aoSelecionarContato }) => {
   return (
