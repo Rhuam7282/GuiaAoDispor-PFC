@@ -1,6 +1,6 @@
 // src/componentes/layout/Menu/RodapeMenu/RodapeMenu.jsx
 import React from 'react';
-import './RodapeMenu.css';
+import 'RodapeMenu.css';
 
 const RodapeMenu = () => {
   return (

@@ -1,16 +1,16 @@
 // client/src/App.jsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthContext } from "./contextos/Autenticacao.jsx";
-import ProtectedRoute from "./componentes/Autenticacao/ProtectedRoute.jsx";
-import AuthRedirect from "./componentes/Autenticacao/AuthRedirect.jsx";
-import SobreNos from "./paginas/sobrenos/SobreNos.jsx";
-import Perfil from "./paginas/perfil/Perfil.jsx";
-import Mensagem from "./paginas/mensagem/Mensagem.jsx";
-import Qualificados from "./paginas/qualificados/Qualificados.jsx";
-import Cadastro from "./paginas/cadastro/Cadastro.jsx";
-import Inicio from "./paginas/inicio/Inicio.jsx";
-import PainelControle from "./componentes/acessibilidade/PainelControle.jsx";
-import VlibrasWidget from "./componentes/acessibilidade/VLibras/VLibrasWidget.jsx";
+import { AuthContext } from "./Contextos/Autenticacao.jsx";
+import ProtectedRoute from "./Componentes/Autenticacao/ProtectedRoute.jsx";
+import AuthRedirect from "./Componentes/Autenticacao/AuthRedirect.jsx";
+import SobreNos from "./Paginas/Sobrenos/SobreNos.jsx";
+import Perfil from "./Paginas/Perfil/Perfil.jsx";
+import Mensagem from "./Paginas/Mensagem/Mensagem.jsx";
+import Qualificados from "./Paginas/Qualificados/Qualificados.jsx";
+import Cadastro from "./Paginas/Cadastro/Cadastro.jsx";
+import Inicio from "./Paginas/Inicio/Inicio.jsx";
+import PainelControle from "./Componentes/Acessibilidade/PainelControle.jsx";
+import VlibrasWidget from "./Componentes/Acessibilidade/VLibras/VLibrasWidget.jsx";
 
 function App() {
   return (

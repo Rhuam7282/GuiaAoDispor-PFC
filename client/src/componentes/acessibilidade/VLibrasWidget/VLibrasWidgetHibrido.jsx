@@ -1,7 +1,7 @@
 // src/componentes/acessibilidade/VLibrasWidget/VLibrasWidgetHibrido.jsx
 import { useEffect, useState } from 'react';
 import { Volume2, RotateCcw, Wifi, WifiOff } from 'lucide-react';
-import './VLibrasWidget.css';
+import 'VLibrasWidget.css';
 
 const VLibrasWidgetHibrido = () => {
   const [vlibrasAtivo, setVlibrasAtivo] = useState(false);
