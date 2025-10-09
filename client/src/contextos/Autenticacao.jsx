@@ -180,4 +180,4 @@ export const ProvedorAutenticacao = ({ children }) => {
   );
 };
 
-export default AuthContext;
+export { AuthContext };

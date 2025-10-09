@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { GOOGLE_CONFIG } from '/GoogleConfig.js';
-import App from 'App.jsx';
-import 'Index.css';
+import App from './App.jsx';
+import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 

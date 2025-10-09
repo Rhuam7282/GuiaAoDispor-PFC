@@ -2,7 +2,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthContext } from "./Contextos/Autenticacao.jsx";
 import ProtectedRoute from "./Componentes/Autenticacao/ProtectedRoute.jsx";
-import AuthRedirect from "./Componentes/Autenticacao/AuthRedirect.jsx";
+
 import SobreNos from "./Paginas/Sobrenos/SobreNos.jsx";
 import Perfil from "./Paginas/Perfil/Perfil.jsx";
 import Mensagem from "./Paginas/Mensagem/Mensagem.jsx";
@@ -29,18 +29,7 @@ function App() {
             <Route path="/sobreNos" element={<SobreNos />} />
 
             {/* Rotas que redirecionam se autenticado */}
-            <Route
-              path="/cadastro"
-              element={
-                <>
-                  <AuthRedirect
-                    redirecionarSeAutenticado={true}
-                    destinoAutenticado="/qualificados"
-                  />
-                  <Cadastro />
-                </>
-              }
-            />
+            <Route path="/cadastro" element={<Cadastro />} />
 
             {/* Rotas protegidas - requerem autenticação */}
             <Route
