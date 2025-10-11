@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Star, Facebook, Instagram, Linkedin, Save, X, Edit, Camera } from "lucide-react";
 import { useAuth } from '../../../Contextos/Autenticacao.jsx';
-import { servicoAuth } from '../../../Servicos/api.js';
+import { ServicoAutenticacao } from '../../../Servicos/api.js';
 
 const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, usuario, id, modoEdicao, setModoEdicao }) => {
   const { atualizarUsuario } = useAuth();
@@ -100,7 +100,7 @@ const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, usuario, id, modoEdic
 
       console.log('📤 Enviando dados de atualização:', dadosAtualizacao);
       
-      const resposta = await servicoAuth.editarPerfil(id, dadosAtualizacao);
+      const resposta = await ServicoAutenticacao.editarPerfil(id, dadosAtualizacao);
       
       if (resposta.status === 'sucesso') {
         // Atualizar contexto de autenticação

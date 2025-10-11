@@ -1,7 +1,7 @@
 // client/src/contextos/Autenticacao.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { servicoAuth } from '../Servicos/Api.js';
+import { ServicoAutenticacao } from '../Servicos/Api.js';
 
 // CORREÇÃO: Exportar o contexto corretamente
 export const AuthContext = createContext();
@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await servicoAuth.logout();
+      await ServicoAutenticacao.logout();
     } catch (erro) {
       console.warn('⚠️ Erro no logout da API:', erro.message);
     } finally {
@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }) => {
     if (!usuario) return;
 
     try {
-      const resposta = await servicoAuth.editarPerfil(usuario._id, dadosAtualizados);
+      const resposta = await ServicoAutenticacao.editarPerfil(usuario._id, dadosAtualizados);
       
       if (resposta.data) {
         const usuarioAtualizado = { ...usuario, ...resposta.data };
@@ -130,7 +130,7 @@ export const AuthProvider = ({ children }) => {
       
       if (autenticado && usuarioArmazenado && tokenArmazenado) {
         try {
-          const resposta = await servicoAuth.buscarPerfilLogado(usuarioArmazenado._id);
+          const resposta = await ServicoAutenticacao.buscarPerfilLogado(usuarioArmazenado._id);
           
           if (resposta.data) {
             setUsuario(usuarioArmazenado);

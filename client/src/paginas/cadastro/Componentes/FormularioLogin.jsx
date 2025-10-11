@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../../Contextos/Autenticacao.jsx';
-import { servicoAuth } from '../../../Servicos/api.js';
+import { ServicoAutenticacao } from '../../../Servicos/api.js';
 
 const FormularioLogin = () => {
   const navigate = useNavigate();
@@ -86,7 +86,7 @@ const FormularioLogin = () => {
         localStorage.removeItem('lembrarMe');
       }
 
-      const resposta = await servicoAuth.login(dadosLogin.email, dadosLogin.senha);
+      const resposta = await ServicoAutenticacao.login(dadosLogin.email, dadosLogin.senha);
       
       console.log('✅ Resposta do servidor:', resposta);
       

@@ -2,9 +2,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contextos/Autenticacao.jsx";
 import ProtectedRoute from "./componentes/Autenticacao/ProtectedRoute.jsx";
 
-import SobreNos from "./paginas/Sobrenos/SobreNos.jsx";
-import Perfil from "./paginas/Perfil/Perfil.jsx";
-import Qualificados from "./paginas/Qualificados/Qualificados.jsx";
+import SobreNos from "./paginas/sobrenos/sobreNos.jsx";
+import Perfil from "./paginas/Perfil/perfil.jsx";
+import Qualificados from "./paginas/Qualificados/qualificados.jsx";
 import Cadastro from "./paginas/Cadastro/Cadastro.jsx";
 import Inicio from "./paginas/Inicio/Inicio.jsx";
 import PainelControle from "./componentes/Acessibilidade/PainelControle.jsx";
