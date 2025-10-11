@@ -1,56 +1,180 @@
-import { useEffect, useRef, useCallback } from 'react';
+import React from 'react';
 
-export const useGuiasLeitura = (guiaLeitura) => {
-  const guiaMouseRef = useRef(null);
-  const mascaraRef = useRef(null);
+import { GoogleLogin } from '@react-oauth/google';
 
-  const limparGuiasLeitura = useCallback(() => {
-    if (guiaMouseRef.current) {
-      guiaMouseRef.current.remove();
-      guiaMouseRef.current = null;
-    }
-    if (mascaraRef.current) {
-      mascaraRef.current.remove();
-      mascaraRef.current = null;
-    }
-  }, []);
 
-  useEffect(() => {
-    const manipularMovimentoMouse = (e) => {
-      if (guiaLeitura === 1 && guiaMouseRef.current) {
-        guiaMouseRef.current.style.top = `${e.clientY}px`;
-        const indicador = guiaMouseRef.current.querySelector('.indicadorCursor');
-        if (indicador) {
-          indicador.style.left = `${e.clientX}px`;
-        }
-      } else if (guiaLeitura === 2 && mascaraRef.current) {
-        mascaraRef.current.style.top = `${e.clientY - 100}px`;
-        mascaraRef.current.style.left = `${e.clientX - 750}px`;
-      }
-    };
+import { useAuth } from '@Contextos/Autenticacao.jsx';
 
-    limparGuiasLeitura();
+import { useNavigate } from 'react-router-dom';
 
-    if (guiaLeitura === 1) {
-      document.addEventListener('mousemove', manipularMovimentoMouse);
-      const guia = document.createElement('div');
-      guia.className = 'guiaLeituraHorizontal';
-      guia.innerHTML = '<div class="indicadorCursor"></div>';
-      document.body.appendChild(guia);
-      guiaMouseRef.current = guia;
-    } else if (guiaLeitura === 2) {
-      document.addEventListener('mousemove', manipularMovimentoMouse);
-      const mascara = document.createElement('div');
-      mascara.className = 'mascaraLeitura';
-      document.body.appendChild(mascara);
-      mascaraRef.current = mascara;
-    }
 
-    return () => {
-      document.removeEventListener('mousemove', manipularMovimentoMouse);
-      limparGuiasLeitura();
-    };
-  }, [guiaLeitura, limparGuiasLeitura]);
 
-  return { limparGuiasLeitura };
+
+
+const decodeJWT = (token) => {
+
+  try {
+
+    const base64Url = token.split('.')[1];
+
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+
+    const jsonPayload = decodeURIComponent(
+
+      atob(base64)
+
+        .split('')
+
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+
+        .join('')
+
+    );
+
+    return JSON.parse(jsonPayload);
+
+  } catch (error) {
+
+    console.error('Erro ao decodificar JWT:', error);
+
+    return null;
+
+  }
+
 };
+
+
+
+
+
+const GoogleLoginButton = ({ onSuccess, onError, text = "Entrar com Google" }) => {
+
+  const { login } = useAuth();
+
+  const navigate = useNavigate();
+
+
+
+
+
+  const handleSuccess = (credentialResponse) => {
+
+    try {
+
+
+
+      const userInfo = decodeJWT(credentialResponse.credential);
+
+
+
+      if (userInfo) {
+
+
+
+        const userData = {
+
+          id: userInfo.sub,
+
+          name: userInfo.name,
+
+          email: userInfo.email,
+
+          picture: userInfo.picture,
+
+          given_name: userInfo.given_name,
+
+          family_name: userInfo.family_name,
+
+          credential: credentialResponse.credential,
+
+          loginTime: new Date().toISOString()
+
+        };
+
+
+
+
+
+        login(userData);
+
+
+
+
+
+        if (onSuccess) {
+
+          onSuccess(userData);
+
+        } else {
+
+
+
+          navigate('/');
+
+        }
+
+
+
+        console.log('Login realizado com sucesso:', userData);
+
+      }
+
+    } catch (error) {
+
+      console.error('Erro no processamento do login:', error);
+
+      handleError();
+
+    }
+
+  };
+
+
+
+
+
+  const handleError = () => {
+
+    console.error('Erro no login com Google');
+
+    if (onError) {
+
+      onError();
+
+    }
+
+  };
+
+
+
+  return (
+
+    <div className="google-login-container flexCentro">
+
+      <GoogleLogin
+
+        onSuccess={handleSuccess}
+
+        onError={handleError}
+
+        text={text}
+
+        theme="outline"
+
+        size="large"
+
+        shape="rectangular"
+
+        width="300"
+
+      />
+
+    </div>
+
+  );
+
+};
+
+
+
+export default GoogleLoginButton;

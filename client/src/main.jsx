@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { GOOGLE_CONFIG } from '/GoogleConfig.js';
+import { GOOGLE_CONFIG } from '/googleConfig.js';
 import App from './App.jsx';
 import './index.css';
 
