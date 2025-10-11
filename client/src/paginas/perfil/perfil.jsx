@@ -4,7 +4,7 @@ import Corpo from "../../Componentes/Layout/Corpo.jsx";
 import InformacoesPerfil from "./Componentes/InformacoesPerfil.jsx";
 import HistoricoAcademicoPerfil from "./Componentes/HistoricoAcademicoPerfil.jsx";
 import HistoricoProfissionalPerfil from "./Componentes/HistoricoProfissionalPerfil.jsx";
-import { servicoProfissional, servicoHCurricular, servicoHProfissional, servicoAuth } from "../../Servicos/Api.js";
+import { ServicoProfissional, HCurricular, HProfissional, ServicoAutenticacao } from "../../Servicos/api.js";
 import { useAuth } from "../../Contextos/Autenticacao.jsx";
 import "./Perfil.css";
 
@@ -113,9 +113,9 @@ const Perfil = () => {
   const carregarPerfilProfissional = async (profissionalId) => {
     try {
       const [perfilResposta, hcurricularResposta, hprofissionalResposta] = await Promise.all([
-        servicoProfissional.buscarPorId(profissionalId).catch(() => null),
-        servicoHCurricular.listarTodos().catch(() => ({ data: [] })),
-        servicoHProfissional.listarTodos().catch(() => ({ data: [] }))
+        ServicoProfissional.buscarPorId(profissionalId).catch(() => null),
+        HCurricular.listarTodos().catch(() => ({ data: [] })),
+        HProfissional.listarTodos().catch(() => ({ data: [] }))
       ]);
 
       if (perfilResposta && perfilResposta.data) {
@@ -161,8 +161,8 @@ const Perfil = () => {
   const carregarHistoricosProfissional = async (profissionalId) => {
     try {
       const [hcurricularResposta, hprofissionalResposta] = await Promise.all([
-        servicoHCurricular.listarTodos().catch(() => ({ data: [] })),
-        servicoHProfissional.listarTodos().catch(() => ({ data: [] }))
+        HCurricular.listarTodos().catch(() => ({ data: [] })),
+        HProfissional.listarTodos().catch(() => ({ data: [] }))
       ]);
 
       // Filtrar históricos por profissional
@@ -207,7 +207,7 @@ const Perfil = () => {
         
         try {
           // Buscar perfil atualizado da API
-          const resposta = await servicoAuth.buscarPerfilLogado(usuario._id);
+          const resposta = await ServicoAutenticacao.buscarPerfilLogado(usuario._id);
           console.log("📨 Resposta da API do perfil:", resposta);
           
           if (resposta && resposta.status === 'sucesso' && resposta.data) {

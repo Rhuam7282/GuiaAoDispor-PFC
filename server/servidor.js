@@ -6,15 +6,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import multer from 'multer';
-import sharp from 'sharp';
-import fs from 'fs/promises';
 
 // Configuração do dotenv
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const caminhoEnv = path.resolve(__dirname, '.env');
-dotenv.config({ path: caminhoEnv });
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 // Importar todos os modelos
 import Localizacao from './Modelos/Localizacao.js';
@@ -26,11 +22,11 @@ import HProfissional from './Modelos/HistProfissional.js';
 
 const app = express();
 
-// Configuração CORS
+// Configuração CORS melhorada
 app.use(cors({
-  origin: true,
+  origin: ['http://localhost:5173', 'http://localhost:3000', 'https://guiaaodispor.onrender.com'],
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
 }));
 
@@ -38,9 +34,6 @@ app.options('*', cors());
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-
-// Configuração para servir arquivos estáticos
-app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
 // Conexão com MongoDB
 const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/guiaaodispor';
@@ -58,58 +51,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware para verificar JWT
-const verificarToken = (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
-  
-  // Rotas públicas que não precisam de token
-  const publicRoutes = [
-    '/api/auth/login',
-    '/api/auth/validar-email',
-    '/api/usuarios',
-    '/api/profissionais',
-    '/api/localizacoes',
-    '/health',
-    '/api/health',
-    '/'
-  ];
-  
-  // Verifica se a rota atual é pública
-  const isPublicRoute = publicRoutes.some(route => {
-    if (route === '/api/profissionais' && req.method === 'GET') return true;
-    if (req.path.startsWith(route) && (req.method === 'POST' || req.method === 'GET')) {
-      return true;
-    }
-    return false;
-  });
+// ========== ROTAS PÚBLICAS ==========
 
-  if (isPublicRoute) {
-    return next();
-  }
-
-  if (!token) {
-    return res.status(401).json({ 
-      status: 'erro', 
-      message: 'Acesso negado. Token não fornecido.' 
-    });
-  }
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || '7282');
-    req.usuario = decoded;
-    next();
-  } catch (error) {
-    console.error('❌ Erro na verificação do token:', error.message);
-    return res.status(401).json({ 
-      status: 'erro', 
-      message: 'Token inválido ou expirado.' 
-    });
-  }
-};
-
-// ========== ROTAS PÚBLICAS (ANTES DO MIDDLEWARE) ==========
-
-// Rota raiz
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Bem-vindo à API do Guia ao Dispor!',
@@ -131,6 +74,7 @@ app.get('/api/health', (req, res) => {
     database: mongoose.connection.readyState === 1 ? 'Conectado' : 'Desconectado'
   });
 });
+
 
 // ========== ROTA PÚBLICA PARA PROFISSIONAIS ==========
 
@@ -586,7 +530,53 @@ app.get('/api/hcurriculares/:id', async (req, res) => {
   }
 });
 
-// ========== APLICA MIDDLEWARE DE AUTENTICAÇÃO A PARTIR DAQUI ==========
+// ========== MIDDLEWARE DE AUTENTICAÇÃO ==========
+const verificarToken = (req, res, next) => {
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+  
+  const publicRoutes = [
+    '/api/auth/login',
+    '/api/auth/validar-email',
+    '/api/usuarios',
+    '/api/profissionais',
+    '/api/localizacoes',
+    '/health',
+    '/api/health',
+    '/'
+  ];
+  
+  const isPublicRoute = publicRoutes.some(route => {
+    if (route === '/api/profissionais' && req.method === 'GET') return true;
+    if (req.path.startsWith(route) && (req.method === 'POST' || req.method === 'GET')) {
+      return true;
+    }
+    return false;
+  });
+
+  if (isPublicRoute) {
+    return next();
+  }
+
+  if (!token) {
+    return res.status(401).json({ 
+      status: 'erro', 
+      message: 'Acesso negado. Token não fornecido.' 
+    });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || '7282');
+    req.usuario = decoded;
+    next();
+  } catch (error) {
+    console.error('❌ Erro na verificação do token:', error.message);
+    return res.status(401).json({ 
+      status: 'erro', 
+      message: 'Token inválido ou expirado.' 
+    });
+  }
+};
+
 app.use(verificarToken);
 
 // ========== ROTAS PROTEGIDAS (APÓS MIDDLEWARE) ==========
@@ -1139,19 +1129,23 @@ app.use((error, req, res, next) => {
   });
 });
 
+// ========== SERVIÇO DE ARQUIVOS ESTÁTICOS PARA PRODUÇÃO ==========
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+// ========== ROTA FALLBACK PARA SPA (DEVE SER A ÚLTIMA ROTA) ==========
+app.get('*', (req, res) => {
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+  } else {
+    res.status(404).json({ 
+      status: 'erro',
+      message: 'Rota API não encontrada' 
+    });
+  }
+});
+
 const PORT = process.env.PORT || 3001;
 const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor rodando na porta http://localhost:${PORT}`);
     console.log(`🌐 Ambiente: ${process.env.NODE_ENV || 'desenvolvimento'}`);
-});
-
-// Configuração para encerramento gracioso
-process.on('SIGINT', () => {
-    console.log('\n🔴 Servidor encerrado pelo usuário (Ctrl+C)');
-    mongoose.connection.close(() => {
-        console.log('✅ Conexão com MongoDB fechada');
-        server.close(() => {
-            process.exit(0);
-        });
-    });
 });

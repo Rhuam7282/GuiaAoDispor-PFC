@@ -18,23 +18,12 @@ export default defineConfig({
     cors: true,
     hmr: {
       overlay: false
-    },
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '/api')
-      }
     }
   },
   build: {
     outDir: path.resolve(__dirname, 'dist'),
     emptyOutDir: true,
-    sourcemap: false,
-    rollupOptions: {
-      input: path.resolve(__dirname, 'index.html')
-    }
+    sourcemap: false
   },
   resolve: {
     alias: {

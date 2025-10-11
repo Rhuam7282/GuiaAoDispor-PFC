@@ -7,7 +7,13 @@ import './index.css';
 // Configuração direta do Google Client ID
 const GOOGLE_CLIENT_ID = '751518931398-co21kq5n50m8apn4llgv7av32g2m17vq.apps.googleusercontent.com';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+// Garantir que o elemento root existe
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('Elemento root não encontrado no HTML');
+}
+
+const root = ReactDOM.createRoot(rootElement);
 
 root.render(
   <React.StrictMode>
