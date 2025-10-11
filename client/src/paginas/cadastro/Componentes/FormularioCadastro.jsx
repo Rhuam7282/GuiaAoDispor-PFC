@@ -18,7 +18,7 @@ const FormularioCadastro = ({
 
 
   return (
-    <form onSubmit={aoEnviarFormulario} className="formulario-cadastro">
+    <form onSubmit={aoEnviarFormulario} id="FuromularioCadastro">
       <div className="conteudo-formulario">
         <div className="campos-formulario">
           {/* Seção de campos básicos */}
