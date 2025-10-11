@@ -29,7 +29,7 @@ export default [
       ...js.configs.recommended.rules,
       ...pluginReact.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^[A-Z_]' }], // 'warn' é melhor para dev
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^[A-Z_]' }],
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
@@ -38,17 +38,30 @@ export default [
       'react/prop-types': 'off',
     },
     settings: {
-  'import/resolver': {
-    alias: {
-      map: [
-        ['@', './src'],
-        ['@componentes', './src/componentes'],
-        ['@paginas', './src/paginas'],
-        ['@recursos', './src/recursos']
-      ],
-      extensions: ['.js', '.jsx']
-    }
-  }
-},
+      'import/resolver': {
+        alias: {
+          map: [
+            ['@', './src'],
+            // CORREÇÃO: Padronizar os aliases para coincidir com o vite.config.js
+            ['@Componentes', './src/Componentes'],
+            ['@Paginas', './src/Paginas'],
+            ['@Recursos', './src/Recursos'],
+            ['@Servicos', './src/Servicos'],
+            ['@Config', './src/Config'],
+            ['@Ganchos', './src/Componentes/Acessibilidade/Ganchos'],
+            ['@Contextos', './src/Contextos'],
+            ['@Autenticacao', './src/Componentes/Autenticacao'],
+            ['@Formularios', './src/Componentes/Formularios'],
+            ['@Layout', './src/Componentes/Layout'],
+            ['@Perfil', './src/Componentes/Perfil'],
+            ['@Comum', './src/Componentes/Comum'],
+            ['@Acessibilidade', './src/Componentes/Acessibilidade'],
+            ['@Estilos', './src/Estilos'],
+            ['@Utils', './src/Utils']
+          ],
+          extensions: ['.js', '.jsx']
+        }
+      }
+    },
   },
 ]

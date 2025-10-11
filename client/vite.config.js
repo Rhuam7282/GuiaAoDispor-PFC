@@ -8,58 +8,36 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   plugins: [react()],
-  root: path.resolve(__dirname, "."),
+  root: __dirname,
   publicDir: path.resolve(__dirname, 'public'),
   server: {
     port: 5173,
     open: true,
-    strictPort: true,
-    host: '0.0.0.0',
-    allowedHosts: ['5173-iwnktope84q4hpntmr0kr-531a31c1.manusvm.computer', 'all'],
-    historyApiFallback: true,
+    strictPort: false,
+    host: true,
+    cors: true,
     hmr: {
-      clientPort: 5173,
+      overlay: false
     },
     proxy: {
       '/api': {
-        target: 'http://localhost:3001', // CORREÇÃO: mudado de 3000 para 3001
+        target: 'http://localhost:3001',
         changeOrigin: true,
         secure: false,
-        configure: (proxy, _options) => {
-          proxy.on('error', (err, _req, _res) => {
-            console.log('❌ Proxy error:', err);
-          });
-          proxy.on('proxyReq', (proxyReq, req, _res) => {
-            console.log('🔄 Proxy Request:', req.method, req.url);
-          });
-        }
+        rewrite: (path) => path.replace(/^\/api/, '/api')
       }
     }
   },
   build: {
-    outDir: path.resolve(__dirname, '../dist'),
+    outDir: path.resolve(__dirname, 'dist'),
     emptyOutDir: true,
-    rollupOptions: {
-      input: 'src/Index.html',
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom'],
-          icons: ['lucide-react']
-        }
-      }
-    },
-    chunkSizeWarningLimit: 1000,
     sourcemap: false,
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true
-      }
+    rollupOptions: {
+      input: path.resolve(__dirname, 'index.html')
     }
   },
-  resolve: {    alias: {
+  resolve: {
+    alias: {
       '@': path.resolve(__dirname, 'src'),
       '@Componentes': path.resolve(__dirname, 'src/Componentes'),
       '@Servicos': path.resolve(__dirname, 'src/Servicos'),
@@ -79,9 +57,6 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom', 'lucide-react']
-  },
-  esbuild: {
-    drop: ['console', 'debugger']
+    include: ['react', 'react-dom', 'react-router-dom']
   }
 });

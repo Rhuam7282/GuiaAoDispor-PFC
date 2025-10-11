@@ -1,18 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { GOOGLE_CONFIG } from '/googleConfig.js';
 import App from './App.jsx';
 import './index.css';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+// Configuração direta do Google Client ID
+const GOOGLE_CLIENT_ID = '751518931398-co21kq5n50m8apn4llgv7av32g2m17vq.apps.googleusercontent.com';
 
-console.log('React version:', React.version);
-console.log('ReactDOM version:', ReactDOM.version);
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
-    <GoogleOAuthProvider clientId={GOOGLE_CONFIG.CLIENT_ID}>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <App />
     </GoogleOAuthProvider>
   </React.StrictMode>

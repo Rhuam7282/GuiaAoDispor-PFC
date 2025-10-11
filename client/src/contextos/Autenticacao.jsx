@@ -3,17 +3,19 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { servicoAuth } from '../Servicos/Api.js';
 
-const AuthContext = createContext();
+// CORREÇÃO: Exportar o contexto corretamente
+export const AuthContext = createContext();
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth deve ser usado dentro de um ProvedorAutenticacao');
+    throw new Error('useAuth deve ser usado dentro de um AuthContext');
   }
   return context;
 };
 
-export const ProvedorAutenticacao = ({ children }) => {
+// CORREÇÃO: Renomear o componente para AuthProvider para evitar conflito de nomes
+export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   
   const [usuario, setUsuario] = useState(null);
@@ -24,7 +26,6 @@ export const ProvedorAutenticacao = ({ children }) => {
     return usuario !== null && token !== null;
   };
 
-  // CORREÇÃO: Função para obter o usuário atual
   const obterUsuario = () => {
     return usuario;
   };
@@ -54,8 +55,6 @@ export const ProvedorAutenticacao = ({ children }) => {
     localStorage.setItem('timestampLogin', Date.now().toString());
     
     console.log('✅ Login realizado:', usuarioNormalizado.nome);
-    
-    // Redirecionar para qualificados após login
     navigate('/qualificados');
   };
 
@@ -76,7 +75,6 @@ export const ProvedorAutenticacao = ({ children }) => {
       localStorage.removeItem('lembrarMe');
       
       console.log('🚪 Logout realizado');
-      // Redirecionar para página inicial após logout
       navigate('/');
     }
   };
@@ -143,7 +141,6 @@ export const ProvedorAutenticacao = ({ children }) => {
           }
         } catch (erro) {
           console.log('🔒 Sessão inválida - realizando logout silencioso');
-          // Limpa os dados de autenticação sem redirecionar
           localStorage.removeItem('usuario');
           localStorage.removeItem('token');
           localStorage.removeItem('autenticado');
@@ -180,4 +177,4 @@ export const ProvedorAutenticacao = ({ children }) => {
   );
 };
 
-export { AuthContext };
+export default AuthProvider;

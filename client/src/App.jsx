@@ -1,6 +1,6 @@
 // client/src/App.jsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthContext } from "./Contextos/Autenticacao.jsx";
+import { AuthProvider } from "./Contextos/Autenticacao.jsx";
 import ProtectedRoute from "./Componentes/Autenticacao/ProtectedRoute.jsx";
 
 import SobreNos from "./paginas/Sobrenos/SobreNos.jsx";
@@ -21,7 +21,7 @@ function App() {
           v7_relativeSplatPath: true,
         }}
       >
-        <AuthContext>
+        <AuthProvider>
           <PainelControle />
           <Routes>
             {/* Rotas públicas */}
@@ -76,7 +76,7 @@ function App() {
               }
             />
           </Routes>
-        </AuthContext>
+        </AuthProvider>
       </BrowserRouter>
       <VlibrasWidget />
     </div>
