@@ -1,9 +1,9 @@
 // src/componentes/layout/Menu/ListaMenu/ListaMenu.jsx
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../../../Contextos/Autenticacao';
+import { useAuth } from "../../../../contextos/Autenticacao.jsx";
 import { Home, User, MessageSquare, Mail, GalleryHorizontal, LogOut } from 'lucide-react';
-import Interrogacao from '../../../acessibilidade/interrogacao/interrogacao.jsx';
+import Interrogacao from "../../../acessibilidade/Interrogacao/Interrogacao.jsx";
 import ItemMenu from './ItemMenu';
 import './ListaMenu.css';
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../../../Contextos/Autenticacao.jsx';
+import { useAuth } from "../../../contextos/Autenticacao.jsx";
 import { ServicoAutenticacao } from '../../../Servicos/api.js';
 
 const FormularioLogin = () => {
