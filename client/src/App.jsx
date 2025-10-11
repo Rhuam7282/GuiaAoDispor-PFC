@@ -3,12 +3,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthContext } from "./Contextos/Autenticacao.jsx";
 import ProtectedRoute from "./Componentes/Autenticacao/ProtectedRoute.jsx";
 
-import SobreNos from "./Paginas/Sobrenos/SobreNos.jsx";
-import Perfil from "./Paginas/Perfil/Perfil.jsx";
-import Mensagem from "./Paginas/Mensagem/Mensagem.jsx";
-import Qualificados from "./Paginas/Qualificados/Qualificados.jsx";
-import Cadastro from "./Paginas/Cadastro/Cadastro.jsx";
-import Inicio from "./Paginas/Inicio/Inicio.jsx";
+import SobreNos from "./paginas/Sobrenos/SobreNos.jsx";
+import Perfil from "./paginas/Perfil/Perfil.jsx";
+import Mensagem from "./paginas/Mensagem/Mensagem.jsx";
+import Qualificados from "./paginas/Qualificados/Qualificados.jsx";
+import Cadastro from "./paginas/Cadastro/Cadastro.jsx";
+import Inicio from "./paginas/Inicio/Inicio.jsx";
 import PainelControle from "./Componentes/Acessibilidade/PainelControle.jsx";
 import VlibrasWidget from "./Componentes/Acessibilidade/VLibras/VLibrasWidget.jsx";
 
