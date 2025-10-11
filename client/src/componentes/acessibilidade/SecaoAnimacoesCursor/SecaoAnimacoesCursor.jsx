@@ -1,4 +1,4 @@
-// src/componentes/acessibilidade/SecaoAnimacoesCursor/SecaoAnimacoesCursor.jsx
+// src/componentes/acessibilidade/./SecaoAnimacoesCursor/SecaoAnimacoesCursor.jsx
 import { Pause, MousePointer } from 'lucide-react';
 
 const SecaoAnimacoesCursor = ({ configuracoes, atualizarConfiguracao }) => {

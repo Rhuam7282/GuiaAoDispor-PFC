@@ -4,12 +4,12 @@ import { PersonStanding, X, Type, AlignJustify, MoreHorizontal, Eye, Contrast, M
 import { useConfiguracaoAcessibilidade } from '/UseConfiguracaoAcessibilidade.jsx';
 import { useGuiasLeitura } from './Ganchos/UseGuiasLeitura';
 // import VLibrasWidgetHibrido from 'VLibrasWidget/VLibrasWidgetHibrido';
-import SecaoTexto from 'SecaoTexto/SecaoTexto';
+import SecaoTexto from './SecaoTexto/SecaoTexto';
 import SecaoVisao from 'SecaoVisao/SecaoVisao';
-import SecaoConteudo from 'SecaoConteudo/SecaoConteudo';
-import SecaoAnimacoesCursor from 'SecaoAnimacoesCursor/SecaoAnimacoesCursor';
-import MaskLeitura from 'MascaraLeitura/MascaraLeitura';
-import GuiaLeitura from 'GuiaLeitura/GuiaLeitura';
+import SecaoConteudo from './SecaoConteudo/SecaoConteudo';
+import SecaoAnimacoesCursor from './SecaoAnimacoesCursor/SecaoAnimacoesCursor';
+import MaskLeitura from './MascaraLeitura/MascaraLeitura';
+import GuiaLeitura from './GuiaLeitura/GuiaLeitura';
 
 import './PainelControle.css';
 

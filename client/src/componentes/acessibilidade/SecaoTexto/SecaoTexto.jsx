@@ -1,4 +1,4 @@
-// src/componentes/acessibilidade/SecaoTexto/SecaoTexto.jsx
+// src/componentes/acessibilidade/./SecaoTexto/SecaoTexto.jsx
 import { Type, AlignJustify, MoreHorizontal } from 'lucide-react';
 
 const SecaoTexto = ({ configuracoes, atualizarConfiguracao }) => {
