@@ -12,6 +12,7 @@
     "dev": "concurrently -k \"npm run dev:cliente\" \"npm run dev:servidor\"",
     "build": "cd client && vite build",
     "lint": "eslint . --fix",
+    "tree:ps": "powershell \"Get-ChildItem -Recurse -Path . | Where-Object { $_.FullName -notlike '*node_modules*' } | Select-Object FullName\"",
     "preview": "cd client && vite preview"
   },
   "author": "Lucas e Rhuam",
