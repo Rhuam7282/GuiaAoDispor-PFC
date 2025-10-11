@@ -1,4 +1,4 @@
-// src/componentes/layout/Menu/Menu.jsx
+// src/componentes/layout/./Menu/Menu.jsx
 import React from 'react';
 import { useAuth } from '../../../Contextos/Autenticacao';
 import FachadaMenu from './Componentes/FachadaMenu';
