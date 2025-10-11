@@ -5,7 +5,7 @@ import { useConfiguracaoAcessibilidade } from '/UseConfiguracaoAcessibilidade.js
 import { useGuiasLeitura } from './Ganchos/UseGuiasLeitura';
 // import VLibrasWidgetHibrido from 'VLibrasWidget/VLibrasWidgetHibrido';
 import SecaoTexto from './SecaoTexto/SecaoTexto';
-import SecaoVisao from 'SecaoVisao/SecaoVisao';
+import SecaoVisao from './SecaoVisao/SecaoVisao';
 import SecaoConteudo from './SecaoConteudo/SecaoConteudo';
 import SecaoAnimacoesCursor from './SecaoAnimacoesCursor/SecaoAnimacoesCursor';
 import MaskLeitura from './MascaraLeitura/MascaraLeitura';

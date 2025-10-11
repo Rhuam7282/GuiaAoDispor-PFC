@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../../Contextos/Autenticacao';
 import { Home, User, MessageSquare, Mail, GalleryHorizontal, LogOut } from 'lucide-react';
 import Interrogacao from '../../../acessibilidade/interrogacao/interrogacao.jsx';
-import ItemMenu from 'ItemMenu';
+import ItemMenu from './ItemMenu';
 import './ListaMenu.css';
 
 const ListaMenu = () => {
