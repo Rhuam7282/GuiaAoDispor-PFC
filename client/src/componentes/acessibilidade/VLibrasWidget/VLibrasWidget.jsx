@@ -1,7 +1,7 @@
 // src/componentes/acessibilidade/VLibrasWidget/VLibrasWidget.jsx
 import { useEffect, useState } from 'react';
 import { Volume2, RotateCcw, Eye, EyeOff } from 'lucide-react';
-import 'VLibrasWidget.css';
+import './VLibrasWidget.css';
 
 const VLibrasWidget = () => {
   const [vlibrasAtivo, setVlibrasAtivo] = useState(false);

@@ -5,7 +5,7 @@ import { useAuth } from '../../../../Contextos/Autenticacao';
 import { Home, User, MessageSquare, Mail, GalleryHorizontal, LogOut } from 'lucide-react';
 import Interrogacao from '../../../acessibilidade/interrogacao/interrogacao.jsx';
 import ItemMenu from 'ItemMenu';
-import 'ListaMenu.css';
+import './ListaMenu.css';
 
 const ListaMenu = () => {
   const navigate = useNavigate();

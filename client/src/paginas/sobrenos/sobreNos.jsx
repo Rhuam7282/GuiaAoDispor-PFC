@@ -1,9 +1,9 @@
 import React from 'react';
 import Corpo from "../../Componentes/Layout/Corpo.jsx";
-import SecaoSobre from 'Componentes/SecaoSobre.jsx';
-import RedesSociais from 'Componentes/RedesSociais.jsx';
-import FormularioContato from 'Componentes/FormularioContato.jsx';
-import 'SobreNos.css';
+import SecaoSobre from './Componentes/SecaoSobre.jsx';
+import RedesSociais from './Componentes/RedesSociais.jsx';
+import FormularioContato from './Componentes/FormularioContato.jsx';
+import './SobreNos.css';
 
 
 

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import 'Filtro.css';
+import './Filtro.css';
 import { ChevronDown, Search } from 'lucide-react';
 
 const Filtro = ({ 
