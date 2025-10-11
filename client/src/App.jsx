@@ -9,7 +9,7 @@ import Qualificados from "./paginas/Qualificados/qualificados.jsx";
 import Cadastro from "./paginas/Cadastro/Cadastro.jsx";
 import Inicio from "./paginas/Inicio/Inicio.jsx";
 import PainelControle from "./componentes/Acessibilidade/PainelControle.jsx";
-import VlibrasWidget from "./componentes/Acessibilidade/VLibras/VLibrasWidget.jsx";
+// import VlibrasWidget from "./componentes/Acessibilidade/VLibras/VLibrasWidget.jsx";
 
 function App() {
   return (
@@ -41,15 +41,14 @@ function App() {
               }
             />
 
-            {/* Rotas protegidas - requerem autenticação */}
             <Route
               path="/qualificados"
               element={
-                <ProtectedRoute>
                   <Qualificados />
-                </ProtectedRoute>
               }
             />
+
+            {/* Rotas protegidas - requerem autenticação */}
             <Route
               path="/perfil"
               element={
@@ -80,7 +79,7 @@ function App() {
           </Routes>
         </AuthProvider>
       </BrowserRouter>
-      <VlibrasWidget />
+      {/* <VlibrasWidget /> */}
     </div>
   );
 }

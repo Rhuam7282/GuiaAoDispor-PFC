@@ -91,7 +91,7 @@ function Qualificados() {
         {/* SEMPRE VISÍVEL - Título e Filtro */}
         <div className="row">
           <div className="col-12">
-            <h2 className="titulo" style={{ marginBottom: '1rem' }}>Profissionais Qualificados</h2>
+            <h2 className="titulo" style={{ marginBottom: '1rem' }}>Profissionais</h2>
             
             <div className="d-flex justify-content-between align-items-center mb-4">
               <Filtro
