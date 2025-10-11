@@ -4,12 +4,12 @@ import ProtectedRoute from "./componentes/Autenticacao/ProtectedRoute.jsx";
 import AuthRedirect from "./contextos/AuthRedirect.jsx";
 
 import SobreNos from "./paginas/sobrenos/sobreNos.jsx";
-import Perfil from "./paginas/Perfil/perfil.jsx";
-import Qualificados from "./paginas/Qualificados/qualificados.jsx";
-import Cadastro from "./paginas/Cadastro/Cadastro.jsx";
-import Inicio from "./paginas/Inicio/Inicio.jsx";
-import PainelControle from "./componentes/Acessibilidade/PainelControle.jsx";
-import VlibrasWidget from "./componentes/Acessibilidade/VLibras/VLibrasWidget.jsx";
+import Perfil from "./paginas/perfil/perfil.jsx";
+import Qualificados from "./paginas/qualificados/qualificados.jsx";
+import Cadastro from "./paginas/cadastro/cadastro.jsx";
+import Inicio from "./paginas/inicio/inicio.jsx";
+import PainelControle from "./componentes/acessibilidade/PainelControle.jsx";
+import VlibrasWidget from "./componentes/acessibilidade/VLibras/VLibrasWidget.jsx";
 
 function App() {
   return (
@@ -86,3 +86,4 @@ function App() {
 }
 
 export default App;
+

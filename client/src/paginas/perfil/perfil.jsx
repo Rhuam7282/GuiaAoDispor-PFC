@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Corpo from "../../Componentes/Layout/Corpo.jsx";
+import Corpo from "../../componentes/Layout/Corpo.jsx";
 import InformacoesPerfil from "./Componentes/InformacoesPerfil.jsx";
 import HistoricoAcademicoPerfil from "./Componentes/HistoricoAcademicoPerfil.jsx";
 import HistoricoProfissionalPerfil from "./Componentes/HistoricoProfissionalPerfil.jsx";
 import { ServicoProfissional, ServicoHCurricular, ServicoHProfissional, ServicoAutenticacao } from "../../Servicos/api.js";
-import { useAuth } from "../../Contextos/Autenticacao.jsx";
-import "./Perfil.css";
+import { useAuth } from "../../contextos/Autenticacao.jsx";
+import "./perfil.css";
 
 import {
   LogOut,
 } from "lucide-react";
 
-import mariaSilva from "../../Recursos/Imagens/Mulher.png";
-import micheleto from "../../Recursos/Imagens/Hospital.jpg";
-import butantan from "../../Recursos/Imagens/Butantan.webp";
-import portugues from "../../Recursos/Imagens/Portugues.jpg";
+import mariaSilva from "../../Recursos/Imagens/mulher.png";
+import micheleto from "../../Recursos/Imagens/hospital.jpg";
+import butantan from "../../Recursos/Imagens/butantan.webp";
+import portugues from "../../Recursos/Imagens/portugues.jpg";
 
 const Perfil = () => {
   const { id } = useParams();

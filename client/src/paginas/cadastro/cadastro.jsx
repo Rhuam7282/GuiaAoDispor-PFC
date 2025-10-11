@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Corpo from "@Componentes/Layout/Corpo.jsx";
+import Corpo from "../../componentes/Layout/Corpo.jsx";
 import FormularioLoginGoogle from './Componentes/FormularioLoginGoogle.jsx';
 import FormularioLogin from './Componentes/FormularioLogin.jsx';
 import FormularioCadastro from './Componentes/FormularioCadastro.jsx';
