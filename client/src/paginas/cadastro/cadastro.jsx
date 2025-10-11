@@ -5,7 +5,7 @@ import FormularioLoginGoogle from './Componentes/FormularioLoginGoogle.jsx';
 import FormularioLogin from './Componentes/FormularioLogin.jsx';
 import FormularioCadastro from './Componentes/FormularioCadastro.jsx';
 // import useBuscaCep from "@Componentes/Acessibilidade/./Ganchos/UseBuscaCep.jsx";
-import { servicoCadastro } from '@Servicos/api.js';
+import { ServicoCadastro } from '@Servicos/api.js';
 import { useAuth } from '@Contextos/Autenticacao.jsx';
 import './Cadastro.css';
 
@@ -69,7 +69,7 @@ const Cadastro = () => {
 
     try {
       console.log('📧 Validando email...');
-      const respostaValidacao = await servicoCadastro.validarEmail(dadosFormulario.email);
+      const respostaValidacao = await ServicoCadastro.validarEmail(dadosFormulario.email);
       if (!respostaValidacao.valido) {
         setErros({ email: 'Este email já está em uso' });
         setCarregandoSubmit(false); 
@@ -103,9 +103,9 @@ const Cadastro = () => {
       
       let respostaCadastro;
       if (dadosFormulario.tipoPerfil === 'Profissional') {
-        respostaCadastro = await servicoCadastro.cadastrarProfissional(dadosPerfil, dadosLocalizacao);
+        respostaCadastro = await ServicoCadastro.cadastrarProfissional(dadosPerfil, dadosLocalizacao);
       } else {
-        respostaCadastro = await servicoCadastro.cadastrarUsuario(dadosPerfil, dadosLocalizacao);
+        respostaCadastro = await ServicoCadastro.cadastrarUsuario(dadosPerfil, dadosLocalizacao);
       }
 
       console.log('✅ Cadastro realizado, fazendo login automático...');

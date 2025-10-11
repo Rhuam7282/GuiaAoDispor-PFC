@@ -28,9 +28,19 @@ export const TiposPerfil = {
   PROFISSIONAL: "Profissional",
 };
 
+// Exportação para compatibilidade com código antigo
+export const API_CONFIG = ConfiguracaoApi;
+export const GOOGLE_CONFIG = ConfiguracaoGoogle;
+export const AUTH_CONFIG = ConfiguracaoAutenticacao;
+export const TIPOS_PERFIL = TiposPerfil;
+
 export default {
   ConfiguracaoApi,
   ConfiguracaoGoogle,
   ConfiguracaoAutenticacao,
-  TiposPerfil
+  TiposPerfil,
+  API_CONFIG,
+  GOOGLE_CONFIG,
+  AUTH_CONFIG,
+  TIPOS_PERFIL
 };

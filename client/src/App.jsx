@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contextos/Autenticacao.jsx";
 import ProtectedRoute from "./componentes/Autenticacao/ProtectedRoute.jsx";
+import AuthRedirect from "./componentes/Autenticacao/AuthRedirect.jsx";
 
 import SobreNos from "./paginas/sobrenos/sobreNos.jsx";
 import Perfil from "./paginas/Perfil/perfil.jsx";
@@ -13,14 +14,32 @@ import VlibrasWidget from "./componentes/Acessibilidade/VLibras/VLibrasWidget.js
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <AuthProvider>
           <PainelControle />
           <Routes>
             {/* Rotas públicas */}
             <Route path="/" element={<Inicio />} />
             <Route path="/sobreNos" element={<SobreNos />} />
-            <Route path="/cadastro" element={<Cadastro />} />
+
+            {/* Rotas que redirecionam se autenticado */}
+            <Route
+              path="/cadastro"
+              element={
+                <>
+                  <AuthRedirect
+                    redirecionarSeAutenticado={true}
+                    destinoAutenticado="/qualificados"
+                  />
+                  <Cadastro />
+                </>
+              }
+            />
 
             {/* Rotas protegidas - requerem autenticação */}
             <Route

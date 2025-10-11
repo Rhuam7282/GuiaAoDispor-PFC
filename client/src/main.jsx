@@ -4,8 +4,8 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import App from './App.jsx';
 import './index.css';
 
-// Configuração direta do Google Client ID
-const GOOGLE_CLIENT_ID = '751518931398-co21kq5n50m8apn4llgv7av32g2m17vq.apps.googleusercontent.com';
+// Configuração do Google Client ID
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '751518931398-co21kq5n50m8apn4llgv7av32g2m17vq.apps.googleusercontent.com';
 
 // Garantir que o elemento root existe
 const rootElement = document.getElementById('root');
@@ -14,6 +14,10 @@ if (!rootElement) {
 }
 
 const root = ReactDOM.createRoot(rootElement);
+
+console.log('React version:', React.version);
+console.log('ReactDOM version:', ReactDOM.version);
+console.log('Google Client ID configurado:', GOOGLE_CLIENT_ID ? 'Sim' : 'Não');
 
 root.render(
   <React.StrictMode>

@@ -6,7 +6,10 @@ const ConfiguracaoApi = {
     AUTENTICACAO: "/api/auth",
     PERFIS: "/api/auth/perfil",
     LOCALIZACOES: "/api/localizacoes",
-    PROFISSIONAIS: "/api/profissionais"
+    PROFISSIONAIS: "/api/profissionais",
+    AVALIACOES: "/api/avaliacoes",
+    HCURRICULARES: "/api/hcurriculares",
+    HPROFISSIONAIS: "/api/hprofissionais"
   }
 };
 
@@ -26,7 +29,9 @@ const fazerRequisicao = async (endpoint, metodo, dados = null) => {
     method: metodo,
     headers: {
       "Content-Type": "application/json",
-    }
+    },
+    mode: "cors",
+    credentials: "include",
   };
 
   if (token) {
@@ -42,55 +47,292 @@ const fazerRequisicao = async (endpoint, metodo, dados = null) => {
     const resposta = await fetch(url, opcoes);
 
     if (!resposta.ok) {
-      const erroTexto = await resposta.text();
-      throw new Error(`Erro ${resposta.status}: ${erroTexto || resposta.statusText}`);
+      let mensagemErro = `Erro ${resposta.status}: ${resposta.statusText}`;
+
+      try {
+        const contentType = resposta.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const dadosErro = await resposta.json();
+          mensagemErro = dadosErro.message || dadosErro.mensagem || mensagemErro;
+        }
+      } catch (e) {
+        // Ignora erro de parsing
+      }
+
+      if (resposta.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+        localStorage.removeItem("autenticado");
+        window.location.href = "/";
+      }
+
+      throw new Error(mensagemErro);
     }
 
-    const texto = await resposta.text();
-    if (!texto) return { status: "sucesso" };
+    const contentType = resposta.headers.get("content-type");
 
-    return JSON.parse(texto);
+    if (resposta.status === 204 || !contentType) {
+      return { status: "sucesso" };
+    }
+
+    const text = await resposta.text();
+
+    if (!contentType.includes("application/json")) {
+      console.warn("⚠️ Resposta não é JSON:", text.substring(0, 200));
+      throw new Error("Resposta da API não é JSON");
+    }
+
+    const dadosResposta = JSON.parse(text);
+    return dadosResposta;
   } catch (erro) {
     console.error("❌ Erro na requisição:", erro);
+
+    if (erro.name === "TypeError" && erro.message.includes("fetch")) {
+      throw new Error("Erro de conexão. Verifique se o servidor está rodando.");
+    }
+
     throw erro;
   }
+};
+
+// Serviços de Localização
+export const ServicoLocalizacao = {
+  criar: (dadosLocalizacao) =>
+    fazerRequisicao(ConfiguracaoApi.ENDPOINTS.LOCALIZACOES, "POST", dadosLocalizacao),
+  buscarPorId: (id) => fazerRequisicao(`${ConfiguracaoApi.ENDPOINTS.LOCALIZACOES}/${id}`, "GET"),
+  listarTodas: () => fazerRequisicao(ConfiguracaoApi.ENDPOINTS.LOCALIZACOES, "GET"),
+  atualizar: (id, dadosLocalizacao) =>
+    fazerRequisicao(`${ConfiguracaoApi.ENDPOINTS.LOCALIZACOES}/${id}`, "PUT", dadosLocalizacao),
+  deletar: (id) => fazerRequisicao(`${ConfiguracaoApi.ENDPOINTS.LOCALIZACOES}/${id}`, "DELETE"),
+};
+
+// Serviços de Usuário
+export const ServicoUsuario = {
+  criar: (dadosUsuario) =>
+    fazerRequisicao(ConfiguracaoApi.ENDPOINTS.USUARIOS, "POST", dadosUsuario),
+  buscarPorId: (id) => fazerRequisicao(`${ConfiguracaoApi.ENDPOINTS.USUARIOS}/${id}`, "GET"),
+  listarTodos: () => fazerRequisicao(ConfiguracaoApi.ENDPOINTS.USUARIOS, "GET"),
+  atualizar: (id, dadosUsuario) =>
+    fazerRequisicao(`${ConfiguracaoApi.ENDPOINTS.USUARIOS}/${id}`, "PUT", dadosUsuario),
+  deletar: (id) => fazerRequisicao(`${ConfiguracaoApi.ENDPOINTS.USUARIOS}/${id}`, "DELETE"),
+};
+
+// Serviços de Profissional
+export const ServicoProfissional = {
+  criar: (dadosProfissional) =>
+    fazerRequisicao(ConfiguracaoApi.ENDPOINTS.PROFISSIONAIS, "POST", dadosProfissional),
+  buscarPorId: (id) =>
+    fazerRequisicao(`${ConfiguracaoApi.ENDPOINTS.PROFISSIONAIS}/${id}`, "GET"),
+  listarTodos: () => fazerRequisicao(ConfiguracaoApi.ENDPOINTS.PROFISSIONAIS, "GET"),
+  atualizar: (id, dadosProfissional) =>
+    fazerRequisicao(
+      `${ConfiguracaoApi.ENDPOINTS.PROFISSIONAIS}/${id}`,
+      "PUT",
+      dadosProfissional
+    ),
+  deletar: (id) => fazerRequisicao(`${ConfiguracaoApi.ENDPOINTS.PROFISSIONAIS}/${id}`, "DELETE"),
+};
+
+// Serviços de Avaliação
+export const ServicoAvaliacao = {
+  criar: (dadosAvaliacao) =>
+    fazerRequisicao(ConfiguracaoApi.ENDPOINTS.AVALIACOES, "POST", dadosAvaliacao),
+  buscarPorId: (id) => fazerRequisicao(`${ConfiguracaoApi.ENDPOINTS.AVALIACOES}/${id}`, "GET"),
+  listarTodas: () => fazerRequisicao(ConfiguracaoApi.ENDPOINTS.AVALIACOES, "GET"),
+  atualizar: (id, dadosAvaliacao) =>
+    fazerRequisicao(`${ConfiguracaoApi.ENDPOINTS.AVALIACOES}/${id}`, "PUT", dadosAvaliacao),
+  deletar: (id) => fazerRequisicao(`${ConfiguracaoApi.ENDPOINTS.AVALIACOES}/${id}`, "DELETE"),
+};
+
+// Serviços de Histórico Curricular
+export const ServicoHCurricular = {
+  criar: (dadosHCurricular) =>
+    fazerRequisicao(ConfiguracaoApi.ENDPOINTS.HCURRICULARES, "POST", dadosHCurricular),
+  buscarPorId: (id) =>
+    fazerRequisicao(`${ConfiguracaoApi.ENDPOINTS.HCURRICULARES}/${id}`, "GET"),
+  listarTodos: () => fazerRequisicao(ConfiguracaoApi.ENDPOINTS.HCURRICULARES, "GET"),
+  atualizar: (id, dadosHCurricular) =>
+    fazerRequisicao(`${ConfiguracaoApi.ENDPOINTS.HCURRICULARES}/${id}`, "PUT", dadosHCurricular),
+  deletar: (id) => fazerRequisicao(`${ConfiguracaoApi.ENDPOINTS.HCURRICULARES}/${id}`, "DELETE"),
+};
+
+// Serviços de Histórico Profissional
+export const ServicoHProfissional = {
+  criar: (dadosHProfissional) =>
+    fazerRequisicao(ConfiguracaoApi.ENDPOINTS.HPROFISSIONAIS, "POST", dadosHProfissional),
+  buscarPorId: (id) =>
+    fazerRequisicao(`${ConfiguracaoApi.ENDPOINTS.HPROFISSIONAIS}/${id}`, "GET"),
+  listarTodos: () => fazerRequisicao(ConfiguracaoApi.ENDPOINTS.HPROFISSIONAIS, "GET"),
+  atualizar: (id, dadosHProfissional) =>
+    fazerRequisicao(
+      `${ConfiguracaoApi.ENDPOINTS.HPROFISSIONAIS}/${id}`,
+      "PUT",
+      dadosHProfissional
+    ),
+  deletar: (id) =>
+    fazerRequisicao(`${ConfiguracaoApi.ENDPOINTS.HPROFISSIONAIS}/${id}`, "DELETE"),
+};
+
+// Serviços de Cadastro
+export const ServicoCadastro = {
+  validarEmail: async (email) => {
+    try {
+      const resposta = await fazerRequisicao(
+        `${ConfiguracaoApi.ENDPOINTS.AUTENTICACAO}/validar-email`,
+        "POST",
+        { email }
+      );
+      return resposta;
+    } catch (erro) {
+      console.error("Erro ao validar email:", erro);
+      throw erro;
+    }
+  },
+
+  cadastrarUsuario: async (dadosPerfil, dadosLocalizacao) => {
+    try {
+      const respostaLocalizacao = await ServicoLocalizacao.criar(
+        dadosLocalizacao
+      );
+      const localizacaoId = respostaLocalizacao.data._id;
+
+      const dadosUsuario = {
+        ...dadosPerfil,
+        localizacao: localizacaoId,
+      };
+
+      const respostaUsuario = await ServicoUsuario.criar(dadosUsuario);
+      return respostaUsuario;
+    } catch (erro) {
+      console.error("Erro ao cadastrar usuário:", erro);
+      throw new Error(`Erro no cadastro: ${erro.message}`);
+    }
+  },
+
+  cadastrarProfissional: async (dadosProfissional, dadosLocalizacao) => {
+    try {
+      const respostaLocalizacao = await ServicoLocalizacao.criar(
+        dadosLocalizacao
+      );
+
+      const respostaProfissional = await ServicoProfissional.criar({
+        ...dadosProfissional,
+        localizacao: respostaLocalizacao.data._id,
+      });
+
+      return respostaProfissional;
+    } catch (erro) {
+      throw new Error(`Erro no cadastro: ${erro.message}`);
+    }
+  },
 };
 
 // Serviços de Autenticação
 export const ServicoAutenticacao = {
   login: async (email, senha) => {
-    const resposta = await fazerRequisicao(
-      `${ConfiguracaoApi.ENDPOINTS.AUTENTICACAO}/login`,
-      "POST",
-      { email, senha }
-    );
+    try {
+      console.log('🔐 Tentando login para:', email);
+      
+      const resposta = await fazerRequisicao(
+        `${ConfiguracaoApi.ENDPOINTS.AUTENTICACAO}/login`, 
+        "POST", 
+        { email, senha }
+      );
 
-    if (resposta && resposta.status === "sucesso") {
-      localStorage.setItem("token", resposta.token);
-      localStorage.setItem("usuario", JSON.stringify(resposta.data));
-      localStorage.setItem("autenticado", "true");
-      return resposta;
+      console.log('📨 Resposta do login:', resposta);
+
+      if (resposta && resposta.status === "sucesso") {
+        localStorage.setItem("token", resposta.token);
+        localStorage.setItem("usuario", JSON.stringify(resposta.data));
+        localStorage.setItem("autenticado", "true");
+        localStorage.setItem("timestampLogin", Date.now().toString());
+
+        console.log('✅ Login bem-sucedido, token armazenado');
+        return resposta;
+      } else {
+        const mensagemErro = resposta?.message || "Credenciais inválidas";
+        console.error('❌ Erro na resposta do login:', mensagemErro);
+        throw new Error(mensagemErro);
+      }
+    } catch (erro) {
+      console.error("❌ Erro no login:", erro);
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("usuario");
+      localStorage.removeItem("autenticado");
+
+      if (erro.message.includes("401")) {
+        throw new Error("Credenciais inválidas");
+      } else if (erro.message.includes("404")) {
+        throw new Error("Email não encontrado");
+      } else if (
+        erro.message.includes("Network Error") ||
+        erro.message.includes("Failed to fetch")
+      ) {
+        throw new Error("Erro de conexão. Verifique sua internet.");
+      } else {
+        throw new Error(erro.message || "Erro ao fazer login");
+      }
     }
-
-    throw new Error(resposta?.message || "Credenciais inválidas");
   },
 
-  buscarPerfil: async (id) => {
-    return await fazerRequisicao(
-      `${ConfiguracaoApi.ENDPOINTS.PERFIS}/${id}`,
-      "GET"
-    );
+  buscarPerfilLogado: async (id) => {
+    try {
+      const resposta = await fazerRequisicao(
+        `${ConfiguracaoApi.ENDPOINTS.PERFIS}/${id}`,
+        "GET"
+      );
+      return resposta;
+    } catch (erro) {
+      throw new Error(`Erro ao buscar perfil: ${erro.message}`);
+    }
   },
 
-  validarEmail: async (email) => {
-    return await fazerRequisicao(
-      `${ConfiguracaoApi.ENDPOINTS.AUTENTICACAO}/validar-email`,
-      "POST",
-      { email }
-    );
-  }
+  editarPerfil: async (id, dadosAtualizacao) => {
+    try {
+      const resposta = await fazerRequisicao(
+        `${ConfiguracaoApi.ENDPOINTS.PERFIS}/${id}`,
+        "PUT",
+        dadosAtualizacao
+      );
+      return resposta;
+    } catch (erro) {
+      throw new Error(`Erro ao editar perfil: ${erro.message}`);
+    }
+  },
+
+  logout: async () => {
+    try {
+      const resposta = await fazerRequisicao(
+        `${ConfiguracaoApi.ENDPOINTS.AUTENTICACAO}/logout`, 
+        "POST"
+      );
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("usuario");
+      localStorage.removeItem("autenticado");
+      localStorage.removeItem("timestampLogin");
+
+      return resposta;
+    } catch (erro) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("usuario");
+      localStorage.removeItem("autenticado");
+      localStorage.removeItem("timestampLogin");
+
+      throw new Error(`Erro ao fazer logout: ${erro.message}`);
+    }
+  },
 };
 
+// Exportação padrão com todos os serviços
 export default {
-  ServicoAutenticacao
+  ServicoAutenticacao,
+  ServicoLocalizacao,
+  ServicoUsuario,
+  ServicoProfissional,
+  ServicoAvaliacao,
+  ServicoHCurricular,
+  ServicoHProfissional,
+  ServicoCadastro
 };

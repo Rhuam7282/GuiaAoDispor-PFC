@@ -4,7 +4,7 @@ import Corpo from "../../Componentes/Layout/Corpo.jsx";
 import InformacoesPerfil from "./Componentes/InformacoesPerfil.jsx";
 import HistoricoAcademicoPerfil from "./Componentes/HistoricoAcademicoPerfil.jsx";
 import HistoricoProfissionalPerfil from "./Componentes/HistoricoProfissionalPerfil.jsx";
-import { ServicoProfissional, HCurricular, HProfissional, ServicoAutenticacao } from "../../Servicos/api.js";
+import { ServicoProfissional, ServicoHCurricular, ServicoHProfissional, ServicoAutenticacao } from "../../Servicos/api.js";
 import { useAuth } from "../../Contextos/Autenticacao.jsx";
 import "./Perfil.css";
 
@@ -112,10 +112,10 @@ const Perfil = () => {
   // Nova função para carregar perfil profissional
   const carregarPerfilProfissional = async (profissionalId) => {
     try {
-      const [perfilResposta, hcurricularResposta, hprofissionalResposta] = await Promise.all([
+      const [perfilResposta, ServicoHCurricularResposta, ServicoHProfissionalResposta] = await Promise.all([
         ServicoProfissional.buscarPorId(profissionalId).catch(() => null),
-        HCurricular.listarTodos().catch(() => ({ data: [] })),
-        HProfissional.listarTodos().catch(() => ({ data: [] }))
+        ServicoHCurricular.listarTodos().catch(() => ({ data: [] })),
+        ServicoHProfissional.listarTodos().catch(() => ({ data: [] }))
       ]);
 
       if (perfilResposta && perfilResposta.data) {
@@ -124,15 +124,15 @@ const Perfil = () => {
         setDadosPerfil(perfilFormatado);
 
         // Filtrar históricos por profissional
-        const hcurriculares = Array.isArray(hcurricularResposta?.data) 
-          ? hcurricularResposta.data.filter(hc => hc.profissional === profissionalId)
+        const ServicoHCurriculares = Array.isArray(ServicoHCurricularResposta?.data) 
+          ? ServicoHCurricularResposta.data.filter(hc => hc.profissional === profissionalId)
           : [];
         
-        const hprofissionais = Array.isArray(hprofissionalResposta?.data) 
-          ? hprofissionalResposta.data.filter(hp => hp.profissional === profissionalId)
+        const hprofissionais = Array.isArray(ServicoHProfissionalResposta?.data) 
+          ? ServicoHProfissionalResposta.data.filter(hp => hp.profissional === profissionalId)
           : [];
 
-        const academicoFormatado = hcurriculares.map(hc => ({
+        const academicoFormatado = ServicoHCurriculares.map(hc => ({
           nome: hc.nome || "Curso não informado",
           instituicao: hc.instituicao || "Instituição não informada",
           periodo: hc.periodo || "Período não informado"
@@ -160,21 +160,21 @@ const Perfil = () => {
   // Nova função para carregar históricos do profissional
   const carregarHistoricosProfissional = async (profissionalId) => {
     try {
-      const [hcurricularResposta, hprofissionalResposta] = await Promise.all([
-        HCurricular.listarTodos().catch(() => ({ data: [] })),
-        HProfissional.listarTodos().catch(() => ({ data: [] }))
+      const [ServicoHCurricularResposta, ServicoHProfissionalResposta] = await Promise.all([
+        ServicoHCurricular.listarTodos().catch(() => ({ data: [] })),
+        ServicoHProfissional.listarTodos().catch(() => ({ data: [] }))
       ]);
 
       // Filtrar históricos por profissional
-      const hcurriculares = Array.isArray(hcurricularResposta?.data) 
-        ? hcurricularResposta.data.filter(hc => hc.profissional === profissionalId)
+      const ServicoHCurriculares = Array.isArray(ServicoHCurricularResposta?.data) 
+        ? ServicoHCurricularResposta.data.filter(hc => hc.profissional === profissionalId)
         : [];
       
-      const hprofissionais = Array.isArray(hprofissionalResposta?.data) 
-        ? hprofissionalResposta.data.filter(hp => hp.profissional === profissionalId)
+      const hprofissionais = Array.isArray(ServicoHProfissionalResposta?.data) 
+        ? ServicoHProfissionalResposta.data.filter(hp => hp.profissional === profissionalId)
         : [];
 
-      const academicoFormatado = hcurriculares.map(hc => ({
+      const academicoFormatado = ServicoHCurriculares.map(hc => ({
         nome: hc.nome || "Curso não informado",
         instituicao: hc.instituicao || "Instituição não informada",
         periodo: hc.periodo || "Período não informado"
