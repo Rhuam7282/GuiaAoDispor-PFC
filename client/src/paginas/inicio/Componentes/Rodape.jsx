@@ -13,7 +13,7 @@ import {
 import "./Rodape.css";
 import logo from "../../../Recursos/icones/logo.png";
 
-const Footer = () => {
+const Rodape = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -94,4 +94,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default Rodape;

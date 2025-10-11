@@ -11,12 +11,12 @@ import "./Inicio.css";
 const Inicio = () => {
   return (
     <Corpo>
-      <div className="paginaInicial">
+      <main className="paginaInicial"> {/* ✅ SEMÂNTICA */}
         <div className="conteudoInicial">
           <HeroPrincipal />
           <BotoesAcao />
         </div>
-      </div>
+      </main>
       <div className="conteudoPrincipalInicio">
         <div className="container">
           <CarrosselAcessibilidade />

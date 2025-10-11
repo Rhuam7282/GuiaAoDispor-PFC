@@ -1,11 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../Contextos/Autenticacao';
-import 'BotoesAcao.css';
+import './BotoesAcao.css'; // ✅ CORRIGIDO
 
 const BotoesAcao = () => {
   const navigate = useNavigate();
-  const { estaAutenticado } = useAuth();
+  const { estaAutenticado } = useAuth?.() || {}; // ✅ DEFENSIVO
+
+  // Ou verificar se o hook existe
+  if (!useAuth) {
+    console.warn('Hook useAuth não disponível');
+    return null;
+  }
 
   const handleEntrarAnonimo = () => {
     console.log('🚀 Acessando diretamente (anonimo)');
@@ -15,9 +21,6 @@ const BotoesAcao = () => {
   const handleFazerLogin = () => {
     navigate('/cadastro');
   };
-
-  // CORREÇÃO: Não esconder os botões mesmo se autenticado
-  // Apenas ajustar o comportamento se necessário
 
   return (
     <div className="secaoBotoesAcao">
@@ -33,17 +36,12 @@ const BotoesAcao = () => {
             className="botaoAcesso botaoSecundario"
           >
             <div className="conteudoBotao">
-              <span className="iconeBotao">🚀 </span>
+              <span className="iconeBotao">🚀</span>
               <div className="textoBotao">
-                <span className="tituloBotao">Acessar Diretamente </span>
+                <span className="tituloBotao">Acessar Diretamente</span>
                 <span className="descricaoBotao">Explore sem compromisso</span>
               </div>
             </div>
-            {/* {hoveredButton === 'anonimo' && (
-              <div className = "tooltipBotao">
-                Navegue pela plataforma e conheça nossos profissionais sem precisar criar uma conta
-              </div>
-            )} */}
           </button>
 
           <button 
@@ -51,9 +49,9 @@ const BotoesAcao = () => {
             className="botaoAcesso botaoPrimario"
           >
             <div className="conteudoBotao">
-              <span className="iconeBotao">🔐 </span>
+              <span className="iconeBotao">🔐</span>
               <div className="textoBotao">
-                <span className="tituloBotao">Fazer Login </span>
+                <span className="tituloBotao">Fazer Login</span>
                 <span className="descricaoBotao">Acesso completo</span>
               </div>
             </div>

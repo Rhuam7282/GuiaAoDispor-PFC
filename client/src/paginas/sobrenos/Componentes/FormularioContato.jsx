@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import RedesSociais from 'RedesSociais';
+import RedesSociais from './RedesSociais.jsx';
 
 const FormularioContato = () => {
   const [dadosFormulario, setDadosFormulario] = useState({
