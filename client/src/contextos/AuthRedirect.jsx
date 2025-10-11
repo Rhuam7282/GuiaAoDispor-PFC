@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contextos/Autenticacao.jsx';
+import { useAuth } from './Autenticacao.jsx';
 
 const AuthRedirect = ({ 
   redirecionarSeAutenticado = false, 

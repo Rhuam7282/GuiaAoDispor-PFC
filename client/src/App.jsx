@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contextos/Autenticacao.jsx";
 import ProtectedRoute from "./componentes/Autenticacao/ProtectedRoute.jsx";
-import AuthRedirect from "./componentes/Autenticacao/AuthRedirect.jsx";
+import AuthRedirect from "./contextos/AuthRedirect.jsx";
 
 import SobreNos from "./paginas/sobrenos/sobreNos.jsx";
 import Perfil from "./paginas/Perfil/perfil.jsx";
