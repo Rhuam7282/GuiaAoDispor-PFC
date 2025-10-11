@@ -4,7 +4,7 @@ import Corpo from "../../componentes/Layout/Corpo.jsx";
 import InformacoesPerfil from "./Componentes/InformacoesPerfil.jsx";
 import HistoricoAcademicoPerfil from "./Componentes/HistoricoAcademicoPerfil.jsx";
 import HistoricoProfissionalPerfil from "./Componentes/HistoricoProfissionalPerfil.jsx";
-import { ServicoProfissional, ServicoHCurricular, ServicoHProfissional, ServicoAutenticacao } from "../../Servicos/api.js";
+import { ServicoProfissional, ServicoHCurricular, ServicoHProfissional, ServicoAutenticacao, ServicoUsuario } from "../../Servicos/api.js";
 import { useAuth } from "../../contextos/Autenticacao.jsx";
 import "./perfil.css";
 
@@ -109,39 +109,51 @@ const Perfil = () => {
     };
   };
 
-  // Nova função para carregar perfil profissional
+  // Função para carregar perfil profissional - CORRIGIDA (usa apenas rota que existe)
   const carregarPerfilProfissional = async (profissionalId) => {
     try {
-      const [perfilResposta, ServicoHCurricularResposta, ServicoHProfissionalResposta] = await Promise.all([
-        ServicoProfissional.buscarPorId(profissionalId).catch(() => null),
+      console.log(`🔍 Buscando perfil via ServicoAutenticacao: ${profissionalId}`);
+      
+      // USA APENAS A ROTA QUE EXISTE NO BACKEND
+      const resposta = await ServicoAutenticacao.buscarPerfilLogado(profissionalId);
+      console.log("✅ Resposta do ServicoAutenticacao:", resposta);
+
+      // Carregar históricos em paralelo
+      const [ServicoHCurricularResposta, ServicoHProfissionalResposta] = await Promise.all([
         ServicoHCurricular.listarTodos().catch(() => ({ data: [] })),
         ServicoHProfissional.listarTodos().catch(() => ({ data: [] }))
       ]);
 
-      if (perfilResposta && perfilResposta.data) {
-        const perfil = perfilResposta.data;
+      if (resposta && (resposta.status === 'sucesso' && resposta.data || resposta._id)) {
+        const perfil = resposta.data || resposta;
         const perfilFormatado = formatarDadosPerfil(perfil);
         setDadosPerfil(perfilFormatado);
 
         // Filtrar históricos por profissional
         const ServicoHCurriculares = Array.isArray(ServicoHCurricularResposta?.data) 
-          ? ServicoHCurricularResposta.data.filter(hc => hc.profissional === profissionalId)
+          ? ServicoHCurricularResposta.data.filter(hc => 
+              hc.profissional === profissionalId || hc.usuario === profissionalId
+            )
           : [];
         
         const hprofissionais = Array.isArray(ServicoHProfissionalResposta?.data) 
-          ? ServicoHProfissionalResposta.data.filter(hp => hp.profissional === profissionalId)
+          ? ServicoHProfissionalResposta.data.filter(hp => 
+              hp.profissional === profissionalId || hp.usuario === profissionalId
+            )
           : [];
 
         const academicoFormatado = ServicoHCurriculares.map(hc => ({
-          nome: hc.nome || "Curso não informado",
+          _id: hc._id,
+          nome: hc.nome || hc.titulo || "Curso não informado",
           instituicao: hc.instituicao || "Instituição não informada",
-          periodo: hc.periodo || "Período não informado"
+          periodo: hc.periodo || hc.duracao || "Período não informado"
         }));
 
         const profissionalFormatado = hprofissionais.map(hp => ({
-          nome: hp.nome || "Empresa não informada",
-          imagem: hp.foto || micheleto,
-          alt: hp.nome || "Empresa",
+          _id: hp._id,
+          nome: hp.nome || hp.empresa || "Empresa não informada",
+          imagem: hp.foto || hp.imagem || micheleto,
+          alt: hp.nome || hp.empresa || "Empresa",
         }));
 
         setHistoricoAcademico(academicoFormatado);
@@ -149,10 +161,27 @@ const Perfil = () => {
         
         console.log("✅ Perfil profissional carregado com sucesso");
       } else {
-        throw new Error('Perfil não encontrado');
+        throw new Error('Perfil não encontrado na resposta da API');
       }
     } catch (error) {
       console.error("❌ Erro ao carregar perfil profissional:", error);
+      
+      // Fallback: usar dados do contexto ou dados estáticos
+      console.log("🔄 Usando fallback...");
+      
+      if (usuario && usuario._id === id) {
+        console.log("✅ Usando dados do contexto de autenticação");
+        const perfilFormatado = formatarDadosPerfil(usuario);
+        setDadosPerfil(perfilFormatado);
+        setHistoricoAcademico([]);
+        setHistoricoProfissional([]);
+      } else {
+        console.log("✅ Usando dados estáticos");
+        setDadosPerfil(dadosEstaticos);
+        setHistoricoAcademico(dadosEstaticos.historicoAcademico);
+        setHistoricoProfissional(dadosEstaticos.historicoProfissional);
+      }
+      
       throw error;
     }
   };
@@ -167,23 +196,29 @@ const Perfil = () => {
 
       // Filtrar históricos por profissional
       const ServicoHCurriculares = Array.isArray(ServicoHCurricularResposta?.data) 
-        ? ServicoHCurricularResposta.data.filter(hc => hc.profissional === profissionalId)
+        ? ServicoHCurricularResposta.data.filter(hc => 
+            hc.profissional === profissionalId || hc.usuario === profissionalId
+          )
         : [];
       
       const hprofissionais = Array.isArray(ServicoHProfissionalResposta?.data) 
-        ? ServicoHProfissionalResposta.data.filter(hp => hp.profissional === profissionalId)
+        ? ServicoHProfissionalResposta.data.filter(hp => 
+            hp.profissional === profissionalId || hp.usuario === profissionalId
+          )
         : [];
 
       const academicoFormatado = ServicoHCurriculares.map(hc => ({
-        nome: hc.nome || "Curso não informado",
+        _id: hc._id,
+        nome: hc.nome || hc.titulo || "Curso não informado",
         instituicao: hc.instituicao || "Instituição não informada",
-        periodo: hc.periodo || "Período não informado"
+        periodo: hc.periodo || hc.duracao || "Período não informado"
       }));
 
       const profissionalFormatado = hprofissionais.map(hp => ({
-        nome: hp.nome || "Empresa não informada",
-        imagem: hp.foto || micheleto,
-        alt: hp.nome || "Empresa",
+        _id: hp._id,
+        nome: hp.nome || hp.empresa || "Empresa não informada",
+        imagem: hp.foto || hp.imagem || micheleto,
+        alt: hp.nome || hp.empresa || "Empresa",
       }));
 
       setHistoricoAcademico(academicoFormatado);
@@ -195,7 +230,7 @@ const Perfil = () => {
     }
   };
 
-  // Função para carregar dados do perfil
+  // Função para carregar dados do perfil - ATUALIZADA
   const carregarDadosPerfil = async () => {
     setCarregando(true);
     setErro(null);
@@ -206,24 +241,25 @@ const Perfil = () => {
         console.log("👤 Carregando perfil do usuário logado:", usuario._id);
         
         try {
-          // Buscar perfil atualizado da API
+          // Buscar perfil atualizado da API - USA A ROTA QUE EXISTE
           const resposta = await ServicoAutenticacao.buscarPerfilLogado(usuario._id);
           console.log("📨 Resposta da API do perfil:", resposta);
           
-          if (resposta && resposta.status === 'sucesso' && resposta.data) {
-            const perfilFormatado = formatarDadosPerfil(resposta.data);
+          if (resposta && (resposta.status === 'sucesso' && resposta.data || resposta._id)) {
+            const dadosPerfilApi = resposta.data || resposta;
+            const perfilFormatado = formatarDadosPerfil(dadosPerfilApi);
             setDadosPerfil(perfilFormatado);
             console.log("✅ Perfil carregado da API:", perfilFormatado);
             
             // Se for profissional, carregar históricos
-            if (resposta.data.tipoPerfil === 'Profissional' || resposta.data.desc) {
+            if (dadosPerfilApi.tipoPerfil === 'Profissional' || dadosPerfilApi.desc) {
               await carregarHistoricosProfissional(usuario._id);
             } else {
               setHistoricoAcademico([]);
               setHistoricoProfissional([]);
             }
           } else {
-            throw new Error('Resposta da API não contém dados');
+            throw new Error('Resposta da API não contém dados válidos');
           }
         } catch (erroApi) {
           console.error("❌ Erro ao buscar perfil da API:", erroApi);
@@ -244,7 +280,7 @@ const Perfil = () => {
           setErro(`Dados carregados localmente. Erro da API: ${erroApi.message}`);
         }
       }
-      // CASO 2: Perfil específico por ID (provavelmente profissional)
+      // CASO 2: Perfil específico por ID (profissional ou usuário)
       else if (id) {
         console.log(`🔍 Carregando perfil específico: ${id}`);
         await carregarPerfilProfissional(id);
@@ -258,12 +294,27 @@ const Perfil = () => {
       }
     } catch (error) {
       console.error("❌ Erro geral ao carregar perfil:", error);
-      setErro("Erro ao carregar dados do perfil. Tente novamente.");
       
-      // Fallback para dados estáticos
-      setDadosPerfil(dadosEstaticos);
-      setHistoricoAcademico(dadosEstaticos.historicoAcademico);
-      setHistoricoProfissional(dadosEstaticos.historicoProfissional);
+      // Mensagem de erro mais específica
+      let mensagemErro = "Erro ao carregar dados do perfil. ";
+      if (error.message.includes("Rota não encontrada")) {
+        mensagemErro += "Serviço temporariamente indisponível.";
+      } else if (error.message.includes("Network Error")) {
+        mensagemErro += "Problema de conexão. Verifique sua internet.";
+      } else if (error.message.includes("Serviço indisponível")) {
+        mensagemErro += "Serviço temporariamente fora do ar.";
+      } else {
+        mensagemErro += "Tente novamente.";
+      }
+      
+      setErro(mensagemErro);
+      
+      // Fallback para dados estáticos apenas se for um perfil público
+      if (!id && !estaAutenticado()) {
+        setDadosPerfil(dadosEstaticos);
+        setHistoricoAcademico(dadosEstaticos.historicoAcademico);
+        setHistoricoProfissional(dadosEstaticos.historicoProfissional);
+      }
     } finally {
       setCarregando(false);
     }
@@ -276,12 +327,15 @@ const Perfil = () => {
     return true; // Se não há ID na URL, é sempre o perfil próprio
   };
 
-  // Função para verificar se é um perfil profissional
+  // Função para verificar se é um perfil profissional - MELHORADA
   const isPerfilProfissional = () => {
+    if (!dadosPerfil) return false;
+    
     return id || 
-           (dadosPerfil?.tipoPerfil === 'Profissional') || 
-           (dadosPerfil?.desc && dadosPerfil.desc !== 'Descrição não informada') ||
-           (historicoAcademico.length > 0 || historicoProfissional.length > 0);
+           (dadosPerfil.tipoPerfil === 'Profissional') || 
+           (dadosPerfil.descricao && dadosPerfil.descricao !== 'Descrição não informada') ||
+           (historicoAcademico.length > 0 || historicoProfissional.length > 0) ||
+           (dadosPerfil.avaliacao && dadosPerfil.avaliacao > 0);
   };
 
   useEffect(() => {
