@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../Contextos/Autenticacao';
+import { useAuth } from "../../../contextos/Autenticacao.jsx";
 import './BotoesAcao.css'; // ✅ CORRIGIDO
 
 const BotoesAcao = () => {
