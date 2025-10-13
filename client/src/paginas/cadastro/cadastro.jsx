@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Corpo from "../../componentes/Layout/Corpo.jsx";
-import FormularioLoginGoogle from './Componentes/FormularioLoginGoogle.jsx';
 import FormularioLogin from './Componentes/FormularioLogin.jsx';
 import FormularioCadastro from './Componentes/FormularioCadastro.jsx';
 import useBuscaCep from "../../../../server/Apis/BuscaCEP.jsx";
@@ -265,18 +264,11 @@ const Cadastro = () => {
     <Corpo>
       <div className="container">
         <h1 className="titulo">Criar Conta</h1>
-        <div className='listaHorizontal'>
-          <FormularioLogin />
-          <FormularioLoginGoogle 
-            aoSucesso={() => {}}
-            aoErro={() => {}}
-          />
-        </div>
+         <FormularioLogin />
         
         <FormularioCadastro 
           dadosFormulario={dadosFormulario}
           erros={{...erros, errosContatos}}
-          // A lógica para combinar os carregamentos está correta
           carregando={carregandoSubmit || carregandoCep} 
           mensagemSucesso={mensagemSucesso}
           aoAlterarCampo={aoAlterarCampo}
@@ -292,4 +284,4 @@ const Cadastro = () => {
   );
 };
 
-export default Cadastro;
+export default Cadastro;;

@@ -19,6 +19,12 @@ const UploadImagem = ({ foto, aoSelecionarArquivo }) => {
           <img src={foto} alt="Preview" />
         </div>
       )}
+      {!foto && (
+        <div className="placeholder-imagem">
+          <span>📷</span>
+          <p>Imagem de perfil</p>
+        </div>
+      )}
     </div>
   );
 };

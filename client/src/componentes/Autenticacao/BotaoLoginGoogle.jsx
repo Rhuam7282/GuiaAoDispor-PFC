@@ -1,15 +1,8 @@
 import React from 'react';
 
 import { GoogleLogin } from '@react-oauth/google';
-
-
 import { useAuth } from '../../contextos/Autenticacao.jsx';
-
 import { useNavigate } from 'react-router-dom';
-
-
-
-
 
 const decodeJWT = (token) => {
 

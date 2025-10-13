@@ -4,7 +4,7 @@
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 4px 8px var(--cor-texto-principal);
+  box-shadow: 0 4px 8px var(--corNeutraEscura);
   border: 3px solid #fff;
 }
 
