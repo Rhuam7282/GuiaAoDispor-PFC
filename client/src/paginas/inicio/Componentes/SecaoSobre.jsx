@@ -1,5 +1,5 @@
 import React from 'react';
-import './SecaoSobre.css';
+import './SecaoSobre.module.css';
 
 const SecaoSobre = () => {
   const diferenciais = [

@@ -3,7 +3,7 @@ import Corpo from "../../componentes/Layout/Corpo.jsx";
 import SecaoSobre from './Componentes/SecaoSobre.jsx';
 import RedesSociais from './Componentes/RedesSociais.jsx';
 import FormularioContato from './Componentes/FormularioContato.jsx';
-import './sobreNos.css';
+import './sobreNos.module.css';
 
 
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from "../../../contextos/Autenticacao.jsx";
 import { ServicoAutenticacao } from '../../../Servicos/api.js';
+import {Eye, EyeOff} from 'lucide-react';
 
 const FormularioLogin = () => {
   const navigate = useNavigate();
@@ -186,7 +187,7 @@ const FormularioLogin = () => {
                 onClick={toggleMostrarSenha}
                 disabled={carregando}
               >
-                {mostrarSenha ? '🙈' : '👁️'}
+                {mostrarSenha ? <EyeOff /> : <Eye />}
               </button>
             </div>
             {erros.senha && (
@@ -204,15 +205,6 @@ const FormularioLogin = () => {
               />
               <span className="texto-lembrar">Lembrar-me</span>
             </label>
-            
-            <button
-              type="button"
-              className="link-esqueci-senha"
-              onClick={lidarEsqueciSenha}
-              disabled={carregando}
-            >
-              Esqueci minha senha
-            </button>
           </div>
 
           <button
@@ -229,33 +221,7 @@ const FormularioLogin = () => {
               'Entrar'
             )}
           </button>
-
-          <div className="separador">
-            <span>ou</span>
-          </div>
-
-          <div className="links-alternativos">
-            <p className="texto-cadastro">
-              Não tem uma conta?{' '}
-              <Link to="/cadastro" className="link-cadastro">
-                Cadastre-se
-              </Link>
-            </p>
-          </div>
         </form>
-      </div>
-
-      <div className="info-adicional">
-        <div className="cartao-info">
-          <h3>Por que fazer login?</h3>
-          <ul className="lista-beneficios">
-            <li>📞 Acesse seus contatos salvos</li>
-            <li>⭐ Avalie profissionais</li>
-            <li>💬 Envie mensagens diretas</li>
-            <li>🔔 Receba notificações personalizadas</li>
-            <li>👥 Gerencie seu perfil</li>
-          </ul>
-        </div>
       </div>
     </div>
   );
