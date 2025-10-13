@@ -400,65 +400,96 @@ const Perfil = () => {
   }
 
   return (
-    <Corpo>
-      <div className="container">
-        <div className="cabecalhoPerfil flexCentro espaçoEntre">
-          <h1 className="titulo">{dadosPerfil.nome}</h1>
-          <div className="botoesCabecalho flexCentro gapPequeno">
-            {estaAutenticado() && isPerfilProprio() && (
-              <button 
-                className="botao botaoSecundario"
-                onClick={() => setModoEdicao(!modoEdicao)}
-              >
-                {modoEdicao ? 'Cancelar Edição' : 'Editar Perfil'}
-              </button>
-            )}
-            {estaAutenticado() && isPerfilProprio() && (
-              <button 
-                onClick={handleLogout}
-                className="botao botaoSecundario flexCentro gapPequeno"
-              >
-                <LogOut size={16} />
-                <span>Sair</span>
-              </button>
-            )}
-          </div>
+  <Corpo>
+    <div className="container">
+      <div className="cabecalhoPerfil flexCentro espaçoEntre">
+        <h2 className="titulo">{dadosPerfil.nome}</h2>
+        <div className="botoesCabecalho flexCentro gapPequeno">
+          {estaAutenticado() && isPerfilProprio() && (
+            <button 
+              className= {modoEdicao ? 'botaoAtivo' : 'botaoSecundario'}
+              onClick={() => setModoEdicao(!modoEdicao)}
+            >
+              {modoEdicao ? 'Cancelar Edição' : 'Editar Perfil'}
+            </button>
+          )}
+          {estaAutenticado() && isPerfilProprio() && (
+            <button 
+              onClick={handleLogout}
+              className="botaoSecundario flexCentro gapPequeno"
+            >
+              <LogOut size={16} />
+              <span>Sair</span>
+            </button>
+          )}
         </div>
-        
-        {erro && (
-          <div className="mensagemAviso margemInferiorMedia">
-            <p>⚠️ {erro}</p>
-          </div>
-        )}
-
-        <InformacoesPerfil 
-          dadosPerfil={dadosPerfil}
-          estaAutenticado={estaAutenticado}
-          usuario={usuario}
-          id={id || (usuario ? usuario._id : null)}
-          modoEdicao={modoEdicao}
-          setModoEdicao={setModoEdicao}
-        />
-
-        {/* Mostrar históricos apenas para perfis profissionais */}
-        {isPerfilProfissional() && (
-          <div className="flexContainer gapGrande">
-            {historicoAcademico.length > 0 && (
-              <HistoricoAcademicoPerfil 
-                historicoAcademico={historicoAcademico} 
-              />
-            )}
-            {historicoProfissional.length > 0 && (
-              <HistoricoProfissionalPerfil 
-                historicoProfissional={historicoProfissional}
-                nomePerfil={dadosPerfil.nome}
-              />
-            )}
-          </div>
-        )}
       </div>
-    </Corpo>
-  );
-};
+      
+      {erro && (
+        <div className="aviso-erro margemInferiorMedia">
+          <p>⚠️ {erro}</p>
+        </div>
+      )}
+
+      <InformacoesPerfil 
+        dadosPerfil={dadosPerfil}
+        estaAutenticado={estaAutenticado}
+        usuario={usuario}
+        id={id || (usuario ? usuario._id : null)}
+        modoEdicao={modoEdicao}
+        setModoEdicao={setModoEdicao}
+      />
+
+      {/* Mostrar históricos apenas para perfis profissionais */}
+      {isPerfilProfissional() && (
+        <>
+          <div className="secaoHistorico">
+            <h2>Histórico Acadêmico</h2>
+            <div className="listaAcademica">
+              {historicoAcademico.length > 0 ? (
+                historicoAcademico.map((item, index) => (
+                  <div key={index} className="destaque2">
+                    <h3>{item.nome}</h3>
+                    <p>{item.instituicao}</p>
+                    <p className="periodo">{item.periodo}</p>
+                  </div>
+                ))
+              ) : (
+                <div className="destaque2">
+                  <p>Nenhum histórico acadêmico cadastrado.</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="secaoHistorico">
+            <h2>Histórico Profissional</h2>
+            <div className="listaProfissional">
+              {historicoProfissional.length > 0 ? (
+                historicoProfissional.map((item, index) => (
+                  <div key={index} className="destaque2">
+                    <div className="imagemProfissional">
+                      <img
+                        src={item.imagem}
+                        alt={item.alt}
+                      />
+                    </div>
+                    <div className="infoProfissional">
+                      <h3>{item.nome}</h3>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="destaque2">
+                  <p>Nenhum histórico profissional cadastrado.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  </Corpo>
+)};
 
 export default Perfil;

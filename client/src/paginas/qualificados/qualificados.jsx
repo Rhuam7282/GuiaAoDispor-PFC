@@ -100,13 +100,6 @@ function Qualificados() {
                 opcaoSelecionada={filtroSelecionado}
                 aoMudar={setFiltroSelecionado}
               />
-              
-              {profissionais.length > 0 && (
-                <small className="text-muted">
-                  {profissionais.length} profissional{profissionais.length !== 1 ? 'es' : ''} 
-                  {error && ' (dados de exemplo)'}
-                </small>
-              )}
             </div>
           </div>
         </div>
