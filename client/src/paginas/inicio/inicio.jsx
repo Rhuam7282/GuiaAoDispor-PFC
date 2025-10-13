@@ -6,19 +6,19 @@ import CarrosselAcessibilidade from "./Componentes/CarrosselAcessibilidade";
 import SecaoComentarios from "./Componentes/SecaoComentarios";
 import Corpo from "../../componentes/Layout/Corpo";
 import Rodape from "./Componentes/Rodape";
-import styles from "./Inicio.module.css";
+import "./Inicio.css";
 
 const Inicio = () => {
   return (
     <Corpo>
-      <main className={styles.paginaInicial}> {/* ✅ SEMÂNTICA */}
-        <div className={styles.conteudoInicial}>
+      <main className="paginaInicial"> {/* ✅ SEMÂNTICA */}
+        <div className="conteudoInicial">
           <HeroPrincipal />
           <BotoesAcao />
         </div>
       </main>
-      <div className={styles.conteudoPrincipalInicio}>
-        <div className={styles.container}>
+      <div className="conteudoPrincipalInicio">
+        <div className="container">
           <CarrosselAcessibilidade />
           <SecaoSobre />
           <SecaoComentarios />

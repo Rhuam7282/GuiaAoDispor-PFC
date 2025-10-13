@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Corpo from "../../componentes/Layout/Corpo.jsx";
 import Filtro from "./Componentes/Filtro.jsx";
 import ListaProfissionais from "./Componentes/ListaProfissionais.jsx";
-import "./qualificados.module.css";
+import "./qualificados.css";
 
 function Qualificados() {
   const [filtroSelecionado, setFiltroSelecionado] = useState("localizacao");

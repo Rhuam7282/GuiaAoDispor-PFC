@@ -1,0 +1,208 @@
+.footer {
+  background-color: var(--corAzulDestaque);
+  color: var(--corMarromEscuro);
+  border-top: 3px solid var(--corMarromDestaque);
+  margin-top: auto;
+}
+
+.containerFooter {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--espacamentoGrande) var(--espacamentoMedio);
+}
+
+.footerSuperior {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--espacamentoGrande);
+  margin-bottom: var(--espacamentoMedio);
+}
+
+.footerSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacamentoMedio);
+}
+
+.logoFooter h3 {
+  color: var(--corMarromEscuro);
+  font-size: var(--tamanhoFonteSubtitulo);
+  font-weight: 700;
+  margin: 0;
+}
+
+.descricaoFooter {
+  color: var(--corMarromEscuro);
+  font-size: var(--tamanhoFonteTextoMenor);
+  line-height: 1.5;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.tituloFooter {
+  color: var(--corMarromEscuro);
+  font-size: var(--tamanhoFonteTextoMedio);
+  font-weight: 600;
+  margin: 0 0 var(--espacamentoPequeno) 0;
+}
+
+.listaFooter {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacamentoPequeno);
+}
+
+.itemListaFooter {
+  margin: 0;
+}
+
+.botaoFooter {
+  display: flex;
+  align-items: center;
+  gap: var(--espacamentoPequeno);
+  background: transparent;
+  border: none;
+  color: var(--corMarromEscuro);
+  font-size: var(--tamanhoFonteTextoMenor);
+  cursor: pointer;
+  padding: var(--espacamentoPequeno);
+  border-radius: var(--bordaArredondada);
+  transition: all 0.3s ease;
+  width: 60%;
+  margin: auto;
+  text-align: center;
+}
+
+.botaoFooter:hover {
+  background-color: var(--corAzulDestaqueTransparente);
+  transform: translateX(4px);
+}
+
+.botaoFooter.ativo {
+  background-color: var(--corMarromDestaqueTransparente);
+  font-weight: 600;
+}
+
+.infoContato {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacamentoPequeno);
+  margin: 0 auto;
+}
+
+.itemContato {
+  display: flex;
+  align-items: center;
+  gap: var(--espacamentoPequeno);
+  color: var(--corMarromEscuro);
+  font-size: var(--tamanhoFonteTextoMenor);
+}
+
+.redesSociais {
+  display: flex;
+  gap: var(--espacamentoMedio);
+}
+
+.botaoRedeSocial {
+  background: var(--corMarromDestaqueTransparente);
+  border: none;
+  border-radius: var(--bordaArredondada);
+  padding: var(--espacamentoPequeno);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 18px;
+}
+
+.botaoRedeSocial:hover {
+  background-color: var(--corMarromDestaque);
+  transform: scale(1.1);
+}
+
+.linhaDivisoria {
+  height: 1px;
+  background-color: var(--corMarromDestaque);
+  margin: var(--espacamentoMedio) 0;
+  opacity: 0.3;
+}
+
+.footerInferior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--espacamentoMedio);
+}
+
+.copyright p {
+  color: var(--corMarromEscuro);
+  font-size: var(--tamanhoFonteTextoMenor);
+  margin: 0;
+  opacity: 0.8;
+}
+
+.linksLegais {
+  display: flex;
+  gap: var(--espacamentoGrande);
+  flex-wrap: wrap;
+}
+
+.botaoLegal {
+  background: var(--corMarromOfuscado);
+  border: none;
+  color: var(--corNeutraClara);
+  font-size: var(--tamanhoFonteTextoMenor);
+  cursor: pointer;
+  padding: var(--espacamentoPequeno);
+  border-radius: var(--bordaArredondada);
+  transition: all 0.3s ease;
+}
+
+.botaoLegal:hover {
+  opacity: 1;
+  background-color: var(--corAzulDestaqueTransparente);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .footerSuperior {
+    grid-template-columns: 1fr;
+    gap: var(--espacamentoMedio);
+    text-align: center;
+  }
+
+  .footerInferior {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--espacamentoMedio);
+  }
+
+  .linksLegais {
+    justify-content: center;
+  }
+
+  .botaoFooter {
+    justify-content: center;
+  }
+
+  .redesSociais {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .containerFooter {
+    padding: var(--espacamentoMedio) var(--espacamentoPequeno);
+  }
+
+  .footerSuperior {
+    gap: var(--espacamentoMedio);
+  }
+
+  .linksLegais {
+    flex-direction: column;
+    gap: var(--espacamentoPequeno);
+  }
+}

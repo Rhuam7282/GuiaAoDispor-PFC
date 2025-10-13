@@ -1,5 +1,5 @@
 import React from 'react';
-import './CarrosselAcessibilidade.module.css';
+import './CarrosselAcessibilidade.css';
 
 const CarrosselAcessibilidade = () => {
   const funcionalidades = [

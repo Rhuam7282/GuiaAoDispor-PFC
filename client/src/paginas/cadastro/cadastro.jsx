@@ -7,7 +7,7 @@ import FormularioCadastro from './Componentes/FormularioCadastro.jsx';
 import useBuscaCep from "../../../../server/Apis/BuscaCEP.jsx";
 import { ServicoCadastro } from '@Servicos/api.js';
 import { useAuth } from '@Contextos/Autenticacao.jsx';
-import './Cadastro.module.css';
+import './Cadastro.css';
 
 const Cadastro = () => {
   const navigate = useNavigate();
