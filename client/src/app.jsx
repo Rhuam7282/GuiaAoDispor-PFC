@@ -5,7 +5,7 @@ import ProtectedRoute from "./componentes/autenticacao/protectedroute.jsx";
 
 import SobreNos from "./paginas/sobrenos/sobrenos.jsx";
 import Perfil from "./paginas/perfil/perfil.jsx";
-import Mensagem from "./paginas/mensagem/mensagem.jsx";
+// import Mensagem from "./paginas/mensagem/mensagem.jsx";
 import Qualificados from "./paginas/qualificados/qualificados.jsx";
 import Cadastro from "./paginas/cadastro/cadastro.jsx";
 import Inicio from "./paginas/inicio/inicio.jsx";
@@ -56,14 +56,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
+            {/* <Route
               path="/mensagem"
               element={
                 <ProtectedRoute>
                   <Mensagem />
                 </ProtectedRoute>
               }
-            />
+            /> */}
 
             {/* Rota 404 */}
             <Route
