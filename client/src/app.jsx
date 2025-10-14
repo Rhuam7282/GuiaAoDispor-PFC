@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contextos/autenticacao.jsx";
-import ProtectedRoute from "./componentes/autenticacao/protectedRoute.jsx";
+import ProtectedRoute from "./componentes/autenticacao/protectedroute.jsx";
 import AuthRedirect from "./contextos/authredirect.jsx";
 import { Suspense, lazy } from "react";
 import PainelControle from "./componentes/acessibilidade/painelcontrole.jsx";
