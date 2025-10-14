@@ -7,8 +7,8 @@ import PainelControle from "./componentes/acessibilidade/PainelControle.jsx";
 
 // Lazy Loading para todas as páginas
 const SobreNos = lazy(() => import("./paginas/sobrenos/sobreNos.jsx"));
-const Perfil = lazy(() => import("./paginas/Perfil/perfil.jsx"));
-const Qualificados = lazy(() => import("./paginas/Qualificados/qualificados.jsx"));
+const Perfil = lazy(() => import("./paginas/perfil/perfil.jsx"));
+const Qualificados = lazy(() => import("./paginas/qualificados/qualificados.jsx"));
 const Cadastro = lazy(() => import("./paginas/Cadastro/Cadastro.jsx"));
 const Inicio = lazy(() => import("./paginas/Inicio/Inicio.jsx"));
 
