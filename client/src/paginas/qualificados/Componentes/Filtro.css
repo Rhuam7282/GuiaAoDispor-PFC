@@ -1,0 +1,100 @@
+/* Estilos específicos do componente de filtro */
+.controleSeletor {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.rotuloSeletor {
+  font-size: var(--tamanhoFonteTextoMenor);
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.opcaoSelecionada {
+  flex-grow: 1;
+  text-align: right;
+  padding-right: 8px;
+}
+
+.iconeSeta {
+  transition: transform 0.3s ease;
+}
+
+.iconeSeta.aberto {
+  transform: rotate(180deg);
+}
+
+.listaOpcoes {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--corNeutraClara);
+  border-radius: var(--bordaArredondada);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-top: 8px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.itemOpcao {
+  padding: 10px var(--espacamentoPequeno);
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.itemOpcao:hover {
+  background-color: var(--corMarromDestaqueTransparente);
+}
+
+.itemOpcao.selecionada {
+  background-color: var(--corMarromDestaque);
+  font-weight: bold;
+}
+
+/* Estilos para funcionalidade de pesquisa */
+.containerPesquisa {
+  position: relative;
+  padding: 10px var(--espacamentoPequeno);
+  border-bottom: 1px solid #eee;
+}
+
+.iconePesquisa {
+  position: absolute;
+  left: 25px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--corMarromOfuscado);
+}
+
+.inputPesquisa {
+  width: 100%;
+  padding: 8px 8px 8px 32px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: var(--tamanhoFonteTextoMinimo);
+}
+
+.inputPesquisa:focus {
+  outline: none;
+  border-color: var(--corMarromDestaque);
+  box-shadow: 0 0 0 2px var(--corMarromDestaqueTransparente);
+}
+
+.nenhumResultado {
+  padding: var(--espacamentoPequeno);
+  text-align: center;
+  color: var(--corMarromOfuscado);
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .cartao {
+    width: 100%;
+    margin-bottom: var(--espacamentoPequeno);
+  }
+}
+
