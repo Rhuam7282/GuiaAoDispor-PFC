@@ -11,11 +11,11 @@ const CartaoPerfil = ({ perfil, aoClicar }) => {
   };
 
   return (
-    <div className="cartaoDestaque variacao1" onClick={aoClicarCartao}>
+    <div className="destaque1" onClick={aoClicarCartao}>
       <img
         src={perfil.imagem}
         alt={`Perfil de ${perfil.nome}`}
-        className="imagemPerfil"
+        className="qualificados-imagemPerfil"
       />
       <div className="profile-text-content">
         <h3 className="profile-name">{perfil.nome}</h3>
@@ -27,4 +27,3 @@ const CartaoPerfil = ({ perfil, aoClicar }) => {
 };
 
 export default CartaoPerfil;
-
