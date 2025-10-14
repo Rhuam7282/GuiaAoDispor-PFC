@@ -1,15 +1,16 @@
 import mongoose from 'mongoose';
 
-const HCurricularSchema = new mongoose.Schema({
+const HProfissionalSchema = new mongoose.Schema({
   nome: {
     type: String,
     required: true
   },
   desc: String,
+  foto: String,
   profissional: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Profissional'
   }
 });
 
-export default mongoose.model('HCurricular', HCurricularSchema);
+export default mongoose.model('HProfissional', HProfissionalSchema);
