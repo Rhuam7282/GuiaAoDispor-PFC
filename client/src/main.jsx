@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import App from './App.jsx';
+import App from './app.jsx';
 import './index.css';
 
 // Configuração do Google Client ID

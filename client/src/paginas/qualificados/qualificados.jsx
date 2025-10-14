@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Corpo from "../../componentes/Layout/Corpo.jsx";
-import Filtro from "./Componentes/Filtro.jsx";
-import ListaProfissionais from "./Componentes/ListaProfissionais.jsx";
+import Corpo from "../../componentes/layout/corpo.jsx";
+import Filtro from "./componentes/filtro.jsx";
+import ListaProfissionais from "./componentes/listaprofissionais.jsx";
 import "./qualificados.css";
 
 function Qualificados() {

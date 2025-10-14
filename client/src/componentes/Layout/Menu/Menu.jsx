@@ -1,10 +1,10 @@
 // src/componentes/layout/./Menu/Menu.jsx
 import React from 'react';
-import { useAuth } from "../../../contextos/Autenticacao.jsx";
-import FachadaMenu from './Componentes/FachadaMenu';
-import ListaMenu from './Componentes/ListaMenu';
-import RodapeMenu from './Componentes/RodapeMenu';
-import './Menu.css';
+import { useAuth } from "../../../contextos/autenticacao.jsx";
+import FachadaMenu from './componentes/fachadamenu.jsx';
+import ListaMenu from './componentes/listamenu.jsx';
+import RodapeMenu from './componentes/rodapemenu.jsx';
+import './menu.css';
 
 const Menu = () => {
   const { estaAutenticado, logout } = useAuth();

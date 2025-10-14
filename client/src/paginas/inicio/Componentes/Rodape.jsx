@@ -10,8 +10,8 @@ import {
   MapPin,
   Mail as MailIcon,
 } from "lucide-react";
-import "./Rodape.css";
-import logo from "../../../Recursos/Icones/logo.png";
+import "./rodape.css";
+import logo from "../../../recursos/icones/logo.png";
 
 const Rodape = () => {
   const navigate = useNavigate();

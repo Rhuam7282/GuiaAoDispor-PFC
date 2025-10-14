@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Star, Facebook, Instagram, Linkedin, Save, X, Edit, Camera, MapPin, Mail } from "lucide-react";
-import { useAuth } from '../../../contextos/Autenticacao.jsx';
-import { ServicoAutenticacao } from '../../../Servicos/api.js';
+import { useAuth } from '../../../contextos/autenticacao.jsx';
+import { ServicoAutenticacao } from '../../../servicos/api.js';
 
 const InformacoesPerfil = ({ dadosPerfil, estaAutenticado, usuario, id, modoEdicao, setModoEdicao }) => {
   const { atualizarUsuario } = useAuth();

@@ -1,5 +1,5 @@
 import React from 'react';
-import './HeroPrincipal.css';
+import './Heroprincipal.css';
 
 const HeroPrincipal = () => {
   return (

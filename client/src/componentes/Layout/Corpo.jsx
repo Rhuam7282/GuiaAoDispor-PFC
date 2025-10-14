@@ -1,6 +1,6 @@
 // src/componentes/layout/Corpo.jsx
-import Menu from './Menu/Menu.jsx';
-import './Corpo.css';
+import Menu from './menu/menu.jsx';
+import './corpo.css';
 import { useLocation } from 'react-router-dom';
 
 const Corpo = ({ children }) => {

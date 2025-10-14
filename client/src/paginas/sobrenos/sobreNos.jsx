@@ -1,8 +1,8 @@
 import React from 'react';
-import Corpo from "../../componentes/Layout/Corpo.jsx";
-import SecaoSobre from './Componentes/SecaoSobre.jsx';
-import FormularioContato from './Componentes/FormularioContato.jsx';
-import './sobreNos.css';
+import Corpo from "../../componentes/layout/corpo.jsx";
+import SecaoSobre from './componentes/secaosobre.jsx';
+import FormularioContato from './componentes/formulariocontato.jsx';
+import './sobrenos.css';
 
 const SobreNos = () => {
   return (

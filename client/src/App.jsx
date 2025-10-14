@@ -1,16 +1,16 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./contextos/Autenticacao.jsx";
-import ProtectedRoute from "./componentes/Autenticacao/ProtectedRoute.jsx";
-import AuthRedirect from "./contextos/AuthRedirect.jsx";
+import { AuthProvider } from "./contextos/autenticacao.jsx";
+import ProtectedRoute from "./componentes/autenticacao/protectedRoute.jsx";
+import AuthRedirect from "./contextos/authredirect.jsx";
 import { Suspense, lazy } from "react";
-import PainelControle from "./componentes/acessibilidade/PainelControle.jsx";
+import PainelControle from "./componentes/acessibilidade/painelcontrole.jsx";
 
 // Lazy Loading para todas as páginas
-const SobreNos = lazy(() => import("./paginas/sobrenos/sobreNos.jsx"));
+const SobreNos = lazy(() => import("./paginas/sobrenos/sobrenos.jsx"));
 const Perfil = lazy(() => import("./paginas/perfil/perfil.jsx"));
 const Qualificados = lazy(() => import("./paginas/qualificados/qualificados.jsx"));
-const Cadastro = lazy(() => import("./paginas/Cadastro/Cadastro.jsx"));
-const Inicio = lazy(() => import("./paginas/Inicio/Inicio.jsx"));
+const Cadastro = lazy(() => import("./paginas/cadastro/cadastro.jsx"));
+const Inicio = lazy(() => import("./paginas/inicio/inicio.jsx"));
 
 function App() {
   return (
