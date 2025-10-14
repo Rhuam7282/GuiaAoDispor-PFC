@@ -1,0 +1,56 @@
+/* Estilos específicos do layout do corpo */
+.containerLayout {
+  text-align: center;
+}
+
+.conteudoPrincipal {
+  transition: all 0.3s ease;
+}
+
+
+/* RESPONSIVIDADE DO LAYOUT - Adaptações para diferentes tamanhos de tela */
+
+/* Container principal responsivo */
+.containerLayout {
+  /* Garante que o layout se adapte a diferentes tamanhos */
+  max-width: 100%;
+  overflow-x: hidden; /* Evita scroll horizontal indesejado */
+}
+
+/* Conteúdo principal responsivo */
+.conteudoPrincipal {
+  /* Padding responsivo baseado no tamanho da tela */
+  min-height: 100vh; /* Garante altura mínima */
+}
+
+/* Tablets e telas médias */
+@media (max-width: 1024px) {
+  .conteudoPrincipal {
+    padding: var(--espacamentoMedio) var(--espacamentoPequeno);
+  }
+}
+
+/* Dispositivos móveis */
+@media (max-width: 768px) {
+  .containerLayout {
+    /* Layout em coluna única para mobile */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .conteudoPrincipal {
+    /* Padding reduzido em mobile */
+    padding: var(--espacamentoPequeno);
+    /* Permite scroll vertical quando necessário */
+    overflow-y: auto;
+  }
+}
+
+/* Dispositivos móveis pequenos */
+@media (max-width: 480px) {
+  .conteudoPrincipal {
+    /* Padding mínimo para telas muito pequenas */
+    padding: 10px;
+  }
+}
+
