@@ -1,0 +1,373 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.titulo {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 40px;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.titulo::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background-color: #d3a37f;
+  border-radius: 2px;
+}
+
+.about-content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.about-text {
+  text-align: justify;
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  background: var(--corMarromDestaqueTransparente);
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: var(--sombra);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-text:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.about-text img {
+  width: 270px;
+  object-fit: cover;
+  display: block;
+  border-radius: 100%;
+  margin: auto;
+}
+
+.about-text .text-content {
+  flex: 1;
+}
+
+.about-text h2 {
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.8rem;
+  border-left: 4px solid #d3a37f;
+  padding-left: 12px;
+}
+
+.about-text p {
+  margin-bottom: 15px;
+  line-height: 1.6;
+  color: #555;
+}
+
+.enviarEmail {
+  margin-top: 50px;
+  padding-top: 40px;
+  border-top: 2px solid #d3a37f;
+  display: flex;
+  gap: 60px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.enviarEmail h2 {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 30px;
+  width: 100%;
+  color: #2c3e50;
+  font-size: 2rem;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+  min-width: 250px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  font-size: 1rem;
+  line-height: 1.6;
+  resize: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: #d3a37f;
+  box-shadow: 0 0 0 2px rgba(211, 163, 127, 0.2);
+}
+
+.contact-form input[type="text"],
+.contact-form input[type="email"] {
+  height: 40px;
+}
+
+.contact-form textarea {
+  min-height: 120px;
+  max-height: 200px;
+  height: 120px;
+}
+
+@media (max-width: 768px) {
+  .about-content {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .about-text {
+    flex-direction: column;
+    text-align: justify;
+    width: 100%;
+    padding: 20px;
+  }
+  
+  .about-text img {
+    width: 100%;
+    max-width: 270px;
+    margin: 0 auto 20px;
+  }
+  
+  .titulo {
+    font-size: 2rem;
+    margin-bottom: 30px;
+  }
+  
+  .enviarEmail {
+    flex-direction: column;
+    gap: 30px;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 15px;
+  }
+  
+  .titulo {
+    font-size: 1.8rem;
+  }
+  
+  .about-text {
+    padding: 15px;
+  }
+  
+  .about-text h2 {
+    font-size: 1.5rem;
+  }
+}
+
+.orientadoras-section {
+  background: var(--corMarromDestaqueTransparente);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: var(--sombra);
+  margin: 40px 0;
+}
+
+.orientadoras-section > h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.orientadoras-section > h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background-color: #d3a37f;
+  border-radius: 2px;
+}
+
+.orientadoras-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.orientadora {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.orientadora.reverse {
+  flex-direction: row-reverse;
+}
+
+.orientadora img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--sombra);
+}
+
+.orientadora-info {
+  flex: 1;
+}
+
+.orientadora-info h3 {
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+.orientadora-info p {
+  line-height: 1.6;
+  color: #555;
+  margin: 0;
+}
+
+.conclusao-orientadoras {
+  margin-top: 40px;
+  padding-top: 25px;
+  border-top: 2px dashed #d3a37f;
+  text-align: center;
+  font-style: italic;
+  color: #666;
+}
+
+.conclusao-orientadoras p {
+  margin: 0;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .orientadora,
+  .orientadora.reverse {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .orientadora img {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
+  }
+  
+  .orientadoras-section {
+    padding: 20px;
+  }
+  
+  .orientadoras-section > h2 {
+    font-size: 1.7rem;
+  }
+}
+.alunos-section {
+  background: var(--corMarromDestaqueTransparente);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: var(--sombra);
+  margin: 40px 0;
+  text-align: center;
+}
+
+.alunos-section > h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 2rem;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.alunos-section > h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background-color: #d3a37f;
+  border-radius: 2px;
+}
+
+.alunos-texto {
+  margin-bottom: 30px;
+  text-align: justify;
+}
+
+.alunos-texto p {
+  line-height: 1.6;
+  color: #555;
+}
+
+.alunos-container {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  margin-top: 20px;
+}
+
+.aluno {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.aluno img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: var(--sombra);
+  margin-bottom: 15px;
+}
+
+.aluno-legenda {
+  font-weight: bold;
+  color: #2c3e50;
+  font-size: 1.2rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .alunos-container {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .alunos-section {
+    padding: 20px;
+  }
+  
+  .alunos-section > h2 {
+    font-size: 1.7rem;
+  }
+}
