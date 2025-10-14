@@ -1,0 +1,18 @@
+/* src/componentes/layout/Menu/RodapeMenu/RodapeMenu.css */
+footer {
+  border-top: 1px solid var(--corAzulEscuro);
+  color: var(--corAzulEscuro);
+  line-height: 16px;
+  font-weight: light;
+  font-size: var(--tamanhoFonteTextoMicro);
+  padding: var(--espacamentoPequeno);
+  margin-top: auto;
+}
+
+/* Dispositivos móveis pequenos */
+@media (max-width: 480px) {
+  footer {
+    font-size: 10px;
+    padding: 10px;
+  }
+}
