@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import './Filtro.css';
 import { ChevronDown, Search } from 'lucide-react';
 
 const Filtro = ({ 
@@ -48,57 +47,56 @@ const Filtro = ({
 
   return (
     <div 
-      className={`cartao cartaoTextoEsquerda ${classeAdicional}`} 
+      className={`filtro-container ${classeAdicional}`} 
       ref={menuRef}
     >
       <div 
-        className="controleSeletor"
+        className="controle-seletor"
         onClick={alternarMenu}
       >
-        <span className="rotuloSeletor">{titulo}</span>
-        <div className="opcaoSelecionada">
+        <span className="rotulo-seletor">{titulo}</span>
+        <div className="opcao-selecionada">
           {opcoes.find(op => op.value === opcaoSelecionada)?.label || 'Selecione'}
         </div>
         <ChevronDown 
-          className={`iconeSeta ${menuAberto ? 'aberto' : ''}`} 
+          className={`icone-seta ${menuAberto ? 'aberto' : ''}`} 
           size={16} 
         />
       </div>
       
       {menuAberto && (
-        <div className="listaOpcoes">
-          {}
+        <div className="lista-opcoes">
           {mostrarPesquisa && opcoes.length > 5 && (
-            <div className="containerPesquisa">
-              <Search size={16} className="iconePesquisa" />
+            <div className="container-pesquisa">
+              <Search size={16} className="icone-pesquisa" />
               <input
                 type="text"
                 placeholder="Pesquisar..."
                 value={termoPesquisa}
                 onChange={(e) => setTermoPesquisa(e.target.value)}
-                className="inputPesquisa"
+                className="input-pesquisa"
+                onClick={(e) => e.stopPropagation()}
               />
-        </div>
-      )}
+            </div>
+          )}
 
-      {}
           {opcoesFiltradas.length > 0 ? (
             opcoesFiltradas.map((opcao) => (
               <div
                 key={opcao.value}
-                className={`itemOpcao ${opcaoSelecionada === opcao.value ? 'selecionada' : ''}`}
+                className={`item-opcao ${opcaoSelecionada === opcao.value ? 'selecionada' : ''}`}
                 onClick={() => selecionarOpcao(opcao.value)}
               >
                 {opcao.label}
               </div>
             ))
           ) : (
-            <div className="nenhumResultado">
+            <div className="nenhum-resultado">
               {`Nenhuma opção encontrada para "${termoPesquisa}"`}
             </div>
           )}
-          </div>
-        )}
+        </div>
+      )}
     </div>
   );
 };

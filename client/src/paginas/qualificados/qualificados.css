@@ -1,53 +1,63 @@
-/* Estilos específicos para a página Qualificados */
+/* Estilos específicos para a página Qualificados - Estilo Antigo */
 .qualificados-imagemPerfil {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 4px 8px var(--cor-texto-principal);
-  border: 3px solid #fff;
 }
 
-.qualificados-cartaoDestaque {
-  box-shadow: var(--sombra) var(--corNeutraEscura);
-  border-radius: 12px;
-  overflow: hidden;
-  background: white;
+.destaque1 {
+  margin-bottom: 0;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  background-color: rgba(211, 163, 127, 0.3);
+  border-radius: 8px;
 }
 
-.qualificados-profile-text-content {
+.destaque1:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.profile-text-content {
   text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   flex: 1;
 }
 
-.qualificados-profile-name {
+.profile-name {
   color: #303538;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   margin: 0;
 }
 
-.qualificados-profile-location {
+.profile-location {
   color: #54453B;
-  font-size: 14px;
+  font-size: 16px;
+  margin: 0;
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
-.qualificados-profile-experience {
+.profile-experience {
   color: #666;
   font-size: 14px;
   line-height: 1.4;
+  margin: 0;
 }
 
-.qualificados-profile-list {
+.profile-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
   margin-top: 30px;
 }
 
@@ -66,17 +76,138 @@
 }
 
 @media (max-width: 768px) {
-  .qualificados-profile-list {
+  .profile-list {
     grid-template-columns: 1fr;
-    gap: 15px;
+    gap: 20px;
   }
 
-  .qualificados-profile-name {
-    font-size: 16px;
+  .destaque1 {
+    padding: 15px;
+    gap: 12px;
+  }
+
+  .qualificados-imagemPerfil {
+    width: 80px;
+    height: 80px;
+  }
+
+  .profile-name {
+    font-size: 18px;
   }
   
-  .qualificados-profile-location,
-  .qualificados-profile-experience {
+  .profile-location {
+    font-size: 14px;
+  }
+  
+  .profile-experience {
     font-size: 13px;
+  }
+}
+/* Estilos para o componente Filtro - Estilo Antigo */
+.filtro-container {
+  display: inline-block;
+  position: relative;
+  margin-bottom: 20px;
+  cursor: pointer;
+  width: 100%;
+  background-color: rgba(211, 163, 127, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.controle-seletor {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rotulo-seletor {
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.opcao-selecionada {
+  flex-grow: 1;
+  text-align: right;
+  padding-right: 8px;
+}
+
+.icone-seta {
+  transition: transform 0.3s ease;
+}
+
+.icone-seta.aberto {
+  transform: rotate(180deg);
+}
+
+.lista-opcoes {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-top: 8px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.container-pesquisa {
+  position: relative;
+  padding: 10px 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.icone-pesquisa {
+  position: absolute;
+  left: 25px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+}
+
+.input-pesquisa {
+  width: 100%;
+  padding: 8px 8px 8px 32px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.input-pesquisa:focus {
+  outline: none;
+  border-color: #d3a37f;
+  box-shadow: 0 0 0 2px rgba(211, 163, 127, 0.2);
+}
+
+.item-opcao {
+  padding: 10px 15px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.item-opcao:hover {
+  background-color: rgba(211, 163, 127, 0.2);
+}
+
+.item-opcao.selecionada {
+  background-color: rgba(211, 163, 127, 0.4);
+  font-weight: bold;
+}
+
+.nenhum-resultado {
+  padding: 15px;
+  text-align: center;
+  color: #777;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .filtro-container {
+    width: 100%;
+    margin-bottom: 15px;
   }
 }

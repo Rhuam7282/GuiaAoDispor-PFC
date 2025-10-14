@@ -3,7 +3,7 @@ import { AuthProvider } from "./contextos/Autenticacao.jsx";
 import ProtectedRoute from "./componentes/Autenticacao/ProtectedRoute.jsx";
 import AuthRedirect from "./contextos/AuthRedirect.jsx";
 import { Suspense, lazy } from "react";
-import PainelControle from "./componentes/Acessibilidade/PainelControle.jsx";
+import PainelControle from "./componentes/acessibilidade/PainelControle.jsx";
 
 // Lazy Loading para todas as páginas
 const SobreNos = lazy(() => import("./paginas/sobrenos/sobreNos.jsx"));

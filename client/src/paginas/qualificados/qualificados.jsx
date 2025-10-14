@@ -86,77 +86,78 @@ function Qualificados() {
   };
 
   return (
-    <Corpo>
-      <div className="container">
-        {/* SEMPRE VISÍVEL - Título e Filtro */}
-        <div className="row">
-          <div className="col-12">
-            <h2 className="titulo" style={{ marginBottom: '1rem' }}>Profissionais</h2>
-            
-            <div className="d-flex justify-content-between align-items-center mb-4">
-              <Filtro
-                titulo="Filtros:"
-                opcoes={opcoesFiltro}
-                opcaoSelecionada={filtroSelecionado}
-                aoMudar={setFiltroSelecionado}
-              />
-            </div>
-          </div>
+  <Corpo>
+    <div className="container">
+      {/* SEMPRE VISÍVEL - Título e Filtro */}
+      <div className="row">
+        <div className="col-12">
+          <h2 className="titulo" style={{ marginBottom: '1rem' }}>Profissionais</h2>
+          
+          <Filtro
+          titulo="Filtros:"
+          opcoes={opcoesFiltro}
+          opcaoSelecionada={filtroSelecionado}
+          aoMudar={setFiltroSelecionado}
+          />
+
+
         </div>
-
-        {/* Área de Status */}
-        {error && (
-          <div className="row">
-            <div className="col-12">
-              <div className="alert alert-warning d-flex align-items-center" role="alert">
-                <div>
-                  <strong>⚠️ Aviso:</strong> {error}
-                </div>
-                <button 
-                  className="btn btn-sm btn-outline-warning ms-3"
-                  onClick={handleRetry}
-                  disabled={loading}
-                >
-                  {loading ? 'Tentando...' : 'Tentar Novamente'}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {loading && (
-          <div className="row">
-            <div className="col-12 text-center py-3">
-              <div className="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
-              <span>Carregando profissionais...</span>
-            </div>
-          </div>
-        )}
-
-        {/* SEMPRE VISÍVEL - Lista de Profissionais */}
-        <div className="row">
-          <div className="col-12">
-            <ListaProfissionais
-              profissionais={profissionais}
-              aoClicarPerfil={aoClicarPerfil}
-            />
-          </div>
-        </div>
-
-        {/* Mensagem quando não há profissionais */}
-        {profissionais.length === 0 && !loading && !error && (
-          <div className="row">
-            <div className="col-12 text-center py-5">
-              <div className="alert alert-info">
-                <h5>Nenhum profissional cadastrado</h5>
-                <p className="mb-0">Não há profissionais disponíveis no momento.</p>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
-    </Corpo>
-  );
+
+      {/* Área de Status */}
+      {error && (
+        <div className="row">
+          <div className="col-12">
+            <div className="qualificados-error-message">
+              <div>
+                <strong>⚠️ Aviso:</strong> {error}
+              </div>
+              <button 
+                className="botaoSecundario"
+                onClick={handleRetry}
+                disabled={loading}
+                style={{ marginTop: '10px', padding: '8px 16px' }}
+              >
+                {loading ? 'Tentando...' : 'Tentar Novamente'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {loading && (
+        <div className="row">
+          <div className="col-12 qualificados-loading-spinner">
+            <div className="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+            <span>Carregando profissionais...</span>
+          </div>
+        </div>
+      )}
+
+      {/* SEMPRE VISÍVEL - Lista de Profissionais */}
+      <div className="row">
+        <div className="col-12">
+          <ListaProfissionais
+            profissionais={profissionais}
+            aoClicarPerfil={aoClicarPerfil}
+          />
+        </div>
+      </div>
+
+      {/* Mensagem quando não há profissionais */}
+      {profissionais.length === 0 && !loading && !error && (
+        <div className="row">
+          <div className="col-12 text-center py-5">
+            <div className="alert alert-info">
+              <h5>Nenhum profissional cadastrado</h5>
+              <p className="mb-0">Não há profissionais disponíveis no momento.</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  </Corpo>
+);
 }
 
 export default Qualificados;
