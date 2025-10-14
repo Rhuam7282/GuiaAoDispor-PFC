@@ -97,6 +97,9 @@
   flex-direction: column;
   align-items: center;
   gap: var(--espacamentoPequeno);
+  background-color: var(--corNeutraEscura);
+  cursor: pointer;
+
 }
 
 .area-upload-imagem {
@@ -568,37 +571,49 @@ input.erro, textarea.erro, select.erro {
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .container-senha .campo-input {
   flex: 1;
-  padding-right: 50px;
+  padding-right: 45px; /* Espaço suficiente para o botão */
+  width: 100%;
+  box-sizing: border-box; /* Importante para incluir padding na largura total */
 }
 
 .botao-visibilidade {
   position: absolute;
-  right: 10px;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.2rem;
-  padding: 5px;
+  font-size: 1.1rem;
+  padding: 6px;
   border-radius: 50%;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 35px;
-  height: 35px;
+  width: 32px;
+  height: 32px;
+  color: var(--corMarromOfuscado);
 }
 
 .botao-visibilidade:hover:not(:disabled) {
   background-color: var(--corAzulDestaqueTransparente);
+  color: var(--corAzulDestaque);
 }
 
 .botao-visibilidade:disabled {
-  opacity: 0.6;
+  opacity: 0.4;
   cursor: not-allowed;
+}
+
+.campo-input {
+  min-height: 44px; /* Altura mínima para melhor usabilidade */
+  box-sizing: border-box;
 }
 
 .mensagem-erro-campo {
@@ -672,6 +687,8 @@ input.erro, textarea.erro, select.erro {
   gap: var(--espacamentoPequeno);
   margin-top: var(--espacamentoPequeno);
 }
+
+
 
 .botao-login:hover:not(:disabled) {
   transform: translateY(-2px);
@@ -872,5 +889,92 @@ input.erro, textarea.erro, select.erro {
   
   .lista-beneficios li {
     font-size: var(--tamanhoFonteTextoMinimo);
+  }
+
+  .container-senha .campo-input {
+    padding-right: 40px;
+  }
+  
+  .botao-visibilidade {
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
+    right: 6px;
+  }
+}
+
+.cartao-login-unificado {
+  background-color: var(--corMarromDestaqueTransparente);
+  border-radius: var(--bordaArredondada);
+  padding: var(--espacamentoGrande);
+  box-shadow: var(--sombra) var(--corNeutraEscura);
+  margin-bottom: var(--espacamentoGrande);
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.cabecalho-login-unificado {
+  text-align: center;
+  margin-bottom: var(--espacamentoGrande);
+}
+
+.titulo-login-unificado {
+  color: var(--corMarromEscuro);
+  font-size: var(--tamanhoFonteTitulo);
+  margin-bottom: var(--espacamentoPequeno);
+  font-weight: 700;
+}
+
+.subtitulo-login-unificado {
+  color: var(--corMarromOfuscado);
+  font-size: var(--tamanhoFonteTexto);
+  line-height: 1.5;
+}
+
+.conteudo-login-unificado {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacamentoGrande);
+  align-items: start;
+}
+
+.formulario-login-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacamentoMedio);
+}
+
+.login-google-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--espacamentoMedio);
+  border-left: 2px solid var(--corMarromOfuscado);
+  min-height: 300px;
+}
+
+.separador-login-google {
+  margin: var(--espacamentoMedio) 0;
+  text-align: center;
+  color: var(--corMarromOfuscado);
+  font-size: var(--tamanhoFonteTextoMenor);
+}
+
+/* Ajustes para responsividade */
+@media (max-width: 768px) {
+  .conteudo-login-unificado {
+    grid-template-columns: 1fr;
+    gap: var(--espacamentoMedio);
+  }
+  
+  .login-google-container {
+    border-left: none;
+    border-top: 2px solid var(--corMarromOfuscado);
+    padding-top: var(--espacamentoMedio);
+    min-height: auto;
+  }
+  
+  .cartao-login-unificado {
+    padding: var(--espacamentoMedio);
   }
 }
