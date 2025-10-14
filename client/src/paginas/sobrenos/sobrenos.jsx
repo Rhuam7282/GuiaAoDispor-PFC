@@ -1,11 +1,9 @@
 import React from 'react';
-import Corpo from "../../Componentes/Layout/Corpo.jsx";
-import SecaoSobre from './Componentes/SecaoSobre.jsx';
-import RedesSociais from './Componentes/RedesSociais.jsx';
-import FormularioContato from './Componentes/FormularioContato.jsx';
-import './SobreNos.css';
-
-
+import Corpo from "../../componentes/layout/corpo.jsx";
+import SecaoSobre from './componentes/secaosobre.jsx';
+import RedesSociais from './componentes/redessociais.jsx';
+import FormularioContato from './componentes/formulariocontato.jsx';
+import './sobrenos.css';
 
 const SobreNos = () => {
   return (
@@ -20,6 +18,4 @@ const SobreNos = () => {
   );
 };
 
-
 export default SobreNos;
-

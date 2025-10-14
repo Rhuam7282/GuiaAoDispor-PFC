@@ -1,6 +1,6 @@
 // src/componentes/layout/Menu/ItemMenu/ItemMenu.jsx
 import React from 'react';
-import './ItemMenu.css';
+import './itemMenu.css';
 
 const ItemMenu = ({ item, ativo, usuarioLogado, onClick }) => {
   const isPerfil = item.texto === 'Perfil';

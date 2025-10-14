@@ -1,6 +1,6 @@
 import React from 'react';
-import Paula from '../../../Recursos/Imagens/paula.png';
-import Caroline from '../../../Recursos/Imagens/caroline.jpg';
+import Paula from '../../../recursos/imagens/paula.png';
+import Caroline from '../../../recursos/imagens/caroline.jpg';
 
 const Orientadoras = () => {
   return (

@@ -1,7 +1,7 @@
 import React from 'react';
-import ArtigoSobre from './ArtigoSobre.jsx';
-import Orientadoras from './Orientadoras.jsx';
-import Alunos from './Alunos.jsx';
+import ArtigoSobre from './artigosobre.jsx';
+import Orientadoras from './orientadoras.jsx';
+import Alunos from './alunos.jsx';
 
 const SecaoSobre = () => {
   const artigos = [

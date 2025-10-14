@@ -1,16 +1,16 @@
 // client/src/App.jsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./Contextos/Autenticacao.jsx";
-import ProtectedRoute from "./Componentes/Autenticacao/ProtectedRoute.jsx";
+import { AuthProvider } from "./contextos/autenticacao.jsx";
+import ProtectedRoute from "./componentes/autenticacao/protectedroute.jsx";
 
-import SobreNos from "./paginas/Sobrenos/SobreNos.jsx";
-import Perfil from "./paginas/Perfil/Perfil.jsx";
-import Mensagem from "./paginas/Mensagem/Mensagem.jsx";
-import Qualificados from "./paginas/Qualificados/Qualificados.jsx";
-import Cadastro from "./paginas/Cadastro/Cadastro.jsx";
-import Inicio from "./paginas/Inicio/Inicio.jsx";
-import PainelControle from "./Componentes/Acessibilidade/PainelControle.jsx";
-import VlibrasWidget from "./Componentes/Acessibilidade/VLibras/VLibrasWidget.jsx";
+import SobreNos from "./paginas/sobrenos/sobrenos.jsx";
+import Perfil from "./paginas/perfil/perfil.jsx";
+import Mensagem from "./paginas/mensagem/mensagem.jsx";
+import Qualificados from "./paginas/qualificados/qualificados.jsx";
+import Cadastro from "./paginas/cadastro/cadastro.jsx";
+import Inicio from "./paginas/inicio/inicio.jsx";
+import PainelControle from "./componentes/acessibilidade/painelcontrole.jsx";
+import VlibrasWidget from "./componentes/acessibilidade/vlibras/vlibraswidget.jsx";
 
 function App() {
   return (

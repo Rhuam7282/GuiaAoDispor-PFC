@@ -1,11 +1,11 @@
 // src/componentes/layout/Menu/ListaMenu/ListaMenu.jsx
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../../../Contextos/Autenticacao';
+import { useAuth } from '../../../../contextos/autenticacao';
 import { Home, User, MessageSquare, Mail, GalleryHorizontal, LogOut } from 'lucide-react';
 import Interrogacao from '../../../acessibilidade/interrogacao/interrogacao.jsx';
-import ItemMenu from './ItemMenu';
-import './ListaMenu.css';
+import ItemMenu from './itemmenu';
+import './listamenu.css';
 
 const ListaMenu = () => {
   const navigate = useNavigate();
