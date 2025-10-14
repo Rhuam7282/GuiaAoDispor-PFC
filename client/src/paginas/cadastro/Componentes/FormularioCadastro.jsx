@@ -1,4 +1,4 @@
-import UploadImagem from "./UploadImagem";
+import UploadImagem from "./uploadImagem";
 
 const FormularioCadastro = ({
   dadosFormulario,

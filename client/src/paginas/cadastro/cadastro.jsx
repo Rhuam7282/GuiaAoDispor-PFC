@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Corpo from "../../componentes/Layout/Corpo.jsx";
-import FormularioLogin from './Componentes/FormularioLogin.jsx';
-import FormularioCadastro from './Componentes/FormularioCadastro.jsx';
+import FormularioLogin from './componentes/formulariologin.jsx';
+import FormularioCadastro from './componentes/formulariocadastro.jsx';
 import useBuscaCep from "../../../../server/Apis/BuscaCEP.jsx";
 import { ServicoCadastro } from '@Servicos/api.js';
 import { useAuth } from '@Contextos/Autenticacao.jsx';
-import './Cadastro.css';
+import './cadastro.css';
 
 const Cadastro = () => {
   const navigate = useNavigate();
