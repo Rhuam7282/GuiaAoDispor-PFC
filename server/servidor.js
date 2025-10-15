@@ -13,12 +13,12 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 // Importar todos os modelos
-import Localizacao from './Modelos/Localizacao.js';
-import Profissional from './Modelos/Profissional.js';
-import Usuario from './Modelos/Usuario.js';
-import Avaliacao from './Modelos/Avaliacao.js';
-import HCurricular from './Modelos/HistCurricular.js';
-import HProfissional from './Modelos/HistProfissional.js';
+import Localizacao from './modelos/localizacao.js';
+import Profissional from './modelos/profissional.js';
+import Usuario from './modelos/usuario.js';
+import Avaliacao from './modelos/avaliacao.js'; //ainda não usado
+import HCurricular from './modelos/histcurricular.js';
+import HProfissional from './modelos/histprofissional.js';
 
 const app = express();
 
