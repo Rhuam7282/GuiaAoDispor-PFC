@@ -6,7 +6,7 @@ import HistoricoAcademicoPerfil from "./componentes/historicoacademicoperfil.jsx
 import HistoricoProfissionalPerfil from "./componentes/historicoprofissionalperfil.jsx";
 import { servicoProfissional, servicoHCurricular, servicoHProfissional, servicoAuth } from "../../servicos/api.jsx";
 import { useAuth } from "../../contextos/autenticacao.jsx";
-import "./Perfil.css";
+import "./perfil.css";
 
 import {
   LogOut,

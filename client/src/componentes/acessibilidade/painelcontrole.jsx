@@ -1,7 +1,7 @@
 // src/componentes/acessibilidade/PainelControle.jsx
 import React, { useState, useEffect } from 'react';
 import { PersonStanding, X, Type, AlignJustify, MoreHorizontal, Eye, Contrast, Moon, Image, Heading, LinkIcon, BookOpen, Pause, MousePointer } from 'lucide-react';
-import { useConfiguracaoAcessibilidade } from '/useconfiguracaoacessibilidade.jsx';
+import { useConfiguracaoAcessibilidade } from './ganchos/useconfiguracaoacessibilidade.jsx';
 import { useGuiasLeitura } from './ganchos/useguiasleitura';
 // import VLibrasWidgetHibrido from 'VLibrasWidget/VLibrasWidgetHibrido';
 import SecaoTexto from './secaotexto/secaotexto';
