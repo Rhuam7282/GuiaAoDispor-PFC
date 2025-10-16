@@ -13,7 +13,7 @@ export const API_CONFIG = {
 
 // Configurações do Google OAuth
 export const GOOGLE_CONFIG = {
-  CLIENT_ID: import.meta.env.VITE_GOOGLE_CLIENT_ID || "751518931398-co21kq5n50m8apn4llgv7av32g2m17vq.apps.googleusercontent.com"
+  CLIENT_ID: import.meta.env.VITE_GOOGLE_CLIENT_ID
 };
 
 // Configurações de autenticação

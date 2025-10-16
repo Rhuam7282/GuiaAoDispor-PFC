@@ -2,7 +2,7 @@
 /* Configuração do Google OAuth */
 export const GOOGLE_CONFIG = {
   // Client ID do Google OAuth - deve ser configurado com o ID real
-  CLIENT_ID: import.meta.env.VITE_GOOGLE_CLIENT_ID || "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+  CLIENT_ID: import.meta.env.VITE_GOOGLE_CLIENT_ID
 };
 /* Configurações da API */
 export const API_CONFIG = {
