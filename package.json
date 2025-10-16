@@ -10,7 +10,9 @@
     "dev:cliente": "cd client && vite",
     "dev:servidor": "cd server && nodemon servidor.js",
     "dev": "concurrently -k \"npm run dev:cliente\" \"npm run dev:servidor\"",
-    "build": "cd client && vite build",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "cd client && npm install && vite build",
+    "build:server": "echo \"Server build complete - no additional build steps needed\"",
     "lint": "eslint . --fix",
     "tree:ps": "powershell \"Get-ChildItem -Recurse -Path . | Where-Object { $_.FullName -notlike '*node_modules*' } | Select-Object FullName\"",
     "preview": "cd client && vite preview"
@@ -22,6 +24,7 @@
     "bcryptjs": "^2.4.3",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.488.0",
@@ -43,7 +46,6 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.0",
     "autoprefixer": "^10.4.19",
-    "dotenv": "^16.6.1",
     "eslint": "^9",
     "eslint-plugin-react": "^7.34.2",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -52,5 +54,8 @@
     "nodemon": "^3.1.2",
     "postcss": "^8.4.38",
     "vite": "^7.1.9"
+  },
+  "engines": {
+    "node": "22.14.0"
   }
 }

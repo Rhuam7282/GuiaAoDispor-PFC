@@ -22,6 +22,10 @@ import HProfissional from './modelos/histprofissional.js';
 
 const app = express();
 
+// ========== SERVIÇO DE ARQUIVOS ESTÁTICOS PARA PRODUÇÃO ==========
+// Este middleware deve vir ANTES das rotas de API
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
 // Configuração CORS melhorada
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:3000', 'https://guiaaodispor.onrender.com'],
@@ -1129,10 +1133,8 @@ app.use((error, req, res, next) => {
   });
 });
 
-// ========== SERVIÇO DE ARQUIVOS ESTÁTICOS PARA PRODUÇÃO ==========
-app.use(express.static(path.join(__dirname, '../client/dist')));
-
 // ========== ROTA FALLBACK PARA SPA (DEVE SER A ÚLTIMA ROTA) ==========
+// Esta rota deve ser a ÚLTIMA de todas
 app.get('*', (req, res) => {
   if (!req.path.startsWith('/api')) {
     res.sendFile(path.join(__dirname, '../client/dist/index.html'));
@@ -1148,4 +1150,4 @@ const PORT = process.env.PORT || 3001;
 const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor rodando na porta http://localhost:${PORT}`);
     console.log(`🌐 Ambiente: ${process.env.NODE_ENV || 'desenvolvimento'}`);
-});                                                        
+});
