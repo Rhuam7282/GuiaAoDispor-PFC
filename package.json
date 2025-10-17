@@ -9,7 +9,7 @@
     "start": "node server/servidor.js",
     "dev:cliente": "cd client && vite",
     "dev:servidor": "cd server && nodemon servidor.js",
-    "dev": "concurrently -k \"npm run dev:cliente\" \"npm run dev:servidor\"",
+    "dev": "concurrently -k \"npm run dev:cliente\"",
     "build": "npm run build:client && npm run build:server",
     "build:client": "cd client && npm install && vite build",
     "build:server": "echo \"Server build complete - no additional build steps needed\"",
