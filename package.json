@@ -11,6 +11,7 @@
     "dev:cliente": "cd client && vite",
     "dev:servidor": "cd server && nodemon servidor.js",
     "dev": "concurrently -k \"npm run dev:cliente\"",
+    "dev:1": "concurrently -k \"cd client && vite\" \"cd server && nodemon servidor.js\"",
     "build": "npm run build:client && npm run build:server",
     "build:client": "cd client && npm install && vite build",
     "build:server": "echo \"Server build complete - no additional build steps needed\"",
