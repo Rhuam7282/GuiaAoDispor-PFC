@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../../contextos/autenticacao.jsx';
 import { servicoAuth } from '../../../servicos/api.jsx';
+import GoogleLoginButton from '../../../componentes/autenticacao/botaologingoogle.jsx';
+import { Eye, EyeOff } from 'lucide-react';
 
 const FormularioLogin = () => {
   const navigate = useNavigate();
@@ -93,7 +95,6 @@ const FormularioLogin = () => {
       if (resposta.data && resposta.token) {
         console.log('✅ Login bem-sucedido:', resposta.data.nome);
         login(resposta.data, resposta.token);
-        // O redirecionamento é feito automaticamente no contexto de autenticação
       } else {
         throw new Error('Resposta de login inválida');
       }
@@ -125,136 +126,136 @@ const FormularioLogin = () => {
     setMostrarSenha(!mostrarSenha);
   };
 
-  const lidarEsqueciSenha = () => {
-    console.log('Redirecionar para recuperação de senha');
+  // const lidarEsqueciSenha = () => {
+  //   console.log('Redirecionar para recuperação de senha');
+  // };
+
+  const aoSucessoLoginGoogle = (userData) => {
+    console.log('Login Google realizado:', userData);
+  };
+
+  const aoErroLoginGoogle = () => {
+    console.error('Erro no login com Google');
   };
 
   return (
-    <div className="container-login">
-      <div className="cartao-login">
-        <div className="cabecalho-login">
-          <h1 className="titulo-login">Entrar na sua conta</h1>
-          <p className="subtitulo-login">
-            Acesse sua conta para conectar com profissionais qualificados
-          </p>
-        </div>
-
-        <form onSubmit={aoFazerLogin} className="formulario-login">
-          {erros.geral && (
-            <div className="mensagem-erro-geral">
-              {erros.geral}
-            </div>
-          )}
-
-          <div className="grupo-formulario">
-            <label htmlFor="email" className="rotulo-campo">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={dadosLogin.email}
-              onChange={aoAlterarCampo}
-              className={`campo-input ${erros.email ? 'erro' : ''}`}
-              placeholder="seu@email.com"
-              disabled={carregando}
-            />
-            {erros.email && (
-              <span className="mensagem-erro-campo">{erros.email}</span>
-            )}
-          </div>
-
-          <div className="grupo-formulario">
-            <label htmlFor="senha" className="rotulo-campo">
-              Senha
-            </label>
-            <div className="container-senha">
-              <input
-                type={mostrarSenha ? "text" : "password"}
-                id="senha"
-                name="senha"
-                value={dadosLogin.senha}
-                onChange={aoAlterarCampo}
-                className={`campo-input ${erros.senha ? 'erro' : ''}`}
-                placeholder="Sua senha"
-                disabled={carregando}
-              />
-              <button
-                type="button"
-                className="botao-visibilidade"
-                onClick={toggleMostrarSenha}
-                disabled={carregando}
-              >
-                {mostrarSenha ? '🙈' : '👁️'}
-              </button>
-            </div>
-            {erros.senha && (
-              <span className="mensagem-erro-campo">{erros.senha}</span>
-            )}
-          </div>
-
-          <div className="linha-opcoes">
-            <label className="opcao-lembrar">
-              <input
-                type="checkbox"
-                checked={lembrarMe}
-                onChange={(e) => setLembrarMe(e.target.checked)}
-                disabled={carregando}
-              />
-              <span className="texto-lembrar">Lembrar-me</span>
-            </label>
-            
-            <button
-              type="button"
-              className="link-esqueci-senha"
-              onClick={lidarEsqueciSenha}
-              disabled={carregando}
-            >
-              Esqueci minha senha
-            </button>
-          </div>
-
-          <button
-            type="submit"
-            className="botao-login"
-            disabled={carregando}
-          >
-            {carregando ? (
-              <>
-                <div className="spinner-login"></div>
-                Entrando...
-              </>
-            ) : (
-              'Entrar'
-            )}
-          </button>
-
-          <div className="separador">
-            <span>ou</span>
-          </div>
-
-          <div className="links-alternativos">
-            <p className="texto-cadastro">
-              Não tem uma conta?{' '}
-              <Link to="/cadastro" className="link-cadastro">
-                Cadastre-se
-              </Link>
-            </p>
-          </div>
-        </form>
+    <div className="cartao-login-unificado">
+      <div className="cabecalho-login-unificado">
+        <h1 className="titulo-login-unificado">Entre na sua conta</h1>
+        <p className="subtitulo-login-unificado">
+          Acesse com suas credenciais ou usando sua conta Google
+        </p>
       </div>
 
-      <div className="info-adicional">
-        <div className="cartao-info">
-          <h3>Por que fazer login?</h3>
-          <ul className="lista-beneficios">
-            <li>📞 Acesse seus contatos salvos</li>
-            <li>⭐ Avalie profissionais</li>
-            <li>💬 Envie mensagens diretas</li>
-            <li>🔔 Receba notificações personalizadas</li>
-            <li>👥 Gerencie seu perfil</li>
-          </ul>
+      <div className="conteudo-login-unificado">
+        <div className="formulario-login-container">
+          <form onSubmit={aoFazerLogin} className="formulario-login">
+            {erros.geral && (
+              <div className="mensagem-erro-geral">
+                {erros.geral}
+              </div>
+            )}
+
+            <div className="grupo-formulario">
+              <label htmlFor="email" className="rotulo-campo">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={dadosLogin.email}
+                onChange={aoAlterarCampo}
+                className={`campo-input ${erros.email ? 'erro' : ''}`}
+                placeholder="seu@email.com"
+                disabled={carregando}
+              />
+              {erros.email && (
+                <span className="mensagem-erro-campo">{erros.email}</span>
+              )}
+            </div>
+
+            <div className="grupo-formulario">
+              <label htmlFor="senha" className="rotulo-campo">
+                Senha
+              </label>
+              <div className="container-senha">
+                <input
+                  type={mostrarSenha ? "text" : "password"}
+                  id="senha"
+                  name="senha"
+                  value={dadosLogin.senha}
+                  onChange={aoAlterarCampo}
+                  className={`campo-input ${erros.senha ? 'erro' : ''}`}
+                  placeholder="Sua senha"
+                  disabled={carregando}
+                />
+                <button
+                  type="button"
+                  className="botao-visibilidade"
+                  onClick={toggleMostrarSenha}
+                  disabled={carregando}
+                >
+                  {mostrarSenha ? <Eye /> : <EyeOff/>}
+                </button>
+              </div>
+              {erros.senha && (
+                <span className="mensagem-erro-campo">{erros.senha}</span>
+              )}
+            </div>
+
+            <div className="linha-opcoes">
+              {/* <label className="opcao-lembrar">
+                <input
+                  type="checkbox"
+                  checked={lembrarMe}
+                  onChange={(e) => setLembrarMe(e.target.checked)}
+                  disabled={carregando}
+                />
+                <span className="texto-lembrar">Lembrar-me</span>
+              </label> */}
+              
+              {/* <button
+                type="button"
+                className="link-esqueci-senha"
+                onClick={lidarEsqueciSenha}
+                disabled={carregando}
+              >
+                Esqueci minha senha
+              </button> */}
+            </div>
+
+            <button
+              type="submit"
+              className="botao-login"
+              disabled={carregando}
+            >
+              {carregando ? (
+                <>
+                  <div className="spinner-login"></div>
+                  Entrando...
+                </>
+              ) : (
+                'Entrar'
+              )}
+            </button>
+          </form>
+        </div>
+
+        <div className="login-google-container">
+          <div className="separador-login-google">
+            <span>Ou entre com</span>
+          </div>
+          
+          <GoogleLoginButton 
+            text="Entrar com Google"
+            onSuccess={aoSucessoLoginGoogle}
+            onError={aoErroLoginGoogle}
+          />
+          
+          <p className="texto-apoio">
+            Entre rapidamente com sua conta Google
+          </p>
         </div>
       </div>
     </div>

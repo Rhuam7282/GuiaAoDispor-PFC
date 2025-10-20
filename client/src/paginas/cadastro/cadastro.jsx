@@ -4,7 +4,7 @@ import Corpo from "../../componentes/layout/corpo.jsx";
 import FormularioLoginGoogle from './componentes/formulariologingoogle.jsx';
 import FormularioLogin from './componentes/formulariologin.jsx';
 import FormularioCadastro from './componentes/formulariocadastro.jsx';
-import useBuscaCep from "../../ganchos/usebuscacep.jsx";
+import useBuscaCep from "../../../../server/apis/buscacep.jsx";
 import { servicoCadastro, servicoAuth } from '../../servicos/api.jsx';
 import { useAuth } from '../../contextos/autenticacao.jsx';
 import './cadastro.css';
@@ -32,11 +32,9 @@ const Cadastro = () => {
   const [erros, setErros] = useState({});
   const [errosContatos, setErrosContatos] = useState({});
   const [mensagemSucesso, setMensagemSucesso] = useState('');
-  
-  // <<< CORREÇÃO 1: Declarar o estado 'carregandoSubmit'
   const [carregandoSubmit, setCarregandoSubmit] = useState(false);
 
-  // Usar o hook de busca de CEP
+  // Hook de busca de CEP
   const { carregandoCep } = useBuscaCep(dadosFormulario.cep, setDadosFormulario, setErros);
 
   const aoAlterarCampo = (evento) => {
@@ -66,10 +64,19 @@ const Cadastro = () => {
 
     setCarregandoSubmit(true); 
     setMensagemSucesso('');
+    setErros({});
 
     try {
       console.log('📧 Validando email...');
-      const respostaValidacao = await servicoCadastro.validarEmail(dadosFormulario.email);
+      
+      // Timeout para evitar espera infinita
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout: Servidor não respondeu')), 10000)
+      );
+
+      const validacaoPromise = servicoCadastro.validarEmail(dadosFormulario.email);
+      const respostaValidacao = await Promise.race([validacaoPromise, timeoutPromise]);
+      
       if (!respostaValidacao.valido) {
         setErros({ email: 'Este email já está em uso' });
         setCarregandoSubmit(false); 
@@ -108,20 +115,36 @@ const Cadastro = () => {
         respostaCadastro = await servicoCadastro.cadastrarUsuario(dadosPerfil, dadosLocalizacao);
       }
 
-      console.log('✅ Cadastro realizado, fazendo login automático...');
+      console.log('✅ Cadastro realizado com sucesso');
+      setMensagemSucesso('Cadastro realizado com sucesso! Faça login para continuar.');
       
-      // CORREÇÃO: Usar os dados do cadastro para login imediato
-      if (respostaCadastro.data && respostaCadastro.token) {
-        login(respostaCadastro.data, respostaCadastro.token);
-        setMensagemSucesso('Cadastro realizado com sucesso! Redirecionando...');
-        // O redirecionamento será feito automaticamente pelo contexto de autenticação
-      } else {
-        throw new Error('Erro no login automático após cadastro');
-      }
+      // Limpa o formulário
+      setDadosFormulario({
+        nome: '',
+        email: '',
+        senha: '',
+        confirmarSenha: '',
+        cep: '',
+        cidade: '',
+        estado: '',
+        desc: '',
+        inst: '',
+        num: '',
+        foto: null,
+        tipoPerfil: 'Pessoal',
+        contatos: []
+      });
 
     } catch (erro) {
       console.error('❌ Erro no cadastro:', erro);
-      setErros({ submit: erro.message || 'Erro ao realizar cadastro' });
+      
+      let mensagemErro = erro.message || 'Erro ao realizar cadastro';
+      
+      if (erro.message.includes('Timeout') || erro.message.includes('conexão')) {
+        mensagemErro = 'Servidor indisponível. Verifique se o backend está rodando na porta 3001.';
+      }
+      
+      setErros({ submit: mensagemErro });
     } finally {
       setCarregandoSubmit(false); 
     }
@@ -276,7 +299,6 @@ const Cadastro = () => {
         <FormularioCadastro 
           dadosFormulario={dadosFormulario}
           erros={{...erros, errosContatos}}
-          // A lógica para combinar os carregamentos está correta
           carregando={carregandoSubmit || carregandoCep} 
           mensagemSucesso={mensagemSucesso}
           aoAlterarCampo={aoAlterarCampo}
