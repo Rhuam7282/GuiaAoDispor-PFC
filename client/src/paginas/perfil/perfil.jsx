@@ -4,7 +4,7 @@ import Corpo from "../../componentes/layout/corpo.jsx";
 import InformacoesPerfil from "./componentes/informacoesperfil.jsx";
 import HistoricoAcademicoPerfil from "./componentes/historicoacademicoperfil.jsx";
 import HistoricoProfissionalPerfil from "./componentes/historicoprofissionalperfil.jsx";
-import { servicoProfissional, servicoHCurricular, servicoHProfissional, servicoAuth } from "../../servicos/api.jsx";
+import { servicoProfissional, servicoHCurricular, servicoHProfissional, servicoAuth } from "../../servicos/api.js";
 import { useAuth } from "../../contextos/autenticacao.jsx";
 import "./perfil.css";
 

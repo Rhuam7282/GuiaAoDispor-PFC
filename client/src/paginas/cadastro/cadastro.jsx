@@ -5,7 +5,7 @@ import FormularioLoginGoogle from './componentes/formulariologingoogle.jsx';
 import FormularioLogin from './componentes/formulariologin.jsx';
 import FormularioCadastro from './componentes/formulariocadastro.jsx';
 import useBuscaCep from "../../ganchos/usebuscacep.jsx";
-import { servicoCadastro, servicoAuth } from '../../servicos/api.jsx';
+import { servicoCadastro, servicoAuth } from '../../servicos/api.js';
 import { useAuth } from '../../contextos/autenticacao.jsx';
 import './cadastro.css';
 
