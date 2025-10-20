@@ -7,20 +7,20 @@ export const API_CONFIG = {
     PROFILES: "/api/profiles",
     LOCATIONS: "/api/localizacoes",
     PROFESSIONALS: "/api/profissionais",
-    EVALUATIONS: "/api/avaliacoes"
-  }
+    EVALUATIONS: "/api/avaliacoes",
+  },
 };
 
 // Configurações do Google OAuth
 export const GOOGLE_CONFIG = {
-  CLIENT_ID: import.meta.env.VITE_GOOGLE_CLIENT_ID
+  CLIENT_ID: import.meta.env.VITE_GOOGLE_CLIENT_ID,
 };
 
 // Configurações de autenticação
 export const AUTH_CONFIG = {
   TOKEN_KEY: "auth_token",
   USER_KEY: "user_data",
-  REFRESH_TOKEN_KEY: "refresh_token"
+  REFRESH_TOKEN_KEY: "refresh_token",
 };
 
 // Tipos de perfil disponíveis
@@ -33,5 +33,5 @@ export default {
   API_CONFIG,
   GOOGLE_CONFIG,
   AUTH_CONFIG,
-  TIPOS_PERFIL
+  TIPOS_PERFIL,
 };

@@ -7,7 +7,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [react()],
-  // CORREÇÃO: Configurações simplificadas
   root: '.',
   publicDir: 'public',
   server: {
@@ -20,13 +19,11 @@ export default defineConfig({
     sourcemap: false,
     minify: 'terser',
     rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom'],
-        }
+      input: {
+        main: path.resolve(__dirname, 'index.html')
       }
     }
+
   },
   resolve: {
     alias: {
