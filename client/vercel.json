@@ -1,5 +1,7 @@
 {
-  
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
   "version": 2,
   "builds": [
     {
@@ -8,21 +10,6 @@
       "config": {
         "distDir": "dist"
       }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/assets/(.*)",
-      "rewrites": [
-      { "source": "/(.*)", "destination": "/index.html" }
-      ],
-      "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
-      }
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
     }
   ],
   "headers": [
