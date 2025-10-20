@@ -1,36 +1,5 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "client/index.html" }
-  ],
-  "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*).js",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/javascript"
-        }
-      ]
-    },
-    {
-      "source": "/(.*).jsx",
-      "headers": [
-        {
-          "key": "Content-Type", 
-          "value": "application/javascript"
-        }
-      ]
-    }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
-
