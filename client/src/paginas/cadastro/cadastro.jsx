@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Corpo from "../../componentes/layout/corpo.jsx";
-import FormularioLoginGoogle from './componentes/formulariologingoogle.jsx';
 import FormularioLogin from './componentes/formulariologin.jsx';
 import FormularioCadastro from './componentes/formulariocadastro.jsx';
 import useBuscaCep from "../../../../server/apis/buscacep.jsx";
-import { servicoCadastro, servicoAuth } from '../../servicos/api.jsx';
+import { servicoCadastro, servicoAuth } from '../../servicos/api.js';
 import { useAuth } from '../../contextos/autenticacao.jsx';
 import './cadastro.css';
 
@@ -32,9 +31,11 @@ const Cadastro = () => {
   const [erros, setErros] = useState({});
   const [errosContatos, setErrosContatos] = useState({});
   const [mensagemSucesso, setMensagemSucesso] = useState('');
+  
+  // <<< CORREÇÃO 1: Declarar o estado 'carregandoSubmit'
   const [carregandoSubmit, setCarregandoSubmit] = useState(false);
 
-  // Hook de busca de CEP
+  // Usar o hook de busca de CEP
   const { carregandoCep } = useBuscaCep(dadosFormulario.cep, setDadosFormulario, setErros);
 
   const aoAlterarCampo = (evento) => {
@@ -64,19 +65,10 @@ const Cadastro = () => {
 
     setCarregandoSubmit(true); 
     setMensagemSucesso('');
-    setErros({});
 
     try {
       console.log('📧 Validando email...');
-      
-      // Timeout para evitar espera infinita
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Timeout: Servidor não respondeu')), 10000)
-      );
-
-      const validacaoPromise = servicoCadastro.validarEmail(dadosFormulario.email);
-      const respostaValidacao = await Promise.race([validacaoPromise, timeoutPromise]);
-      
+      const respostaValidacao = await ServicoCadastro.validarEmail(dadosFormulario.email);
       if (!respostaValidacao.valido) {
         setErros({ email: 'Este email já está em uso' });
         setCarregandoSubmit(false); 
@@ -110,41 +102,25 @@ const Cadastro = () => {
       
       let respostaCadastro;
       if (dadosFormulario.tipoPerfil === 'Profissional') {
-        respostaCadastro = await servicoCadastro.cadastrarProfissional(dadosPerfil, dadosLocalizacao);
+        respostaCadastro = await ServicoCadastro.cadastrarProfissional(dadosPerfil, dadosLocalizacao);
       } else {
-        respostaCadastro = await servicoCadastro.cadastrarUsuario(dadosPerfil, dadosLocalizacao);
+        respostaCadastro = await ServicoCadastro.cadastrarUsuario(dadosPerfil, dadosLocalizacao);
       }
 
-      console.log('✅ Cadastro realizado com sucesso');
-      setMensagemSucesso('Cadastro realizado com sucesso! Faça login para continuar.');
+      console.log('✅ Cadastro realizado, fazendo login automático...');
       
-      // Limpa o formulário
-      setDadosFormulario({
-        nome: '',
-        email: '',
-        senha: '',
-        confirmarSenha: '',
-        cep: '',
-        cidade: '',
-        estado: '',
-        desc: '',
-        inst: '',
-        num: '',
-        foto: null,
-        tipoPerfil: 'Pessoal',
-        contatos: []
-      });
+      // CORREÇÃO: Usar os dados do cadastro para login imediato
+      if (respostaCadastro.data && respostaCadastro.token) {
+        login(respostaCadastro.data, respostaCadastro.token);
+        setMensagemSucesso('Cadastro realizado com sucesso! Redirecionando...');
+        // O redirecionamento será feito automaticamente pelo contexto de autenticação
+      } else {
+        throw new Error('Erro no login automático após cadastro');
+      }
 
     } catch (erro) {
       console.error('❌ Erro no cadastro:', erro);
-      
-      let mensagemErro = erro.message || 'Erro ao realizar cadastro';
-      
-      if (erro.message.includes('Timeout') || erro.message.includes('conexão')) {
-        mensagemErro = 'Servidor indisponível. Verifique se o backend está rodando na porta 3001.';
-      }
-      
-      setErros({ submit: mensagemErro });
+      setErros({ submit: erro.message || 'Erro ao realizar cadastro' });
     } finally {
       setCarregandoSubmit(false); 
     }
@@ -288,13 +264,7 @@ const Cadastro = () => {
     <Corpo>
       <div className="container">
         <h1 className="titulo">Criar Conta</h1>
-        <div className='listaHorizontal'>
-          <FormularioLogin />
-          <FormularioLoginGoogle 
-            aoSucesso={() => {}}
-            aoErro={() => {}}
-          />
-        </div>
+         <FormularioLogin />
         
         <FormularioCadastro 
           dadosFormulario={dadosFormulario}
