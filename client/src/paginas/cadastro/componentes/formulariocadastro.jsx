@@ -16,7 +16,7 @@ const FormularioCadastro = ({
   const errosContatos = erros.errosContatos || {};
   const enderecoPreenchidoPelaAPI =
     dadosFormulario.cidade && dadosFormulario.estado && !erros.cep;
-
+  
   return (
     <form onSubmit={aoEnviarFormulario} className="formulario-cadastro">
       <div className="conteudo-formulario">
@@ -216,7 +216,7 @@ const FormularioCadastro = ({
               {/* Descrição (obrigatória para profissional, opcional para pessoal) */}
             </div>
           </div>
-          
+
           {/* Seção de Descrição */}
           <div className="grupo-formulario">
             <label htmlFor="desc">

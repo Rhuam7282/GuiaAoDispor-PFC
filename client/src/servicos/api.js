@@ -1,5 +1,5 @@
 // client/src/servicos/api.js
-import { API_CONFIG } from "../config/apiconfig";
+import { API_CONFIG } from "../config/apiconfig"; // Ajuste o caminho conforme sua estrutura
 
 const URL_BASE = API_CONFIG.BASE_URL;
 
@@ -115,16 +115,43 @@ export const servicoProfissional = {
   deletar: (id) => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.PROFESSIONALS}/${id}`, "DELETE"),
 };
 
-export const servicoAvaliacao = {
-  criar: (dadosAvaliacao) =>
-    fazerRequisicao(`${URL_BASE}/api/avaliacoes`, "POST", dadosAvaliacao),
-  buscarPorId: (id) => fazerRequisicao(`${URL_BASE}/api/avaliacoes/${id}`, "GET"),
-  listarTodas: () => fazerRequisicao(`${URL_BASE}/api/avaliacoes`, "GET"),
-  atualizar: (id, dadosAvaliacao) =>
-    fazerRequisicao(`${URL_BASE}/api/avaliacoes/${id}`, "PUT", dadosAvaliacao),
-  deletar: (id) => fazerRequisicao(`${URL_BASE}/api/avaliacoes/${id}`, "DELETE"),
+// Serviço para buscar profissionais (usado na página Qualificados)
+export const servicoProfissionais = {
+  listar: async () => {
+    try {
+      console.log('📋 Buscando lista de profissionais...');
+      const resposta = await fazerRequisicao(
+        `${URL_BASE}${API_CONFIG.ENDPOINTS.PROFESSIONALS}`, 
+        "GET"
+      );
+      console.log('✅ Profissionais encontrados:', resposta);
+      return resposta;
+    } catch (erro) {
+      console.error('❌ Erro ao buscar profissionais:', erro);
+      throw erro;
+    }
+  },
+
+  buscarPorId: async (id) => {
+    return await fazerRequisicao(
+      `${URL_BASE}${API_CONFIG.ENDPOINTS.PROFESSIONALS}/${id}`, 
+      "GET"
+    );
+  }
 };
 
+// Serviço de avaliações
+export const servicoAvaliacao = {
+  criar: (dadosAvaliacao) =>
+    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.EVALUATIONS}`, "POST", dadosAvaliacao),
+  buscarPorId: (id) => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.EVALUATIONS}/${id}`, "GET"),
+  listarTodas: () => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.EVALUATIONS}`, "GET"),
+  atualizar: (id, dadosAvaliacao) =>
+    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.EVALUATIONS}/${id}`, "PUT", dadosAvaliacao),
+  deletar: (id) => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.EVALUATIONS}/${id}`, "DELETE"),
+};
+
+// Serviços de histórico (mantidos para compatibilidade)
 export const servicoHCurricular = {
   criar: (dadosHCurricular) =>
     fazerRequisicao(`${URL_BASE}/api/hcurriculares`, "POST", dadosHCurricular),

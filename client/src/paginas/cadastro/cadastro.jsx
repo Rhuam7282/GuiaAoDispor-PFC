@@ -68,7 +68,7 @@ const Cadastro = () => {
 
     try {
       console.log('📧 Validando email...');
-      const respostaValidacao = await ServicoCadastro.validarEmail(dadosFormulario.email);
+      const respostaValidacao = await servicoCadastro.validarEmail(dadosFormulario.email);
       if (!respostaValidacao.valido) {
         setErros({ email: 'Este email já está em uso' });
         setCarregandoSubmit(false); 
@@ -102,9 +102,9 @@ const Cadastro = () => {
       
       let respostaCadastro;
       if (dadosFormulario.tipoPerfil === 'Profissional') {
-        respostaCadastro = await ServicoCadastro.cadastrarProfissional(dadosPerfil, dadosLocalizacao);
+        respostaCadastro = await servicoCadastro.cadastrarProfissional(dadosPerfil, dadosLocalizacao);
       } else {
-        respostaCadastro = await ServicoCadastro.cadastrarUsuario(dadosPerfil, dadosLocalizacao);
+        respostaCadastro = await servicoCadastro.cadastrarUsuario(dadosPerfil, dadosLocalizacao);
       }
 
       console.log('✅ Cadastro realizado, fazendo login automático...');

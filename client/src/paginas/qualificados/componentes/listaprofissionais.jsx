@@ -2,74 +2,53 @@ import React from "react";
 
 const ListaProfissionais = ({ profissionais, aoClicarPerfil }) => {
   const handleImageError = (e) => {
-    console.log('🖼️ Erro ao carregar imagem, usando padrão');
-    e.target.src = "/imagens/mulher.png"; // CORREÇÃO: caminho absoluto
+    e.target.style.filter = 'grayscale(100%)';
+    e.target.style.opacity = '0.7';
+    
+    e.target.style.backgroundColor = '#f5f5f5';
+    
+    console.log('🖼️ Aplicando filtro cinza na imagem com erro');
   };
 
-  // Debug: verificar dados recebidos
-  console.log('📊 Profissionais recebidos no ListaProfissionais:', profissionais);
+  const profissionaisComImagem = profissionais?.map(profissional => ({
+    ...profissional,
+    imagem: profissional.imagem?.startsWith('/') 
+      ? profissional.imagem 
+      : "/imagens/logo-cinza.png"
+  })) || [];
+
+  console.log('📊 Profissionais com imagem processada:', profissionaisComImagem.length);
 
   return (
-    <div className="profile-list">
-      {!profissionais || profissionais.length === 0 ? (
-        <div 
-          style={{ 
-            textAlign: "center", 
-            padding: "3rem",
-            gridColumn: "1 / -1" 
-          }}
-        >
+    <div className="qualificados-profile-list">
+      {profissionaisComImagem.length === 0 ? (
+        <div className="qualificados-empty-state">
           <p>Nenhum profissional encontrado.</p>
           <small className="text-muted">
             Tente recarregar a página ou verificar a conexão.
           </small>
         </div>
       ) : (
-        profissionais.map((profissional) => (
+        profissionaisComImagem.map((profissional) => (
           <div
-            key={profissional._id || `prof-${Math.random()}`}
-            className="cartaoDestaque variacao1"
+            key={profissional._id}
+            className="qualificados-cartaoDestaque"
             onClick={() => aoClicarPerfil(profissional)}
-            style={{
-              cursor: "pointer",
-              transition: "transform 0.2s, box-shadow 0.2s",
-              marginBottom: "20px",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-5px)";
-              e.currentTarget.style.boxShadow = "0 8px 16px rgba(0,0,0,0.1)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = "var(--sombra) var(--corNeutraEscura)";
-            }}
           >
-            <div
-              style={{
-                display: "flex",
-                gap: "15px",
-                alignItems: "center",
-                padding: "20px",
-              }}
-            >
+            <div className="qualificados-profile-content">
               <img
-                src={profissional.imagem} // CORREÇÃO: campo 'imagem' do backend
+                src={profissional.imagem}
                 alt={`Perfil de ${profissional.nome}`}
-                className="imagemPerfil"
+                className="qualificados-imagemPerfil"
                 onError={handleImageError}
-                style={{
-                  width: '80px',
-                  height: '80px',
-                  borderRadius: '50%',
-                  objectFit: 'cover'
-                }}
+                loading="lazy"
               />
-              <div className="profile-text-content">
-                <span className="profile-name">{profissional.nome}</span>
-                <span className="profile-location">
+              <div className="qualificados-profile-text-content">
+                <span className="qualificados-profile-name">{profissional.nome}</span>
+                <span className="qualificados-profile-location">
                   📍 {profissional.localizacao}
                 </span>
-                <span className="profile-experience">
+                <span className="qualificados-profile-experience">
                   💼 {profissional.experiencia}
                 </span>
               </div>
