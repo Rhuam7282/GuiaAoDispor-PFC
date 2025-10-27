@@ -1,5 +1,8 @@
-import UploadImagem from "./uploadimagem";
+import UploadImagem from "./uploadimagem.jsx";
+import HistoricoCurricular from "./historicocurricular.jsx";
+import HistoricoProfissional from "./historicoprofissional.jsx";
 
+// Modifique o componente para receber as novas props
 const FormularioCadastro = ({
   dadosFormulario,
   erros,
@@ -11,12 +14,21 @@ const FormularioCadastro = ({
   adicionarContato,
   removerContato,
   alterarContato,
+  historicosCurriculares,
+  historicosProfissionais,
+  adicionarHistoricoCurricular,
+  removerHistoricoCurricular,
+  alterarHistoricoCurricular,
+  adicionarHistoricoProfissional,
+  removerHistoricoProfissional,
+  alterarHistoricoProfissional,
+  alterarFotoHistoricoProfissional,
 }) => {
   const isPerfilProfissional = dadosFormulario.tipoPerfil === "Profissional";
   const errosContatos = erros.errosContatos || {};
   const enderecoPreenchidoPelaAPI =
     dadosFormulario.cidade && dadosFormulario.estado && !erros.cep;
-  
+
   return (
     <form onSubmit={aoEnviarFormulario} className="formulario-cadastro">
       <div className="conteudo-formulario">
@@ -169,9 +181,27 @@ const FormularioCadastro = ({
                     placeholder="Sua instituição de ensino ou empresa"
                   />
                 </div>
+                {/* ADICIONE AS SEÇÕES DE HISTÓRICOS AQUI */}
+                <HistoricoCurricular
+                  historicosCurriculares={historicosCurriculares}
+                  adicionarHistoricoCurricular={adicionarHistoricoCurricular}
+                  removerHistoricoCurricular={removerHistoricoCurricular}
+                  alterarHistoricoCurricular={alterarHistoricoCurricular}
+                />
+
+                <HistoricoProfissional
+                  historicosProfissionais={historicosProfissionais}
+                  adicionarHistoricoProfissional={
+                    adicionarHistoricoProfissional
+                  }
+                  removerHistoricoProfissional={removerHistoricoProfissional}
+                  alterarHistoricoProfissional={alterarHistoricoProfissional}
+                  alterarFotoHistoricoProfissional={
+                    alterarFotoHistoricoProfissional
+                  }
+                />
               </>
             )}
-
             {/* Seção de Tipo de Perfil */}
             <div className="cartaoDestaque variacao2" id="tipo-perfil">
               <div className="grupo-formulario">

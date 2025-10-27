@@ -41,7 +41,9 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
           mensagemErro =
             dadosErro.message || dadosErro.mensagem || mensagemErro;
         }
-      } catch (e) {/**/}
+      } catch (e) {
+        /**/
+      }
 
       if (resposta.status === 401) {
         localStorage.removeItem("token");
@@ -82,73 +84,119 @@ const fazerRequisicao = async (url, metodo, dados = null) => {
 // Serviços básicos usando os endpoints corretos do apiConfig
 export const servicoLocalizacao = {
   criar: (dadosLocalizacao) =>
-    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.LOCATIONS}`, "POST", dadosLocalizacao),
-  buscarPorId: (id) => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.LOCATIONS}/${id}`, "GET"),
-  listarTodas: () => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.LOCATIONS}`, "GET"),
+    fazerRequisicao(
+      `${URL_BASE}${API_CONFIG.ENDPOINTS.LOCATIONS}`,
+      "POST",
+      dadosLocalizacao
+    ),
+  buscarPorId: (id) =>
+    fazerRequisicao(
+      `${URL_BASE}${API_CONFIG.ENDPOINTS.LOCATIONS}/${id}`,
+      "GET"
+    ),
+  listarTodas: () =>
+    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.LOCATIONS}`, "GET"),
   atualizar: (id, dadosLocalizacao) =>
-    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.LOCATIONS}/${id}`, "PUT", dadosLocalizacao),
-  deletar: (id) => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.LOCATIONS}/${id}`, "DELETE"),
+    fazerRequisicao(
+      `${URL_BASE}${API_CONFIG.ENDPOINTS.LOCATIONS}/${id}`,
+      "PUT",
+      dadosLocalizacao
+    ),
+  deletar: (id) =>
+    fazerRequisicao(
+      `${URL_BASE}${API_CONFIG.ENDPOINTS.LOCATIONS}/${id}`,
+      "DELETE"
+    ),
 };
 
 export const servicoUsuario = {
   criar: (dadosUsuario) =>
-    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.USERS}`, "POST", dadosUsuario),
-  buscarPorId: (id) => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.USERS}/${id}`, "GET"),
-  listarTodos: () => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.USERS}`, "GET"),
+    fazerRequisicao(
+      `${URL_BASE}${API_CONFIG.ENDPOINTS.USERS}`,
+      "POST",
+      dadosUsuario
+    ),
+  buscarPorId: (id) =>
+    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.USERS}/${id}`, "GET"),
+  listarTodos: () =>
+    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.USERS}`, "GET"),
   atualizar: (id, dadosUsuario) =>
-    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.USERS}/${id}`, "PUT", dadosUsuario),
-  deletar: (id) => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.USERS}/${id}`, "DELETE"),
+    fazerRequisicao(
+      `${URL_BASE}${API_CONFIG.ENDPOINTS.USERS}/${id}`,
+      "PUT",
+      dadosUsuario
+    ),
+  deletar: (id) =>
+    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.USERS}/${id}`, "DELETE"),
 };
 
 export const servicoProfissional = {
   criar: (dadosProfissional) =>
-    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.PROFESSIONALS}`, "POST", dadosProfissional),
+    fazerRequisicao(`${URL_BASE}/api/profissionais`, "POST", dadosProfissional),
   buscarPorId: (id) =>
-    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.PROFESSIONALS}/${id}`, "GET"),
-  listarTodos: () => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.PROFESSIONALS}`, "GET"),
+    fazerRequisicao(`${URL_BASE}/api/profissionais/${id}`, "GET"),
+  listarTodos: () => fazerRequisicao(`${URL_BASE}/api/profissionais`, "GET"),
   atualizar: (id, dadosProfissional) =>
     fazerRequisicao(
-      `${URL_BASE}${API_CONFIG.ENDPOINTS.PROFESSIONALS}/${id}`,
+      `${URL_BASE}/api/profissionais/${id}`,
       "PUT",
       dadosProfissional
     ),
-  deletar: (id) => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.PROFESSIONALS}/${id}`, "DELETE"),
+  deletar: (id) =>
+    fazerRequisicao(`${URL_BASE}/api/profissionais/${id}`, "DELETE"),
 };
 
 // Serviço para buscar profissionais (usado na página Qualificados)
 export const servicoProfissionais = {
   listar: async () => {
     try {
-      console.log('📋 Buscando lista de profissionais...');
+      console.log("📋 Buscando lista de profissionais...");
       const resposta = await fazerRequisicao(
-        `${URL_BASE}${API_CONFIG.ENDPOINTS.PROFESSIONALS}`, 
+        `${URL_BASE}${API_CONFIG.ENDPOINTS.PROFESSIONALS}`,
         "GET"
       );
-      console.log('✅ Profissionais encontrados:', resposta);
+      console.log("✅ Profissionais encontrados:", resposta);
       return resposta;
     } catch (erro) {
-      console.error('❌ Erro ao buscar profissionais:', erro);
+      console.error("❌ Erro ao buscar profissionais:", erro);
       throw erro;
     }
   },
 
   buscarPorId: async (id) => {
     return await fazerRequisicao(
-      `${URL_BASE}${API_CONFIG.ENDPOINTS.PROFESSIONALS}/${id}`, 
+      `${URL_BASE}${API_CONFIG.ENDPOINTS.PROFESSIONALS}/${id}`,
       "GET"
     );
-  }
+  },
 };
 
 // Serviço de avaliações
 export const servicoAvaliacao = {
   criar: (dadosAvaliacao) =>
-    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.EVALUATIONS}`, "POST", dadosAvaliacao),
-  buscarPorId: (id) => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.EVALUATIONS}/${id}`, "GET"),
-  listarTodas: () => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.EVALUATIONS}`, "GET"),
+    fazerRequisicao(
+      `${URL_BASE}${API_CONFIG.ENDPOINTS.EVALUATIONS}`,
+      "POST",
+      dadosAvaliacao
+    ),
+  buscarPorId: (id) =>
+    fazerRequisicao(
+      `${URL_BASE}${API_CONFIG.ENDPOINTS.EVALUATIONS}/${id}`,
+      "GET"
+    ),
+  listarTodas: () =>
+    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.EVALUATIONS}`, "GET"),
   atualizar: (id, dadosAvaliacao) =>
-    fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.EVALUATIONS}/${id}`, "PUT", dadosAvaliacao),
-  deletar: (id) => fazerRequisicao(`${URL_BASE}${API_CONFIG.ENDPOINTS.EVALUATIONS}/${id}`, "DELETE"),
+    fazerRequisicao(
+      `${URL_BASE}${API_CONFIG.ENDPOINTS.EVALUATIONS}/${id}`,
+      "PUT",
+      dadosAvaliacao
+    ),
+  deletar: (id) =>
+    fazerRequisicao(
+      `${URL_BASE}${API_CONFIG.ENDPOINTS.EVALUATIONS}/${id}`,
+      "DELETE"
+    ),
 };
 
 // Serviços de histórico (mantidos para compatibilidade)
@@ -159,13 +207,22 @@ export const servicoHCurricular = {
     fazerRequisicao(`${URL_BASE}/api/hcurriculares/${id}`, "GET"),
   listarTodos: () => fazerRequisicao(`${URL_BASE}/api/hcurriculares`, "GET"),
   atualizar: (id, dadosHCurricular) =>
-    fazerRequisicao(`${URL_BASE}/api/hcurriculares/${id}`, "PUT", dadosHCurricular),
-  deletar: (id) => fazerRequisicao(`${URL_BASE}/api/hcurriculares/${id}`, "DELETE"),
+    fazerRequisicao(
+      `${URL_BASE}/api/hcurriculares/${id}`,
+      "PUT",
+      dadosHCurricular
+    ),
+  deletar: (id) =>
+    fazerRequisicao(`${URL_BASE}/api/hcurriculares/${id}`, "DELETE"),
 };
 
 export const servicoHProfissional = {
   criar: (dadosHProfissional) =>
-    fazerRequisicao(`${URL_BASE}/api/hprofissionais`, "POST", dadosHProfissional),
+    fazerRequisicao(
+      `${URL_BASE}/api/hprofissionais`,
+      "POST",
+      dadosHProfissional
+    ),
   buscarPorId: (id) =>
     fazerRequisicao(`${URL_BASE}/api/hprofissionais/${id}`, "GET"),
   listarTodos: () => fazerRequisicao(`${URL_BASE}/api/hprofissionais`, "GET"),
@@ -220,12 +277,72 @@ export const servicoCadastro = {
         dadosLocalizacao
       );
 
+      // CRIAR HISTÓRICOS CURRICULARES
+      const historicosCurricularesPromises =
+        dadosProfissional.historicosCurriculares.map(async (hc) => {
+          const hcData = {
+            nome: hc.nome,
+            desc: hc.desc,
+            profissional: null, // será preenchido depois
+          };
+          return await servicoHCurricular.criar(hcData);
+        });
+
+      // CRIAR HISTÓRICOS PROFISSIONAIS
+      const historicosProfissionaisPromises =
+        dadosProfissional.historicosProfissionais.map(async (hp) => {
+          const hpData = {
+            nome: hp.nome,
+            desc: hp.desc,
+            foto: hp.foto,
+            profissional: null, // será preenchido depois
+          };
+          return await servicoHProfissional.criar(hpData);
+        });
+
+      // CRIAR PROFISSIONAL
       const respostaProfissional = await servicoProfissional.criar({
         ...dadosProfissional,
         localizacao: respostaLocalizacao.data._id,
+        historicosCurriculares: [], // serão preenchidos depois
+        historicosProfissionais: [], // serão preenchidos depois
       });
 
-      return respostaProfissional;
+      const profissionalId = respostaProfissional.data._id;
+
+      // ATUALIZAR HISTÓRICOS COM O ID DO PROFISSIONAL
+      const historicosCurricularesCriados = await Promise.all(
+        historicosCurricularesPromises.map(async (promise) => {
+          const hcCriado = await promise;
+          return await servicoHCurricular.atualizar(hcCriado.data._id, {
+            ...hcCriado.data,
+            profissional: profissionalId,
+          });
+        })
+      );
+
+      const historicosProfissionaisCriados = await Promise.all(
+        historicosProfissionaisPromises.map(async (promise) => {
+          const hpCriado = await promise;
+          return await servicoHProfissional.atualizar(hpCriado.data._id, {
+            ...hpCriado.data,
+            profissional: profissionalId,
+          });
+        })
+      );
+
+      // ATUALIZAR PROFISSIONAL COM OS IDs DOS HISTÓRICOS
+      const respostaProfissionalAtualizado =
+        await servicoProfissional.atualizar(profissionalId, {
+          historicosCurriculares: historicosCurricularesCriados.map(
+            (hc) => hc.data._id
+          ),
+          historicosProfissionais: historicosProfissionaisCriados.map(
+            (hp) => hp.data._id
+          ),
+        });
+
+      return respostaProfissionalAtualizado;
     } catch (erro) {
       throw new Error(`Erro no cadastro: ${erro.message}`);
     }
@@ -235,15 +352,15 @@ export const servicoCadastro = {
 export const servicoAuth = {
   login: async (email, senha) => {
     try {
-      console.log('🔐 Tentando login para:', email);
-      
+      console.log("🔐 Tentando login para:", email);
+
       const resposta = await fazerRequisicao(
-        `${URL_BASE}${API_CONFIG.ENDPOINTS.AUTH}/login`, 
-        "POST", 
+        `${URL_BASE}${API_CONFIG.ENDPOINTS.AUTH}/login`,
+        "POST",
         { email, senha }
       );
 
-      console.log('📨 Resposta do login:', resposta);
+      console.log("📨 Resposta do login:", resposta);
 
       // CORREÇÃO: Verificar a estrutura correta da resposta do servidor
       if (resposta && resposta.status === "sucesso") {
@@ -253,12 +370,12 @@ export const servicoAuth = {
         localStorage.setItem("estaAutenticado", "true");
         localStorage.setItem("loginTimestamp", Date.now().toString());
 
-        console.log('✅ Login bem-sucedido, token armazenado');
+        console.log("✅ Login bem-sucedido, token armazenado");
         return resposta;
       } else {
         // Se a resposta não tem status sucesso, verificar se há mensagem de erro
         const mensagemErro = resposta?.message || "Credenciais inválidas";
-        console.error('❌ Erro na resposta do login:', mensagemErro);
+        console.error("❌ Erro na resposta do login:", mensagemErro);
         throw new Error(mensagemErro);
       }
     } catch (erro) {
@@ -287,7 +404,7 @@ export const servicoAuth = {
   buscarPerfilLogado: async (id) => {
     try {
       const resposta = await fazerRequisicao(
-        `${URL_BASE}${API_CONFIG.ENDPOINTS.AUTH}/perfil/${id}`,
+        `${URL_BASE}/api/auth/perfil/${id}`,
         "GET"
       );
       return resposta;
@@ -312,7 +429,7 @@ export const servicoAuth = {
   logout: async () => {
     try {
       const resposta = await fazerRequisicao(
-        `${URL_BASE}${API_CONFIG.ENDPOINTS.AUTH}/logout`, 
+        `${URL_BASE}${API_CONFIG.ENDPOINTS.AUTH}/logout`,
         "POST"
       );
 

@@ -1,49 +1,51 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Corpo from "../../componentes/layout/corpo.jsx";
-import FormularioLogin from './componentes/formulariologin.jsx';
-import FormularioCadastro from './componentes/formulariocadastro.jsx';
+import FormularioLogin from "./componentes/formulariologin.jsx";
+import FormularioCadastro from "./componentes/formulariocadastro.jsx";
 import useBuscaCep from "../../../../server/apis/buscacep.jsx";
-import { servicoCadastro, servicoAuth } from '../../servicos/api.js';
-import { useAuth } from '../../contextos/autenticacao.jsx';
-import './cadastro.css';
+import { servicoCadastro, servicoAuth } from "../../servicos/api.js";
+import { useAuth } from "../../contextos/autenticacao.jsx";
+import "./cadastro.css";
 
 const Cadastro = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
-  
+
   const [dadosFormulario, setDadosFormulario] = useState({
-    nome: '',
-    email: '',
-    senha: '',
-    confirmarSenha: '',
-    cep: '',
-    cidade: '',
-    estado: '',
-    desc: '',
-    inst: '',
-    num: '',
+    nome: "",
+    email: "",
+    senha: "",
+    confirmarSenha: "",
+    cep: "",
+    cidade: "",
+    estado: "",
+    desc: "",
+    inst: "",
+    num: "",
     foto: null,
-    tipoPerfil: 'Pessoal',
-    contatos: []
+    tipoPerfil: "Pessoal",
+    contatos: [],
+    historicosCurriculares: [],
+    historicosProfissionais: [],
   });
-  
+
   const [erros, setErros] = useState({});
   const [errosContatos, setErrosContatos] = useState({});
-  const [mensagemSucesso, setMensagemSucesso] = useState('');
-  
-  // <<< CORREÇÃO 1: Declarar o estado 'carregandoSubmit'
+  const [mensagemSucesso, setMensagemSucesso] = useState("");
   const [carregandoSubmit, setCarregandoSubmit] = useState(false);
-
-  // Usar o hook de busca de CEP
-  const { carregandoCep } = useBuscaCep(dadosFormulario.cep, setDadosFormulario, setErros);
+  const { carregandoCep } = useBuscaCep(
+    dadosFormulario.cep,
+    setDadosFormulario,
+    setErros
+  );
 
   const aoAlterarCampo = (evento) => {
     const { name, value } = evento.target;
-    setDadosFormulario(prev => ({ ...prev, [name]: value }));
-    
+    setDadosFormulario((prev) => ({ ...prev, [name]: value }));
+
     if (erros[name]) {
-      setErros(prev => ({ ...prev, [name]: '' }));
+      setErros((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
@@ -51,27 +53,30 @@ const Cadastro = () => {
     const arquivo = evento.target.files[0];
     if (arquivo) {
       const leitor = new FileReader();
-      leitor.onload = (e) => setDadosFormulario(prev => ({ ...prev, foto: e.target.result }));
+      leitor.onload = (e) =>
+        setDadosFormulario((prev) => ({ ...prev, foto: e.target.result }));
       leitor.readAsDataURL(arquivo);
     }
   };
 
   const aoEnviarFormulario = async (evento) => {
     evento.preventDefault();
-    
+
     if (!validarFormulario()) {
       return;
     }
 
-    setCarregandoSubmit(true); 
-    setMensagemSucesso('');
+    setCarregandoSubmit(true);
+    setMensagemSucesso("");
 
     try {
-      console.log('📧 Validando email...');
-      const respostaValidacao = await servicoCadastro.validarEmail(dadosFormulario.email);
+      console.log("📧 Validando email...");
+      const respostaValidacao = await servicoCadastro.validarEmail(
+        dadosFormulario.email
+      );
       if (!respostaValidacao.valido) {
-        setErros({ email: 'Este email já está em uso' });
-        setCarregandoSubmit(false); 
+        setErros({ email: "Este email já está em uso" });
+        setCarregandoSubmit(false);
         return;
       }
 
@@ -79,11 +84,11 @@ const Cadastro = () => {
         nome: `${dadosFormulario.cidade}, ${dadosFormulario.estado}`,
         cep: dadosFormulario.cep,
         cidade: dadosFormulario.cidade,
-        estado: dadosFormulario.estado
+        estado: dadosFormulario.estado,
       };
 
       const contatosValidos = dadosFormulario.contatos.filter(
-        contato => contato.tipo && contato.valor
+        (contato) => contato.tipo && contato.valor
       );
 
       const dadosPerfil = {
@@ -95,59 +100,57 @@ const Cadastro = () => {
         num: dadosFormulario.num,
         foto: dadosFormulario.foto,
         contatos: contatosValidos,
-        tipoPerfil: dadosFormulario.tipoPerfil
+        tipoPerfil: dadosFormulario.tipoPerfil,
+        // ADICIONANDO OS HISTÓRICOS AO ENVIO
+        historicosCurriculares: dadosFormulario.historicosCurriculares,
+        historicosProfissionais: dadosFormulario.historicosProfissionais,
       };
 
-      console.log('👤 Iniciando cadastro como:', dadosFormulario.tipoPerfil);
-      
+      console.log("👤 Iniciando cadastro como:", dadosFormulario.tipoPerfil);
+
       let respostaCadastro;
-      if (dadosFormulario.tipoPerfil === 'Profissional') {
-        respostaCadastro = await servicoCadastro.cadastrarProfissional(dadosPerfil, dadosLocalizacao);
+      if (dadosFormulario.tipoPerfil === "Profissional") {
+        respostaCadastro = await servicoCadastro.cadastrarProfissional(
+          dadosPerfil,
+          dadosLocalizacao
+        );
       } else {
-        respostaCadastro = await servicoCadastro.cadastrarUsuario(dadosPerfil, dadosLocalizacao);
+        respostaCadastro = await servicoCadastro.cadastrarUsuario(
+          dadosPerfil,
+          dadosLocalizacao
+        );
       }
 
-      console.log('✅ Cadastro realizado, fazendo login automático...');
-      
-      // CORREÇÃO: Usar os dados do cadastro para login imediato
+      console.log("✅ Cadastro realizado, fazendo login automático...");
+
       if (respostaCadastro.data && respostaCadastro.token) {
         login(respostaCadastro.data, respostaCadastro.token);
-        setMensagemSucesso('Cadastro realizado com sucesso! Redirecionando...');
-        // O redirecionamento será feito automaticamente pelo contexto de autenticação
+        setMensagemSucesso("Cadastro realizado com sucesso! Redirecionando...");
       } else {
-        throw new Error('Erro no login automático após cadastro');
+        throw new Error("Erro no login automático após cadastro");
       }
-
     } catch (erro) {
-      console.error('❌ Erro no cadastro:', erro);
-      setErros({ submit: erro.message || 'Erro ao realizar cadastro' });
+      console.error("❌ Erro no cadastro:", erro);
+      setErros({ submit: erro.message || "Erro ao realizar cadastro" });
     } finally {
-      setCarregandoSubmit(false); 
+      setCarregandoSubmit(false);
     }
   };
 
-  const aoSucessoLoginGoogle = (userData) => {
-    console.log('Login Google realizado:', userData);
-  };
-
-  const aoErroLoginGoogle = () => {
-    console.error('Erro no login com Google');
-  };
-
   const adicionarContato = () => {
-    setDadosFormulario(prev => ({
+    setDadosFormulario((prev) => ({
       ...prev,
-      contatos: [...(prev.contatos || []), { tipo: '', valor: '' }]
+      contatos: [...(prev.contatos || []), { tipo: "", valor: "" }],
     }));
   };
 
   const removerContato = (indice) => {
-    setDadosFormulario(prev => ({
+    setDadosFormulario((prev) => ({
       ...prev,
-      contatos: prev.contatos.filter((_, i) => i !== indice)
+      contatos: prev.contatos.filter((_, i) => i !== indice),
     }));
-    
-    setErrosContatos(prev => {
+
+    setErrosContatos((prev) => {
       const novosErros = { ...prev };
       delete novosErros[indice];
       return novosErros;
@@ -155,64 +158,140 @@ const Cadastro = () => {
   };
 
   const alterarContato = (indice, campo, valor) => {
-    setDadosFormulario(prev => {
-      const novosContatos = prev.contatos.map((contato, i) => 
+    setDadosFormulario((prev) => {
+      const novosContatos = prev.contatos.map((contato, i) =>
         i === indice ? { ...contato, [campo]: valor } : contato
       );
-      
+
       const contatoAtualizado = novosContatos[indice];
-      
+
       if (contatoAtualizado.tipo && contatoAtualizado.valor) {
-        const erro = validarContato(contatoAtualizado.tipo, contatoAtualizado.valor);
-        setErrosContatos(prevErros => ({
+        const erro = validarContato(
+          contatoAtualizado.tipo,
+          contatoAtualizado.valor
+        );
+        setErrosContatos((prevErros) => ({
           ...prevErros,
-          [indice]: erro
+          [indice]: erro,
         }));
       } else {
-        setErrosContatos(prevErros => {
+        setErrosContatos((prevErros) => {
           const novosErros = { ...prevErros };
           delete novosErros[indice];
           return novosErros;
         });
       }
-      
+
       return {
         ...prev,
-        contatos: novosContatos
+        contatos: novosContatos,
       };
     });
   };
 
   const validarContato = (tipo, valor) => {
-    if (!valor.trim()) return 'Campo obrigatório';
-    
+    if (!valor.trim()) return "Campo obrigatório";
+
     switch (tipo) {
-      case 'Email': {
+      case "Email": {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(valor)) return 'Email inválido';
+        if (!emailRegex.test(valor)) return "Email inválido";
         break;
       }
-      case 'Telefone': {
-        const telefoneRegex = /^(\d{2}\s?\d{4,5}\s?\d{4})|(\(\d{2}\)\s?\d{4,5}?\d{4})$/;
-        if (!telefoneRegex.test(valor.replace(/\s/g, ''))) return 'Telefone inválido';
+      case "Telefone": {
+        const telefoneRegex =
+          /^(\d{2}\s?\d{4,5}\s?\d{4})|(\(\d{2}\)\s?\d{4,5}?\d{4})$/;
+        if (!telefoneRegex.test(valor.replace(/\s/g, "")))
+          return "Telefone inválido";
         break;
       }
-      case 'LinkedIn': {
+      case "LinkedIn": {
         const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/.+/;
-        if (!linkedinRegex.test(valor)) return 'URL do LinkedIn inválida';
+        if (!linkedinRegex.test(valor)) return "URL do LinkedIn inválida";
         break;
       }
-      case 'Facebook': {
+      case "Facebook": {
         const facebookRegex = /^(https?:\/\/)?(www\.)?facebook\.com\/.+/;
-        if (!facebookRegex.test(valor)) return 'URL do Facebook inválida';
+        if (!facebookRegex.test(valor)) return "URL do Facebook inválida";
         break;
       }
       default: {
         break;
       }
     }
-    
-    return '';
+
+    return "";
+  };
+
+  const adicionarHistoricoCurricular = () => {
+    setDadosFormulario((prev) => ({
+      ...prev,
+      historicosCurriculares: [
+        ...prev.historicosCurriculares,
+        { nome: "", desc: "" },
+      ],
+    }));
+  };
+
+  const removerHistoricoCurricular = (indice) => {
+    setDadosFormulario((prev) => ({
+      ...prev,
+      historicosCurriculares: prev.historicosCurriculares.filter(
+        (_, i) => i !== indice
+      ),
+    }));
+  };
+
+  const alterarHistoricoCurricular = (indice, campo, valor) => {
+    setDadosFormulario((prev) => {
+      const novosHistoricos = prev.historicosCurriculares.map((hc, i) =>
+        i === indice ? { ...hc, [campo]: valor } : hc
+      );
+      return { ...prev, historicosCurriculares: novosHistoricos };
+    });
+  };
+
+  const adicionarHistoricoProfissional = () => {
+    setDadosFormulario((prev) => ({
+      ...prev,
+      historicosProfissionais: [
+        ...prev.historicosProfissionais,
+        { nome: "", desc: "", foto: null },
+      ],
+    }));
+  };
+
+  const removerHistoricoProfissional = (indice) => {
+    setDadosFormulario((prev) => ({
+      ...prev,
+      historicosProfissionais: prev.historicosProfissionais.filter(
+        (_, i) => i !== indice
+      ),
+    }));
+  };
+
+  const alterarHistoricoProfissional = (indice, campo, valor) => {
+    setDadosFormulario((prev) => {
+      const novosHistoricos = prev.historicosProfissionais.map((hp, i) =>
+        i === indice ? { ...hp, [campo]: valor } : hp
+      );
+      return { ...prev, historicosProfissionais: novosHistoricos };
+    });
+  };
+
+  const alterarFotoHistoricoProfissional = (indice, arquivo) => {
+    if (arquivo) {
+      const leitor = new FileReader();
+      leitor.onload = (e) => {
+        setDadosFormulario((prev) => {
+          const novosHistoricos = prev.historicosProfissionais.map((hp, i) =>
+            i === indice ? { ...hp, foto: e.target.result } : hp
+          );
+          return { ...prev, historicosProfissionais: novosHistoricos };
+        });
+      };
+      leitor.readAsDataURL(arquivo);
+    }
   };
 
   const validarFormulario = () => {
@@ -220,29 +299,30 @@ const Cadastro = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const novosErrosContatos = {};
 
-    if (!dadosFormulario.nome.trim()) novosErros.nome = 'Nome é obrigatório';
-    
-    if (!dadosFormulario.email) {
-      novosErros.email = 'Email é obrigatório';
-    } else if (!emailRegex.test(dadosFormulario.email)) {
-      novosErros.email = 'Email inválido';
-    }
-    
-    if (!dadosFormulario.senha) {
-      novosErros.senha = 'Senha é obrigatória';
-    } else if (dadosFormulario.senha.length < 8) {
-      novosErros.senha = 'A senha deve ter pelo menos 8 caracteres';
-    }
-    
-    if (dadosFormulario.senha !== dadosFormulario.confirmarSenha) {
-      novosErros.confirmarSenha = 'As senhas não coincidem';
-    }
-    
-    if (!dadosFormulario.cep) novosErros.cep = 'CEP é obrigatório';
-    if (!dadosFormulario.cidade) novosErros.cidade = 'Cidade é obrigatória';
+    if (!dadosFormulario.nome.trim()) novosErros.nome = "Nome é obrigatório";
 
-    if (dadosFormulario.tipoPerfil === 'Profissional') {
-      if (!dadosFormulario.desc.trim()) novosErros.desc = 'Descrição é obrigatória para perfil profissional';
+    if (!dadosFormulario.email) {
+      novosErros.email = "Email é obrigatório";
+    } else if (!emailRegex.test(dadosFormulario.email)) {
+      novosErros.email = "Email inválido";
+    }
+
+    if (!dadosFormulario.senha) {
+      novosErros.senha = "Senha é obrigatória";
+    } else if (dadosFormulario.senha.length < 8) {
+      novosErros.senha = "A senha deve ter pelo menos 8 caracteres";
+    }
+
+    if (dadosFormulario.senha !== dadosFormulario.confirmarSenha) {
+      novosErros.confirmarSenha = "As senhas não coincidem";
+    }
+
+    if (!dadosFormulario.cep) novosErros.cep = "CEP é obrigatório";
+    if (!dadosFormulario.cidade) novosErros.cidade = "Cidade é obrigatória";
+
+    if (dadosFormulario.tipoPerfil === "Profissional") {
+      if (!dadosFormulario.desc.trim())
+        novosErros.desc = "Descrição é obrigatória para perfil profissional";
     }
 
     dadosFormulario.contatos.forEach((contato, index) => {
@@ -257,27 +337,38 @@ const Cadastro = () => {
     setErros(novosErros);
     setErrosContatos(novosErrosContatos);
 
-    return Object.keys(novosErros).length === 0 && Object.keys(novosErrosContatos).length === 0;
+    return (
+      Object.keys(novosErros).length === 0 &&
+      Object.keys(novosErrosContatos).length === 0
+    );
   };
 
   return (
     <Corpo>
       <div className="container">
         <h1 className="titulo">Criar Conta</h1>
-         <FormularioLogin />
-        
-        <FormularioCadastro 
+        <FormularioLogin />
+
+        <FormularioCadastro
           dadosFormulario={dadosFormulario}
-          erros={{...erros, errosContatos}}
-          carregando={carregandoSubmit || carregandoCep} 
+          erros={{ ...erros, errosContatos }}
+          carregando={carregandoSubmit || carregandoCep}
           mensagemSucesso={mensagemSucesso}
           aoAlterarCampo={aoAlterarCampo}
           aoSelecionarArquivo={aoSelecionarArquivo}
           aoEnviarFormulario={aoEnviarFormulario}
-          setDadosFormulario={setDadosFormulario}
           adicionarContato={adicionarContato}
           removerContato={removerContato}
           alterarContato={alterarContato}
+          historicosCurriculares={dadosFormulario.historicosCurriculares}
+          historicosProfissionais={dadosFormulario.historicosProfissionais}
+          adicionarHistoricoCurricular={adicionarHistoricoCurricular}
+          removerHistoricoCurricular={removerHistoricoCurricular}
+          alterarHistoricoCurricular={alterarHistoricoCurricular}
+          adicionarHistoricoProfissional={adicionarHistoricoProfissional}
+          removerHistoricoProfissional={removerHistoricoProfissional}
+          alterarHistoricoProfissional={alterarHistoricoProfissional}
+          alterarFotoHistoricoProfissional={alterarFotoHistoricoProfissional}
         />
       </div>
     </Corpo>
