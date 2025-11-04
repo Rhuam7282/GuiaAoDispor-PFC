@@ -7,7 +7,7 @@ import Interrogacao from '../../../acessibilidade/interrogacao/interrogacao.jsx'
 import ItemMenu from './itemmenu';
 import './listamenu.css';
 
-const ListaMenu = () => {
+const ListaMenu = ({ onItemClick }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { estaAutenticado, usuario, logout } = useAuth();
@@ -22,22 +22,27 @@ const ListaMenu = () => {
   const handleItemClick = (item) => {
     if (item.texto === 'Perfil') {
       if (estaAutenticado() && usuario) {
-        // Usuário logado: redireciona para seu próprio perfil
         navigate(`/perfil/${usuario._id}`);
       } else {
-        // Usuário não logado: redireciona para cadastro
         navigate('/cadastro');
       }
     } else {
       navigate(item.rota);
     }
+    
+    // Fechar menu após clicar em um item
+    if (onItemClick) {
+      onItemClick();
+    }
   };
 
   const handleLogout = () => {
     logout();
+    if (onItemClick) {
+      onItemClick();
+    }
   };
 
-  // Verificar se o item está ativo, considerando cadastro como ativo para Perfil
   const isItemAtivo = (item) => {
     if (item.texto === 'Perfil') {
       return location.pathname === '/perfil' || location.pathname.startsWith('/perfil/') || location.pathname === '/cadastro';

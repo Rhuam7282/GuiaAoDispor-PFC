@@ -81,21 +81,8 @@ function Qualificados() {
         `📋 Dados de exemplo: ${perfil.nome}\n\nO backend está offline no momento.`
       );
     } else {
-      alert(`Perfil de ${perfil.nome}`);
-    }
-  };
-
-  const aoSelecionarArquivo = (arquivo) => {
-    if (arquivo) {
-      // Cria uma URL temporária para preview
-      const urlTemporaria = URL.createObjectURL(arquivo);
-
-      // Atualiza o estado com a URL temporária E o arquivo original
-      setDadosFormulario((prev) => ({
-        ...prev,
-        foto: urlTemporaria,
-        arquivoFoto: arquivo, // Guarda o arquivo original para enviar depois
-      }));
+      // REDIRECIONAR PARA A PÁGINA DO PROFISSIONAL
+      window.location.href = `/perfil/${perfil._id}`;
     }
   };
 

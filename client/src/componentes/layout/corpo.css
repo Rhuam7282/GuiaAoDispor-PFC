@@ -1,4 +1,4 @@
-/* Estilos específicos do layout do corpo */
+/* src/componentes/layout/corpo.css */
 .containerLayout {
   text-align: center;
 }
@@ -7,24 +7,50 @@
   transition: all 0.3s ease;
 }
 
+/* Grid para layout com menu */
+.gridContainer.gridDuasColunas {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 100vh;
+}
+
+.gridContainer.gridUmaColuna {
+  display: block;
+}
+
+/* Conteúdo principal deve ocupar o espaço restante */
+.conteudoPrincipal:not(.larguraViewport) {
+  margin-left: 0;
+  width: 100%;
+}
+
+.larguraViewport {
+  width: 100vw;
+}
+
+.transicaoSuave {
+  transition: all 0.3s ease;
+}
 
 /* RESPONSIVIDADE DO LAYOUT - Adaptações para diferentes tamanhos de tela */
 
 /* Container principal responsivo */
 .containerLayout {
-  /* Garante que o layout se adapte a diferentes tamanhos */
   max-width: 100%;
-  overflow-x: hidden; /* Evita scroll horizontal indesejado */
+  overflow-x: hidden;
 }
 
 /* Conteúdo principal responsivo */
 .conteudoPrincipal {
-  /* Padding responsivo baseado no tamanho da tela */
-  min-height: 100vh; /* Garante altura mínima */
+  min-height: 100vh;
 }
 
 /* Tablets e telas médias */
 @media (max-width: 1024px) {
+  .gridContainer.gridDuasColunas {
+    grid-template-columns: 1fr;
+  }
+  
   .conteudoPrincipal {
     padding: var(--espacamentoMedio) var(--espacamentoPequeno);
   }
@@ -33,24 +59,26 @@
 /* Dispositivos móveis */
 @media (max-width: 768px) {
   .containerLayout {
-    /* Layout em coluna única para mobile */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .gridContainer.gridDuasColunas {
     display: flex;
     flex-direction: column;
   }
   
   .conteudoPrincipal {
-    /* Padding reduzido em mobile */
     padding: var(--espacamentoPequeno);
-    /* Permite scroll vertical quando necessário */
     overflow-y: auto;
+    width: 100% !important;
+    margin-left: 0 !important;
   }
 }
 
 /* Dispositivos móveis pequenos */
 @media (max-width: 480px) {
   .conteudoPrincipal {
-    /* Padding mínimo para telas muito pequenas */
     padding: 10px;
   }
 }
-

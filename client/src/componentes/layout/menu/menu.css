@@ -1,4 +1,3 @@
-/* src/componentes/layout/Menu/Menu.css */
 menu {
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
@@ -6,6 +5,51 @@ menu {
   background-color: var(--corAzulDestaque);
   text-align: center;
   filter: drop-shadow(var(--sombra) var(--corNeutraEscura));
+  width: 280px;
+  position: relative; /* Mudado de fixed para relative */
+  z-index: 100;
+}
+
+/* Botão Hamburguer - Estilo idêntico ao botão de acessibilidade */
+.botao-hamburguer {
+  display: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--corAzulDestaque);
+  color: var(--corMarromEscuro);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001;
+  position: fixed;
+  top: var(--espacamentoMedio);
+  left: var(--espacamentoMedio);
+  box-shadow: var(--sombra) var(--corNeutraEscura);
+  transition: all 0.3s;
+  align-items: center;
+  justify-content: center;
+}
+
+.botao-hamburguer:hover {
+  filter: brightness(0.95);
+  transform: scale(1.05);
+}
+
+.botao-hamburguer:active {
+  transform: scale(0.95);
+}
+
+/* Overlay para mobile */
+.overlay-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
 }
 
 /* Tablets e telas médias */
@@ -16,17 +60,34 @@ menu {
     height: auto;
     min-height: 100vh;
     padding: var(--espacamentoMedio);
+    max-width: 300px;
   }
 }
 
 /* Dispositivos móveis */
 @media (max-width: 768px) {
+  .botao-hamburguer {
+    display: flex;
+  }
+
+  .overlay-menu {
+    display: block;
+  }
+
   menu {
-    grid-template-rows: auto;
-    grid-template-columns: 1fr;
-    height: auto;
-    min-height: 100vh;
-    padding: var(--espacamentoMedio);
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    width: 280px;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  menu.aberto {
+    transform: translateX(0);
   }
 }
 
@@ -34,5 +95,18 @@ menu {
 @media (max-width: 480px) {
   menu {
     padding: 10px;
+    width: 250px;
+  }
+
+  .botao-hamburguer {
+    width: 48px;
+    height: 48px;
+    top: 12px;
+    left: 12px;
+  }
+
+  .botao-hamburguer svg {
+    width: 20px;
+    height: 20px;
   }
 }
